@@ -1,26 +1,29 @@
 import '../../../scss/signup.scss';
 
-function signup() {
-  document.querySelector('.login-form-container').style.cssText =
-    'display: none;';
-  document.querySelector('.signup-form-container').style.cssText =
-    'display: block;';
-  document.querySelector('.container').style.cssText =
-    'background: linear-gradient(to bottom, rgb(56, 189, 149),  rgb(28, 139, 106));';
-  document.querySelector('.button-1').style.cssText = 'display: none';
-  document.querySelector('.button-2').style.cssText = 'display: block';
-}
-signup();
+console.log('test');
 
-function login() {
-  document.querySelector('.signup-form-container').style.cssText =
-    'display: none;';
-  document.querySelector('.login-form-container').style.cssText =
-    'display: block;';
-  document.querySelector('.container').style.cssText =
-    'background: linear-gradient(to bottom, rgb(6, 108, 224),  rgb(14, 48, 122));';
-  document.querySelector('.button-2').style.cssText = 'display: none';
-  document.querySelector('.button-1').style.cssText = 'display: block';
+const signUpTab = document.querySelector('.sign-up');
+const loginTab = document.querySelector('.login');
+const signUpFormContainer = document.querySelector('.signup-form-container');
+const loginFormContainer = document.querySelector('.login-form-container');
+
+loginFormContainer.classList.add('active-form');
+
+function switchToSignUp() {
+  signUpTab.classList.add('active');
+  loginTab.classList.remove('active');
+
+  signUpFormContainer.classList.add('active-form');
+  loginFormContainer.classList.remove('active-form');
 }
 
-login();
+function switchToLogin() {
+  loginTab.classList.add('active');
+  signUpTab.classList.remove('active');
+
+  loginFormContainer.classList.add('active-form');
+  signUpFormContainer.classList.remove('active-form');
+}
+
+signUpTab.addEventListener('click', switchToSignUp);
+loginTab.addEventListener('click', switchToLogin);
