@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Sleek Authentication Forms</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="text-box">
+        <div class="content-holder">
+          <h2>Hello!</h2>
+        </div>
+      </div>
+      <div class="form-box">
+        <div class="tab-container">
+          <button class="sign-up">Sign up</button>
+          <button class="login active">Login</button>
+        </div>
+        <div class="login-form-container">
+          <h1>Login Form</h1>
+          <form class="login-form">
+            <input
+              id="email-input"
+              type="email"
+              placeholder="Email"
+              class="input-field"
+              required
+            />
+            <br />
+            <input
+              type="password"
+              placeholder="Password"
+              class="input-field"
+              required
+            />
+            <br />
+            <div class="forgot-password">
+              <p>
+                <a href="./forgotPasswordPage.html" class=""
+                  >Forgot password?</a
+                >
+              </p>
+            </div>
+            <p id="message" class="text-center mt-3"></p>
+            <button class="login-button" type="submit">Login</button>
+          </form>
+        </div>
+
+        <div class="signup-form-container">
+          <h1>Sign Up Form</h1>
+          <form class="signup-form">
+            <input
+              type="text"
+              placeholder="Username"
+              class="input-field"
+              required
+            />
+            <br />
+            <input
+              type="email"
+              placeholder="Email"
+              class="input-field"
+              required
+            />
+            <br />
+            <input
+              type="password"
+              placeholder="Password"
+              class="input-field"
+              required
+            />
+            <br />
+            <p id="message" class="text-center mt-3"></p>
+            <button class="signup-button" type="submit">Sign Up</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="../js/pages/signup/signup.js"></script>
+  </body>
+</html>
