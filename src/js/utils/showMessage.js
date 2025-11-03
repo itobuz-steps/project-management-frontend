@@ -1,5 +1,10 @@
 const messageDiv = document.getElementById('message');
 
-export function showMessage(text, type = 'info') {
-  messageDiv.innerHTML = `<div class="alert alert-${type}" role="alert">${text}</div>`;
+export function showMessage(text, type = 'danger') {
+  messageDiv.textContent = text;
+  if (type === 'danger') {
+    messageDiv.style.color = 'red';
+  } else if (type === 'info') {
+    messageDiv.style.color = '';
+  }
 }
