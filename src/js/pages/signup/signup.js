@@ -77,3 +77,43 @@ async function handleSignup(event) {
 if (signupForm) {
   signupForm.addEventListener('submit', handleSignup);
 }
+
+const loginForm = document.querySelector('.login-form');
+const loginEmail = document.getElementById('email-input');
+const loginPassword = document.getElementById('password-input');
+const loginBtn = document.querySelector('.login-button');
+
+async function handleLogin(event) {
+  event.preventDefault();
+
+  const email = loginEmail.value.trim();
+  const password = loginPassword.value;
+  const originalText = loginBtn.textContent;
+
+  loginBtn.textContent = 'Signing in...';
+  loginBtn.disabled = true;
+
+  try {
+    await authService.login(email, password);
+
+    //showMessage('Login successful', 'success');
+    console.log('Login successful');
+
+    setTimeout(() => {
+      window.location.href = './index.html';
+    }, 1000);
+  } catch (error) {
+    // showMessage(
+    //   error.message || 'Login failed. Please check your credentials.',
+    //   'danger'
+    // );
+    console.log(error.message);
+  } finally {
+    loginBtn.textContent = originalText;
+    loginBtn.disabled = false;
+  }
+}
+
+if (loginForm) {
+  loginForm.addEventListener('submit', handleLogin);
+}
