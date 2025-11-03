@@ -1,4 +1,4 @@
-import '../../../scss/signup.scss';
+import '../../../styles/signup.scss';
 
 console.log('test');
 
