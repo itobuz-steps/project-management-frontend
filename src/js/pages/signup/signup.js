@@ -57,7 +57,7 @@ async function handleSignup(event) {
     );
 
     setTimeout(() => {
-      window.location.href = '../../../pages/otpVerify.html ';
+      window.location.href = 'verifyOtpPage.html';
     }, 1000);
   } catch (error) {
     showMessage(`${error.message}`, 'danger');
