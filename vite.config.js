@@ -1,6 +1,7 @@
 import { resolve } from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import tailwindcss from '@tailwindcss/vite';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -16,17 +17,17 @@ export default {
       },
     },
   },
-  // Optional: Silence Sass deprecation warnings. See note below.
-  css: {
-    preprocessorOptions: {
-      scss: {
-        silenceDeprecations: [
-          'import',
-          'mixed-decls',
-          'color-functions',
-          'global-builtin',
-        ],
-      },
-    },
-  },
+  plugins: [tailwindcss()],
+  // css: {
+  //   preprocessorOptions: {
+  //     scss: {
+  //       silenceDeprecations: [
+  //         'import',
+  //         'mixed-decls',
+  //         'color-functions',
+  //         'global-builtin',
+  //       ],
+  //     },
+  //   },
+  // },
 };
