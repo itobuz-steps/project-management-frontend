@@ -1,5 +1,6 @@
 import '../../../scss/signup.scss';
 import authService from '../../services/AuthService.js';
+import { showMessage } from '../../utils/showMessage.js';
 
 const signUpTab = document.querySelector('.sign-up');
 const loginTab = document.querySelector('.login');
@@ -45,19 +46,21 @@ async function handleSignup(event) {
   signupBtn.disabled = true;
 
   try {
-    const response = await authService.signup(name, email, password);
-    console.log('Registration response:', response);
+    await authService.signup(name, email, password);
 
     localStorage.setItem('pendingEmail', email);
     localStorage.setItem('username', name);
 
-    console.log('Registration successful! Please check your email for OTP.');
+    showMessage(
+      'Registration successful! Please check your email for OTP.',
+      'success'
+    );
 
-    // setTimeout(() => {
-    //   window.location.href = '../../../pages/otpVerify.html ';
-    // }, 1000);
+    setTimeout(() => {
+      window.location.href = '../../../pages/otpVerify.html ';
+    }, 1000);
   } catch (error) {
-    console.error('Registration error:', error.message); // Todo: show error.message in form
+    showMessage(`${error.message}`, 'danger');
     if (
       error.message.includes('Failed to fetch') ||
       error.message.includes('NetworkError')
@@ -66,7 +69,7 @@ async function handleSignup(event) {
         'Backend server is not running. Please start your backend server and try again.'
       );
     } else {
-      console.log('Registration failed. Please try again.');
+      showMessage('Registration failed. Please try again.', 'danger');
     }
   } finally {
     signupBtn.textContent = originalText;
@@ -96,18 +99,16 @@ async function handleLogin(event) {
   try {
     await authService.login(email, password);
 
-    //showMessage('Login successful', 'success');
-    console.log('Login successful');
+    showMessage('Login successful', 'success');
 
     setTimeout(() => {
       window.location.href = './index.html';
     }, 1000);
   } catch (error) {
-    // showMessage(
-    //   error.message || 'Login failed. Please check your credentials.',
-    //   'danger'
-    // );
-    console.log(error.message);
+    showMessage(
+      error.message || 'Login failed. Please check your credentials.',
+      'danger'
+    );
   } finally {
     loginBtn.textContent = originalText;
     loginBtn.disabled = false;
