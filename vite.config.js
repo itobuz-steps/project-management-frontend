@@ -14,6 +14,8 @@ export default {
       input: {
         signup: resolve(__dirname, 'src/pages/signup.html'),
         index: resolve(__dirname, 'src/index.html'),
+        forgotPassword: resolve(__dirname, 'src/pages/forgotPasswordPage.html'),
+        otp: resolve(__dirname, 'src/pages/verifyOtpPage.html'),
       },
     },
   },
