@@ -61,22 +61,7 @@ async function handleSignup(event) {
       window.location.href = 'verifyOtpPage.html';
     }, 1000);
   } catch (error) {
-    console.log(error.message);
-    showMessage(`${error.message}`, 'danger', 'signup-message');
-    if (
-      error.message.includes('Failed to fetch') ||
-      error.message.includes('NetworkError')
-    ) {
-      console.log(
-        'Backend server is not running. Please start your backend server and try again.'
-      );
-    } else {
-      showMessage(
-        'Registration failed. Please try again.',
-        'danger',
-        'signup-message'
-      );
-    }
+    showMessage(error.message, 'danger', 'signup-message');
   } finally {
     signupBtn.textContent = originalText;
     signupBtn.disabled = false;
