@@ -1,8 +1,7 @@
 import * as bootstrap from 'bootstrap';
 
-const messageDiv = document.getElementById('message');
-
-function showMessage(text, type = 'info') {
+function showMessage(text, type = 'info', messageId = 'message') {
+  const messageDiv = document.getElementById(messageId);
   messageDiv.textContent = text;
   if (type === 'danger') {
     messageDiv.style.color = 'red';
