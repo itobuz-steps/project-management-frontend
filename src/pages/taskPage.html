@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task Card</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="bg-gray-900 flex items-center justify-center min-h-screen text-gray-100"
+  >
+    <div class="bg-gray-800 rounded-xl p-6 w-[400px] shadow-lg space-y-5">
+      
+      <h2 class="text-xl font-semibold">
+        Schedule Me An Appointment With My Endocrinologist
+      </h2>
+
+      
+      <div class="flex items-center space-x-3">
+        <img
+          src="https://i.pravatar.cc/40"
+          alt="Avatar"
+          class="w-8 h-8 rounded-full"
+        />
+        <div>
+          <p class="text-sm text-gray-400">Assignee</p>
+          <p class="text-gray-200 font-medium">Jenifer Anniston</p>
+        </div>
+      </div>
+
+      
+      <div>
+        <p class="text-sm text-gray-400 mb-1">Due Date</p>
+        <div class="flex items-center space-x-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5 text-gray-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              d="M8 7V3m8 4V3m-9 8h10m-11 8h12a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"
+            />
+          </svg>
+          <span class="text-gray-300">Jul 16 - 24</span>
+        </div>
+      </div>
+
+      
+      <div class="bg-gray-700 rounded-lg p-4 space-y-3">
+        <div class="flex justify-between items-center">
+          <span class="text-gray-400 text-sm">Status</span>
+          <span
+            class="bg-purple-500/20 text-purple-400 px-3 py-1 rounded-full text-sm font-medium"
+            >In Progress</span
+          >
+        </div>
+
+        <div class="flex justify-between items-center">
+          <span class="text-gray-400 text-sm">Priority</span>
+          <span
+            class="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-sm font-medium"
+            >Low</span
+          >
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
