@@ -53,14 +53,16 @@ async function handleSignup(event) {
 
     showMessage(
       'Registration successful! Please check your email for OTP.',
-      'success'
+      'success',
+      'signup-message'
     );
 
     setTimeout(() => {
       window.location.href = 'verifyOtpPage.html';
     }, 1000);
   } catch (error) {
-    showMessage(`${error.message}`, 'danger');
+    console.log(error.message);
+    showMessage(`${error.message}`, 'danger', 'signup-message');
     if (
       error.message.includes('Failed to fetch') ||
       error.message.includes('NetworkError')
@@ -69,7 +71,11 @@ async function handleSignup(event) {
         'Backend server is not running. Please start your backend server and try again.'
       );
     } else {
-      showMessage('Registration failed. Please try again.', 'danger');
+      showMessage(
+        'Registration failed. Please try again.',
+        'danger',
+        'signup-message'
+      );
     }
   } finally {
     signupBtn.textContent = originalText;
@@ -102,11 +108,12 @@ async function handleLogin(event) {
     showMessage('Login successful', 'success');
 
     setTimeout(() => {
-      window.location.href = './index.html';
+      window.location.href = 'index';
     }, 1000);
   } catch (error) {
     showMessage(
-      error.message || 'Login failed. Please check your credentials.',
+      error.response.data.message ||
+        'Login failed. Please check your credentials.',
       'danger'
     );
   } finally {
