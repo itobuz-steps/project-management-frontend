@@ -1,3 +1,5 @@
+//todo:-  update the throw err.response.data to throw new Error('Message')
+
 import axios from 'axios';
 const API_BASE_URL = 'http://localhost:3001/auth';
 
