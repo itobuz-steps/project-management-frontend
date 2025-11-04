@@ -64,8 +64,6 @@ async function handleResendOtp() {
   }
 }
 
-//const verifyButton = document.querySelector('.verify-button');
-
 if (verifyForm) {
   verifyForm.addEventListener('submit', handleOtpVerification);
 }
