@@ -49,12 +49,12 @@ class AuthService {
     }
   }
 
-  async forgetPasswordReset(email, otp, newPassword) {
+  async forgetPasswordReset(email, otp, password) {
     try {
       const response = await this.api.post(`/forgot-password`, {
         email,
         otp,
-        newPassword,
+        password,
       });
 
       return response;

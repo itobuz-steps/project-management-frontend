@@ -14,13 +14,13 @@ function showMessage(text, type = 'info') {
     messageDiv.style.color = 'crimson';
   }
 }
-  
+
 /**
  * @param {string} message
  * @param {string} type
  * @param {number} delay
  */
-export function showToast(message, type = 'info', delay = 2000) {
+function showToast(message, type = 'info', delay = 2000) {
   const container = document.getElementById('toastContainer');
   if (!container) {
     return;
@@ -53,7 +53,6 @@ export function showToast(message, type = 'info', delay = 2000) {
   toast.show();
 
   toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
-
 }
 
-export {showToast, showMessage};
+export { showToast, showMessage };
