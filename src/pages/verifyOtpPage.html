@@ -20,6 +20,7 @@
           <h1>Enter OTP</h1>
           <form class="verify-form">
             <input
+              id="otp-input"
               type="text"
               maxlength="6"
               placeholder="Enter OTP"
@@ -30,11 +31,13 @@
             <p id="message" class="text-center mt-3"></p>
             <button class="verify-button" type="submit">Verify</button>
             <p class="resend-otp">
-              Didn't receive the OTP? <a href="#">Resend OTP</a>
+              Didn't receive the OTP? <a href="" class="resend">Resend OTP</a>
             </p>
           </form>
         </div>
       </div>
     </div>
+
+    <script type="module" src="../js/pages/otpVerify/otpVerify.js"></script>
   </body>
 </html>
