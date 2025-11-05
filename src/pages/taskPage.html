@@ -3,69 +3,174 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Task Card</title>
+    <title>Task Drawer with Gaps</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
   </head>
+
   <body
-    class="bg-gray-900 flex items-center justify-center min-h-screen text-gray-100"
+    class="bg-gray-50 flex flex-col items-center justify-center min-h-screen"
   >
-    <div class="bg-gray-800 rounded-xl p-6 w-[400px] shadow-lg space-y-5">
-      
-      <h2 class="text-xl font-semibold">
-        Schedule Me An Appointment With My Endocrinologist
-      </h2>
+    <button
+      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-4 focus:outline-none"
+      type="button"
+      data-drawer-target="task-drawer"
+      data-drawer-show="task-drawer"
+      data-drawer-placement="right"
+      aria-controls="task-drawer"
+    >
+      Show Task Drawer
+    </button>
 
-      
-      <div class="flex items-center space-x-3">
-        <img
-          src="https://i.pravatar.cc/40"
-          alt="Avatar"
-          class="w-8 h-8 rounded-full"
-        />
-        <div>
-          <p class="text-sm text-gray-400">Assignee</p>
-          <p class="text-gray-200 font-medium">Jenifer Anniston</p>
-        </div>
-      </div>
-
-      
-      <div>
-        <p class="text-sm text-gray-400 mb-1">Due Date</p>
-        <div class="flex items-center space-x-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="w-5 h-5 text-gray-400"
-            fill="none"
-            viewBox="0 0 24 24"
+    <div
+      id="task-drawer"
+      class="fixed top-0 right-0 z-40 h-screen overflow-y-auto transition-transform translate-x-full bg-white w-[320px]"
+      tabindex="-1"
+      aria-labelledby="task-drawer-label"
+    >
+      <button
+        type="button"
+        data-drawer-hide="task-drawer"
+        aria-controls="task-drawer"
+        class="absolute top-3 right-3 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex items-center justify-center"
+      >
+        <svg
+          class="w-3 h-3"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 14 14"
+        >
+          <path
             stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              d="M8 7V3m8 4V3m-9 8h10m-11 8h12a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"
-            />
-          </svg>
-          <span class="text-gray-300">Jul 16 - 24</span>
-        </div>
-      </div>
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+          />
+        </svg>
+        <span class="sr-only">Close</span>
+      </button>
 
-      
-      <div class="bg-gray-700 rounded-lg p-4 space-y-3">
-        <div class="flex justify-between items-center">
-          <span class="text-gray-400 text-sm">Status</span>
-          <span
-            class="bg-purple-500/20 text-purple-400 px-3 py-1 rounded-full text-sm font-medium"
-            >In Progress</span
-          >
+      <div class="mt-8 bg-white shadow-lg p-6 flex flex-col gap-5">
+        <h2 class="text-xl font-semibold">
+          Schedule Me An Appointment With My Endocrinologist
+        </h2>
+
+        <div class="flex items-center gap-3">
+          <img
+            src="https://i.pravatar.cc/40"
+            alt="Avatar"
+            class="w-8 h-8 rounded-full"
+          />
+          <div class="flex flex-col leading-tight">
+            <p class="text-sm text-gray-500">Assignee</p>
+            <p class="text-gray-700 font-medium">Jenifer Anniston</p>
+          </div>
         </div>
 
-        <div class="flex justify-between items-center">
-          <span class="text-gray-400 text-sm">Priority</span>
-          <span
-            class="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-sm font-medium"
-            >Low</span
+        <div class="flex flex-col gap-1">
+          <p class="text-sm text-gray-500">Due Date</p>
+          <div class="flex items-center gap-2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-5 h-5 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M8 7V3m8 4V3m-9 8h10m-11 8h12a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"
+              />
+            </svg>
+            <span class="text-gray-600">Jul 16 - 24</span>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-3">
+          <div class="text-gray-700 text-md font-semibold">Projects</div>
+
+          <div class="rounded-lg p-2 flex flex-col gap-3">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-500 text-sm">Status</span>
+              <select
+                id="statusSelect"
+                class="appearance-none bg-purple-500/20 text-purple-500 px-3 py-1 rounded-full text-sm font-medium focus:outline-none cursor-pointer"
+              >
+                <option value="todo" class="text-gray-500">To Do</option>
+                <option value="inprogress" selected class="text-purple-500">
+                  In Progress
+                </option>
+                <option value="done" class="text-green-500">Done</option>
+              </select>
+            </div>
+
+            <div class="flex justify-between items-center">
+              <span class="text-gray-500 text-sm">Priority</span>
+              <select
+                id="prioritySelect"
+                class="appearance-none bg-green-500/20 text-green-500 px-3 py-1 rounded-full text-sm font-medium focus:outline-none cursor-pointer"
+              >
+                <option value="high" class="text-red-500">High</option>
+                <option value="medium" class="text-yellow-500">Medium</option>
+                <option value="low" selected class="text-green-500">Low</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <div class="text-gray-700 text-md font-semibold">Description</div>
+          <div
+            class="border-2 rounded-2xl p-3 text-sm text-gray-600 overflow-y-scroll"
           >
+            <p>
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nobis
+              quidem eius repellat similique blanditiis sed laudantium.
+              Laboriosam iusto animi exercitationem est vel. Esse alias et
+              laudantium expedita qui nobis eos. Voluptatibus natus enim nam quo
+              possimus est illo eaque? Enim tempore ullam facere, magni quasi
+              sit labore cum nobis nam quidem optio deserunt ut et architecto
+              nesciunt ratione fugit non. Perspiciatis perferendis mollitia
+              inventore recusandae deleniti eos facilis vero dolore quo aperiam
+              aut vel libero, suscipit sapiente minus quasi autem, similique,
+              quas ipsum magni consequuntur id facere quaerat nostrum. Aperiam.
+              Error ab iure magni modi tempora, expedita consequuntur nobis,
+              sunt ad, harum iusto? Recusandae, explicabo commodi quas quidem
+              voluptas maxime, animi reiciendis culpa eum accusantium nam iste
+              eligendi sapiente amet. Sunt iste fugit nesciunt unde pariatur
+              doloremque rerum? Voluptates, sapiente reprehenderit ab maxime
+              vero porro tempora nihil. Numquam placeat amet aspernatur,
+              consequatur, expedita rerum veniam iure a consectetur soluta
+              voluptatum. Id ratione veniam excepturi quae, at esse numquam
+              consectetur, accusamus alias tempore vero quas, libero amet quidem
+              voluptates aspernatur ea minima in odit ex odio distinctio maxime
+              possimus labore? Consequatur. Qui iste ipsam, aut, dicta cumque
+              dignissimos debitis, maiores maxime nulla placeat quas? Expedita
+              quae et aliquam molestiae! Animi praesentium ratione nemo
+              cupiditate distinctio, cum reprehenderit reiciendis voluptates
+              ullam asperiores? Dignissimos ad nesciunt, officia tenetur
+              sapiente delectus, cum non officiis aspernatur aperiam, excepturi
+              tempore sequi? Ratione rerum natus dolore delectus obcaecati
+              veritatis, ipsam labore amet magnam aliquid tempore eius autem.
+              Adipisci dolores explicabo tempora blanditiis. Id consequatur vero
+              sequi nemo harum temporibus aperiam optio cumque non sed
+              voluptatibus fugiat assumenda, quas aspernatur tempora doloribus
+              quasi perspiciatis ullam rerum aliquid numquam. Et vel nulla
+              doloremque recusandae quo laborum eum labore placeat totam animi
+              deserunt consectetur tenetur aut alias mollitia delectus officiis
+              distinctio asperiores exercitationem tempora est, maxime
+              voluptates. Ab, nisi aperiam!
+            </p>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-2 bg-gray-50 border rounded-xl p-3">
+          <div class="font-semibold">Comments</div>
+          <div class="text-gray-500 text-sm">No comments yet.</div>
         </div>
       </div>
     </div>
