@@ -12,7 +12,7 @@
     class="bg-gray-50 flex flex-col items-center justify-center min-h-screen"
   >
     <button
-      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-4 focus:outline-none"
+      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-md px-5 py-2.5 mb-4 focus:outline-none"
       type="button"
       data-drawer-target="task-drawer"
       data-drawer-show="task-drawer"
@@ -32,7 +32,7 @@
         type="button"
         data-drawer-hide="task-drawer"
         aria-controls="task-drawer"
-        class="absolute top-3 right-3 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex items-center justify-center"
+        class="absolute top-3 right-3 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-md w-8 h-8 inline-flex items-center justify-center"
       >
         <svg
           class="w-3 h-3"
@@ -64,13 +64,13 @@
             class="w-8 h-8 rounded-full"
           />
           <div class="flex flex-col leading-tight">
-            <p class="text-sm text-gray-500">Assignee</p>
+            <p class="text- md text-gray-500">Assignee</p>
             <p class="text-gray-700 font-medium">Jenifer Anniston</p>
           </div>
         </div>
 
         <div class="flex flex-col gap-1">
-          <p class="text-sm text-gray-500">Due Date</p>
+          <p class="text-md text-gray-500">Due Date</p>
           <div class="flex items-center gap-2">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -95,10 +95,10 @@
 
           <div class="rounded-lg p-2 flex flex-col gap-3">
             <div class="flex justify-between items-center">
-              <span class="text-gray-500 text-sm">Status</span>
+              <span class="text-gray-500 text-md">Status</span>
               <select
                 id="statusSelect"
-                class="appearance-none bg-purple-500/20 text-purple-500 px-3 py-1 rounded-full text-sm font-medium focus:outline-none cursor-pointer"
+                class="appearance-none bg-purple-500/20 text-purple-500 px-3 py-1 rounded-full text-md font-medium focus:outline-none cursor-pointer"
               >
                 <option value="todo" class="text-gray-500">To Do</option>
                 <option value="inprogress" selected class="text-purple-500">
@@ -109,10 +109,10 @@
             </div>
 
             <div class="flex justify-between items-center">
-              <span class="text-gray-500 text-sm">Priority</span>
+              <span class="text-gray-500 text-md">Priority</span>
               <select
                 id="prioritySelect"
-                class="appearance-none bg-green-500/20 text-green-500 px-3 py-1 rounded-full text-sm font-medium focus:outline-none cursor-pointer"
+                class="appearance-none bg-green-500/20 text-green-500 px-3 py-1 rounded-full text-md font-medium focus:outline-none cursor-pointer"
               >
                 <option value="high" class="text-red-500">High</option>
                 <option value="medium" class="text-yellow-500">Medium</option>
@@ -122,10 +122,16 @@
           </div>
         </div>
 
-        <div class="flex flex-col gap-2">
-          <div class="text-gray-700 text-md font-semibold">Description</div>
+        <div id="description" class="flex flex-col gap-2">
           <div
-            class="border-2 rounded-2xl p-3 text-sm text-gray-600 overflow-y-scroll"
+            id="descriptionHeader"
+            class="text-gray-700 text-md font-semibold"
+          >
+            Description
+          </div>
+          <div
+            id="descritionText"
+            class="border-2 rounded-xl p-3 text-gray-600 overflow-auto max-h-60"
           >
             <p>
               Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nobis
@@ -168,9 +174,35 @@
           </div>
         </div>
 
-        <div class="flex flex-col gap-2 bg-gray-50 border rounded-xl p-3">
-          <div class="font-semibold">Comments</div>
-          <div class="text-gray-500 text-sm">No comments yet.</div>
+        <div
+          id="commentsContainer"
+          class="flex flex-col gap-3 bg-gray-50 border rounded-xl"
+        >
+          <div id="commentContainerHeaderText" class="font-semibold">
+            Comments
+          </div>
+
+          <div
+            id="commentImage"
+            class="flex gap-3 items-start bg-white rounded-lg shadow-md"
+          >
+            <img
+              src="https://i.pravatar.cc/40?u=johnsmith"
+              alt="Avatar"
+              class="w-7 h-7 rounded-full"
+            />
+            <div id="CommentInformation" class="flex flex-col gap-1">
+              <div class="flex items-center gap-2 text-md text-gray-500">
+                <span id="" class="font-medium text-gray-700">John Smith</span>
+                <span>•</span>
+                <span class="text-sm">17th Feb 2024</span>
+              </div>
+              <p class="text-gray-700 text-sm">
+                Hi ,I’ll do that task now, you can start working on another
+                task!
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
