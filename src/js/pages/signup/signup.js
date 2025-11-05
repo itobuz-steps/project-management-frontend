@@ -1,4 +1,3 @@
-import '../../../scss/signup.scss';
 import authService from '../../services/AuthService.js';
 import { showMessage, showToast } from '../../utils/showMessage.js';
 
@@ -13,22 +12,57 @@ const passwordInput = document.getElementById('password');
 const signupBtn = document.querySelector('.signup-button');
 const signupForm = document.querySelector('.signup-form');
 
-loginFormContainer.classList.add('active-form');
+loginFormContainer.classList.remove('hidden');
+signUpFormContainer.classList.add('hidden');
+
+activateLoginTab();
+
+function activateLoginTab() {
+  loginTab.classList.add('bg-[#8c91ff]', 'text-white', 'shadow-md');
+  loginTab.classList.remove(
+    'bg-[#eef0f7]',
+    'text-[#2b2d42]',
+    'hover:bg-white',
+    'hover:text-[#8c91ff]'
+  );
+
+  signUpTab.classList.remove('bg-[#8c91ff]', 'text-white', 'shadow-md');
+  signUpTab.classList.add(
+    'bg-[#eef0f7]',
+    'text-[#2b2d42]',
+    'hover:bg-white',
+    'hover:text-[#8c91ff]'
+  );
+}
+
+function activateSignUpTab() {
+  signUpTab.classList.add('bg-[#8c91ff]', 'text-white', 'shadow-md');
+  signUpTab.classList.remove(
+    'bg-[#eef0f7]',
+    'text-[#2b2d42]',
+    'hover:bg-white',
+    'hover:text-[#8c91ff]'
+  );
+
+  loginTab.classList.remove('bg-[#8c91ff]', 'text-white', 'shadow-md');
+  loginTab.classList.add(
+    'bg-[#eef0f7]',
+    'text-[#2b2d42]',
+    'hover:bg-white',
+    'hover:text-[#8c91ff]'
+  );
+}
 
 function switchToSignUp() {
-  signUpTab.classList.add('active');
-  loginTab.classList.remove('active');
-
-  signUpFormContainer.classList.add('active-form');
-  loginFormContainer.classList.remove('active-form');
+  signUpFormContainer.classList.remove('hidden');
+  loginFormContainer.classList.add('hidden');
+  activateSignUpTab();
 }
 
 function switchToLogin() {
-  loginTab.classList.add('active');
-  signUpTab.classList.remove('active');
-
-  loginFormContainer.classList.add('active-form');
-  signUpFormContainer.classList.remove('active-form');
+  loginFormContainer.classList.remove('hidden');
+  signUpFormContainer.classList.add('hidden');
+  activateLoginTab();
 }
 
 signUpTab.addEventListener('click', switchToSignUp);
@@ -89,7 +123,6 @@ async function handleLogin(event) {
 
   try {
     await authService.login(email, password);
-
     showToast('Login successful', 'success');
 
     setTimeout(() => {
@@ -97,7 +130,7 @@ async function handleLogin(event) {
     }, 2000);
   } catch (error) {
     showMessage(
-      error.response.data.message ||
+      error.response?.data?.message ||
         'Login failed. Please check your credentials.',
       'danger'
     );
