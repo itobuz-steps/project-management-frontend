@@ -55,7 +55,7 @@
     <div class="sidebar d-none"></div>
     <div class="main p-4 flex gap-4 flex-col">
       <div class="project-info flex gap-2 items-center">
-        <div class="project-name text-2xl">Project Name</div>
+        <div class="project-name text-2xl font-semibold">Project Name</div>
         <div class="dropdown-icon">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -75,26 +75,26 @@
       </div>
 
       <ul
-        class="tabs list-none grid grid-cols-3 w-full border-b border-b-gray-200"
+        class="tabs list-none grid grid-cols-3 w-full border-b border-b-gray-200 text-gray-500"
       >
         <li
-          class="text-center border-b border-b-transparent hover:border-b-black pb-2"
+          class="text-center border-b border-b-transparent hover:border-b-black pb-2 hover:text-black"
         >
           Backlog
         </li>
         <li
-          class="text-center border-b border-b-transparent hover:border-b-black pb-2"
+          class="text-center border-b border-b-transparent hover:border-b-black pb-2 hover:text-black"
         >
           Board
         </li>
         <li
-          class="text-center border-b border-b-transparent hover:border-b-black pb-2"
+          class="text-center border-b border-b-transparent hover:border-b-black pb-2 hover:text-black"
         >
           List
         </li>
       </ul>
-      <div class="form-container border p-2 rounded">
-        <h1 class="flex gap-2">
+      <div class="form-container border border-gray-300 p-2 rounded">
+        <h3 class="flex gap-2">
           <div class="plus-icon">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -128,10 +128,58 @@
               />
             </svg>
           </div>
-        </h1>
+        </h3>
         <form action="" class="create-task-form"></form>
       </div>
-      <div class="content"></div>
+      <div class="content">
+        <div class="task-list flex gap-3 flex-col text-slate-700">
+          <h3 class="font-bold mb-2">TASKS</h3>
+          <div
+            class="task border border-gray-300 rounded p-3 flex flex-col gap-2"
+          >
+            <div class="title font-medium">Create frontend wireframe</div>
+            <div class="flex justify-start gap-2">
+              <span
+                class="status bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-sm font-medium"
+                >In Progress</span
+              >
+              <span
+                class="priority bg-green-500/20 text-green-400 px-2 py-1 rounded text-sm font-medium"
+                >Low</span
+              >
+              <div class="asignee flex items-center space-x-3 ml-auto">
+                <img
+                  src="https://i.pravatar.cc/40"
+                  alt="Avatar"
+                  class="w-8 h-8 rounded-full"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="task border border-gray-300 rounded p-3 flex flex-col gap-2"
+          >
+            <div class="title font-medium">Create frontend wireframe</div>
+            <div class="flex justify-start gap-2">
+              <span
+                class="status bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-sm font-medium"
+                >In Progress</span
+              >
+              <span
+                class="priority bg-green-500/20 text-green-400 px-2 py-1 rounded text-sm font-medium"
+                >Low</span
+              >
+              <div class="asignee flex items-center space-x-3 ml-auto">
+                <img
+                  src="https://i.pravatar.cc/40"
+                  alt="Avatar"
+                  class="w-8 h-8 rounded-full"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="aside"></div>
   </body>
