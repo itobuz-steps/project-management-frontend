@@ -28,7 +28,7 @@ async function handleOtpVerification(event) {
     showMessage('OTP verified successfully! Redirecting...', 'success');
 
     setTimeout(() => {
-      window.location.href = 'index';
+      window.location.href = 'dashboard';
     }, 1000);
   } catch (error) {
     showMessage(
