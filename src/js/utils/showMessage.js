@@ -50,12 +50,17 @@ function showToast(message, type = 'info', delay = 2000) {
   toastEl.setAttribute('aria-live', 'assertive');
   toastEl.setAttribute('aria-atomic', 'true');
 
-  toastEl.innerHTML = `
-    <div class="d-flex">
-      <div class="toast-body">${message}</div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-    </div>
-  `;
+  // toastEl.innerHTML = `
+  //   <div class="d-flex">
+  //     <div class="toast-body">${message}</div>
+  //     <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+  //   </div>
+  // `;
+
+  toastEl.innerHTML = `<div id="toast-simple" class="mb-7 flex items-center w-full max-w-xs p-4 space-x-4 rtl:space-x-reverse text-gray-500 bg-white divide-x rtl:divide-x-reverse divide-gray-200 rounded-lg shadow-sm" role="alert">
+  
+    <div class="ps-4 text-sm font-normal">${message}</div>
+</div>`;
 
   container.appendChild(toastEl);
 
