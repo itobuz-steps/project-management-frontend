@@ -172,53 +172,6 @@
         <form action="" class="create-task-form"></form>
       </div>
       <div class="content">
-        <div class="task-list hidden flex gap-3 flex-col text-slate-700">
-          <h3 class="font-bold mb-2">TASKS</h3>
-          <div
-            class="task border border-gray-300 rounded p-3 flex flex-col gap-2"
-          >
-            <div class="title font-medium">Create frontend wireframe</div>
-            <div class="flex justify-start gap-2">
-              <span
-                class="status bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-sm font-medium"
-                >In Progress</span
-              >
-              <span
-                class="priority bg-green-500/20 text-green-400 px-2 py-1 rounded text-sm font-medium"
-                >Low</span
-              >
-              <div class="asignee flex items-center space-x-3 ml-auto">
-                <img
-                  src="https://i.pravatar.cc/40"
-                  alt="Avatar"
-                  class="w-8 h-8 rounded-full"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="task border border-gray-300 rounded p-3 flex flex-col gap-2"
-          >
-            <div class="title font-medium">Create frontend wireframe</div>
-            <div class="flex justify-start gap-2">
-              <span
-                class="status bg-purple-500/20 text-purple-400 px-2 py-1 rounded text-sm font-medium"
-                >In Progress</span
-              >
-              <span
-                class="priority bg-green-500/20 text-green-400 px-2 py-1 rounded text-sm font-medium"
-                >Low</span
-              >
-              <div class="asignee flex items-center space-x-3 ml-auto">
-                <img
-                  src="https://i.pravatar.cc/40"
-                  alt="Avatar"
-                  class="w-8 h-8 rounded-full"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
         <div class="kanban-board w-full  bg-gray-100 p-4 overflow-x-auto overflow-y-hidden">
         <div class="flex space-x-4 min-w-max h-full">
@@ -373,68 +326,6 @@
     
   </div>
     <div class="aside"></div>
-
-
-
-    <script>
-      const toggleBtn = document.querySelector(".toggle-sidebar-btn");
-      const sidebar = document.querySelector("#sidebar");
-      const main = document.querySelector(".main");
-
-
-      toggleBtn?.addEventListener("click", () => {
-        sidebar.classList.toggle("-translate-x-full");
-        sidebar.classList.toggle("translate-x-0");
-        // main.classList.toggle("ml-64");
-      });
-
-
-      document.addEventListener("click", (e) => {
-        if (!sidebar.contains(e.target) && !toggleBtn?.contains(e.target)) {
-          sidebar.classList.add("-translate-x-full");
-          sidebar.classList.remove("translate-x-0");
-          main.classList.remove("ml-64");
-        }
-      });
-
-
-      const projectsMenu = document.getElementById("projectsMenu");
-      const dropdown = document.getElementById("projectsDropdown");
-
-
-      dropdown.classList.add("transition-all", "duration-300", "overflow-hidden", "max-h-0");
-
-
-      projectsMenu.addEventListener("click", (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-
-        const isOpen = dropdown.classList.contains("max-h-[500px]");
-
-        if (isOpen) {
-          
-          dropdown.classList.add("max-h-0");
-          dropdown.classList.remove("max-h-[500px]");
-          dropdown.classList.add("hidden"); 
-        } else {
-          
-          dropdown.classList.remove("hidden"); 
-          setTimeout(() => { 
-            dropdown.classList.remove("max-h-0");
-            dropdown.classList.add("max-h-[500px]");
-          }, 10);
-        }
-      });
-      document.addEventListener("click", (e) => {
-        if (!projectsMenu.contains(e.target)) {
-          dropdown.classList.remove("max-h-[500px]");
-          dropdown.classList.add("max-h-0");
-          dropdown.classList.add("hidden");
-        }
-      });
-
-
-</script>
 </body>
 </html>
 
