@@ -1,26 +1,142 @@
-<!-- this design is to add with js -->
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Task Card with Type Dropdown</title>
     <script
       type="module"
       src="../js/pages/taskcCard.js/taskCard.js"
       defer
     ></script>
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body>
-    <div class="task border-2 p-3 rounded-2 bg-gray-100">
-      <div class="task-title">Hey this is task 1</div>
-      <div class="edit-task">svg</div>
-      <div class="options">...</div>
-      <div class="asignee">
-        <img src="" alt="" />
+  <body class="bg-gray-100 p-10">
+    <div
+      class="task flex flex-col max-w-sm border-2 p-4 bg-white text-black gap-4 relative"
+    >
+      <div class="card-header flex justify-between items-center">
+        <p class="text-lg font-medium">Task 1</p>
+
+        <!-- Menu -->
+        <div class="relative">
+          <button id="menuButton" class="outline-none">
+            <svg
+              width="18px"
+              height="18px"
+              viewBox="0 0 16 16"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="#00000"
+              class="bi bi-three-dots mr-2"
+            >
+              <path
+                d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"
+              />
+            </svg>
+          </button>
+
+          <div
+            id="dropdownMenu"
+            class="hidden absolute right-0 w-32 bg-white border border-gray-200 rounded shadow-lg z-10"
+          >
+            <ul class="text-sm text-gray-700">
+              <li>
+                <button
+                  class="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                  id="editBtn"
+                >
+                  Edit
+                </button>
+              </li>
+              <li>
+                <button
+                  class="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                  id="deleteBtn"
+                >
+                  Delete
+                </button>
+              </li>
+              <li>
+                <button
+                  class="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                  id="moveBtn"
+                >
+                  Move To
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
-      <div class="task-id"></div>
-      <div class="story-points"></div>
+
+      <div
+        class="card-footer flex justify-between items-center text-sm text-gray-400"
+      >
+        <div class="flex items-center gap-2">
+          <span
+            id="typeTag"
+            class="bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm"
+            >PM-37</span
+          >
+
+          <select
+            id="typeSelector"
+            class="text-sm border border-gray-300 rounded px-1 py-1 focus:outline-none"
+          >
+            <option value="story" selected>Story</option>
+            <option value="task">Task</option>
+          </select>
+        </div>
+
+        <!-- Avatar -->
+        <div class="flex items-center">
+          <span
+            class="w-8 h-8 text-white font-semibold rounded-full bg-blue-500 flex items-center justify-center"
+            >SB</span
+          >
+        </div>
+      </div>
     </div>
+
+    <script>
+      const menuButton = document.getElementById('menuButton');
+      const dropdownMenu = document.getElementById('dropdownMenu');
+
+      menuButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('hidden');
+      });
+
+      document.addEventListener('click', () => {
+        dropdownMenu.classList.add('hidden');
+      });
+
+      document.getElementById('editBtn').addEventListener('click', () => {
+        dropdownMenu.classList.add('hidden');
+      });
+      document.getElementById('deleteBtn').addEventListener('click', () => {
+        dropdownMenu.classList.add('hidden');
+      });
+      document.getElementById('moveBtn').addEventListener('click', () => {
+        dropdownMenu.classList.add('hidden');
+      });
+
+      const typeTag = document.getElementById('typeTag');
+      const typeSelector = document.getElementById('typeSelector');
+
+      typeSelector.addEventListener('change', (e) => {
+        const value = e.target.value;
+
+        if (value === 'task') {
+          typeTag.className =
+            'bg-blue-600 text-white text-xs font-semibold py-1 px-2 rounded-sm';
+          typeTag.textContent = 'TASK';
+        } else {
+          typeTag.className =
+            'bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm';
+          typeTag.textContent = 'STORY';
+        }
+      });
+    </script>
   </body>
 </html>
