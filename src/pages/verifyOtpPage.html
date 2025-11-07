@@ -3,35 +3,66 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-
     <title>Verify OTP</title>
-    <link rel="stylesheet" href="../scss/verifyOtp.scss" />
+    <script type="module" src="../js/main.js" defer></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bitcount+Grid+Double+Ink:wght@100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+      rel="stylesheet"
+    />
   </head>
-  <body>
-    <div class="container">
-      <div class="text-box">
-        <div class="content-holder">
-          <h2>Verify OTP</h2>
-          <p>Please enter the OTP sent to your email to continue.</p>
+  <body
+    class="w-screen h-screen flex items-center justify-center bg-[#f5f6fa] font-[Orbitron,Arial,Helvetica,sans-serif] min-h-[100vh]"
+  >
+    <div
+      class="container h-full grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-5 bg-gradient-to-b from-[#eef0f7] to-[#f5f6fa]"
+    >
+      <div class="test-box p-5 flex items-center justify-center">
+        <div class="text-center text-[#2b2d42] content-holder">
+          <h2 class="text-[60px] mb-5 text-[#8c91ff]">Verify OTP</h2>
+          <p class="text-2xl text-[#4f4f6f] drop-shadow-[0_0_3px_#8c91ff]">
+            Please enter the OTP sent to your email to continue.
+          </p>
         </div>
       </div>
-      <div class="form-box">
-        <div class="verify-form-container active-form">
-          <h1>Enter OTP</h1>
-          <form class="verify-form">
+
+      <div
+        class="form-box p-5 bg-white rounded-xl flex flex-col justify-center items-center shadow-[0_8px_20px_rgba(140,145,255,0.15),_inset_0_0_10px_rgba(140,145,255,0.05)]"
+      >
+        <div
+          class="verify-form-container active-form w-full max-w-md text-center p-5 box-border"
+        >
+          <h1
+            class="text-[45px] text-[#2b2d42] mb-8 drop-shadow-[0_0_3px_#8c91ff]"
+          >
+            Enter OTP
+          </h1>
+
+          <form class="verify-form flex flex-col items-center space-y-4">
             <input
               id="otp-input"
               type="text"
               maxlength="6"
               placeholder="Enter OTP"
-              class="input-field"
               required
+              class="text-sm p-3 rounded-lg border border-[#d1d4e0] min-w-[250px] max-w-[250px] w-full outline-none bg-[#f5f6fa] text-[#2b2d42] text-center tracking-widest focus:border-[#8c91ff] focus:shadow-[0_0_3px_#8c91ff] transition-all duration-300"
             />
-            <br />
-            <p id="message" class="text-center mt-3"></p>
-            <button class="verify-button" type="submit">Verify</button>
-            <p class="resend-otp">
-              Didn't receive the OTP? <a href="" class="resend">Resend OTP</a>
+
+            <p id="message" class="text-center"></p>
+
+            <button
+              type="submit"
+              class="verify-button text-[16px] p-3 mt-5 rounded-lg w-[80%] max-w-[250px] bg-[#8c91ff] text-white cursor-pointer transition-all duration-300 hover:bg-[#a3a6ff] hover:shadow-[0_0_5px_#a3a6ff,0_0_5px_#8c91ff] border-none"
+            >
+              Verify
+            </button>
+
+            <p class="mt-4 text-sm">
+              Didn't receive the OTP?
+              <a
+                href=""
+                class="resend text-[#8c91ff] hover:text-[#a3a6ff] hover:underline transition-colors duration-300"
+                >Resend OTP</a
+              >
             </p>
           </form>
         </div>
