@@ -1,9 +1,13 @@
 import TaskService from "../services/TaskService.js";
+import AuthService from "../services/AuthService.js";
 
 const listTableBody = document.getElementById('table-body');
 
-export function createTaskList(task) {
+export async function createTaskList(task) {
   const tr = document.createElement("tr");
+
+  const reporter = await AuthService.getUserDetailsById(task.reporter).name;
+
   tr.classList = "bg-white border-b border-gray-500 hover:bg-gray-100 whitespace-nowrap";
   tr.dataset.id = task._id;
   tr.innerHTML = `
@@ -60,10 +64,10 @@ export function createTaskList(task) {
                       <td class="px-6 py-4">${task.sprint}</td>
                       <td class="px-6 py-4">${task.assignee}</td>
                       <td class="px-6 py-4">${task.dueDate}</td>
-                      <td class="px-6 py-4">${task.labels}</td>
+                      <td class="px-6 py-4">${task.tags.join(" ")}</td>
                       <td class="px-6 py-4">${task.createdAt}</td>
                       <td class="px-6 py-4">${task.updatedAt}</td>
-                      <td class="px-6 py-4">${task.reporter}</td>
+                      <td class="px-6 py-4">${reporter}</td>
   `;
   return tr;
 }
