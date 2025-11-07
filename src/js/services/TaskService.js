@@ -39,8 +39,8 @@ class TaskService {
           originalRequest._retry = true;
 
           try {
-            const response = await this.api.get(
-              '/refresh-token',
+            const response = await axios.get(
+              'http://localhost:3001/auth/refresh-token',
               {
                 headers: {
                   Authorization:

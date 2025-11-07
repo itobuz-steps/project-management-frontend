@@ -1,4 +1,5 @@
 import '../../../scss/main.css';
+import { renderTasks } from '../../utils/renderTasks.js';
 
 const toggleBtn = document.querySelector(".toggle-sidebar-btn");
 const sidebar = document.querySelector("#sidebar");
@@ -85,3 +86,5 @@ dropdownButtonBacklog.addEventListener('click', function () {
     dropdownIconBacklog.classList.add('rotate-270');
   }
 });
+
+renderTasks();
