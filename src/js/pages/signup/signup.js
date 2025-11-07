@@ -1,5 +1,5 @@
 import authService from '../../services/AuthService.js';
-import { showMessage } from '../../utils/showMessage.js';
+import { showMessage, showToast } from '../../utils/showMessage.js';
 
 const signUpTab = document.querySelector('.sign-up');
 const loginTab = document.querySelector('.login');
@@ -123,7 +123,7 @@ async function handleLogin(event) {
 
   try {
     await authService.login(email, password);
-    showMessage('Login successful', 'success');
+    showToast('Login successful', 'success');
 
     setTimeout(() => {
       window.location.href = 'dashboard';
