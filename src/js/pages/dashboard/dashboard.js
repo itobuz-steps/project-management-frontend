@@ -1,6 +1,6 @@
 import '../../../scss/main.css';
-
 import projectService from '../../services/ProjectService';
+import taskService from '../../services/TaskService';
 
 const toggleBtn = document.querySelector('.toggle-sidebar-btn');
 const sidebar = document.querySelector('#sidebar');
@@ -47,6 +47,7 @@ projectsMenu.addEventListener('click', (e) => {
     }, 10);
   }
 });
+
 document.addEventListener('click', (e) => {
   if (!projectsMenu.contains(e.target)) {
     dropdown.classList.remove('max-h-[500px]');
@@ -56,35 +57,27 @@ document.addEventListener('click', (e) => {
 });
 
 const dropdownButtonSprint = document.getElementById('dropdownButtonForSprint');
-dropdownButtonSprint.addEventListener('click', function () {
+dropdownButtonSprint?.addEventListener('click', function () {
   const dropdownMenu = document.querySelector('.dropdown-menu-sprint');
   dropdownMenu.classList.toggle('hidden');
+});
+
+const dropdownIconSprint = document.getElementById('dropdown-icon-sprint');
+dropdownButtonSprint?.addEventListener('click', function () {
+  dropdownIconSprint.classList.toggle('rotate-270');
 });
 
 const dropdownButtonBacklog = document.getElementById(
   'dropdownButtonForBacklog'
 );
-dropdownButtonBacklog.addEventListener('click', function () {
+dropdownButtonBacklog?.addEventListener('click', function () {
   const dropdownMenu = document.querySelector('.dropdown-menu-backlog');
   dropdownMenu.classList.toggle('hidden');
 });
 
-const dropdownIconSprint = document.getElementById('dropdown-icon-sprint');
-dropdownButtonSprint.addEventListener('click', function () {
-  if (dropdownIconSprint.classList.contains('rotate-270')) {
-    dropdownIconSprint.classList.remove('rotate-270');
-  } else {
-    dropdownIconSprint.classList.add('rotate-270');
-  }
-});
-
 const dropdownIconBacklog = document.getElementById('dropdown-icon-backlog');
-dropdownButtonBacklog.addEventListener('click', function () {
-  if (dropdownIconBacklog.classList.contains('rotate-270')) {
-    dropdownIconBacklog.classList.remove('rotate-270');
-  } else {
-    dropdownIconBacklog.classList.add('rotate-270');
-  }
+dropdownButtonBacklog?.addEventListener('click', function () {
+  dropdownIconBacklog.classList.toggle('rotate-270');
 });
 
 async function showProjectList() {
@@ -104,3 +97,71 @@ async function showProjectList() {
 }
 
 showProjectList();
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadTasksToKanban();
+});
+
+async function loadTasksToKanban() {
+  try {
+    const response = await taskService.getAllTasks();
+    const tasks = response.data;
+
+    const todoColumn = document.querySelector(
+      '.kanban-board .flex > div:nth-child(1) .space-y-3'
+    );
+    const inProgressColumn = document.querySelector(
+      '.kanban-board .flex > div:nth-child(2) .space-y-3'
+    );
+    const qaColumn = document.querySelector(
+      '.kanban-board .flex > div:nth-child(3) .space-y-3'
+    );
+    const doneColumn = document.querySelector(
+      '.kanban-board .flex > div:nth-child(4) .space-y-3'
+    );
+
+    todoColumn.innerHTML = '';
+    inProgressColumn.innerHTML = '';
+    qaColumn.innerHTML = '';
+    doneColumn.innerHTML = '';
+
+    tasks.forEach((task) => {
+      const card = createTaskCard(task);
+
+      switch (task.status?.toLowerCase()) {
+        case 'to do':
+        case 'todo':
+          todoColumn.appendChild(card);
+          break;
+        case 'in progress':
+          inProgressColumn.appendChild(card);
+          break;
+        case 'qa':
+          qaColumn.appendChild(card);
+          break;
+        case 'done':
+          doneColumn.appendChild(card);
+          break;
+        default:
+          console.warn(`Unknown task status: ${task.status}`);
+      }
+    });
+  } catch (err) {
+    console.error('Error loading tasks:', err.message || err);
+  }
+}
+
+function createTaskCard(task) {
+  const div = document.createElement('div');
+  div.className =
+    'p-3 bg-gray-50 rounded-md shadow-sm cursor-pointer hover:bg-gray-100 transition';
+  div.innerHTML = `
+    <h3 class="font-semibold text-sm">${task.title}</h3>
+    <p class="text-xs text-gray-500 mt-1">${task.description || ''}</p>
+    <div class="flex justify-between items-center mt-2 text-[11px] text-gray-400">
+      <span>${task.priority || 'Medium'}</span>
+      <span>${task.assignee || 'Unassigned'}</span>
+    </div>
+  `;
+  return div;
+}
