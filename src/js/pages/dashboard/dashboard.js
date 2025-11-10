@@ -87,8 +87,6 @@ dropdownButtonBacklog.addEventListener('click', function () {
   }
 });
 
-// project wala add
-
 async function showProjectList() {
   try {
     const projects = await projectService.getAllProjects();
