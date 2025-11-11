@@ -87,8 +87,39 @@ dropdownButtonBacklog.addEventListener('click', function () {
   }
 });
 
-async function callRenderTask() {
-  return await renderTasks();
+renderTasks();
+
+const backlogBtn = document.getElementById('backlog-li');
+const backlogView = document.getElementById('backlog-view');
+backlogBtn.addEventListener('click', () => {
+  removeActive(backlogBtn);
+  hideAll(backlogView);
+});
+
+const boardBtn = document.getElementById('board-li');
+const boardView = document.getElementById('board-view');
+boardBtn.addEventListener('click', () => {
+  removeActive(boardBtn);
+  hideAll(boardView);
+});
+
+const listBtn = document.getElementById('list-li');
+const listView = document.getElementById('list-view');
+listBtn.addEventListener('click', () => {
+  removeActive(listBtn);
+  hideAll(listView);
+});
+
+function removeActive(element) {
+  [...element.parentElement.children].forEach((child) => {
+    child.classList.remove('active');
+  });
+  element.classList.toggle('active');
 }
 
-callRenderTask();
+function hideAll(element) {
+  [...element.parentElement.children].forEach((child) => {
+    child.classList.add('hidden');
+  })
+  element.classList.remove('hidden');
+}

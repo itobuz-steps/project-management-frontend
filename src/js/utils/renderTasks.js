@@ -77,11 +77,13 @@ export async function renderTasks() {
   try {
     let tasksArray = [];
     const tasks = await TaskService.getAllTasks();
+    console.log(tasks);
     tasksArray.push(...tasks.data.result);
 
     if (!tasksArray.length) {
-      const emptyMessage = document.createElement("tr");
+      const emptyMessage = document.createElement("div");
       emptyMessage.textContent = "No tasks found!";
+      emptyMessage.className = 'text-center w-full flex justify-center';
       listTableBody.append(emptyMessage);
     } else {
       for (const task of tasksArray) {
