@@ -94,6 +94,16 @@ class TaskService {
     }
   }
 
+  async getUserDetailsById(userId) {
+    try {
+      const response = await this.api.get(`/user/${userId}`);
+
+      return response;
+    } catch (error) {
+      throw error.response.data;
+    }
+  }
+
   async createTask(task) {
     const formData = new FormData();
 

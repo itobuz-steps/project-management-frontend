@@ -87,4 +87,8 @@ dropdownButtonBacklog.addEventListener('click', function () {
   }
 });
 
-renderTasks();
+async function callRenderTask() {
+  return await renderTasks();
+}
+
+callRenderTask();

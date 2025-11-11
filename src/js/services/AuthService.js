@@ -22,16 +22,6 @@ class AuthService {
     }
   }
 
-  async getUserDetailsById(userId) {
-    try {
-      const response = await this.api.get(`/${userId}`);
-
-      return response;
-    } catch (error) {
-      throw error.response.data;
-    }
-  }
-
   async verify(email, otp) {
     try {
       const response = await this.api.post(`/verify`, { email, otp });
