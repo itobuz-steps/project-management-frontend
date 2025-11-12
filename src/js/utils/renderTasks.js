@@ -1,14 +1,15 @@
-import TaskService from "../services/TaskService.js";
+import TaskService from '../services/TaskService.js';
 
 const listTableBody = document.getElementById('table-body');
 
 export async function createTaskList(task) {
-  const tr = document.createElement("tr");
+  const tr = document.createElement('tr');
 
   const reporter = await TaskService.getUserDetailsById(task.reporter);
   const assignee = await TaskService.getUserDetailsById(task.assignee);
 
-  tr.classList = "bg-white border-b border-gray-500 hover:bg-gray-100 whitespace-nowrap";
+  tr.classList =
+    'bg-white border-b border-gray-500 hover:bg-gray-100 whitespace-nowrap';
   tr.dataset.id = task._id;
   tr.innerHTML = `
     <td class="w-4 p-4">
@@ -63,10 +64,10 @@ export async function createTaskList(task) {
                       <td class="px-6 py-4">${task.comments}</td>
                       <td class="px-6 py-4">${task.sprint}</td>
                       <td class="px-6 py-4">${assignee.data.user.name}</td>
-                      <td class="px-6 py-4">${task.dueDate.split("T")[0]}</td>
-                      <td class="px-6 py-4">${task.tags.join(" ")}</td>
-                      <td class="px-6 py-4">${task.createdAt.split("T")[0]}</td>
-                      <td class="px-6 py-4">${task.updatedAt.split("T")[0]}</td>
+                      <td class="px-6 py-4">${task.dueDate.split('T')[0]}</td>
+                      <td class="px-6 py-4">${task.tags.join(' ')}</td>
+                      <td class="px-6 py-4">${task.createdAt.split('T')[0]}</td>
+                      <td class="px-6 py-4">${task.updatedAt.split('T')[0]}</td>
                       <td class="px-6 py-4">${reporter.data.user.name}</td>
 
   `;
@@ -81,8 +82,8 @@ export async function renderTasks() {
     tasksArray.push(...tasks.data.result);
 
     if (!tasksArray.length) {
-      const emptyMessage = document.createElement("div");
-      emptyMessage.textContent = "No tasks found!";
+      const emptyMessage = document.createElement('div');
+      emptyMessage.textContent = 'No tasks found!';
       emptyMessage.className = 'text-center w-full flex justify-center';
       listTableBody.append(emptyMessage);
     } else {
@@ -91,7 +92,6 @@ export async function renderTasks() {
         listTableBody.append(tr);
       }
     }
-
   } catch (error) {
     console.error(error.message);
   }
