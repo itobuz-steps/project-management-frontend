@@ -2,6 +2,8 @@ import '../../../scss/main.css';
 
 const menuButton = document.getElementById('menuButton');
 const dropdownMenu = document.getElementById('dropdownMenu');
+const typeTag = document.getElementById('typeTag');
+const typeSelector = document.getElementById('typeSelector');
 
 menuButton.addEventListener('click', (e) => {
   e.stopPropagation();
@@ -21,9 +23,6 @@ document.getElementById('deleteBtn').addEventListener('click', () => {
 document.getElementById('moveBtn').addEventListener('click', () => {
   dropdownMenu.classList.add('hidden');
 });
-
-const typeTag = document.getElementById('typeTag');
-const typeSelector = document.getElementById('typeSelector');
 
 typeSelector.addEventListener('change', (e) => {
   const value = e.target.value;
