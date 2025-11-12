@@ -6,17 +6,18 @@ import projectService from '../../services/ProjectService';
 const toggleBtn = document.querySelector('.toggle-sidebar-btn');
 const sidebar = document.querySelector('#sidebar');
 const main = document.querySelector('.main');
+const body = document.querySelector('body');
 
-toggleBtn?.addEventListener('click', () => {
+toggleBtn.addEventListener('click', () => {
   sidebar.classList.toggle('-translate-x-full');
   sidebar.classList.toggle('translate-x-0');
+  body.classList.toggle('overflow-hidden');
 });
 
 document.addEventListener('click', (e) => {
   if (!sidebar.contains(e.target) && !toggleBtn?.contains(e.target)) {
     sidebar.classList.add('-translate-x-full');
     sidebar.classList.remove('translate-x-0');
-    main.classList.remove('ml-64');
   }
 });
 
@@ -145,6 +146,7 @@ function hideAll(element) {
   });
   element.classList.remove('hidden');
 }
+
 
 function checkIfToken() {
   if (!localStorage.getItem('access_token')) {
