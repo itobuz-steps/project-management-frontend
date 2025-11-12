@@ -95,7 +95,9 @@
           id="sidebar"
           class="fixed top-[56] left-0 w-64 h-[calc(100vh-56px)] bg-gray-50 shadow-md transform -translate-x-full transition-transform duration-300 z-40"
         >
-          <div class="h-full px-3 py-4 overflow-y-auto">
+          <div
+            class="h-full px-3 py-4 overflow-y-auto flex flex-col justify-between"
+          >
             <ul class="space-y-2 font-medium">
               <li>
                 <a
@@ -131,6 +133,14 @@
                 >
               </li>
             </ul>
+            <div class="py-5">
+              <a
+                href="#"
+                class="flex items-center p-2 text-red-600 rounded-lg hover:bg-red-100"
+                id="logout-btn"
+                >Logout</a
+              >
+            </div>
           </div>
         </aside>
       </div>

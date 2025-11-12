@@ -146,5 +146,18 @@ function hideAll(element) {
   element.classList.remove('hidden');
 }
 
+function checkIfToken() {
+  if (!localStorage.getItem('access_token')) {
+    window.location.href = 'signup';
+  }
+}
+
+const logoutBtn = document.getElementById('logout-btn');
+logoutBtn.addEventListener('click', () => {
+  localStorage.clear();
+  checkIfToken();
+});
+
+checkIfToken();
 showProjectList();
 renderTasks();
