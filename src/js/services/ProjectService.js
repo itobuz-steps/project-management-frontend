@@ -34,12 +34,15 @@ class ProjectService {
           originalRequest._retry = true;
 
           try {
-            const response = await this.api.get('/refresh-token', {
-              headers: {
-                Authorization:
-                  'Bearer ' + localStorage.getItem('refresh_token'),
-              },
-            });
+            const response = await axios.get(
+              'http://localhost:3001/auth/refresh-token',
+              {
+                headers: {
+                  Authorization:
+                    'Bearer ' + localStorage.getItem('refresh_token'),
+                },
+              }
+            );
 
             if (response) {
               localStorage.setItem('access_token', response.data.accessToken);
