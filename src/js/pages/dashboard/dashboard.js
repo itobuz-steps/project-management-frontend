@@ -1,7 +1,9 @@
 import '../../../scss/main.css';
 import { renderTasks } from '../../utils/renderTasks.js';
+import ProjectService from '../../services/ProjectService.js';
 
-import projectService from '../../services/ProjectService';
+// eslint-disable-next-line no-unused-vars
+// let selectedProject;
 
 const toggleBtn = document.querySelector('.toggle-sidebar-btn');
 const sidebar = document.querySelector('#sidebar');
@@ -91,7 +93,7 @@ dropdownButtonBacklog.addEventListener('click', function () {
 
 async function showProjectList() {
   try {
-    const projects = await projectService.getAllProjects();
+    const projects = await ProjectService.getAllProjects();
     const listContainer = document.getElementById('projectsDropdown');
     listContainer.innerHTML = '';
     console.log('projects: ', projects);
@@ -100,10 +102,15 @@ async function showProjectList() {
       listContainer.innerHTML = 'No project Found';
       listContainer.className = 'block p-2 text-gray-900 hover:bg-gray-100';
     } else {
-      projects.forEach((p) => {
+      projects.forEach((project) => {
         const item = document.createElement('li');
-        item.textContent = p.name;
-        item.className = 'block p-2 text-gray-900 hover:bg-gray-100';
+        console.log(project._id);
+        item.dataset.id = project._id;
+        item.textContent = project.name;
+        item.className = 'block p-2 text-gray-900 hover:bg-gray-100 rounded-lg [&.selected]:border [&.selected]:border-black-500 [&.selected]:bg-gray-400';
+        if (project._id === localStorage.getItem('selectedProject')) {
+          item.classList.toggle('selected');
+        }
         listContainer.appendChild(item);
       });
     }
@@ -160,6 +167,27 @@ logoutBtn.addEventListener('click', () => {
   checkIfToken();
 });
 
+const projectDropdownContainer = document.getElementById('projectsDropdown');
+projectDropdownContainer.addEventListener('click', (event) => {
+  const targetLi = event.target;
+  localStorage.setItem('selectedProject', targetLi.dataset.id);
+
+  [...targetLi.parentElement.children].forEach((child) => {
+    child.classList.remove('selected');
+  });
+
+  targetLi.classList.toggle('selected');
+  renderDashboard(localStorage.getItem('selectedProject'));
+});
+
+const projectName = document.getElementById('projectName');
+
+async function renderDashboard(projectId) {
+  const project = await ProjectService.getProjectById(projectId);
+  projectName.innerText = project.result[0].name;
+}
+
+renderDashboard(localStorage.getItem('selectedProject'));
 checkIfToken();
 showProjectList();
 renderTasks();

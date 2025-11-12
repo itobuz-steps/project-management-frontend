@@ -78,7 +78,6 @@ export async function renderTasks() {
   try {
     let tasksArray = [];
     const tasks = await TaskService.getAllTasks();
-    console.log(tasks);
     tasksArray.push(...tasks.data.result);
 
     if (!tasksArray.length) {
