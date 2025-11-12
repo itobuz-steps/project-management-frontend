@@ -1,9 +1,8 @@
-//todo:-  update the throw err.response.data to throw new Error('Message')
-
 import axios from 'axios';
-const API_BASE_URL = 'http://localhost:3001/tasks';
 
-class TaskService {
+const API_BASE_URL = 'http://localhost:3001/project';
+
+class ProjectService {
   api = axios.create({
     baseURL: API_BASE_URL,
   });
@@ -12,22 +11,18 @@ class TaskService {
     this.api.interceptors.request.use(
       function (config) {
         const token = localStorage.getItem('access_token');
-
         if (token) {
           config.headers['Authorization'] = `Bearer ${token}`;
         }
-
         return config;
       },
       function (error) {
-        console.log(error);
+        console.error(error);
       }
     );
 
     this.api.interceptors.response.use(
-      (response) => {
-        return response;
-      },
+      (response) => response,
       async (error) => {
         const originalRequest = error.config;
 
@@ -48,7 +43,6 @@ class TaskService {
                 },
               }
             );
-            console.log(response);          // to be removed 
 
             if (response) {
               localStorage.setItem('access_token', response.data.accessToken);
@@ -60,11 +54,10 @@ class TaskService {
 
               return this.api(originalRequest);
             }
-          } catch (error) {
-            console.log(error);
+          } catch (err) {
+            console.error(err);
             localStorage.removeItem('access_token');
             localStorage.removeItem('refresh_token');
-
             window.location.reload();
           }
         }
@@ -74,81 +67,61 @@ class TaskService {
     );
   }
 
-  async getAllTasks() {
+  async getAllProjects() {
     try {
       const response = await this.api.get(`/`);
-
-      return response;
+      return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw new Error(
+        error.response?.data?.message || 'Failed to fetch projects'
+      );
     }
   }
 
-  async getTaskById(id) {
+  async getProjectById(id) {
     try {
       const response = await this.api.get(`/${id}`);
-
-      return response;
+      return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw new Error(
+        error.response?.data?.message || 'Failed to fetch project'
+      );
     }
   }
 
-  async getUserDetailsById(userId) {
+  async createProject(project) {
     try {
-      const response = await this.api.get(`/user/${userId}`);
-
-      return response;
+      const response = await this.api.post(`/`, project);
+      return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw new Error(
+        error.response?.data?.message || 'Failed to create project'
+      );
     }
   }
 
-  async createTask(task) {
-    const formData = new FormData();
-
-    formData.append('projectId', task.projectId);
-    formData.append('title', task.title);
-    formData.append('description', task.description);
-    formData.append('type', task.type);
-    formData.append('key', task.key);
-    formData.append('status', task.status);
-    formData.append('priority', task.priority);
-    formData.append('tags', JSON.stringify(task.tags));
-    formData.append('dueDate', task.dueDate);
-    formData.append('reporter', task.reporter);
-    formData.append('assignee', task.assignee);
-
+  async updateProject(id, updatedProject) {
     try {
-      const response = await this.api.post(`/`, formData);
-
-      return response;
+      const response = await this.api.put(`/${id}`, updatedProject);
+      return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw new Error(
+        error.response?.data?.message || 'Failed to update project'
+      );
     }
   }
 
-  async updateTask(id, updatedTask) {
-    try {
-      const response = await this.api.put(`/${id}`, updatedTask);
-
-      return response;
-    } catch (error) {
-      throw error.response.data;
-    }
-  }
-
-  async deleteTask(id) {
+  async deleteProject(id) {
     try {
       const response = await this.api.delete(`/${id}`);
-
-      return response;
+      return response.data;
     } catch (error) {
-      throw error.response.data;
+      throw new Error(
+        error.response?.data?.message || 'Failed to delete project'
+      );
     }
   }
 }
 
-const taskService = new TaskService();
-
-export default taskService;
+const projectService = new ProjectService();
+export default projectService;
