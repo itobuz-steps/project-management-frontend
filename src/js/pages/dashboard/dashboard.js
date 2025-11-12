@@ -1,61 +1,60 @@
 import '../../../scss/main.css';
 import { renderTasks } from '../../utils/renderTasks.js';
 
-const toggleBtn = document.querySelector(".toggle-sidebar-btn");
-const sidebar = document.querySelector("#sidebar");
-const main = document.querySelector(".main");
+import projectService from '../../services/ProjectService';
 
+const toggleBtn = document.querySelector('.toggle-sidebar-btn');
+const sidebar = document.querySelector('#sidebar');
+const main = document.querySelector('.main');
 
-toggleBtn?.addEventListener("click", () => {
-  sidebar.classList.toggle("-translate-x-full");
-  sidebar.classList.toggle("translate-x-0");
+toggleBtn?.addEventListener('click', () => {
+  sidebar.classList.toggle('-translate-x-full');
+  sidebar.classList.toggle('translate-x-0');
 });
 
-
-document.addEventListener("click", (e) => {
+document.addEventListener('click', (e) => {
   if (!sidebar.contains(e.target) && !toggleBtn?.contains(e.target)) {
-    sidebar.classList.add("-translate-x-full");
-    sidebar.classList.remove("translate-x-0");
-    main.classList.remove("ml-64");
+    sidebar.classList.add('-translate-x-full');
+    sidebar.classList.remove('translate-x-0');
+    main.classList.remove('ml-64');
   }
 });
 
+const projectsMenu = document.getElementById('projectsMenu');
+const dropdown = document.getElementById('projectsDropdown');
 
-const projectsMenu = document.getElementById("projectsMenu");
-const dropdown = document.getElementById("projectsDropdown");
+dropdown.classList.add(
+  'transition-all',
+  'duration-300',
+  'overflow-hidden',
+  'max-h-0'
+);
 
-
-dropdown.classList.add("transition-all", "duration-300", "overflow-hidden", "max-h-0");
-
-
-projectsMenu.addEventListener("click", (e) => {
+projectsMenu.addEventListener('click', (e) => {
   e.stopPropagation();
   e.preventDefault();
 
-  const isOpen = dropdown.classList.contains("max-h-[500px]");
+  const isOpen = dropdown.classList.contains('max-h-[500px]');
 
   if (isOpen) {
-
-    dropdown.classList.add("max-h-0");
-    dropdown.classList.remove("max-h-[500px]");
-    dropdown.classList.add("hidden");
+    dropdown.classList.add('max-h-0');
+    dropdown.classList.remove('max-h-[500px]');
+    dropdown.classList.add('hidden');
   } else {
-
-    dropdown.classList.remove("hidden");
+    dropdown.classList.remove('hidden');
     setTimeout(() => {
-      dropdown.classList.remove("max-h-0");
-      dropdown.classList.add("max-h-[500px]");
+      dropdown.classList.remove('max-h-0');
+      dropdown.classList.add('max-h-[500px]');
     }, 10);
   }
 });
-document.addEventListener("click", (e) => {
+document.addEventListener('click', (e) => {
   if (!projectsMenu.contains(e.target)) {
-    dropdown.classList.remove("max-h-[500px]");
-    dropdown.classList.add("max-h-0");
-    dropdown.classList.add("hidden");
+    dropdown.classList.remove('max-h-[500px]');
+    dropdown.classList.add('max-h-0');
+    dropdown.classList.add('hidden');
   }
 });
-
 
 const dropdownButtonSprint = document.getElementById('dropdownButtonForSprint');
 dropdownButtonSprint.addEventListener('click', function () {
@@ -63,7 +62,9 @@ dropdownButtonSprint.addEventListener('click', function () {
   dropdownMenu.classList.toggle('hidden');
 });
 
-const dropdownButtonBacklog = document.getElementById('dropdownButtonForBacklog');
+const dropdownButtonBacklog = document.getElementById(
+  'dropdownButtonForBacklog'
+);
 dropdownButtonBacklog.addEventListener('click', function () {
   const dropdownMenu = document.querySelector('.dropdown-menu-backlog');
   dropdownMenu.classList.toggle('hidden');
@@ -87,7 +88,22 @@ dropdownButtonBacklog.addEventListener('click', function () {
   }
 });
 
-renderTasks();
+
+async function showProjectList() {
+  try {
+    const projects = await projectService.getAllProjects();
+    const listContainer = document.getElementById('projectsDropdown');
+    listContainer.innerHTML = '';
+
+    projects.forEach((p) => {
+      const item = document.createElement('li');
+      item.textContent = p.name;
+      listContainer.appendChild(item);
+    });
+  } catch (err) {
+    console.error(err.message);
+  }
+}
 
 const backlogBtn = document.getElementById('backlog-li');
 const backlogView = document.getElementById('backlog-view');
@@ -123,3 +139,7 @@ function hideAll(element) {
   })
   element.classList.remove('hidden');
 }
+
+
+showProjectList();
+renderTasks();
