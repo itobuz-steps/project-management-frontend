@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:3001/project';
+const API_BASE_URL = 'http://localhost:3001/sprint';
 
-class ProjectService {
+class SprintService {
   api = axios.create({
     baseURL: API_BASE_URL,
   });
@@ -67,66 +67,67 @@ class ProjectService {
     );
   }
 
-  async getAllProjects() {
+  async getAllSprints(projectId = "") {
     try {
-      const response = await this.api.get(`/`);
+      const response = await this.api.get(`/?projectId=${projectId}`);
 
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || 'Failed to fetch projects'
+        error.response?.data?.message || 'Failed to fetch sprints'
       );
     }
   }
 
-  async getProjectById(id) {
+  async getSprintById(id) {
     try {
       const response = await this.api.get(`/${id}`);
 
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || 'Failed to fetch project'
+        error.response?.data?.message || 'Failed to fetch sprint'
       );
     }
   }
 
-  async createProject(project) {
+  async createSprint(sprint) {
     try {
-      const response = await this.api.post(`/`, project);
+      const response = await this.api.post(`/`, sprint);
 
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || 'Failed to create project'
+        error.response?.data?.message || 'Failed to create sprint'
       );
     }
   }
 
-  async updateProject(id, updatedProject) {
+  async updateSprint(id, updatedSprint) {
     try {
-      const response = await this.api.put(`/${id}`, updatedProject);
+      const response = await this.api.put(`/${id}`, updatedSprint);
 
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || 'Failed to update project'
+        error.response?.data?.message || 'Failed to update sprint'
       );
     }
   }
 
-  async deleteProject(id) {
+  async deleteSprint(id) {
     try {
       const response = await this.api.delete(`/${id}`);
 
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || 'Failed to delete project'
+        error.response?.data?.message || 'Failed to delete sprint'
       );
     }
   }
+
 }
 
-const projectService = new ProjectService();
-export default projectService;
+const sprintService = new SprintService();
+export default sprintService;

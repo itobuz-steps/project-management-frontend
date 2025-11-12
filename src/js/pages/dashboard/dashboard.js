@@ -94,12 +94,19 @@ async function showProjectList() {
     const projects = await projectService.getAllProjects();
     const listContainer = document.getElementById('projectsDropdown');
     listContainer.innerHTML = '';
+    console.log('projects: ', projects);
 
-    projects.forEach((p) => {
-      const item = document.createElement('li');
-      item.textContent = p.name;
-      listContainer.appendChild(item);
-    });
+    if (!projects.length) {
+      listContainer.innerHTML = 'No project Found';
+      listContainer.className = 'block p-2 text-gray-900 hover:bg-gray-100';
+    } else {
+      projects.forEach((p) => {
+        const item = document.createElement('li');
+        item.textContent = p.name;
+        item.className = 'block p-2 text-gray-900 hover:bg-gray-100';
+        listContainer.appendChild(item);
+      });
+    }
   } catch (err) {
     console.error(err.message);
   }
@@ -140,5 +147,19 @@ function hideAll(element) {
   element.classList.remove('hidden');
 }
 
+
+function checkIfToken() {
+  if (!localStorage.getItem('access_token')) {
+    window.location.href = 'signup';
+  }
+}
+
+const logoutBtn = document.getElementById('logout-btn');
+logoutBtn.addEventListener('click', () => {
+  localStorage.clear();
+  checkIfToken();
+});
+
+checkIfToken();
 showProjectList();
 renderTasks();
