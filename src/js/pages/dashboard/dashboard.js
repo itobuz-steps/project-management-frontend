@@ -140,6 +140,12 @@ function hideAll(element) {
   element.classList.remove('hidden');
 }
 
+function checkIfToken() {
+  if (!localStorage.getItem('access_token')) {
+    window.location.href = 'signup';
+  }
+}
 
+checkIfToken();
 showProjectList();
 renderTasks();
