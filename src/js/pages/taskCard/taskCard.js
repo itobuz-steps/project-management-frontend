@@ -1,3 +1,5 @@
+import '../../../scss/main.css';
+
 const menuButton = document.getElementById('menuButton');
 const dropdownMenu = document.getElementById('dropdownMenu');
 
