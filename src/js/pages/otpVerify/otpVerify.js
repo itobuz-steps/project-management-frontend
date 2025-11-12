@@ -24,6 +24,7 @@ async function handleOtpVerification(event) {
     await authService.verify(email, otp);
 
     localStorage.removeItem('pendingEmail');
+    localStorage.removeItem('username');
 
     showMessage('OTP verified successfully! Redirecting...', 'success');
 
