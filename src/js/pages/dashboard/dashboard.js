@@ -152,6 +152,12 @@ function checkIfToken() {
   }
 }
 
+const logoutBtn = document.getElementById('logout-btn');
+logoutBtn.addEventListener('click', () => {
+  localStorage.clear();
+  checkIfToken();
+});
+
 checkIfToken();
 showProjectList();
 renderTasks();
