@@ -6,10 +6,12 @@ import projectService from '../../services/ProjectService';
 const toggleBtn = document.querySelector('.toggle-sidebar-btn');
 const sidebar = document.querySelector('#sidebar');
 const main = document.querySelector('.main');
+const body = document.querySelector('body');
 
-toggleBtn?.addEventListener('click', () => {
+toggleBtn.addEventListener('click', () => {
   sidebar.classList.toggle('-translate-x-full');
   sidebar.classList.toggle('translate-x-0');
+  body.classList.toggle('overflow-hidden');
 });
 
 document.addEventListener('click', (e) => {
