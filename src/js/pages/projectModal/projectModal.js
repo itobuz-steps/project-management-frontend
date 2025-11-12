@@ -2,7 +2,7 @@ import '../../../scss/main.css';
 
 const toggleButton = document.getElementById('toggleButton');
 const closeButton = document.getElementById('CloseButton');
-const modal = document.getElementById('task-modal');
+const modal = document.getElementById('project-modal');
 
 toggleButton.addEventListener('click', () => {
   modal.classList.toggle('hidden');
