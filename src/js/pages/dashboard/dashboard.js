@@ -1,9 +1,7 @@
 import '../../../scss/main.css';
 import { renderTasks } from '../../utils/renderTasks.js';
 import ProjectService from '../../services/ProjectService.js';
-
-// eslint-disable-next-line no-unused-vars
-// let selectedProject;
+import TaskService from '../../services/TaskService.js';
 
 const toggleBtn = document.querySelector('.toggle-sidebar-btn');
 const sidebar = document.querySelector('#sidebar');
@@ -107,7 +105,7 @@ async function showProjectList() {
         console.log(project._id);
         item.dataset.id = project._id;
         item.textContent = project.name;
-        item.className = 'block p-2 text-gray-900 hover:bg-gray-100 rounded-lg [&.selected]:border [&.selected]:border-black-500 [&.selected]:bg-gray-400';
+        item.className = 'block p-2 text-gray-900 hover:bg-gray-100 rounded-lg [&.selected]:border [&.selected]:border-black-500 [&.selected]:bg-gray-300';
         if (project._id === localStorage.getItem('selectedProject')) {
           item.classList.toggle('selected');
         }
@@ -185,6 +183,8 @@ const projectName = document.getElementById('projectName');
 async function renderDashboard(projectId) {
   const project = await ProjectService.getProjectById(projectId);
   projectName.innerText = project.result[0].name;
+  const projectTasks = await TaskService.getTaskByProjectId(projectId);
+  console.log(projectTasks);
 }
 
 renderDashboard(localStorage.getItem('selectedProject'));
