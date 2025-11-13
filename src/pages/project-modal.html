@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Create Task Modal</title>
+    <title>Create Project Modal</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.1/flowbite.min.js"></script>
   </head>
 
@@ -34,7 +34,7 @@
           <div
             class="flex items-center justify-between p-2 md:p-5 border-b rounded-t border-black sticky top-0 bg-white z-10"
           >
-            <h3 class="text-xl font-semibold text-black">Create Task</h3>
+            <h3 class="text-xl font-semibold text-black">Create Project</h3>
             <button
               id="CloseButton"
               type="button"
@@ -90,8 +90,11 @@
                   class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
                   required
                 >
-                  <option value="kanban">Kanban</option>
-                  <option value="scrum">Scrum</option>
+                  <option value="" selected disabled>
+                    Select a project type
+                  </option>
+                  <option value="kanban">kanban</option>
+                  <option value="scrum">scrum</option>
                 </select>
               </div>
 
@@ -110,14 +113,6 @@
                   placeholder="Enter your fields"
                 />
               </div>
-
-              <div>
-                <label
-                  for="memberLead"
-                  class="block mb-2 text-sm font-medium text-black"
-                ></label>
-              </div>
-
               <button
                 type="submit"
                 class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
