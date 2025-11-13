@@ -80,7 +80,7 @@ class TaskService {
 
       return response;
     } catch (error) {
-      throw error.response.data;
+      throw new Error(error.response?.data?.message || 'Failed to fetch tasks');
     }
   }
 
@@ -90,7 +90,7 @@ class TaskService {
 
       return response;
     } catch (error) {
-      throw error.response.data;
+      throw new Error(error.response?.data?.message || 'Failed to fetch tasks');
     }
   }
 
@@ -100,7 +100,17 @@ class TaskService {
 
       return response;
     } catch (error) {
-      throw error.response.data;
+      throw new Error(error.response?.data?.message || 'Failed to fetch user details');
+    }
+  }
+
+  async getTaskByProjectId(projectId) {
+    try {
+      const response = await this.api.get(`/?projectId=${projectId}`);
+
+      return response;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to fetch tasks');
     }
   }
 
@@ -124,7 +134,7 @@ class TaskService {
 
       return response;
     } catch (error) {
-      throw error.response.data;
+      throw new Error(error.response?.data?.message || 'Failed to create task');
     }
   }
 
@@ -134,7 +144,7 @@ class TaskService {
 
       return response;
     } catch (error) {
-      throw error.response.data;
+      throw new Error(error.response?.data?.message || 'Failed to update task');
     }
   }
 
@@ -144,7 +154,7 @@ class TaskService {
 
       return response;
     } catch (error) {
-      throw error.response.data;
+      throw new Error(error.response?.data?.message || 'Failed to delete task');
     }
   }
 }

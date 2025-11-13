@@ -63,12 +63,12 @@ export async function createTaskList(task) {
                       <td class="px-6 py-4">${task.status}</td>
                       <td class="px-6 py-4">${task.comments}</td>
                       <td class="px-6 py-4">${task.sprint}</td>
-                      <td class="px-6 py-4">${assignee.data.user.name}</td>
+                      <td class="px-6 py-4">${assignee.data.result.name}</td>
                       <td class="px-6 py-4">${task.dueDate.split('T')[0]}</td>
                       <td class="px-6 py-4">${task.tags.join(' ')}</td>
                       <td class="px-6 py-4">${task.createdAt.split('T')[0]}</td>
                       <td class="px-6 py-4">${task.updatedAt.split('T')[0]}</td>
-                      <td class="px-6 py-4">${reporter.data.user.name}</td>
+                      <td class="px-6 py-4">${reporter.data.result.name}</td>
 
   `;
   return tr;
@@ -77,7 +77,7 @@ export async function createTaskList(task) {
 export async function renderTasks() {
   try {
     let tasksArray = [];
-    const tasks = await TaskService.getAllTasks();
+    const tasks = await TaskService.getTaskByProjectId(localStorage.getItem('selectedProject'));
     tasksArray.push(...tasks.data.result);
 
     if (!tasksArray.length) {
