@@ -48,7 +48,7 @@ class TaskService {
                 },
               }
             );
-            console.log(response);          // to be removed 
+            console.log(response); // to be removed
 
             if (response) {
               localStorage.setItem('access_token', response.data.accessToken);
@@ -100,7 +100,9 @@ class TaskService {
 
       return response;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch user details');
+      throw new Error(
+        error.response?.data?.message || 'Failed to fetch user details'
+      );
     }
   }
 
@@ -127,7 +129,10 @@ class TaskService {
     formData.append('tags', JSON.stringify(task.tags));
     formData.append('dueDate', task.dueDate);
     formData.append('reporter', task.reporter);
-    formData.append('assignee', task.assignee);
+
+    if (task.assignee) {
+      formData.append('assignee', task.assignee);
+    } // change the service logic    }
 
     try {
       const response = await this.api.post(`/`, formData);
