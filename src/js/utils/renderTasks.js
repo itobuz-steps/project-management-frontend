@@ -1,12 +1,19 @@
+import SprintService from '../services/SprintService.js';
 import TaskService from '../services/TaskService.js';
 
 const listTableBody = document.getElementById('table-body');
+const sprintTableBody = document.getElementById('sprint-table-body');
+const backlogTableBody = document.getElementById('backlog-table-body');
+
+const emptySprintContainer = document.getElementById('empty-sprint-container');
+const emptyBacklogContainer = document.getElementById('empty-backlog-container');
+const emptyListContainer = document.getElementById('empty-list-container');
 
 export async function createTaskList(task) {
   const tr = document.createElement('tr');
 
-  const reporter = await TaskService.getUserDetailsById(task.reporter);
-  const assignee = await TaskService.getUserDetailsById(task.assignee);
+  const reporter = task.reporter ? (await TaskService.getUserDetailsById(task.reporter)).data.result : "";
+  const assignee = task.assignee ? (await TaskService.getUserDetailsById(task.assignee)).data.result : "";
 
   tr.classList =
     'bg-white border-b border-gray-500 hover:bg-gray-100 whitespace-nowrap';
@@ -63,32 +70,74 @@ export async function createTaskList(task) {
                       <td class="px-6 py-4">${task.status}</td>
                       <td class="px-6 py-4">${task.comments}</td>
                       <td class="px-6 py-4">${task.sprint}</td>
-                      <td class="px-6 py-4">${assignee.data.result.name}</td>
+                      <td class="px-6 py-4">${assignee.name}</td>
                       <td class="px-6 py-4">${task.dueDate.split('T')[0]}</td>
                       <td class="px-6 py-4">${task.tags.join(' ')}</td>
                       <td class="px-6 py-4">${task.createdAt.split('T')[0]}</td>
                       <td class="px-6 py-4">${task.updatedAt.split('T')[0]}</td>
-                      <td class="px-6 py-4">${reporter.data.result.name}</td>
+                      <td class="px-6 py-4">${reporter.name}</td>
 
   `;
   return tr;
 }
 
-export async function renderTasks() {
+export async function renderTasksList() {
   try {
     let tasksArray = [];
     const tasks = await TaskService.getTaskByProjectId(localStorage.getItem('selectedProject'));
     tasksArray.push(...tasks.data.result);
 
     if (!tasksArray.length) {
-      const emptyMessage = document.createElement('div');
-      emptyMessage.textContent = 'No tasks found!';
-      emptyMessage.className = 'text-center w-full flex justify-center';
-      listTableBody.append(emptyMessage);
+      emptyListContainer.classList.remove('hidden');
     } else {
+      emptyListContainer.classList.add('hidden');
       for (const task of tasksArray) {
         const tr = await createTaskList(task);
         listTableBody.append(tr);
+      }
+    }
+  } catch (error) {
+    console.error(error.message);
+  }
+}
+
+export async function renderDashBoardTasks() {
+  try {
+    const projectId = localStorage.getItem('selectedProject');
+    const tasks = await TaskService.getTaskByProjectId(projectId);
+    const tasksSet = new Set(tasks.data.result.map((task) => task._id));
+
+    const sprints = await SprintService.getAllSprints(projectId);
+    const taskWithSprint = []
+    sprints.result.forEach((sprint) => taskWithSprint.push(sprint.tasks));
+
+    const sprintTaskSet = new Set(...taskWithSprint);
+    console.log(tasksSet, sprintTaskSet)
+    console.log();
+
+    const taskWithoutSprint = Array.from(tasksSet.difference(sprintTaskSet))
+
+    console.log({ taskWithSprint, taskWithoutSprint })
+
+    if (!taskWithSprint.length) {
+      emptySprintContainer.classList.remove('hidden');
+    } else {
+      emptySprintContainer.classList.add('hidden');
+      for (const taskId of taskWithSprint) {
+        const task = await TaskService.getTaskById(taskId)
+        const tr = await createTaskList(task.data.result);
+        sprintTableBody.append(tr);
+      }
+    }
+
+    if (!taskWithoutSprint.length) {
+      emptyBacklogContainer.classList.remove('hidden');
+    } else {
+      emptyBacklogContainer.classList.add('hidden');
+      for (const taskId of taskWithoutSprint) {
+        const task = await TaskService.getTaskById(taskId)
+        const tr = await createTaskList(task.data.result);
+        backlogTableBody.append(tr);
       }
     }
   } catch (error) {
