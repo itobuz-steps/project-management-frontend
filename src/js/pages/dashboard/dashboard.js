@@ -2,10 +2,11 @@ import '../../../scss/main.css';
 import { renderTasks } from '../../utils/renderTasks.js';
 import ProjectService from '../../services/ProjectService.js';
 import TaskService from '../../services/TaskService.js';
+import projectService from '../../services/ProjectService.js';
+import taskService from '../../services/TaskService.js';
 
 const toggleBtn = document.querySelector('.toggle-sidebar-btn');
 const sidebar = document.querySelector('#sidebar');
-const main = document.querySelector('.main');
 const body = document.querySelector('body');
 
 toggleBtn.addEventListener('click', () => {
@@ -105,7 +106,8 @@ async function showProjectList() {
         console.log(project._id);
         item.dataset.id = project._id;
         item.textContent = project.name;
-        item.className = 'block p-2 text-gray-900 hover:bg-gray-100 rounded-lg [&.selected]:border [&.selected]:border-black-500 [&.selected]:bg-gray-300';
+        item.className =
+          'block p-2 text-gray-900 hover:bg-gray-100 rounded-lg [&.selected]:border [&.selected]:border-black-500 [&.selected]:bg-gray-300';
         if (project._id === localStorage.getItem('selectedProject')) {
           item.classList.toggle('selected');
         }
@@ -152,7 +154,6 @@ function hideAll(element) {
   element.classList.remove('hidden');
 }
 
-
 function checkIfToken() {
   if (!localStorage.getItem('access_token')) {
     window.location.href = 'signup';
@@ -182,12 +183,175 @@ const projectName = document.getElementById('projectName');
 
 async function renderDashboard(projectId) {
   const project = await ProjectService.getProjectById(projectId);
-  projectName.innerText = project.result[0].name;
+  projectName.innerText = project.result.name;
   const projectTasks = await TaskService.getTaskByProjectId(projectId);
   console.log(projectTasks);
+}
+
+async function getTaskGroupedByStatus(projectId) {
+  const project = (await projectService.getProjectById(projectId)).result;
+  const result = {};
+
+  project.columns.forEach((column) => (result[column] = []));
+
+  const tasks = await taskService.getTaskByProjectId(projectId);
+
+  tasks.data.result.forEach((task) => result[task.status].push(task));
+
+  return result;
+}
+
+async function renderBoard(projectId) {
+  const columns = await getTaskGroupedByStatus(projectId);
+  const project = (await projectService.getProjectById(projectId)).result;
+
+  const columnContainer = document.getElementById('columns');
+  columnContainer.innerHTML = '';
+
+  project.columns.forEach((column) => {
+    const columnEl = document.createElement('div');
+    columnEl.innerHTML = `<div
+                class="w-72 bg-white rounded-lg shadow p-4 shrink-0 h-full overflow-y-auto"
+              >
+                <h2
+                  class="text-lg font-semibold mb-3 border-b pb-2 sticky top-0 bg-white z-10"
+                >
+                  ${column.toUpperCase()}
+                </h2>
+                <div class="space-y-3 pb-4 class" id="task-list">
+                </div>
+              </div>
+    `;
+
+    const tasks = columns[column];
+    tasks.forEach((task) => {
+      const taskEl = document.createElement('div');
+      taskEl.className =
+        'task flex flex-col max-w-sm p-4 bg-gray-100 text-black gap-4 relative';
+      taskEl.innerHTML = `
+      <div class="card-header flex justify-between items-center">
+        <p class="text-lg font-medium">${task.title}</p>
+
+        <!-- Menu -->
+        <div class="relative">
+          <button class="outline-none menu-button">
+            <svg
+              width="18px"
+              height="18px"
+              viewBox="0 0 16 16"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="#00000"
+              class="bi bi-three-dots mr-2"
+            >
+              <path
+                d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"
+              />
+            </svg>
+          </button>
+
+          <div
+            class="dropdown-menu hidden absolute right-0 w-32 bg-white border border-gray-200 rounded shadow-lg z-10 "
+          >
+            <ul class="text-sm text-gray-700">
+              <li>
+                <button
+                  class="edit-btn block w-full text-left px-4 py-2 hover:bg-gray-100"
+                >
+                  Edit
+                </button>
+              </li>
+              <li>
+                <button
+                  class="delete-btn block w-full text-left px-4 py-2 hover:bg-gray-100"
+                >
+                  Delete
+                </button>
+              </li>
+              <li>
+                <button
+                  class="move-btn block w-full text-left px-4 py-2 hover:bg-gray-100"
+                >
+                  Move To
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="card-footer flex justify-between items-center text-sm text-gray-400"
+      >
+        <div class="flex items-center gap-2">
+          <span
+
+            class="type-tag bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm"
+            >${task.key}</span
+          >
+
+          <select
+            class="type-selector text-sm border border-gray-300 rounded px-1 py-1 focus:outline-none"
+          >
+            <option value="story" selected>Story</option>
+            <option value="task">Task</option>
+          </select>
+        </div>
+
+        <!-- Avatar -->
+        <div class="flex items-center">
+          <span
+            class="w-8 h-8 text-white font-semibold rounded-full bg-blue-500 flex items-center justify-center"
+            >SG</span
+          >
+        </div>
+      </div>`;
+      const menuButton = taskEl.querySelector('.menu-button');
+      const dropdownMenu = taskEl.querySelector('.dropdown-menu');
+      const typeTag = taskEl.querySelector('.type-tag');
+      const typeSelector = taskEl.querySelector('.type-selector');
+
+      menuButton.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('hidden');
+      });
+
+      document.addEventListener('click', () => {
+        dropdownMenu.classList.add('hidden');
+      });
+
+      taskEl.querySelector('.edit-btn').addEventListener('click', () => {
+        dropdownMenu.classList.add('hidden');
+      });
+      taskEl.querySelector('.delete-btn').addEventListener('click', () => {
+        dropdownMenu.classList.add('hidden');
+      });
+      taskEl.querySelector('.move-btn').addEventListener('click', () => {
+        dropdownMenu.classList.add('hidden');
+      });
+
+      typeSelector.addEventListener('change', (e) => {
+        const value = e.target.value;
+
+        if (value === 'task') {
+          typeTag.className =
+            'bg-blue-600 text-white text-xs font-semibold py-1 px-2 rounded-sm';
+          typeTag.textContent = 'TASK';
+        } else {
+          typeTag.className =
+            'bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm';
+          typeTag.textContent = 'STORY';
+        }
+      });
+
+      columnEl.querySelector('#task-list').appendChild(taskEl);
+    });
+
+    columnContainer.appendChild(columnEl);
+  });
 }
 
 renderDashboard(localStorage.getItem('selectedProject'));
 checkIfToken();
 showProjectList();
 renderTasks();
+renderBoard(localStorage.getItem('selectedProject'));
