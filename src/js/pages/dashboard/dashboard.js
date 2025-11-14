@@ -1,5 +1,8 @@
 import '../../../scss/main.css';
-import { renderTasksList, renderDashBoardTasks } from '../../utils/renderTasks.js';
+import {
+  renderTasksList,
+  renderDashBoardTasks,
+} from '../../utils/renderTasks.js';
 import ProjectService from '../../services/ProjectService.js';
 import TaskService from '../../services/TaskService.js';
 import projectService from '../../services/ProjectService.js';
@@ -316,9 +319,9 @@ projectDropdownContainer.addEventListener('click', (event) => {
 
   targetLi.classList.toggle('selected');
   renderDashboard(localStorage.getItem('selectedProject'));
-  listTableBody.innerHTML = "";
-  sprintTableBody.innerHTML = "";
-  backlogTableBody.innerHTML = "";
+  listTableBody.innerHTML = '';
+  sprintTableBody.innerHTML = '';
+  backlogTableBody.innerHTML = '';
   renderTasksList();
   renderDashBoardTasks();
 });
@@ -499,5 +502,4 @@ checkIfToken();
 showProjectList();
 renderTasksList();
 renderDashBoardTasks();
-renderTasks();
 renderBoard(localStorage.getItem('selectedProject'));
