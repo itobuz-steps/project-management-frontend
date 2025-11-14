@@ -4,10 +4,57 @@ import ProjectService from '../../services/ProjectService.js';
 import TaskService from '../../services/TaskService.js';
 import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
+import templates from '../../template/template.js';
 
 const toggleBtn = document.querySelector('.toggle-sidebar-btn');
 const sidebar = document.querySelector('#sidebar');
 const body = document.querySelector('body');
+const openProjectBtn = document.getElementById('plus-icon');
+const createProjectModal = document.getElementById('create-project-modal');
+const closeProjectBtn = document.getElementById('close-button');
+const projectCreateForm = document.getElementById('project-form');
+
+openProjectBtn.addEventListener('click', () => {
+  createProjectModal.classList.remove('hidden');
+});
+closeProjectBtn.addEventListener('click', () => {
+  createProjectModal.classList.add('hidden');
+});
+
+// temp
+projectCreateForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById('name').value.trim();
+  const projectType = document.getElementById('projectType').value;
+  const columnInput = document.getElementById('columns').value;
+
+  let columns = [];
+  if (columnInput) {
+    columns = columnInput
+      .split(',')
+      .map((col) => col.trim())
+      .filter((col) => col.length > 0);
+  }
+
+  const projectData = {
+    name,
+    projectType,
+    columns,
+  };
+
+  try {
+    const createdProject = await projectService.createProject(projectData);
+    console.log(createdProject);
+
+    // form.reset();
+    // modal.classList.add('hidden');
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+// tmp update
 
 toggleBtn.addEventListener('click', () => {
   sidebar.classList.toggle('-translate-x-full');
