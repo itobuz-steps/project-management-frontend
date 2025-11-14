@@ -299,6 +299,7 @@ async function renderBacklogTasks(backlogTasks) {
 
 export async function renderDashBoardTasks() {
   try {
+    sprintBacklogWrapper.innerHTML = "";
     const projectId = localStorage.getItem('selectedProject');
     const tasks = await TaskService.getTaskByProjectId(projectId);
     const allTasks = tasks.data.result.map((task) => task._id);

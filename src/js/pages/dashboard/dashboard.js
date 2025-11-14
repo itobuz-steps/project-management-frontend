@@ -167,9 +167,6 @@ projectDropdownContainer.addEventListener('click', (event) => {
   targetLi.classList.toggle('selected');
   renderDashboard(localStorage.getItem('selectedProject'));
   listTableBody.innerHTML = "";
-  sprintTableBody.innerHTML = "";
-  backlogTableBody.innerHTML = "";
-  renderTasksList();
   renderDashBoardTasks();
 });
 
