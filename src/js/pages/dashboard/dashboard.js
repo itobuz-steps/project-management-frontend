@@ -53,6 +53,7 @@ projectsMenu.addEventListener('click', (e) => {
     }, 10);
   }
 });
+
 document.addEventListener('click', (e) => {
   if (!projectsMenu.contains(e.target)) {
     dropdown.classList.remove('max-h-[500px]');
@@ -61,37 +62,23 @@ document.addEventListener('click', (e) => {
   }
 });
 
-const dropdownButtonSprint = document.getElementById('dropdownButtonForSprint');
-dropdownButtonSprint.addEventListener('click', function () {
-  const dropdownMenu = document.querySelector('.dropdown-menu-sprint');
-  dropdownMenu.classList.toggle('hidden');
-});
+export function dropdownEvent(sprint = {}) {
+  const nameKey = sprint.name ? sprint.name : `backlog`;
+  const dropdownButton = document.getElementById(`dropdownButton-${nameKey}`);
+  const dropdownMenu = document.querySelector(`.dropdown-menu-${nameKey}`);
+  dropdownButton.addEventListener('click', function () {
+    dropdownMenu.classList.toggle('hidden');
+  });
 
-const dropdownButtonBacklog = document.getElementById(
-  'dropdownButtonForBacklog'
-);
-dropdownButtonBacklog.addEventListener('click', function () {
-  const dropdownMenu = document.querySelector('.dropdown-menu-backlog');
-  dropdownMenu.classList.toggle('hidden');
-});
-
-const dropdownIconSprint = document.getElementById('dropdown-icon-sprint');
-dropdownButtonSprint.addEventListener('click', function () {
-  if (dropdownIconSprint.classList.contains('rotate-270')) {
-    dropdownIconSprint.classList.remove('rotate-270');
-  } else {
-    dropdownIconSprint.classList.add('rotate-270');
-  }
-});
-
-const dropdownIconBacklog = document.getElementById('dropdown-icon-backlog');
-dropdownButtonBacklog.addEventListener('click', function () {
-  if (dropdownIconBacklog.classList.contains('rotate-270')) {
-    dropdownIconBacklog.classList.remove('rotate-270');
-  } else {
-    dropdownIconBacklog.classList.add('rotate-270');
-  }
-});
+  const dropdownIcon = document.querySelector(`.dropdown-icon-${nameKey}`);
+  dropdownButton.addEventListener('click', function () {
+    if (dropdownIcon.classList.contains('rotate-270')) {
+      dropdownIcon.classList.remove('rotate-270');
+    } else {
+      dropdownIcon.classList.add('rotate-270');
+    }
+  });
+}
 
 async function showProjectList() {
   try {
