@@ -148,25 +148,9 @@
       <div
         class="main p-4 flex flex-col gap-4 transition-all duration-300 flex-1 overflow-auto"
       >
-        <div class="project-info flex gap-2 items-center">
+        <div class="project-info items-center">
           <div class="project-name text-2xl font-semibold" id="projectName">
             Project Name
-          </div>
-          <div class="dropdown-icon">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="size-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="m19.5 8.25-7.5 7.5-7.5-7.5"
-              />
-            </svg>
           </div>
         </div>
 
@@ -193,46 +177,57 @@
             List
           </li>
         </ul>
+        <div class="flex flex-row gap-3">
+          <div
+            class="form-container border border-gray-300 p-2 rounded w-full md:w-1/6 xl:w-1/12 bg-blue-400 hover:bg-blue-300 cursor-pointer"
+          >
+            <div class="flex justify-between task-create">
+              <div>Add Task</div>
 
-        <div class="form-container border border-gray-300 p-2 rounded">
-          <h3 class="flex gap-2">
-            <div class="plus-icon">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 4.5v15m7.5-7.5h-15"
-                />
-              </svg>
+              <div class="plus-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 4.5v15m7.5-7.5h-15"
+                  />
+                </svg>
+              </div>
             </div>
-            Add Task
-            <div class="down-icon ml-auto">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                />
-              </svg>
+            <form action="" class="create-task-form"></form>
+          </div>
+
+          <div
+            class="form-container border border-gray-300 p-2 rounded w-full md:w-1/6 xl:w-1/16 bg-blue-400 cursor-pointer hover:bg-blue-300"
+          >
+            <div class="flex justify-between">
+              <div>Filter</div>
+              <div class="filter-icon">
+                <svg
+                  fill="#000000"
+                  width="30px"
+                  height="30px"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d=" M7 11h10v2H7zM4 7h16v2H4zm6 8h4v2h-4z"
+                  />
+                </svg>
+              </div>
             </div>
-          </h3>
-          <form action="" class="create-task-form"></form>
+            <form action="" class="create-task-form"></form>
+          </div>
         </div>
-
         <div class="content">
           <div
             class="task-list flex gap-3 flex-col text-slate-700 hidden"
