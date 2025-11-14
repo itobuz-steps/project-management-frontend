@@ -13,7 +13,7 @@
   <body>
     <div class="header">
       <nav
-        class="flex flex-row justify-between align-items-center p-6 border-b border-b-gray-200"
+        class="flex flex-row justify-between align-items-center p-5 border-b border-b-gray-200"
       >
         <div class="flex items-center">
           <button class="toggle-sidebar-btn">
@@ -52,8 +52,28 @@
         </div>
 
         <div class="flex gap-3 items-center">
-          <div class="search-icon">
+          <div class="search-icon flex items-center justify-between">
+            <form
+              class="rounded-lg w-40 xs:w-60 md:w-80 lg:w-100 hidden"
+              id="search-input"
+            >
+              <label
+                for="search-input-field"
+                class="mb-2 text-sm font-sm text-gray-900 sr-only dark:text-white"
+                >Search</label
+              >
+              <div class="relative border-cyan-300">
+                <input
+                  type="search"
+                  id="search-input-field"
+                  class="block w-full p-3 ps-6 bg-neutral-secondary-medium focus:border-cyan-200 text-heading text-sm placeholder:text-body"
+                  placeholder="Search"
+                  required
+                />
+              </div>
+            </form>
             <svg
+              id="search-icon"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"

@@ -350,6 +350,28 @@ async function renderBoard(projectId) {
   });
 }
 
+const searchIcon = document.getElementById('search-icon');
+const searchInput = document.getElementById('search-input');
+searchIcon.addEventListener('click', (e) => {
+  searchIcon.classList.toggle('hidden');
+  searchInput.classList.toggle('hidden');
+  e.stopPropagation();
+  toggleSearchHidden();
+});
+
+function toggleSearchHidden() {
+  // if (document.addEventListener('click', (e) => {
+
+  // }))
+  document.addEventListener('click', (e) => {
+    console.log(e);
+    if (!e.target.isEqualNode(searchInput)) {
+      searchIcon.classList.toggle('hidden');
+      searchInput.classList.toggle('hidden');
+    }
+  });
+}
+
 renderDashboard(localStorage.getItem('selectedProject'));
 checkIfToken();
 showProjectList();
