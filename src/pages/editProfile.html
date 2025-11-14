@@ -10,8 +10,10 @@
       defer
     ></script>
   </head>
-  <body class="flex flex-col justify-center align-center min-h-screen">
-    <div class="card p-4 w-90">
+  <body class="flex justify-center items-center min-h-screen">
+    <div
+      class="card p-4 w-90 flex flex-col justify-center align-center rounded-xl shadow-xl/50"
+    >
       <h3 class="text-center mb-4 text-xl font-semibold">Edit Profile</h3>
       <div class="flex justify-center align-center mb-3">
         <img
@@ -24,7 +26,12 @@
         />
       </div>
       <p id="user-email" class="text-blue-400 text-center"></p>
-      <form id="edit-profile-form" enctype="multipart/form-data">
+
+      <form
+        id="edit-profile-form"
+        enctype="multipart/form-data"
+        class="flex flex-col justify-center items-center"
+      >
         <div class="mb-1 flex flex-col justify-center align-center">
           <label for="user_name" class="from-label">Username</label>
           <input
@@ -35,7 +42,8 @@
             placeholder="Username"
           />
         </div>
-        <div>
+
+        <div class="flex flex-col justify-center align-center">
           <label for="profileImage" class="form-label"
             >Upload Profile Image</label
           >
@@ -52,11 +60,12 @@
         >
         <button
           type="submit"
-          class="btn btn-primary w-75 bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
+          class="btn btn-primary w-75 text-white py-2 rounded-lg hover:bg-cyan-600 bg-cyan-500 shadow-lg shadow-cyan-500/50"
         >
           Save
         </button>
       </form>
+
       <p id="message" class="text-center mt-3"></p>
     </div>
   </body>
