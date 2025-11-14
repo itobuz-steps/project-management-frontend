@@ -1,5 +1,5 @@
 import '../../../scss/main.css';
-import { renderTasks } from '../../utils/renderTasks.js';
+import { renderTasksList, renderDashBoardTasks } from '../../utils/renderTasks.js';
 import ProjectService from '../../services/ProjectService.js';
 import TaskService from '../../services/TaskService.js';
 import projectService from '../../services/ProjectService.js';
@@ -20,7 +20,12 @@ document.addEventListener('click', (e) => {
 
 const toggleBtn = document.querySelector('.toggle-sidebar-btn');
 const sidebar = document.querySelector('#sidebar');
+// const main = document.querySelector('.main');
 const body = document.querySelector('body');
+
+const listTableBody = document.getElementById('table-body');
+const sprintTableBody = document.getElementById('sprint-table-body');
+const backlogTableBody = document.getElementById('backlog-table-body');
 
 toggleBtn.addEventListener('click', () => {
   sidebar.classList.toggle('-translate-x-full');
@@ -63,6 +68,7 @@ projectsMenu.addEventListener('click', (e) => {
     }, 10);
   }
 });
+
 document.addEventListener('click', (e) => {
   if (!projectsMenu.contains(e.target)) {
     dropdown.classList.remove('max-h-[500px]');
@@ -71,37 +77,23 @@ document.addEventListener('click', (e) => {
   }
 });
 
-const dropdownButtonSprint = document.getElementById('dropdownButtonForSprint');
-dropdownButtonSprint.addEventListener('click', function () {
-  const dropdownMenu = document.querySelector('.dropdown-menu-sprint');
-  dropdownMenu.classList.toggle('hidden');
-});
+export function dropdownEvent(sprint = {}) {
+  const nameKey = sprint.name ? sprint.name : `backlog`;
+  const dropdownButton = document.getElementById(`dropdownButton-${nameKey}`);
+  const dropdownMenu = document.querySelector(`.dropdown-menu-${nameKey}`);
+  dropdownButton.addEventListener('click', function () {
+    dropdownMenu.classList.toggle('hidden');
+  });
 
-const dropdownButtonBacklog = document.getElementById(
-  'dropdownButtonForBacklog'
-);
-dropdownButtonBacklog.addEventListener('click', function () {
-  const dropdownMenu = document.querySelector('.dropdown-menu-backlog');
-  dropdownMenu.classList.toggle('hidden');
-});
-
-const dropdownIconSprint = document.getElementById('dropdown-icon-sprint');
-dropdownButtonSprint.addEventListener('click', function () {
-  if (dropdownIconSprint.classList.contains('rotate-270')) {
-    dropdownIconSprint.classList.remove('rotate-270');
-  } else {
-    dropdownIconSprint.classList.add('rotate-270');
-  }
-});
-
-const dropdownIconBacklog = document.getElementById('dropdown-icon-backlog');
-dropdownButtonBacklog.addEventListener('click', function () {
-  if (dropdownIconBacklog.classList.contains('rotate-270')) {
-    dropdownIconBacklog.classList.remove('rotate-270');
-  } else {
-    dropdownIconBacklog.classList.add('rotate-270');
-  }
-});
+  const dropdownIcon = document.querySelector(`.dropdown-icon-${nameKey}`);
+  dropdownButton.addEventListener('click', function () {
+    if (dropdownIcon.classList.contains('rotate-270')) {
+      dropdownIcon.classList.remove('rotate-270');
+    } else {
+      dropdownIcon.classList.add('rotate-270');
+    }
+  });
+}
 
 async function showProjectList() {
   try {
@@ -116,7 +108,6 @@ async function showProjectList() {
     } else {
       projects.forEach((project) => {
         const item = document.createElement('li');
-        console.log(project._id);
         item.dataset.id = project._id;
         item.textContent = project.name;
         item.className =
@@ -190,6 +181,11 @@ projectDropdownContainer.addEventListener('click', (event) => {
 
   targetLi.classList.toggle('selected');
   renderDashboard(localStorage.getItem('selectedProject'));
+  listTableBody.innerHTML = "";
+  sprintTableBody.innerHTML = "";
+  backlogTableBody.innerHTML = "";
+  renderTasksList();
+  renderDashBoardTasks();
 });
 
 const projectName = document.getElementById('projectName');
@@ -366,5 +362,7 @@ async function renderBoard(projectId) {
 renderDashboard(localStorage.getItem('selectedProject'));
 checkIfToken();
 showProjectList();
+renderTasksList();
+renderDashBoardTasks();
 renderTasks();
 renderBoard(localStorage.getItem('selectedProject'));
