@@ -4,7 +4,6 @@ import ProjectService from '../../services/ProjectService.js';
 import TaskService from '../../services/TaskService.js';
 import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
-import templates from '../../template/template.js';
 
 const toggleBtn = document.querySelector('.toggle-sidebar-btn');
 const sidebar = document.querySelector('#sidebar');
@@ -54,7 +53,96 @@ projectCreateForm.addEventListener('submit', async (e) => {
   }
 });
 
-// tmp update
+// tmp
+
+//task create
+
+const openTaskCreate = document.getElementById('create-task');
+const closeTaskModal = document.getElementById('close-task-modal');
+const createTaskModal = document.getElementById('create-task-modal');
+
+openTaskCreate.addEventListener('click', () => {
+  createTaskModal.classList.remove('hidden');
+});
+closeTaskModal.addEventListener('click', () => {
+  createTaskModal.classList.add('hidden');
+});
+
+//temp form submission // submission yet to be handled correctly
+const input = document.getElementById('attachments');
+const fileName = document.getElementById('file-name');
+const taskForm = document.getElementById('task-form');
+
+input.addEventListener('change', () => {
+  if (input.files.length > 0) {
+    fileName.textContent = Array.from(input.files)
+      .map((file) => file.name)
+      .join(', ');
+  } else {
+    fileName.textContent = 'No Files Chosen';
+  }
+});
+taskForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  // Build the task object from form inputs
+  const task = {
+    projectId: '69156d314a8b5c98fff3fb48',
+    title: document.getElementById('title').value.trim(),
+    description: document.getElementById('description').value.trim(),
+    type: document.getElementById('type').value,
+    priority: document.getElementById('priority').value,
+    status: document.getElementById('status').value,
+
+    tags: document.getElementById('tags').value
+      ? document
+          .getElementById('tags')
+          .value.split(',')
+          .map((t) => t.trim())
+      : [],
+
+    block: document.getElementById('block').value
+      ? document
+          .getElementById('block')
+          .value.split(',')
+          .map((t) => t.trim())
+      : [],
+
+    blockedBy: document.getElementById('BlockedBy').value
+      ? document
+          .getElementById('BlockedBy')
+          .value.split(',')
+          .map((t) => t.trim())
+      : [],
+
+    relatesTo: document.getElementById('relatesTo').value
+      ? document
+          .getElementById('relatesTo')
+          .value.split(',')
+          .map((t) => t.trim())
+      : [],
+
+    dueDate: document.getElementById('dueDate').value,
+    assignee: document.getElementById('assignee').value.trim(),
+
+    attachments: input.files,
+  };
+
+  try {
+    const response = await taskService.createTask(task);
+
+    console.log('Task created:', response);
+    alert('Task created successfully!');
+
+    taskForm.reset();
+    fileName.textContent = 'No file chosen';
+  } catch (error) {
+    console.error(error);
+    alert('Failed to create task');
+  }
+});
+
+//end for tasks
 
 toggleBtn.addEventListener('click', () => {
   sidebar.classList.toggle('-translate-x-full');
