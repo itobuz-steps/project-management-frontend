@@ -84,7 +84,39 @@
               />
             </svg>
           </div>
-          <div class="profile-image w-7 h-7 bg-blue-400 rounded-full"></div>
+          <!-- <div class="profile-image w-7 h-7 bg-blue-400 rounded-full"></div> -->
+          <div class="relative">
+            <button id="profileBtn" class="flex items-center">
+              <div class="profile-image rounded-full cursor-pointer">
+                <img
+                  id="profileImage"
+                  src="../assets/img/profile.png"
+                  alt="Profile Preview"
+                  class=""
+                  width="25"
+                  height="25"
+                />
+              </div>
+            </button>
+
+            <div
+              id="dropdownMenu"
+              class="hidden absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-lg border py-2 z-50"
+            >
+              <a
+                href="../pages/editProfile.html"
+                class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
+                Edit Profile
+              </a>
+
+              <button
+                class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
         </div>
       </nav>
     </div>
