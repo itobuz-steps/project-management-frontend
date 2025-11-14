@@ -5,6 +5,19 @@ import TaskService from '../../services/TaskService.js';
 import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
 
+const profileBtn = document.getElementById('profileBtn');
+const dropdownMenu = document.getElementById('dropdownMenu');
+
+profileBtn.addEventListener('click', () => {
+  dropdownMenu.classList.toggle('hidden');
+});
+
+document.addEventListener('click', (e) => {
+  if (!profileBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+    dropdownMenu.classList.add('hidden');
+  }
+});
+
 const toggleBtn = document.querySelector('.toggle-sidebar-btn');
 const sidebar = document.querySelector('#sidebar');
 const body = document.querySelector('body');
