@@ -1,10 +1,7 @@
 import '../../../scss/main.css';
-import {
-  renderTasksList,
-  renderDashBoardTasks,
-} from '../../utils/renderTasks.js';
+import { renderTasksList, renderDashBoardTasks } from '../../utils/renderTasks.js';
 import ProjectService from '../../services/ProjectService.js';
-import TaskService from '../../services/TaskService.js';
+// import TaskService from '../../services/TaskService.js';
 import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
 
@@ -165,6 +162,8 @@ const listTableBody = document.getElementById('table-body');
 const sprintTableBody = document.getElementById('sprint-table-body');
 const backlogTableBody = document.getElementById('backlog-table-body');
 
+const listTableBody = document.getElementById('table-body');
+
 toggleBtn.addEventListener('click', () => {
   sidebar.classList.toggle('-translate-x-full');
   sidebar.classList.toggle('translate-x-0');
@@ -318,21 +317,18 @@ projectDropdownContainer.addEventListener('click', (event) => {
   });
 
   targetLi.classList.toggle('selected');
-  renderDashboard(localStorage.getItem('selectedProject'));
-  listTableBody.innerHTML = '';
-  sprintTableBody.innerHTML = '';
-  backlogTableBody.innerHTML = '';
-  renderTasksList();
+  listTableBody.innerHTML = "";
   renderDashBoardTasks();
+  renderTasksList();
+  renderBoard(localStorage.getItem('selectedProject'));
 });
 
-const projectName = document.getElementById('projectName');
 
-async function renderDashboard(projectId) {
-  const project = await ProjectService.getProjectById(projectId);
-  projectName.innerText = project.result.name;
-  const projectTasks = await TaskService.getTaskByProjectId(projectId);
-  console.log(projectTasks);
+async function renderDashboard(project) {
+  const projectName = document.getElementById('projectName');
+
+  projectName.innerText = project.name;
+  projectName.innerText = project.name;
 }
 
 async function getTaskGroupedByStatus(projectId) {
@@ -345,12 +341,18 @@ async function getTaskGroupedByStatus(projectId) {
 
   tasks.data.result.forEach((task) => result[task.status].push(task));
 
+  // console.log(result);
+  // let emptyResult = [];
+  // emptyResult["todo"].push([{}]);
+  // console.log(emptyResult);
   return result;
 }
 
 async function renderBoard(projectId) {
   const columns = await getTaskGroupedByStatus(projectId);
   const project = (await projectService.getProjectById(projectId)).result;
+
+  renderDashboard(project);
 
   const columnContainer = document.getElementById('columns');
   columnContainer.innerHTML = '';
@@ -497,9 +499,30 @@ async function renderBoard(projectId) {
   });
 }
 
-renderDashboard(localStorage.getItem('selectedProject'));
+// const searchIcon = document.getElementById('search-icon');
+// const searchInput = document.getElementById('search-input');
+// searchIcon.addEventListener('click', (e) => {
+//   searchIcon.classList.toggle('hidden');
+//   searchInput.classList.toggle('hidden');
+//   e.stopPropagation();
+//   toggleSearchHidden();
+// });
+
+// function toggleSearchHidden() {
+//   // if (document.addEventListener('click', (e) => {
+
+//   // }))
+//   document.addEventListener('click', (e) => {
+//     console.log(e);
+//     if (!e.target.isEqualNode(searchInput)) {
+//       searchIcon.classList.toggle('hidden');
+//       searchInput.classList.toggle('hidden');
+//     }
+//   });
+// }
+
+renderBoard(localStorage.getItem('selectedProject'));
 checkIfToken();
 showProjectList();
 renderTasksList();
 renderDashBoardTasks();
-renderBoard(localStorage.getItem('selectedProject'));
