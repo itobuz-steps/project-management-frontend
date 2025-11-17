@@ -3,8 +3,6 @@ import {
   renderTasksList,
   renderDashBoardTasks,
 } from '../../utils/renderTasks.js';
-// import ProjectService from '../../services/ProjectService.js';
-// import TaskService from '../../services/TaskService.js';
 import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
 
@@ -231,7 +229,7 @@ export function dropdownEvent(sprint = {}) {
 
 async function showProjectList() {
   try {
-    const projects = await ProjectService.getAllProjects();
+    const projects = await projectService.getAllProjects();
     const listContainer = document.getElementById('projectsDropdown');
     listContainer.innerHTML = '';
     console.log('projects: ', projects);
