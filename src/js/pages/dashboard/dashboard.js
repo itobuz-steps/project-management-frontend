@@ -1,5 +1,8 @@
 import '../../../scss/main.css';
-import { renderTasksList, renderDashBoardTasks } from '../../utils/renderTasks.js';
+import {
+  renderTasksList,
+  renderDashBoardTasks,
+} from '../../utils/renderTasks.js';
 import ProjectService from '../../services/ProjectService.js';
 // import TaskService from '../../services/TaskService.js';
 import projectService from '../../services/ProjectService.js';
@@ -159,10 +162,6 @@ taskForm.addEventListener('submit', async (e) => {
 //end for tasks
 
 const listTableBody = document.getElementById('table-body');
-const sprintTableBody = document.getElementById('sprint-table-body');
-const backlogTableBody = document.getElementById('backlog-table-body');
-
-const listTableBody = document.getElementById('table-body');
 
 toggleBtn.addEventListener('click', () => {
   sidebar.classList.toggle('-translate-x-full');
@@ -317,12 +316,11 @@ projectDropdownContainer.addEventListener('click', (event) => {
   });
 
   targetLi.classList.toggle('selected');
-  listTableBody.innerHTML = "";
+  listTableBody.innerHTML = '';
   renderDashBoardTasks();
   renderTasksList();
   renderBoard(localStorage.getItem('selectedProject'));
 });
-
 
 async function renderDashboard(project) {
   const projectName = document.getElementById('projectName');
