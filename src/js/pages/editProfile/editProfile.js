@@ -9,6 +9,11 @@ async function editProfile() {
   const userEmail = document.getElementById('user-email');
   const name = document.getElementById('name');
   const userInfo = await authService.getUserInfo();
+  const goBackBtn = document.getElementById('profile-go-back-btn');
+
+  goBackBtn.addEventListener('click', () => {
+    window.history.back();
+  });
 
   if (userInfo.name) {
     name.value = userInfo.name;
