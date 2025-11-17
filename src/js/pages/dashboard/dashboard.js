@@ -29,6 +29,66 @@ const openProjectBtn = document.getElementById('plus-icon');
 const createProjectModal = document.getElementById('create-project-modal');
 const closeProjectBtn = document.getElementById('close-button');
 const projectCreateForm = document.getElementById('project-form');
+const filterBtn = document.getElementById('filterBtn');
+const filterDropdown = document.getElementById('filterDropdown');
+const subDropdown = document.getElementById('subDropdown');
+const subDropdownList = document.getElementById('subDropdownList');
+
+const filterOptions = {
+  sprint: ['Sprint-1', 'Sprint-2', 'Sprint-3', 'Sprint-4'],
+  assignee: ['Member-1', 'Member-2', 'Member-3', 'Member-4'],
+  status: ['To-Do', 'In Progress', 'QA', 'Done'],
+  priority: ['High', 'Medium', 'Low', 'Critical'],
+};
+
+// Toggle main dropdown-mobile view to be checked
+filterBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  filterDropdown.classList.toggle('hidden');
+  subDropdown.classList.add('hidden');
+});
+
+document.addEventListener('click', () => {
+  filterDropdown.classList.add('hidden');
+  subDropdown.classList.add('hidden');
+});
+
+filterDropdown.querySelectorAll('li').forEach((item) => {
+  item.addEventListener('click', (e) => {
+    e.stopPropagation();
+
+    const key = item.dataset.filter;
+
+    subDropdownList.innerHTML = '';
+    filterOptions[key].forEach((val) => {
+      const li = document.createElement('li');
+      li.textContent = val;
+      li.className = 'cursor-pointer p-2 hover:bg-gray-100';
+      subDropdownList.appendChild(li);
+    });
+
+    subDropdown.classList.remove('hidden');
+
+    const itemRect = item.getBoundingClientRect();
+    const wrapperRect = filterWrapper.getBoundingClientRect();
+    const top = itemRect.top - wrapperRect.top;
+    let left = itemRect.width + 10;
+
+    const spaceRight = window.innerWidth - itemRect.right;
+    if (spaceRight < 200) {
+      left = -200;
+    }
+
+    subDropdown.style.top = `${top}px`;
+    subDropdown.style.left = `${left}px`;
+  });
+});
+
+subDropdown.addEventListener('click', (e) => {
+  e.stopPropagation();
+  console.log('Selected:', e.target.textContent);
+  subDropdown.classList.add('hidden');
+});
 
 openProjectBtn.addEventListener('click', () => {
   createProjectModal.classList.remove('hidden');
