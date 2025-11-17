@@ -14,4 +14,4 @@ async function profileIcon() {
   }
 }
 
-profileIcon();
+// profileIcon();
