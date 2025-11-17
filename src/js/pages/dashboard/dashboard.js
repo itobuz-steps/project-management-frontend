@@ -368,7 +368,7 @@ function toggleSearchHidden() {
   });
 }
 
-renderDashboard(localStorage.getItem('selectedProject'));
+renderBoard(localStorage.getItem('selectedProject'));
 checkIfToken();
 showProjectList();
 renderTasksList();
