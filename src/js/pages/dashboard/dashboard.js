@@ -1,5 +1,8 @@
 import '../../../scss/main.css';
-import { renderTasksList, renderDashBoardTasks } from '../../utils/renderTasks.js';
+import {
+  renderTasksList,
+  renderDashBoardTasks,
+} from '../../utils/renderTasks.js';
 import ProjectService from '../../services/ProjectService.js';
 // import TaskService from '../../services/TaskService.js';
 import projectService from '../../services/ProjectService.js';
@@ -159,10 +162,6 @@ taskForm.addEventListener('submit', async (e) => {
 //end for tasks
 
 const listTableBody = document.getElementById('table-body');
-const sprintTableBody = document.getElementById('sprint-table-body');
-const backlogTableBody = document.getElementById('backlog-table-body');
-
-const listTableBody = document.getElementById('table-body');
 
 toggleBtn.addEventListener('click', () => {
   sidebar.classList.toggle('-translate-x-full');
@@ -180,37 +179,35 @@ document.addEventListener('click', (e) => {
 const projectsMenu = document.getElementById('projectsMenu');
 const dropdown = document.getElementById('projectsDropdown');
 
-dropdown.classList.add(
-  'transition-all',
-  'duration-300',
-  'overflow-hidden',
-  'max-h-0'
-);
+// dropdown.classList.add(
+//   'transition-all',
+//   'duration-300',
+//   'overflow-y-auto',
+//   'max-h-0'
+// );
 
 projectsMenu.addEventListener('click', (e) => {
   e.stopPropagation();
   e.preventDefault();
 
-  const isOpen = dropdown.classList.contains('max-h-[500px]');
+  const isOpen = dropdown.classList.contains('max-h-60');
 
   if (isOpen) {
+    dropdown.classList.remove('max-h-60');
     dropdown.classList.add('max-h-0');
-    dropdown.classList.remove('max-h-[500px]');
-    dropdown.classList.add('hidden');
+    setTimeout(() => dropdown.classList.add('hidden'), 200);
   } else {
     dropdown.classList.remove('hidden');
-    setTimeout(() => {
-      dropdown.classList.remove('max-h-0');
-      dropdown.classList.add('max-h-[500px]');
-    }, 10);
+    dropdown.classList.remove('max-h-0');
+    dropdown.classList.add('max-h-60');
   }
 });
 
 document.addEventListener('click', (e) => {
-  if (!projectsMenu.contains(e.target)) {
-    dropdown.classList.remove('max-h-[500px]');
+  if (!projectsMenu.contains(e.target) && !dropdown.contains(e.target)) {
+    dropdown.classList.remove('max-h-60');
     dropdown.classList.add('max-h-0');
-    dropdown.classList.add('hidden');
+    setTimeout(() => dropdown.classList.add('hidden'), 200);
   }
 });
 
@@ -317,12 +314,11 @@ projectDropdownContainer.addEventListener('click', (event) => {
   });
 
   targetLi.classList.toggle('selected');
-  listTableBody.innerHTML = "";
+  listTableBody.innerHTML = '';
   renderDashBoardTasks();
   renderTasksList();
   renderBoard(localStorage.getItem('selectedProject'));
 });
-
 
 async function renderDashboard(project) {
   const projectName = document.getElementById('projectName');
