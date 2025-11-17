@@ -148,11 +148,11 @@
       <div
         class="main p-2 flex flex-col gap-4 transition-all duration-300 flex-1 overflow-auto"
       >
-        <div class="project-info flex gap-2 items-center">
+        <div class="project-info items-center flex flex-row gap-3">
           <div class="project-name text-2xl font-semibold" id="projectName">
             Project Name
           </div>
-          <div class="dropdown-icon">
+          <div class="plus-icon cursor-pointer add-project">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -164,7 +164,7 @@
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                d="m19.5 8.25-7.5 7.5-7.5-7.5"
+                d="M12 4.5v15m7.5-7.5h-15"
               />
             </svg>
           </div>
@@ -193,46 +193,57 @@
             List
           </li>
         </ul>
+        <div class="flex flex-row gap-3">
+          <div
+            class="form-container border border-gray-300 p-2 rounded w-full md:w-1/6 xl:w-1/12 bg-blue-400 hover:bg-blue-300 cursor-pointer"
+          >
+            <div class="flex justify-between task-create">
+              <div>Add Task</div>
 
-        <div class="form-container border border-gray-300 p-2 rounded">
-          <h3 class="flex gap-2">
-            <div class="plus-icon">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 4.5v15m7.5-7.5h-15"
-                />
-              </svg>
+              <div class="plus-icon">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="size-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 4.5v15m7.5-7.5h-15"
+                  />
+                </svg>
+              </div>
             </div>
-            Add Task
-            <div class="down-icon ml-auto">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="m19.5 8.25-7.5 7.5-7.5-7.5"
-                />
-              </svg>
+            <form action="" class="create-task-form"></form>
+          </div>
+
+          <div
+            class="form-container border border-gray-300 p-2 rounded w-full md:w-1/6 xl:w-1/16 bg-blue-400 cursor-pointer hover:bg-blue-300"
+          >
+            <div class="flex justify-between">
+              <div>Filter</div>
+              <div class="filter-icon">
+                <svg
+                  fill="#000000"
+                  width="30px"
+                  height="30px"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d=" M7 11h10v2H7zM4 7h16v2H4zm6 8h4v2h-4z"
+                  />
+                </svg>
+              </div>
             </div>
-          </h3>
-          <form action="" class="create-task-form"></form>
+            <form action="" class="create-task-form"></form>
+          </div>
         </div>
-
         <div class="content">
           <!-- list-view -->
           <div
@@ -289,34 +300,7 @@
             class="kanban-board w-full bg-gray-100 p-4 overflow-x-auto overflow-y-hidden"
             id="board-view"
           >
-            <div class="flex space-x-4 min-w-max h-full">
-              <div
-                class="w-72 bg-white rounded-lg shadow p-4 shrink-0 h-full overflow-y-auto"
-              >
-                <h2
-                  class="text-lg font-semibold mb-3 border-b pb-2 sticky top-0 bg-white z-10"
-                >
-                  To Do
-                </h2>
-                <div class="space-y-3 pb-4">
-                  <div class="p-3 bg-gray-50 rounded-md shadow-sm">
-                    Validation issues Bugs and Refactoring
-                  </div>
-                  <div class="p-3 bg-gray-50 rounded-md shadow-sm">
-                    Front end design
-                  </div>
-                  <div class="p-3 bg-gray-50 rounded-md shadow-sm">
-                    Task integration frontend
-                  </div>
-                  <div class="p-3 bg-gray-50 rounded-md shadow-sm">
-                    Create API end points tests
-                  </div>
-                  <div class="p-3 bg-gray-50 rounded-md shadow-sm">
-                    Another extra task for testing overflow
-                  </div>
-                </div>
-              </div>
-
+            <div class="flex space-x-4 min-w-max h-full" id="columns">
               <div
                 class="w-72 bg-white rounded-lg shadow p-4 flex-shrink-0 h-full"
               >
