@@ -5,9 +5,162 @@ import ProjectService from '../../services/ProjectService.js';
 import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
 
+const profileBtn = document.getElementById('profileBtn');
+const dropdownMenu = document.getElementById('dropdownMenu');
+
+profileBtn.addEventListener('click', () => {
+  dropdownMenu.classList.toggle('hidden');
+});
+
+document.addEventListener('click', (e) => {
+  if (!profileBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+    dropdownMenu.classList.add('hidden');
+  }
+});
+
 const toggleBtn = document.querySelector('.toggle-sidebar-btn');
 const sidebar = document.querySelector('#sidebar');
+// const main = document.querySelector('.main');
 const body = document.querySelector('body');
+const openProjectBtn = document.getElementById('plus-icon');
+const createProjectModal = document.getElementById('create-project-modal');
+const closeProjectBtn = document.getElementById('close-button');
+const projectCreateForm = document.getElementById('project-form');
+
+openProjectBtn.addEventListener('click', () => {
+  createProjectModal.classList.remove('hidden');
+});
+closeProjectBtn.addEventListener('click', () => {
+  createProjectModal.classList.add('hidden');
+});
+
+// temp
+projectCreateForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const name = document.getElementById('name').value.trim();
+  const projectType = document.getElementById('projectType').value;
+  const columnInput = document.getElementById('columns').value;
+
+  let columns = [];
+  if (columnInput) {
+    columns = columnInput
+      .split(',')
+      .map((col) => col.trim())
+      .filter((col) => col.length > 0);
+  }
+
+  const projectData = {
+    name,
+    projectType,
+    columns,
+  };
+
+  try {
+    const createdProject = await projectService.createProject(projectData);
+    console.log(createdProject);
+
+    // form.reset();
+    // modal.classList.add('hidden');
+  } catch (error) {
+    console.error(error.message);
+  }
+});
+
+// tmp
+
+//task create
+
+const openTaskCreate = document.getElementById('create-task');
+const closeTaskModal = document.getElementById('close-task-modal');
+const createTaskModal = document.getElementById('create-task-modal');
+
+openTaskCreate.addEventListener('click', () => {
+  createTaskModal.classList.remove('hidden');
+});
+closeTaskModal.addEventListener('click', () => {
+  createTaskModal.classList.add('hidden');
+});
+
+//temp form submission // submission yet to be handled correctly
+const input = document.getElementById('attachments');
+const fileName = document.getElementById('file-name');
+const taskForm = document.getElementById('task-form');
+
+input.addEventListener('change', () => {
+  if (input.files.length > 0) {
+    fileName.textContent = Array.from(input.files)
+      .map((file) => file.name)
+      .join(', ');
+  } else {
+    fileName.textContent = 'No Files Chosen';
+  }
+});
+taskForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  // Build the task object from form inputs
+  const task = {
+    projectId: '69156d314a8b5c98fff3fb48',
+    title: document.getElementById('title').value.trim(),
+    description: document.getElementById('description').value.trim(),
+    type: document.getElementById('type').value,
+    priority: document.getElementById('priority').value,
+    status: document.getElementById('status').value,
+
+    tags: document.getElementById('tags').value
+      ? document
+          .getElementById('tags')
+          .value.split(',')
+          .map((t) => t.trim())
+      : [],
+
+    block: document.getElementById('block').value
+      ? document
+          .getElementById('block')
+          .value.split(',')
+          .map((t) => t.trim())
+      : [],
+
+    blockedBy: document.getElementById('BlockedBy').value
+      ? document
+          .getElementById('BlockedBy')
+          .value.split(',')
+          .map((t) => t.trim())
+      : [],
+
+    relatesTo: document.getElementById('relatesTo').value
+      ? document
+          .getElementById('relatesTo')
+          .value.split(',')
+          .map((t) => t.trim())
+      : [],
+
+    dueDate: document.getElementById('dueDate').value,
+    assignee: document.getElementById('assignee').value.trim(),
+
+    attachments: input.files,
+  };
+
+  try {
+    const response = await taskService.createTask(task);
+
+    console.log('Task created:', response);
+    alert('Task created successfully!');
+
+    taskForm.reset();
+    fileName.textContent = 'No file chosen';
+  } catch (error) {
+    console.error(error);
+    alert('Failed to create task');
+  }
+});
+
+//end for tasks
+
+const listTableBody = document.getElementById('table-body');
+const sprintTableBody = document.getElementById('sprint-table-body');
+const backlogTableBody = document.getElementById('backlog-table-body');
 
 const listTableBody = document.getElementById('table-body');
 

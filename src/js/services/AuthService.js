@@ -64,6 +64,35 @@ class AuthService {
       throw error.response.data;
     }
   }
+
+  async updateUserInfo(name, profileImage) {
+    const formData = new FormData();
+
+    formData.append('name', name);
+    formData.append('profileImage', profileImage);
+
+    const response = await this.api.post('/user-update', formData, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    const user = response.data.result;
+
+    return user;
+  }
+
+  async getUserInfo() {
+    const response = await this.api.get('/user', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    });
+    const user = response.data.result;
+
+    return user;
+  }
 }
 
 const authService = new AuthService();
