@@ -1,6 +1,8 @@
 import '../../../scss/main.css';
 import authService from '../../services/AuthService.js';
 
+
+// eslint-disable-next-line
 async function profileIcon() {
   const preview = document.getElementById('profileImage');
   const profileName = document.querySelector('.profile-image');
@@ -14,4 +16,4 @@ async function profileIcon() {
   }
 }
 
-profileIcon();
+// profileIcon();

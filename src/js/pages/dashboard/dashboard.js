@@ -110,30 +110,30 @@ taskForm.addEventListener('submit', async (e) => {
 
     tags: document.getElementById('tags').value
       ? document
-          .getElementById('tags')
-          .value.split(',')
-          .map((t) => t.trim())
+        .getElementById('tags')
+        .value.split(',')
+        .map((t) => t.trim())
       : [],
 
     block: document.getElementById('block').value
       ? document
-          .getElementById('block')
-          .value.split(',')
-          .map((t) => t.trim())
+        .getElementById('block')
+        .value.split(',')
+        .map((t) => t.trim())
       : [],
 
     blockedBy: document.getElementById('BlockedBy').value
       ? document
-          .getElementById('BlockedBy')
-          .value.split(',')
-          .map((t) => t.trim())
+        .getElementById('BlockedBy')
+        .value.split(',')
+        .map((t) => t.trim())
       : [],
 
     relatesTo: document.getElementById('relatesTo').value
       ? document
-          .getElementById('relatesTo')
-          .value.split(',')
-          .map((t) => t.trim())
+        .getElementById('relatesTo')
+        .value.split(',')
+        .map((t) => t.trim())
       : [],
 
     dueDate: document.getElementById('dueDate').value,
@@ -159,10 +159,7 @@ taskForm.addEventListener('submit', async (e) => {
 //end for tasks
 
 const listTableBody = document.getElementById('table-body');
-const sprintTableBody = document.getElementById('sprint-table-body');
-const backlogTableBody = document.getElementById('backlog-table-body');
 
-const listTableBody = document.getElementById('table-body');
 
 toggleBtn.addEventListener('click', () => {
   sidebar.classList.toggle('-translate-x-full');
@@ -331,13 +328,13 @@ async function renderDashboard(project) {
   projectName.innerText = project.name;
 }
 
-async function getTaskGroupedByStatus(projectId) {
+async function getTaskGroupedByStatus(projectId, filter, searchInput) {
   const project = (await projectService.getProjectById(projectId)).result;
   const result = {};
 
   project.columns.forEach((column) => (result[column] = []));
 
-  const tasks = await taskService.getTaskByProjectId(projectId);
+  const tasks = await taskService.getTaskByProjectId(projectId, filter, searchInput);
 
   tasks.data.result.forEach((task) => result[task.status].push(task));
 
@@ -348,8 +345,8 @@ async function getTaskGroupedByStatus(projectId) {
   return result;
 }
 
-async function renderBoard(projectId) {
-  const columns = await getTaskGroupedByStatus(projectId);
+async function renderBoard(projectId, filter = "", searchInput = "") {
+  const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const project = (await projectService.getProjectById(projectId)).result;
 
   renderDashboard(project);
@@ -499,30 +496,18 @@ async function renderBoard(projectId) {
   });
 }
 
-// const searchIcon = document.getElementById('search-icon');
-// const searchInput = document.getElementById('search-input');
-// searchIcon.addEventListener('click', (e) => {
-//   searchIcon.classList.toggle('hidden');
-//   searchInput.classList.toggle('hidden');
-//   e.stopPropagation();
-//   toggleSearchHidden();
-// });
+const searchForm = document.getElementById('search-input-form');
+const searchInput = document.getElementById('search-input-field');
+searchInput.addEventListener('input', handleSearch);
+searchForm.addEventListener('submit', handleSearch);
 
-// function toggleSearchHidden() {
-//   // if (document.addEventListener('click', (e) => {
+function handleSearch(e) {
+  e.preventDefault();
+  renderBoard(localStorage.getItem('selectedProject'), "", searchInput.value.trim());
+}
 
-//   // }))
-//   document.addEventListener('click', (e) => {
-//     console.log(e);
-//     if (!e.target.isEqualNode(searchInput)) {
-//       searchIcon.classList.toggle('hidden');
-//       searchInput.classList.toggle('hidden');
-//     }
-//   });
-// }
-
-renderBoard(localStorage.getItem('selectedProject'));
 checkIfToken();
+renderBoard(localStorage.getItem('selectedProject'));
 showProjectList();
 renderTasksList();
 renderDashBoardTasks();
