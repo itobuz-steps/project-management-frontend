@@ -28,6 +28,31 @@ const createProjectModal = document.getElementById('create-project-modal');
 const closeProjectBtn = document.getElementById('close-button');
 const projectCreateForm = document.getElementById('project-form');
 
+const filterBox = document.getElementById('filterBox');
+const mainDropdown = document.getElementById('mainDropdown');
+const subDropdowns = document.querySelectorAll('.subDropdown');
+
+filterBox.addEventListener('click', (e) => {
+  e.stopPropagation();
+  mainDropdown.classList.toggle('hidden');
+  subDropdowns.forEach((d) => d.classList.add('hidden'));
+});
+
+document.querySelectorAll('.dropdown-item').forEach((item) => {
+  item.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const target = item.getAttribute('data-target');
+
+    subDropdowns.forEach((d) => d.id !== target && d.classList.add('hidden'));
+    document.getElementById(target).classList.toggle('hidden');
+  });
+});
+
+document.addEventListener('click', () => {
+  mainDropdown.classList.add('hidden');
+  subDropdowns.forEach((d) => d.classList.add('hidden'));
+});
+
 openProjectBtn.addEventListener('click', () => {
   createProjectModal.classList.remove('hidden');
 });

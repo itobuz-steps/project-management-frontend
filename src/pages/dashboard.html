@@ -273,7 +273,8 @@
           </div>
 
           <div
-            class="form-container border border-gray-300 p-2 rounded w-full md:w-1/6 xl:w-1/16 bg-blue-400 cursor-pointer hover:bg-blue-300"
+            class="form-container border border-gray-300 p-2 rounded w-full md:w-1/6 xl:w-1/16 bg-blue-400 cursor-pointer hover:bg-blue-300 relative"
+            id="filterBox"
           >
             <div class="flex justify-between">
               <div>Filter</div>
@@ -288,14 +289,109 @@
                   <path
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    d=" M7 11h10v2H7zM4 7h16v2H4zm6 8h4v2h-4z"
+                    d="M7 11h10v2H7zM4 7h16v2H4zm6 8h4v2h-4z"
                   />
                 </svg>
               </div>
             </div>
-            <form action="" class="create-task-form"></form>
+
+            <!-- MAIN DROPDOWN -->
+            <div
+              id="mainDropdown"
+              class="hidden absolute md:left-full md:top-0 <!-- DESKTOP --> left-0 top-full <!-- MOBILE --> bg-white shadow-lg border rounded w-40 z-40"
+            >
+              <div
+                class="dropdown-item px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                data-target="sprintDropdown"
+              >
+                Sprint
+              </div>
+              <div
+                class="dropdown-item px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                data-target="asigneeDropdown"
+              >
+                Asignee
+              </div>
+              <div
+                class="dropdown-item px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                data-target="statusDropdown"
+              >
+                Status
+              </div>
+              <div
+                class="dropdown-item px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                data-target="priorityDropdown"
+              >
+                Priority
+              </div>
+            </div>
+
+            <!-- SUBDROPDOWNS -->
+
+            <div
+              id="sprintDropdown"
+              class="subDropdown hidden bg-white shadow border rounded w-40 absolute md:left-[200px] md:top-0 <!-- DESKTOP --> left-[-160px] top-full <!-- MOBILE --> z-50"
+            >
+              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                Sprint 1
+              </div>
+              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                Sprint 2
+              </div>
+              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                Sprint 3
+              </div>
+              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                Sprint 4
+              </div>
+            </div>
+
+            <div
+              id="asigneeDropdown"
+              class="subDropdown hidden bg-white shadow border rounded w-40 absolute md:left-[200px] md:top-0 left-[-160px] top-full z-50"
+            >
+              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                Member 1
+              </div>
+              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                Member 2
+              </div>
+              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                Member 3
+              </div>
+              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                Member 4
+              </div>
+            </div>
+
+            <div
+              id="statusDropdown"
+              class="subDropdown hidden bg-white shadow border rounded w-40 absolute md:left-[200px] md:top-0 left-[-160px] top-full z-50"
+            >
+              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                To Do
+              </div>
+              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                In Progress
+              </div>
+              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">QA</div>
+              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Done</div>
+            </div>
+
+            <div
+              id="priorityDropdown"
+              class="subDropdown hidden bg-white shadow border rounded w-40 absolute md:left-[200px] md:top-0 left-[-160px] top-full z-50"
+            >
+              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Low</div>
+              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Med</div>
+              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">High</div>
+              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                Critical
+              </div>
+            </div>
           </div>
         </div>
+
         <div class="content">
           <!-- list-view -->
           <div
