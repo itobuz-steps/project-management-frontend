@@ -4,38 +4,56 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Edit Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+
     <script
       type="module"
       src="../js/pages/editProfile/editProfile.js"
       defer
     ></script>
   </head>
-  <body class="flex justify-center items-center min-h-screen">
+
+  <body
+    class="flex justify-center items-center min-h-screen bg-[#caf0f8] font-['Libre_Baskerville']"
+  >
     <div
-      class="card p-4 w-90 flex flex-col justify-center align-center rounded-xl shadow-xl/50"
+      class="card p-4 w-90 flex flex-col justify-center align-center rounded-xl shadow-[0_8px_20px_rgba(0,180,216,0.15),_inset_0_0_10px_rgba(0,180,216,0.05)] bg-white max-w-[400px] w-full"
     >
-      <h3 class="text-center mb-4 text-xl font-semibold">Edit Profile</h3>
+      <h3 class="text-center mb-4 text-[28px] text-[#03045e] font-bold">
+        Edit Profile
+      </h3>
+
       <div class="flex justify-center align-center mb-3">
         <img
           id="preview"
           src="../assets/img/profile.png"
           alt="Profile Preview"
-          class="rounded-full"
-          width="100"
-          height="100"
+          class="rounded-full shadow-md border-4 border-[#90e0ef]"
+          width="110"
+          height="110"
         />
       </div>
-      <p id="user-email" class="text-cyan-500 text-center"></p>
+
+      <p id="user-email" class="text-[#0077b6] text-center text-sm mb-4"></p>
 
       <form
         id="edit-profile-form"
         enctype="multipart/form-data"
-        class="flex flex-col justify-center items-center gap-2 m-5"
+        class="flex flex-col justify-center items-center gap-4 m-5"
       >
-        <div class="flex flex-col justify-center align-center">
-          <label for="user_name" class="from-label">Username</label>
+        <div class="flex flex-col justify-center align-center w-full">
+          <label
+            for="user_name"
+            class="from-label text-[#03045e] font-semibold mb-1"
+            >Username</label
+          >
           <input
-            class="from-control border border-gray-300 p-2 rounded-lg w-75"
+            class="from-control text-sm border border-[#90e0ef] p-2 rounded-lg w-full outline-none focus:border-[#0077b6] focus:shadow-[0_0_8px_#0077b6] transition-all duration-300 placeholder:text-sm"
             type="text"
             id="name"
             name="user_name"
@@ -43,24 +61,33 @@
           />
         </div>
 
-        <div class="flex flex-col justify-center align-center">
-          <label for="profileImage" class="form-label"
-            >Upload Profile Image</label
+        <div class="flex flex-col justify-center align-center w-full">
+          <label
+            for="profileImage"
+            class="form-label text-[#03045e] font-semibold mb-1"
           >
+            Upload Profile Image
+          </label>
+
           <input
-            class="form-control border border-gray-300 p-2 rounded-lg w-75"
+            class="form-control border border-[#90e0ef] p-2 rounded-lg w-full cursor-pointer outline-none focus:border-[#0077b6] focus:shadow-[0_0_8px_#0077b6] transition-all duration-300 text-sm text-[#03045e] file:bg-[#caf0f8] file:border-none file:mr-4 file:px-4 file:py-1 file:rounded-md file:text-[#03045e] file:font-medium file:cursor-pointer hover:border-[#0077b6] hover:shadow-[0_0_8px_#90e0ef]"
             type="file"
             id="profileImageAdd"
             name="profileImage"
             accept="image/*"
           />
         </div>
-        <label for="profile_image" class="form-label text-gray-500 mb-3 text-xs"
-          >* max 5KB</label
+
+        <label
+          for="profile_image"
+          class="form-label text-gray-500 mb-3 text-xs"
         >
+          * max 5KB
+        </label>
+
         <button
           type="submit"
-          class="btn btn-primary w-75 text-white py-2 rounded-lg hover:bg-cyan-600 bg-cyan-500 shadow-lg shadow-cyan-500/50"
+          class="btn btn-primary w-full text-white py-2 rounded-lg bg-[#0077b6] hover:bg-[#00b4d8] transition-all duration-300 font-medium"
         >
           Save
         </button>
@@ -68,10 +95,12 @@
       <a
         href="#"
         id="profile-go-back-btn"
-        class="text-cyan-500 font-semibold transition-colors duration-300 text-center"
-        >&#8592; Go back</a
+        class="text-[#0077b6] font-semibold transition-colors duration-300 text-center hover:text-[#00b4d8]"
       >
-      <p id="message" class="text-center mt-3"></p>
+        &#8592; Go back
+      </a>
+
+      <p id="message" class="text-center mt-3 text-[#03045e] font-medium"></p>
     </div>
   </body>
 </html>
