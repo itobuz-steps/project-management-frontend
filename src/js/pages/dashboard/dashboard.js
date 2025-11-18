@@ -5,6 +5,7 @@ import {
 } from '../../utils/renderTasks.js';
 import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
+import axios from 'axios';
 
 const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
@@ -159,7 +160,108 @@ taskForm.addEventListener('submit', async (e) => {
   }
 });
 
-//end for tasks
+//end for create tasks
+
+//update task details
+
+const openEditTask = document.getElementById('');
+const closeEditTask = document.getElementById('close-task-modal');
+const editModal = document.getElementById('update-task-modal');
+const editForm = document.getElementById('edit-task-form');
+
+let currentTaskId = null;
+
+async function openEditModal(taskId) {
+  currentTaskId = taskId;
+
+  try {
+    const response = await taskService.getTaskById(taskId);
+    const task = response.data.result;
+    console.log(taskId, task);
+
+    editModal.querySelector('#title').value = task.title;
+    editModal.querySelector('#description').value = task.description;
+    editModal.querySelector('#type').value = task.type;
+    editModal.querySelector('#priority').value = task.priority;
+    editModal.querySelector('#status').value = task.status;
+    editModal.querySelector('#tags').value = task.tags?.join(', ') || '';
+    editModal.querySelector('#block').value = task.block || '';
+    editModal.querySelector('#BlockedBy').value = task.blockedBy || '';
+    editModal.querySelector('#relatesTo').value = task.relatesTo || '';
+    if (task.dueDate) {
+      console.log(task.dueDate);
+      const dueDate = new Date(task.dueDate);
+
+      const formattedDate = dueDate.toISOString().slice(0, 10);
+      editModal.querySelector('#dueDate').value = formattedDate;
+    } else {
+      editModal.querySelector('#dueDate').value = '';
+    }
+    editModal.querySelector('#assignee').value = task.assignee || '';
+
+    editModal.classList.remove('hidden');
+  } catch (error) {
+    console.error('Failed to load task:', error);
+    alert('Error loading task data');
+  }
+}
+
+// Submit form
+editForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const updatedTask = {
+    title: editModal.querySelector('#title').value,
+    description: editModal.querySelector('#description').value,
+    type: editModal.querySelector('#type').value,
+    priority: editModal.querySelector('#priority').value,
+    status: editModal.querySelector('#status').value,
+    tags: editModal
+      .querySelector('#tags')
+      .value.split(',')
+      .map((t) => t.trim()),
+    relatesTo: editModal
+      .querySelector('#relatesTo')
+      .value.split(',')
+      .map((t) => t.trim()),
+
+    blockedBy: editModal
+      .querySelector('#BlockedBy')
+      .value.split(',')
+      .map((t) => t.trim()),
+
+    block: editModal
+      .querySelector('#block')
+      .value.split(',')
+      .map((t) => t.trim()),
+
+    dueDate: editModal.querySelector('#dueDate').value,
+    assignee: editModal.querySelector('#assignee').value,
+  };
+
+  console.log(updatedTask);
+
+  try {
+    const response = await taskService.updateTask(currentTaskId, updatedTask);
+    console.log('Task updated successfully:', response.data);
+
+    editModal.classList.add('hidden');
+  } catch (error) {
+    console.error(error);
+    alert('Failed to update task');
+  }
+});
+
+// Close modal
+closeEditTask.addEventListener('click', () => {
+  editModal.classList.add('hidden');
+});
+
+//update task
+
+// create sprint modal
+
+//update sprint modal
 
 const listTableBody = document.getElementById('table-body');
 
@@ -416,13 +518,6 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
                   Delete
                 </button>
               </li>
-              <li>
-                <button
-                  class="move-btn block w-full text-left px-4 py-2 hover:bg-gray-100"
-                >
-                  Move To
-                </button>
-              </li>
             </ul>
           </div>
         </div>
@@ -470,13 +565,15 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
 
       taskEl.querySelector('.edit-btn').addEventListener('click', () => {
         dropdownMenu.classList.add('hidden');
+        console.log(task._id);
+        openEditModal(task._id);
       });
-      taskEl.querySelector('.delete-btn').addEventListener('click', () => {
-        dropdownMenu.classList.add('hidden');
-      });
-      taskEl.querySelector('.move-btn').addEventListener('click', () => {
-        dropdownMenu.classList.add('hidden');
-      });
+      taskEl
+        .querySelector('.delete-btn')
+        .addEventListener('click', async () => {
+          dropdownMenu.classList.add('hidden');
+          await taskService.deleteTask(task._id);
+        });
 
       typeSelector.addEventListener('change', (e) => {
         const value = e.target.value;
