@@ -1,5 +1,8 @@
 import '../../../scss/main.css';
-import { renderTasksList, renderDashBoardTasks } from '../../utils/renderTasks.js';
+import {
+  renderTasksList,
+  renderDashBoardTasks,
+} from '../../utils/renderTasks.js';
 import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
 
@@ -24,6 +27,31 @@ const openProjectBtn = document.getElementById('plus-icon');
 const createProjectModal = document.getElementById('create-project-modal');
 const closeProjectBtn = document.getElementById('close-button');
 const projectCreateForm = document.getElementById('project-form');
+
+const filterBox = document.getElementById('filterBox');
+const mainDropdown = document.getElementById('mainDropdown');
+const subDropdowns = document.querySelectorAll('.subDropdown');
+
+filterBox.addEventListener('click', (e) => {
+  e.stopPropagation();
+  mainDropdown.classList.toggle('hidden');
+  subDropdowns.forEach((d) => d.classList.add('hidden'));
+});
+
+document.querySelectorAll('.dropdown-item').forEach((item) => {
+  item.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const target = item.getAttribute('data-target');
+
+    subDropdowns.forEach((d) => d.id !== target && d.classList.add('hidden'));
+    document.getElementById(target).classList.toggle('hidden');
+  });
+});
+
+document.addEventListener('click', () => {
+  mainDropdown.classList.add('hidden');
+  subDropdowns.forEach((d) => d.classList.add('hidden'));
+});
 
 openProjectBtn.addEventListener('click', () => {
   createProjectModal.classList.remove('hidden');
@@ -108,30 +136,30 @@ taskForm.addEventListener('submit', async (e) => {
 
     tags: document.getElementById('tags').value
       ? document
-        .getElementById('tags')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('tags')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     block: document.getElementById('block').value
       ? document
-        .getElementById('block')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('block')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     blockedBy: document.getElementById('BlockedBy').value
       ? document
-        .getElementById('BlockedBy')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('BlockedBy')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     relatesTo: document.getElementById('relatesTo').value
       ? document
-        .getElementById('relatesTo')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('relatesTo')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     dueDate: document.getElementById('dueDate').value,
@@ -328,7 +356,11 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
 
   project.columns.forEach((column) => (result[column] = []));
 
-  const tasks = await taskService.getTaskByProjectId(projectId, filter, searchInput);
+  const tasks = await taskService.getTaskByProjectId(
+    projectId,
+    filter,
+    searchInput
+  );
 
   tasks.data.result.forEach((task) => result[task.status].push(task));
 
@@ -339,7 +371,7 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
   return result;
 }
 
-async function renderBoard(projectId, filter = "", searchInput = "") {
+async function renderBoard(projectId, filter = '', searchInput = '') {
   const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const project = (await projectService.getProjectById(projectId)).result;
 
@@ -497,7 +529,11 @@ searchForm.addEventListener('submit', handleSearch);
 
 function handleSearch(e) {
   e.preventDefault();
-  renderBoard(localStorage.getItem('selectedProject'), "", searchInput.value.trim());
+  renderBoard(
+    localStorage.getItem('selectedProject'),
+    '',
+    searchInput.value.trim()
+  );
 }
 
 checkIfToken();
