@@ -454,6 +454,7 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
           >
         </div>
       </div>`;
+
       const menuButton = taskEl.querySelector('.menu-button');
       const dropdownMenu = taskEl.querySelector('.dropdown-menu');
       const typeTag = taskEl.querySelector('.type-tag');
@@ -467,6 +468,8 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
       document.addEventListener('click', () => {
         dropdownMenu.classList.add('hidden');
       });
+
+      taskEl.addEventListener('click', () => showTaskDrawer(task._id));
 
       taskEl.querySelector('.edit-btn').addEventListener('click', () => {
         dropdownMenu.classList.add('hidden');
@@ -511,6 +514,41 @@ function handleSearch(e) {
     '',
     searchInput.value.trim()
   );
+}
+
+async function showTaskDrawer(taskId) {
+  const task = (await taskService.getTaskById(taskId)).data.result;
+  const assignee = (await taskService.getUserDetailsById(task.assignee)).data
+    .result;
+  console.log(assignee);
+
+  const taskDrawer = document.querySelector('.task-drawer');
+  const drawerBackdrop = document.querySelector('.drawer-backdrop');
+
+  const titleEl = taskDrawer.querySelector('.title');
+  const descriptionEl = taskDrawer.querySelector('.description');
+  const assigneeEl = taskDrawer.querySelector('.assignee');
+  const profileImageEl = taskDrawer.querySelector('.profile-image');
+  const dueDateEl = taskDrawer.querySelector('.due-date');
+  const closeButton = taskDrawer.querySelector('.close-btn');
+
+  taskDrawer.dataset.id = task._id;
+  titleEl.textContent = task.title;
+  descriptionEl.textContent = task.description;
+  assigneeEl.textContent = assignee.name;
+  profileImageEl.src =
+    'http://localhost:3001/uploads/profile/' + assignee.profileImage;
+  dueDateEl.textContent = task.dueDate;
+
+  taskDrawer.classList.remove('translate-x-full');
+  taskDrawer.classList.add('transform-none');
+  drawerBackdrop.classList.remove('hidden');
+
+  closeButton.addEventListener('click', () => {
+    taskDrawer.classList.add('translate-x-full');
+    taskDrawer.classList.remove('transform-none');
+    drawerBackdrop.classList.add('hidden');
+  });
 }
 
 checkIfToken();
