@@ -1,5 +1,8 @@
 import '../../../scss/main.css';
-import { renderTasksList, renderDashBoardTasks } from '../../utils/renderTasks.js';
+import {
+  renderTasksList,
+  renderDashBoardTasks,
+} from '../../utils/renderTasks.js';
 import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
 
@@ -108,30 +111,30 @@ taskForm.addEventListener('submit', async (e) => {
 
     tags: document.getElementById('tags').value
       ? document
-        .getElementById('tags')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('tags')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     block: document.getElementById('block').value
       ? document
-        .getElementById('block')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('block')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     blockedBy: document.getElementById('BlockedBy').value
       ? document
-        .getElementById('BlockedBy')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('BlockedBy')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     relatesTo: document.getElementById('relatesTo').value
       ? document
-        .getElementById('relatesTo')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('relatesTo')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     dueDate: document.getElementById('dueDate').value,
@@ -139,6 +142,8 @@ taskForm.addEventListener('submit', async (e) => {
 
     attachments: input.files,
   };
+
+  console.log({ task });
 
   try {
     const response = await taskService.createTask(task);
@@ -328,7 +333,11 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
 
   project.columns.forEach((column) => (result[column] = []));
 
-  const tasks = await taskService.getTaskByProjectId(projectId, filter, searchInput);
+  const tasks = await taskService.getTaskByProjectId(
+    projectId,
+    filter,
+    searchInput
+  );
 
   tasks.data.result.forEach((task) => result[task.status].push(task));
 
@@ -339,7 +348,7 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
   return result;
 }
 
-async function renderBoard(projectId, filter = "", searchInput = "") {
+async function renderBoard(projectId, filter = '', searchInput = '') {
   const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const project = (await projectService.getProjectById(projectId)).result;
 
@@ -497,7 +506,11 @@ searchForm.addEventListener('submit', handleSearch);
 
 function handleSearch(e) {
   e.preventDefault();
-  renderBoard(localStorage.getItem('selectedProject'), "", searchInput.value.trim());
+  renderBoard(
+    localStorage.getItem('selectedProject'),
+    '',
+    searchInput.value.trim()
+  );
 }
 
 checkIfToken();
