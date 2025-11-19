@@ -9,6 +9,7 @@ async function profileIcon() {
 
   if (response.profileImage) {
     preview.src = `http://localhost:3001/uploads/profile/${response.profileImage}`;
+    preview.title = response.email;
   } else {
     profileNameIcon(profileName);
   }
