@@ -199,8 +199,8 @@
       <div
         class="main p-2 flex flex-col gap-4 transition-all duration-300 flex-1 overflow-auto"
       >
-        <div class="project-info items-center flex flex-row gap-3">
-          <div>
+        <div class="project-info items-center flex flex-row justify-between">
+          <div class="flex flex-row items-center gap-3">
             <div class="project-name text-2xl font-semibold" id="projectName">
               Project Name
             </div>
@@ -1331,71 +1331,5 @@
     <div
       class="drawer-backdrop hidden bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-30"
     ></div>
-
-    <script type="module">
-      import authService from '../js/services/AuthService.js';
-
-      const userInfo = await authService.getUserInfo();
-
-      async function loadProjectMembers() {
-        try {
-          const token = localStorage.getItem('access_token');
-
-          if (!token) {
-            console.error('No token found in localStorage');
-            return;
-          }
-
-          const res = await fetch(
-            'http://localhost:3001/project/get-user/69156d314a8b5c98fff3fb48',
-            {
-              method: 'GET',
-              headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json',
-              },
-            }
-          );
-
-          const data = await res.json();
-          console.log('API Response:', data);
-
-          if (!data.success) {
-            console.error('API Error:', data.message);
-            return;
-          }
-
-          const members = data.result;
-          const container = document.getElementById('memberAvatars');
-          container.innerHTML = '';
-
-          members.forEach((user, index) => {
-            const img = document.createElement('img');
-
-            const imageUrl = user.profileImage
-              ? `http://localhost:3001/uploads/profile/${encodeURIComponent(
-                  user.profileImage
-                )}`
-              : 'http://localhost:3001/uploads/profile/default-avatar.png';
-
-            img.src = imageUrl;
-            img.alt = user.name;
-            img.title = user.name;
-
-            img.className =
-              'w-10 h-10 rounded-full object-cover border-2 border-white shadow-md';
-
-            // stacked like Jira
-            img.style.marginLeft = index === 0 ? '0px' : '-10px';
-
-            container.appendChild(img);
-          });
-        } catch (error) {
-          console.error('Error loading images:', error);
-        }
-      }
-
-      loadProjectMembers();
-    </script>
   </body>
 </html>
