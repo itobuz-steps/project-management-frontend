@@ -8,7 +8,6 @@ import taskService from '../../services/TaskService.js';
 import axios from 'axios';
 import commentService from '../../services/CommentService.js';
 
-
 const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
 
@@ -676,7 +675,7 @@ async function showTaskDrawer(taskId) {
   assigneeEl.textContent = assignee.name;
   profileImageEl.src =
     'http://localhost:3001/uploads/profile/' + assignee.profileImage;
-  dueDateEl.textContent = task.dueDate;
+  dueDateEl.textContent = task.dueDate.split('T')[0];
 
   taskDrawer.classList.remove('translate-x-full');
   taskDrawer.classList.add('transform-none');
