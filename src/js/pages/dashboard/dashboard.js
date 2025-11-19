@@ -5,7 +5,6 @@ import {
 } from '../../utils/renderTasks.js';
 import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
-import axios from 'axios';
 import commentService from '../../services/CommentService.js';
 
 const profileBtn = document.getElementById('profileBtn');
@@ -597,7 +596,7 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         }
       });
 
-      cardHeader.addEventListener('click', (e) => {
+      cardHeader.addEventListener('click', () => {
         showTaskDrawer(task._id);
       });
 
