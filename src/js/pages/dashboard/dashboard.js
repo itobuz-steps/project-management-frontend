@@ -5,7 +5,7 @@ import {
 } from '../../utils/renderTasks.js';
 import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
-import axios from 'axios';
+// import axios from 'axios';
 
 const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
@@ -128,7 +128,7 @@ taskForm.addEventListener('submit', async (e) => {
 
   // Build the task object from form inputs
   const task = {
-    projectId: '69156d314a8b5c98fff3fb48',
+    projectId: localStorage.getItem('selectedProject'),
     title: document.getElementById('title').value.trim(),
     description: document.getElementById('description').value.trim(),
     type: document.getElementById('type').value,
@@ -189,8 +189,7 @@ taskForm.addEventListener('submit', async (e) => {
 
 //update task details
 
-const openEditTask = document.getElementById('');
-const closeEditTask = document.getElementById('close-task-modal');
+const closeEditTask = document.getElementById('close-update-task-modal');
 const editModal = document.getElementById('update-task-modal');
 const editForm = document.getElementById('edit-task-form');
 
@@ -222,7 +221,7 @@ async function openEditModal(taskId) {
     } else {
       editModal.querySelector('#dueDate').value = '';
     }
-    editModal.querySelector('#assignee').value = task.assignee || '';
+    editModal.querySelector('#assignee').value = task.assignee || null;
 
     editModal.classList.remove('hidden');
   } catch (error) {
