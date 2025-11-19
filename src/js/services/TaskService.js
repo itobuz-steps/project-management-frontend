@@ -136,10 +136,15 @@ class TaskService {
     if (task.assignee) {
       formData.append('assignee', task.assignee);
     } // change the service logic    }
-
-    formData.append('block', JSON.stringify(task.block));
-    formData.append('blockedBy', JSON.stringify(task.blockedBy));
-    formData.append('relatesTo', JSON.stringify(task.relatesTo));
+    task.block.forEach((blockingTask) => {
+      formData.append('block[]', blockingTask);
+    });
+    task.block.forEach((blockedTask) => {
+      formData.append('blockedBy[]', blockedTask);
+    });
+    task.block.forEach((relatedTask) => {
+      formData.append('relatesTo[]', relatedTask);
+    });
 
     // if (task.attachments && task.attachments.length > 0) {
     //   for (let i = 0; i < task.attachments.length; i++) {

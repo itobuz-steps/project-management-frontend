@@ -67,7 +67,8 @@ projectCreateForm.addEventListener('submit', async (e) => {
 
   const name = document.getElementById('name').value.trim();
   const projectType = document.getElementById('projectType').value;
-  const columnInput = document.getElementById('columns').value;
+  const columnInput = document.getElementById('project-columns').value;
+  console.log(columnInput);
 
   let columns = [];
   if (columnInput) {
@@ -649,8 +650,9 @@ function handleSearch(e) {
 
 async function showTaskDrawer(taskId) {
   const task = (await taskService.getTaskById(taskId)).data.result;
-  const assignee = (await taskService.getUserDetailsById(task.assignee)).data
-    .result;
+  const assignee = task.assignee
+    ? (await taskService.getUserDetailsById(task.assignee)).data.result
+    : null;
   console.log(assignee);
 
   const taskDrawer = document.querySelector('.task-drawer');
@@ -671,9 +673,13 @@ async function showTaskDrawer(taskId) {
   taskDrawer.dataset.id = task._id;
   titleEl.textContent = task.title;
   descriptionEl.textContent = task.description;
-  assigneeEl.textContent = assignee.name;
-  profileImageEl.src =
-    'http://localhost:3001/uploads/profile/' + assignee.profileImage;
+  assigneeEl.textContent = assignee ? assignee.name : 'No assignee';
+  profileImageEl.src = assignee
+    ? 'http://localhost:3001/uploads/profile/' + assignee.profileImage
+    : '';
+
+  !assignee && profileImageEl.classList.add('hidden');
+  
   dueDateEl.textContent = task.dueDate.split('T')[0];
 
   taskDrawer.classList.remove('translate-x-full');
@@ -684,6 +690,7 @@ async function showTaskDrawer(taskId) {
     taskDrawer.classList.add('translate-x-full');
     taskDrawer.classList.remove('transform-none');
     drawerBackdrop.classList.add('hidden');
+    profileImageEl.classList.remove('hidden');
   });
 
   comments.forEach((comment) => {
@@ -743,6 +750,11 @@ async function loadProjectMembers(projectId) {
     console.error('Error loading images:', error);
   }
 }
+
+const editTaskButton = document.getElementById('edit-task-button');
+editTaskButton.addEventListener('click', () => {
+  editModal.classList.remove('hidden');
+});
 
 checkIfToken();
 loadProjectMembers(localStorage.getItem('selectedProject'));
