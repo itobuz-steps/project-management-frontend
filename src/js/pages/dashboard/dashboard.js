@@ -8,6 +8,7 @@ import taskService from '../../services/TaskService.js';
 import axios from 'axios';
 import commentService from '../../services/CommentService.js';
 
+
 const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
 
@@ -129,7 +130,7 @@ taskForm.addEventListener('submit', async (e) => {
 
   // Build the task object from form inputs
   const task = {
-    projectId: '69156d314a8b5c98fff3fb48',
+    projectId: localStorage.getItem('selectedProject'),
     title: document.getElementById('title').value.trim(),
     description: document.getElementById('description').value.trim(),
     type: document.getElementById('type').value,
@@ -190,8 +191,7 @@ taskForm.addEventListener('submit', async (e) => {
 
 //update task details
 
-const openEditTask = document.getElementById('');
-const closeEditTask = document.getElementById('close-task-modal');
+const closeEditTask = document.getElementById('close-update-task-modal');
 const editModal = document.getElementById('update-task-modal');
 const editForm = document.getElementById('edit-task-form');
 
@@ -223,7 +223,7 @@ async function openEditModal(taskId) {
     } else {
       editModal.querySelector('#dueDate').value = '';
     }
-    editModal.querySelector('#assignee').value = task.assignee || '';
+    editModal.querySelector('#assignee').value = task.assignee || null;
 
     editModal.classList.remove('hidden');
   } catch (error) {
@@ -446,6 +446,7 @@ projectDropdownContainer.addEventListener('click', (event) => {
   renderDashBoardTasks();
   renderTasksList();
   renderBoard(localStorage.getItem('selectedProject'));
+  loadProjectMembers(localStorage.getItem('selectedProject'));
 });
 
 async function renderDashboard(project) {
@@ -716,7 +717,37 @@ async function showTaskDrawer(taskId) {
   });
 }
 
+async function loadProjectMembers(projectId) {
+  try {
+    const data = await projectService.getProjectMembers(projectId);
+    const members = data.result;
+    const container = document.getElementById('memberAvatars');
+    container.innerHTML = '';
+
+    members.forEach((userInfo, index) => {
+      const img = document.createElement('img');
+      const imageUrl = userInfo.profileImage
+        ? `http://localhost:3001/uploads/profile/${userInfo.profileImage}`
+        : `../../../assets/img/profile.png`;
+
+      img.src = imageUrl;
+      img.alt = userInfo.name;
+      img.title = userInfo.name;
+
+      img.className =
+        'w-10 h-10 rounded-full object-cover border-2 border-white shadow-md';
+
+      img.style.marginLeft = index === 0 ? '0px' : '-10px';
+
+      container.appendChild(img);
+    });
+  } catch (error) {
+    console.error('Error loading images:', error);
+  }
+}
+
 checkIfToken();
+loadProjectMembers(localStorage.getItem('selectedProject'));
 renderBoard(localStorage.getItem('selectedProject'));
 showProjectList();
 renderTasksList();

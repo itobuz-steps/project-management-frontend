@@ -126,6 +126,18 @@ class ProjectService {
       );
     }
   }
+
+  async getProjectMembers(projectId) {
+    try {
+      const response = await this.api.get(`/get-user/${projectId}`);
+
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || 'Failed to fetch project members'
+      );
+    }
+  }
 }
 
 const projectService = new ProjectService();
