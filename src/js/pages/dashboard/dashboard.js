@@ -444,6 +444,7 @@ projectDropdownContainer.addEventListener('click', (event) => {
   renderDashBoardTasks();
   renderTasksList();
   renderBoard(localStorage.getItem('selectedProject'));
+  loadProjectMembers(localStorage.getItem('selectedProject'));
 });
 
 async function renderDashboard(project) {
@@ -672,7 +673,37 @@ async function showTaskDrawer(taskId) {
   });
 }
 
+async function loadProjectMembers(projectId) {
+  try {
+    const data = await projectService.getProjectMembers(projectId);
+    const members = data.result;
+    const container = document.getElementById('memberAvatars');
+    container.innerHTML = '';
+
+    members.forEach((userInfo, index) => {
+      const img = document.createElement('img');
+      const imageUrl = userInfo.profileImage
+        ? `http://localhost:3001/uploads/profile/${userInfo.profileImage}`
+        : `../../../assets/img/profile.png`;
+
+      img.src = imageUrl;
+      img.alt = userInfo.name;
+      img.title = userInfo.name;
+
+      img.className =
+        'w-10 h-10 rounded-full object-cover border-2 border-white shadow-md';
+
+      img.style.marginLeft = index === 0 ? '0px' : '-10px';
+
+      container.appendChild(img);
+    });
+  } catch (error) {
+    console.error('Error loading images:', error);
+  }
+}
+
 checkIfToken();
+loadProjectMembers(localStorage.getItem('selectedProject'));
 renderBoard(localStorage.getItem('selectedProject'));
 showProjectList();
 renderTasksList();
