@@ -5,7 +5,6 @@ import {
 } from '../../utils/renderTasks.js';
 import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
-// import axios from 'axios';
 
 const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
@@ -18,6 +17,7 @@ document.addEventListener('click', (e) => {
   if (!profileBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
     dropdownMenu.classList.add('hidden');
   }
+  e.stopPropagation();
 });
 
 const toggleBtn = document.querySelector('.toggle-sidebar-btn');
@@ -49,9 +49,10 @@ document.querySelectorAll('.dropdown-item').forEach((item) => {
   });
 });
 
-document.addEventListener('click', () => {
+document.addEventListener('click', (e) => {
   mainDropdown.classList.add('hidden');
   subDropdowns.forEach((d) => d.classList.add('hidden'));
+  e.stopPropagation();
 });
 
 openProjectBtn.addEventListener('click', () => {
@@ -137,30 +138,30 @@ taskForm.addEventListener('submit', async (e) => {
 
     tags: document.getElementById('tags').value
       ? document
-          .getElementById('tags')
-          .value.split(',')
-          .map((t) => t.trim())
+        .getElementById('tags')
+        .value.split(',')
+        .map((t) => t.trim())
       : [],
 
     block: document.getElementById('block').value
       ? document
-          .getElementById('block')
-          .value.split(',')
-          .map((t) => t.trim())
+        .getElementById('block')
+        .value.split(',')
+        .map((t) => t.trim())
       : [],
 
     blockedBy: document.getElementById('BlockedBy').value
       ? document
-          .getElementById('BlockedBy')
-          .value.split(',')
-          .map((t) => t.trim())
+        .getElementById('BlockedBy')
+        .value.split(',')
+        .map((t) => t.trim())
       : [],
 
     relatesTo: document.getElementById('relatesTo').value
       ? document
-          .getElementById('relatesTo')
-          .value.split(',')
-          .map((t) => t.trim())
+        .getElementById('relatesTo')
+        .value.split(',')
+        .map((t) => t.trim())
       : [],
 
     dueDate: document.getElementById('dueDate').value,
@@ -300,6 +301,7 @@ document.addEventListener('click', (e) => {
     sidebar.classList.add('-translate-x-full');
     sidebar.classList.remove('translate-x-0');
   }
+  e.stopPropagation();
 });
 
 const projectsMenu = document.getElementById('projectsMenu');
@@ -489,14 +491,16 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
                 class="w-72 bg-white rounded-lg shadow p-4 shrink-0 h-full overflow-y-auto"
               >
                 <h2
-                  class="text-lg font-semibold mb-3 border-b pb-2 sticky top-0 bg-white z-10"
+                  class="text-lg font-semibold mb-3 border-b pb-2 sticky top-0 bg-white z-10 flex gap-2"
                 >
                   ${column.toUpperCase()}
+                  <div class="issue-count rounded-full  w-7 h-7 text-center text-md text-white bg-cyan-900"></div>
                 </h2>
                 <div class="space-y-3 pb-4 class" id="task-list">
                 </div>
               </div>
     `;
+    columnEl.querySelector('.issue-count').innerText = columns[column].length;
 
     const tasks = columns[column];
     tasks.forEach((task) => {
@@ -584,8 +588,9 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         dropdownMenu.classList.toggle('hidden');
       });
 
-      document.addEventListener('click', () => {
+      document.addEventListener('click', (e) => {
         dropdownMenu.classList.add('hidden');
+        e.stopPropagation();
       });
 
       taskEl.addEventListener('click', () => showTaskDrawer(task._id));
@@ -621,6 +626,8 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
 
     columnContainer.appendChild(columnEl);
   });
+
+  handleStatusFilter();
 }
 
 const searchForm = document.getElementById('search-input-form');
@@ -672,8 +679,56 @@ async function showTaskDrawer(taskId) {
   });
 }
 
+function renderSubDropdown(item) {
+  const subDropdown = document.createElement('div');
+  subDropdown.className = `px-4 py-2 hover:bg-gray-100 cursor-pointer ${item}-filter`;
+  subDropdown.id = `${item}-filter`;
+  subDropdown.innerHTML = `
+    ${item.charAt(0).toUpperCase() + item.slice(1)}
+  `;
+  return subDropdown;
+}
+
 checkIfToken();
-renderBoard(localStorage.getItem('selectedProject'));
+const currentProject = localStorage.getItem('selectedProject');
+
+const statusDropDown = document.getElementById('statusDropdown');
+
+async function handleStatusFilter() {
+  const project = (await projectService.getProjectById(currentProject)).result;
+
+  project.columns.forEach((column) => {
+    const dropdownEl = renderSubDropdown(column);
+    statusDropDown.appendChild(dropdownEl);
+    dropdownEl.addEventListener('click', () => {
+      statusDropDown.innerHTML = '';
+      renderBoard(currentProject, 'status', `${column}`)
+    });
+  });
+}
+
+const lowFilterBtn = document.getElementById('low-filter');
+const midFilterBtn = document.getElementById('medium-filter');
+const highFilterBtn = document.getElementById('high-filter');
+const criticalFilterBtn = document.getElementById('critical-filter');
+
+lowFilterBtn.addEventListener('click', () => {
+  renderBoard(currentProject, 'priority', 'low');
+});
+
+midFilterBtn.addEventListener('click', () => {
+  renderBoard(currentProject, 'priority', 'medium');
+});
+
+highFilterBtn.addEventListener('click', () => {
+  renderBoard(currentProject, 'priority', 'high');
+});
+
+criticalFilterBtn.addEventListener('click', () => {
+  renderBoard(currentProject, 'priority', 'critical');
+});
+
+renderBoard(currentProject);
 showProjectList();
 renderTasksList();
 renderDashBoardTasks();

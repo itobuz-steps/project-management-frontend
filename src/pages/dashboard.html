@@ -298,7 +298,7 @@
             <!-- MAIN DROPDOWN -->
             <div
               id="mainDropdown"
-              class="hidden absolute md:left-full md:top-0 <!-- DESKTOP --> left-0 top-full <!-- MOBILE --> bg-white shadow-lg border rounded w-40 z-40"
+              class="hidden absolute md:left-full md:top-0 left-0 top-full bg-white shadow-lg border rounded w-35 sm:w-40 z-40"
             >
               <div
                 class="dropdown-item px-4 py-2 hover:bg-gray-100 cursor-pointer"
@@ -330,7 +330,7 @@
 
             <div
               id="sprintDropdown"
-              class="subDropdown hidden bg-white shadow border rounded w-40 absolute md:left-[200px] md:top-0 <!-- DESKTOP --> left-[-160px] top-full <!-- MOBILE --> z-50"
+              class="subDropdown hidden bg-white shadow border rounded w-35 sm:w-40 absolute md:left-[200px] md:top-0 -left-32 sm:-left-40 top-full z-50"
             >
               <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                 Sprint 1
@@ -348,7 +348,7 @@
 
             <div
               id="asigneeDropdown"
-              class="subDropdown hidden bg-white shadow border rounded w-40 absolute md:left-[200px] md:top-0 left-[-160px] top-full z-50"
+              class="subDropdown hidden bg-white shadow border rounded w-35 sm:w-40 absolute md:left-[200px] md:top-0 -left-32 sm:-left-40 top-full z-50"
             >
               <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                 Member 1
@@ -366,26 +366,35 @@
 
             <div
               id="statusDropdown"
-              class="subDropdown hidden bg-white shadow border rounded w-40 absolute md:left-[200px] md:top-0 left-[-160px] top-full z-50"
-            >
-              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                To Do
-              </div>
-              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                In Progress
-              </div>
-              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">QA</div>
-              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Done</div>
-            </div>
+              class="subDropdown hidden bg-white shadow border rounded w-35 sm:w-40 absolute md:left-[200px] md:top-0 -left-32 sm:-left-40 top-full z-50"
+            ></div>
 
             <div
               id="priorityDropdown"
-              class="subDropdown hidden bg-white shadow border rounded w-40 absolute md:left-[200px] md:top-0 left-[-160px] top-full z-50"
+              class="subDropdown hidden bg-white shadow border rounded w-35 sm:w-40 absolute md:left-[200px] md:top-0 -left-32 sm:-left-40 top-full z-50"
             >
-              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Low</div>
-              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">Med</div>
-              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">High</div>
-              <div class="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+              <div
+                class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                id="low-filter"
+              >
+                Low
+              </div>
+              <div
+                class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                id="medium-filter"
+              >
+                Med
+              </div>
+              <div
+                class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                id="high-filter"
+              >
+                High
+              </div>
+              <div
+                class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                id="critical-filter"
+              >
                 Critical
               </div>
             </div>
@@ -1323,6 +1332,7 @@
         </div>
       </div>
     </div>
+
     <div
       class="drawer-backdrop hidden bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-30"
     ></div>
