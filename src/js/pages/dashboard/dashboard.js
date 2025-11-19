@@ -1,5 +1,8 @@
 import '../../../scss/main.css';
-import { renderTasksList, renderDashBoardTasks } from '../../utils/renderTasks.js';
+import {
+  renderTasksList,
+  renderDashBoardTasks,
+} from '../../utils/renderTasks.js';
 import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
 
@@ -108,30 +111,30 @@ taskForm.addEventListener('submit', async (e) => {
 
     tags: document.getElementById('tags').value
       ? document
-        .getElementById('tags')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('tags')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     block: document.getElementById('block').value
       ? document
-        .getElementById('block')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('block')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     blockedBy: document.getElementById('BlockedBy').value
       ? document
-        .getElementById('BlockedBy')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('BlockedBy')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     relatesTo: document.getElementById('relatesTo').value
       ? document
-        .getElementById('relatesTo')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('relatesTo')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     dueDate: document.getElementById('dueDate').value,
@@ -154,7 +157,107 @@ taskForm.addEventListener('submit', async (e) => {
   }
 });
 
-//end for tasks
+//end for create tasks
+
+//update task details
+
+const closeEditTask = document.getElementById('close-update-task-modal');
+const editModal = document.getElementById('update-task-modal');
+const editForm = document.getElementById('edit-task-form');
+
+let currentTaskId = null;
+
+async function openEditModal(taskId) {
+  currentTaskId = taskId;
+
+  try {
+    const response = await taskService.getTaskById(taskId);
+    const task = response.data.result;
+    console.log(taskId, task);
+
+    editModal.querySelector('#title').value = task.title;
+    editModal.querySelector('#description').value = task.description;
+    editModal.querySelector('#type').value = task.type;
+    editModal.querySelector('#priority').value = task.priority;
+    editModal.querySelector('#status').value = task.status;
+    editModal.querySelector('#tags').value = task.tags?.join(', ') || '';
+    editModal.querySelector('#block').value = task.block || '';
+    editModal.querySelector('#BlockedBy').value = task.blockedBy || '';
+    editModal.querySelector('#relatesTo').value = task.relatesTo || '';
+    if (task.dueDate) {
+      console.log(task.dueDate);
+      const dueDate = new Date(task.dueDate);
+
+      const formattedDate = dueDate.toISOString().slice(0, 10);
+      editModal.querySelector('#dueDate').value = formattedDate;
+    } else {
+      editModal.querySelector('#dueDate').value = '';
+    }
+    editModal.querySelector('#assignee').value = task.assignee || null;
+
+    editModal.classList.remove('hidden');
+  } catch (error) {
+    console.error('Failed to load task:', error);
+    alert('Error loading task data');
+  }
+}
+
+// Submit form
+editForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const updatedTask = {
+    title: editModal.querySelector('#title').value,
+    description: editModal.querySelector('#description').value,
+    type: editModal.querySelector('#type').value,
+    priority: editModal.querySelector('#priority').value,
+    status: editModal.querySelector('#status').value,
+    tags: editModal
+      .querySelector('#tags')
+      .value.split(',')
+      .map((t) => t.trim()),
+    relatesTo: editModal
+      .querySelector('#relatesTo')
+      .value.split(',')
+      .map((t) => t.trim()),
+
+    blockedBy: editModal
+      .querySelector('#BlockedBy')
+      .value.split(',')
+      .map((t) => t.trim()),
+
+    block: editModal
+      .querySelector('#block')
+      .value.split(',')
+      .map((t) => t.trim()),
+
+    dueDate: editModal.querySelector('#dueDate').value,
+    assignee: editModal.querySelector('#assignee').value,
+  };
+
+  console.log(updatedTask);
+
+  try {
+    const response = await taskService.updateTask(currentTaskId, updatedTask);
+    console.log('Task updated successfully:', response.data);
+
+    editModal.classList.add('hidden');
+  } catch (error) {
+    console.error(error);
+    alert('Failed to update task');
+  }
+});
+
+// Close modal
+closeEditTask.addEventListener('click', () => {
+  editModal.classList.add('hidden');
+});
+
+//update task
+
+// create sprint modal
+
+//update sprint modal
 
 const listTableBody = document.getElementById('table-body');
 
@@ -328,7 +431,11 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
 
   project.columns.forEach((column) => (result[column] = []));
 
-  const tasks = await taskService.getTaskByProjectId(projectId, filter, searchInput);
+  const tasks = await taskService.getTaskByProjectId(
+    projectId,
+    filter,
+    searchInput
+  );
 
   tasks.data.result.forEach((task) => result[task.status].push(task));
 
@@ -339,7 +446,7 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
   return result;
 }
 
-async function renderBoard(projectId, filter = "", searchInput = "") {
+async function renderBoard(projectId, filter = '', searchInput = '') {
   const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const project = (await projectService.getProjectById(projectId)).result;
 
@@ -497,7 +604,11 @@ searchForm.addEventListener('submit', handleSearch);
 
 function handleSearch(e) {
   e.preventDefault();
-  renderBoard(localStorage.getItem('selectedProject'), "", searchInput.value.trim());
+  renderBoard(
+    localStorage.getItem('selectedProject'),
+    '',
+    searchInput.value.trim()
+  );
 }
 
 checkIfToken();
