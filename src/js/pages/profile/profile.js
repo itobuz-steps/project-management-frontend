@@ -1,5 +1,6 @@
 import '../../../scss/main.css';
 import authService from '../../services/AuthService.js';
+import { profileNameIcon } from '../../utils/profileIcon.js';
 
 async function profileIcon() {
   const preview = document.getElementById('profileImage');
@@ -8,9 +9,9 @@ async function profileIcon() {
 
   if (response.profileImage) {
     preview.src = `http://localhost:3001/uploads/profile/${response.profileImage}`;
-  } else if (response.name) {
-    const name = response.name.split('')[0];
-    profileName.textContent = name.toUpperCase();
+    preview.title = response.email;
+  } else {
+    profileNameIcon(profileName);
   }
 }
 

@@ -133,11 +133,16 @@ class TaskService {
 
     if (task.assignee) {
       formData.append('assignee', task.assignee);
-    }
-
-    formData.append('block', JSON.stringify(task.block));
-    formData.append('blockedBy', JSON.stringify(task.blockedBy));
-    formData.append('relatesTo', JSON.stringify(task.relatesTo));
+    } // change the service logic    }
+    task.block.forEach((blockingTask) => {
+      formData.append('block[]', blockingTask);
+    });
+    task.block.forEach((blockedTask) => {
+      formData.append('blockedBy[]', blockedTask);
+    });
+    task.block.forEach((relatedTask) => {
+      formData.append('relatesTo[]', relatedTask);
+    });
 
     try {
       const response = await this.api.post(`/`, formData);

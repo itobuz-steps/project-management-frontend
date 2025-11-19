@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:3001/project';
+const API_BASE_URL = 'http://localhost:3001/comments';
 
-class ProjectService {
+class CommentService {
   api = axios.create({
     baseURL: API_BASE_URL,
   });
@@ -67,78 +67,54 @@ class ProjectService {
     );
   }
 
-  async getAllProjects() {
+  async getAllComments(taskId = '') {
     try {
-      const response = await this.api.get(`/`);
+      const response = await this.api.get(`/?taskId=${taskId}`);
 
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || 'Failed to fetch projects'
+        error.response?.data?.message || 'Failed to fetch comments'
       );
     }
   }
 
-  async getProjectById(id) {
+  async createComment(comment) {
     try {
-      const response = await this.api.get(`/${id}`);
+      const response = await this.api.post(`/`, comment);
 
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || 'Failed to fetch project'
+        error.response?.data?.message || 'Failed to create comment'
       );
     }
   }
 
-  async createProject(project) {
+  async updateComment(id, updatedComment) {
     try {
-      const response = await this.api.post(`/`, project);
+      const response = await this.api.put(`/${id}`, updatedComment);
 
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || 'Failed to create project'
+        error.response?.data?.message || 'Failed to update comment'
       );
     }
   }
 
-  async updateProject(id, updatedProject) {
-    try {
-      const response = await this.api.put(`/${id}`, updatedProject);
-
-      return response.data;
-    } catch (error) {
-      throw new Error(
-        error.response?.data?.message || 'Failed to update project'
-      );
-    }
-  }
-
-  async deleteProject(id) {
+  async deleteComment(id) {
     try {
       const response = await this.api.delete(`/${id}`);
 
       return response.data;
     } catch (error) {
       throw new Error(
-        error.response?.data?.message || 'Failed to delete project'
-      );
-    }
-  }
-
-  async getProjectMembers(projectId) {
-    try {
-      const response = await this.api.get(`/get-user/${projectId}`);
-
-      return response.data;
-    } catch (error) {
-      throw new Error(
-        error.response?.data?.message || 'Failed to fetch project members'
+        error.response?.data?.message || 'Failed to delete comment'
       );
     }
   }
 }
 
-const projectService = new ProjectService();
-export default projectService;
+const commentService = new CommentService();
+export default commentService;
