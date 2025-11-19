@@ -5,7 +5,9 @@ import {
 } from '../../utils/renderTasks.js';
 import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
-// import axios from 'axios';
+import axios from 'axios';
+import commentService from '../../services/CommentService.js';
+
 
 const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
@@ -445,6 +447,7 @@ projectDropdownContainer.addEventListener('click', (event) => {
   renderDashBoardTasks();
   renderTasksList();
   renderBoard(localStorage.getItem('selectedProject'));
+  loadProjectMembers(localStorage.getItem('selectedProject'));
 });
 
 async function renderDashboard(project) {
@@ -503,7 +506,7 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
     tasks.forEach((task) => {
       const taskEl = document.createElement('div');
       taskEl.className =
-        'task flex flex-col max-w-sm p-4 bg-gray-100 text-black gap-4 relative';
+        'task flex flex-col max-w-sm p-4 bg-gray-100 text-black gap-4 relative cursor-pointer';
       taskEl.innerHTML = `
       <div class="card-header flex justify-between items-center">
         <p class="text-lg font-medium">${task.title}</p>
@@ -579,6 +582,7 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
       const dropdownMenu = taskEl.querySelector('.dropdown-menu');
       const typeTag = taskEl.querySelector('.type-tag');
       const typeSelector = taskEl.querySelector('.type-selector');
+      const cardHeader = taskEl.querySelector('.card-header > p');
 
       menuButton.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -589,7 +593,15 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         dropdownMenu.classList.add('hidden');
       });
 
-      taskEl.addEventListener('click', () => showTaskDrawer(task._id));
+      taskEl.addEventListener('click', (e) => {
+        if (e.target === taskEl) {
+          showTaskDrawer(task._id);
+        }
+      });
+
+      cardHeader.addEventListener('click', (e) => {
+        showTaskDrawer(task._id);
+      });
 
       taskEl.querySelector('.edit-btn').addEventListener('click', () => {
         dropdownMenu.classList.add('hidden');
@@ -655,6 +667,11 @@ async function showTaskDrawer(taskId) {
   const dueDateEl = taskDrawer.querySelector('.due-date');
   const closeButton = taskDrawer.querySelector('.close-btn');
 
+  const commentContainer = taskDrawer.querySelector('#commentsContainer');
+  const comments = (await commentService.getAllComments(task._id)).result;
+
+  commentContainer.innerHTML = `<div id="commentContainerHeaderText" class="ml-4 font-semibold">Comments</div>`;
+
   taskDrawer.dataset.id = task._id;
   titleEl.textContent = task.title;
   descriptionEl.textContent = task.description;
@@ -677,6 +694,63 @@ async function showTaskDrawer(taskId) {
     drawerBackdrop.classList.add('hidden');
     profileImageEl.classList.remove('hidden');
   });
+
+  comments.forEach((comment) => {
+    const commentEl = document.createElement('div');
+    commentEl.className =
+      'flex gap-3 items-start bg-white rounded-lg shadow-md pl-3 py-3';
+    commentEl.innerHTML = `
+            <img
+              src="${
+                'http://localhost:3001/uploads/profile/' +
+                comment.author.profileImage
+              }"
+              alt="Avatar"
+              class="w-7 h-7 rounded-full"
+            />
+            <div id="CommentInformation" class="flex flex-col gap-1">
+              <div class="flex items-center gap-2 text-md text-gray-500">
+                <span id="" class="username font-medium text-gray-700"
+                  >${comment.author.name}</span
+                >
+                <span>•</span>
+                <span class="text-sm">${comment.createdAt.split('T')[0]}</span>
+              </div>
+              <p class="message text-gray-700 text-sm">
+                ${comment.message}
+              </p>
+            </div>`;
+    commentContainer.appendChild(commentEl);
+  });
+}
+
+async function loadProjectMembers(projectId) {
+  try {
+    const data = await projectService.getProjectMembers(projectId);
+    const members = data.result;
+    const container = document.getElementById('memberAvatars');
+    container.innerHTML = '';
+
+    members.forEach((userInfo, index) => {
+      const img = document.createElement('img');
+      const imageUrl = userInfo.profileImage
+        ? `http://localhost:3001/uploads/profile/${userInfo.profileImage}`
+        : `../../../assets/img/profile.png`;
+
+      img.src = imageUrl;
+      img.alt = userInfo.name;
+      img.title = userInfo.name;
+
+      img.className =
+        'w-10 h-10 rounded-full object-cover border-2 border-white shadow-md hover:z-10';
+
+      img.style.marginLeft = index === 0 ? '0px' : '-10px';
+
+      container.appendChild(img);
+    });
+  } catch (error) {
+    console.error('Error loading images:', error);
+  }
 }
 
 const editTaskButton = document.getElementById('edit-task-button');
@@ -685,6 +759,7 @@ editTaskButton.addEventListener('click', () => {
 });
 
 checkIfToken();
+loadProjectMembers(localStorage.getItem('selectedProject'));
 renderBoard(localStorage.getItem('selectedProject'));
 showProjectList();
 renderTasksList();

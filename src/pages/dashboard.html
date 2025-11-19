@@ -199,25 +199,30 @@
       <div
         class="main p-2 flex flex-col gap-4 transition-all duration-300 flex-1 overflow-auto"
       >
-        <div class="project-info items-center flex flex-row gap-3">
-          <div class="project-name text-2xl font-semibold" id="projectName">
-            Project Name
+        <div class="project-info items-center flex flex-row justify-between">
+          <div class="flex flex-row items-center gap-3">
+            <div class="project-name text-2xl font-semibold" id="projectName">
+              Project Name
+            </div>
+            <div id="plus-icon" class="plus-icon cursor-pointer add-project">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                />
+              </svg>
+            </div>
           </div>
-          <div id="plus-icon" class="plus-icon cursor-pointer add-project">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="size-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M12 4.5v15m7.5-7.5h-15"
-              />
-            </svg>
+          <div class="top-4 right-4">
+            <div id="memberAvatars" class="flex items-center"></div>
           </div>
         </div>
 
@@ -1361,11 +1366,13 @@
             />
             <div id="CommentInformation" class="flex flex-col gap-1">
               <div class="flex items-center gap-2 text-md text-gray-500">
-                <span id="" class="font-medium text-gray-700">John Smith</span>
+                <span id="" class="username font-medium text-gray-700"
+                  >John Smith</span
+                >
                 <span>•</span>
                 <span class="text-sm">17th Feb 2024</span>
               </div>
-              <p class="text-gray-700 text-sm">
+              <p class="message text-gray-700 text-sm">
                 Hi ,I’ll do that task now, you can start working on another
                 task!
               </p>
