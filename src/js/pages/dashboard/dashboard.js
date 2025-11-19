@@ -302,6 +302,7 @@ document.addEventListener('click', (e) => {
   if (!sidebar.contains(e.target) && !toggleBtn?.contains(e.target)) {
     sidebar.classList.add('-translate-x-full');
     sidebar.classList.remove('translate-x-0');
+    body.classList.remove('overflow-hidden');
   }
   e.stopPropagation();
 });
