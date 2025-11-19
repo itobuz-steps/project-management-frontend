@@ -85,6 +85,7 @@ class TaskService {
   }
 
   async getTaskById(id) {
+    console.log(`task id ${id}`);
     try {
       const response = await this.api.get(`/${id}`);
 
@@ -108,7 +109,9 @@ class TaskService {
 
   async getTaskByProjectId(projectId, filter, searchInput) {
     try {
-      const response = await this.api.get(`/?projectId=${projectId}&filter=${filter}&searchInput=${searchInput}`);
+      const response = await this.api.get(
+        `/?projectId=${projectId}&filter=${filter}&searchInput=${searchInput}`
+      );
 
       return response;
     } catch (error) {

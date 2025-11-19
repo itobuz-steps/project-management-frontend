@@ -3,37 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Create Task Modal</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.1/flowbite.min.js"></script>
+    <title>Document</title>
   </head>
-  <body class="flex justify-center items-center">
-    <!-- remove the button upon integration -->
-    <button
-      id="toggleButton"
-      class="block text-black bg-gray-300 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
-      type="button"
-    >
-      Toggle modal
-    </button>
-    <!-- this is the end -->
+  <body>
     <div
-      id="task-modal"
+      id="create-task-modal"
       tabindex="-1"
-      aria-hidden="true"
       class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/50"
     >
-      <div
-        class="relative p-4 w-full max-w-md md:max-w-3xl max-h-[80vh] overflow-y-auto"
-      >
+      <div class="relative p-4 w-full max-w-md md:max-w-3xl max-h-[80vh]">
         <div
-          class="relative bg-white rounded-lg shadow-sm max-h-[90vh] flex flex-col"
+          class="relative bg-white rounded-lg shadow-sm max-h-[80vh] flex flex-col"
         >
           <div
             class="flex items-center justify-between p-2 md:p-5 border-b rounded-t border-black relative top-0 bg-white z-10"
           >
             <h3 class="text-xl font-semibold text-black">Create Task</h3>
             <button
-              id="CloseButton"
+              id="close-task-modal"
               type="button"
               class="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
             >
@@ -57,7 +44,7 @@
           </div>
           <!--  input forms  -->
           <div class="py-3 px-4 md:p-3 overflow-scroll">
-            <form class="space-y-3" action="submit">
+            <form id="task-form" class="space-y-3" action="submit">
               <div>
                 <label
                   for="title"
@@ -86,6 +73,7 @@
                   id="description"
                   class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
                   placeholder="Enter details"
+                  required
                   maxlength="1000"
                 />
               </div>
@@ -120,6 +108,7 @@
                   name="priority"
                   id="priority"
                   class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                  required
                 >
                   <option value="">Select a type</option>
                   <option value="low">low</option>
@@ -139,6 +128,7 @@
                   name="status"
                   id="status"
                   class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                  required
                 >
                   <option value="">Select a type</option>
                   <option value="todo">todo</option>
@@ -280,10 +270,5 @@
         </div>
       </div>
     </div>
-    <script type="module" src="../js/pages/taskModal/taskModal.js"></script>
   </body>
 </html>
-
-
-
-<!--  -->
