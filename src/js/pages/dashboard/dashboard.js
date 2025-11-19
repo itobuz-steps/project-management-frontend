@@ -5,9 +5,7 @@ import {
 } from '../../utils/renderTasks.js';
 import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
-import axios from 'axios';
 import commentService from '../../services/CommentService.js';
-
 
 const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
@@ -598,7 +596,7 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         }
       });
 
-      cardHeader.addEventListener('click', (e) => {
+      cardHeader.addEventListener('click', () => {
         showTaskDrawer(task._id);
       });
 
@@ -676,7 +674,7 @@ async function showTaskDrawer(taskId) {
   assigneeEl.textContent = assignee.name;
   profileImageEl.src =
     'http://localhost:3001/uploads/profile/' + assignee.profileImage;
-  dueDateEl.textContent = task.dueDate;
+  dueDateEl.textContent = task.dueDate.split('T')[0];
 
   taskDrawer.classList.remove('translate-x-full');
   taskDrawer.classList.add('transform-none');
@@ -735,7 +733,7 @@ async function loadProjectMembers(projectId) {
       img.title = userInfo.name;
 
       img.className =
-        'w-10 h-10 rounded-full object-cover border-2 border-white shadow-md hover:z-10';
+        'w-10 h-10 rounded-full object-cover border-2 border-white shadow-md hover:z-1';
 
       img.style.marginLeft = index === 0 ? '0px' : '-10px';
 
