@@ -139,9 +139,7 @@ input.addEventListener('change', () => {
 async function populateAssigneeDropDown() {
   const projectId = localStorage.getItem('selectedProject');
   const assigneeDropdown = document.getElementById('assignee');
-
   const data = await projectService.getProjectMembers(projectId);
-  console.log('projectMembers =', data);
 
   assigneeDropdown.innerHTML = `<option value="">Select an assignee</option>`;
 
@@ -581,6 +579,31 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
   return result;
 }
 
+const deleteModal = document.getElementById('deleteModal');
+const cancelDeleteBtn = document.getElementById('cancelDelete');
+const confirmDeleteBtn = document.getElementById('confirmDelete');
+
+let taskToDelete = null;
+
+async function showDeleteModal(taskId) {
+  taskToDelete = taskId;
+  deleteModal.classList.remove('hidden');
+}
+
+cancelDeleteBtn.addEventListener('click', () => {
+  deleteModal.classList.add('hidden');
+});
+
+confirmDeleteBtn.addEventListener('click', async () => {
+  if (taskToDelete) {
+    await taskService.deleteTask(taskToDelete);
+    renderBoard(localStorage.getItem('selectedProject'));
+    renderTasksList();
+    renderDashBoardTasks();
+  }
+  deleteModal.classList.add('hidden');
+});
+
 async function renderBoard(projectId, filter = '', searchInput = '') {
   const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const project = (await projectService.getProjectById(projectId)).result;
@@ -592,19 +615,15 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
 
   project.columns.forEach((column) => {
     const columnEl = document.createElement('div');
-    columnEl.innerHTML = `<div
-                class="w-72 bg-white rounded-lg shadow p-4 shrink-0 h-full overflow-y-auto"
-              >
-                <h2
-                  class="text-lg font-semibold mb-3 border-b pb-2 sticky top-0 bg-white z-10 flex gap-2"
-                >
-                  ${column.toUpperCase()}
-                  <div class="issue-count rounded-full  w-7 h-7 text-center text-md text-white bg-cyan-900"></div>
-                </h2>
-                <div class="space-y-3 pb-4 class" id="task-list">
-                </div>
-              </div>
-    `;
+    columnEl.innerHTML = `
+        <div class="w-72 bg-white rounded-lg shadow p-4 shrink-0 h-full overflow-y-auto">
+          <h2 class="text-lg font-semibold mb-3 border-b pb-2 sticky top-0 bg-white z-10 flex gap-2">
+            ${column.toUpperCase()}
+            <div class="issue-count rounded-full w-7 h-7 text-center text-md text-white bg-cyan-900"></div>
+          </h2>
+          <div class="space-y-3 pb-4 class" id="task-list"></div>
+        </div>
+      `;
     columnEl.querySelector('.issue-count').innerText = columns[column].length;
 
     const tasks = columns[column];
@@ -622,78 +641,58 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
       taskEl.className =
         'task flex flex-col max-w-sm p-4 bg-gray-100 text-black gap-4 relative cursor-pointer';
       taskEl.innerHTML = `
-      <div class="card-header flex justify-between items-center">
-        <p class="text-lg font-medium">${task.title}</p>
-
-        <!-- Menu -->
-        <div class="relative">
-          <button class="outline-none menu-button">
-            <svg
-              width="18px"
-              height="18px"
-              viewBox="0 0 16 16"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="#00000"
-              class="bi bi-three-dots mr-2"
-            >
-              <path
-                d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"
-              />
-            </svg>
-          </button>
-
-          <div
-            class="dropdown-menu hidden absolute right-0 w-32 bg-white border border-gray-200 rounded shadow-lg z-10 "
-          >
-            <ul class="text-sm text-gray-700">
-              <li>
-                <button
-                  class="edit-btn block w-full text-left px-4 py-2 hover:bg-gray-100"
-                >
-                  Edit
-                </button>
-              </li>
-              <li>
-                <button
-                  class="delete-btn block w-full text-left px-4 py-2 hover:bg-gray-100"
-                >
-                  Delete
-                </button>
-              </li>
-            </ul>
+        <div class="card-header flex justify-between items-center">
+          <p class="text-lg font-medium">${task.title}</p>
+          <div class="relative">
+            <button class="outline-none menu-button">
+              <svg
+                width="18px"
+                height="18px"
+                viewBox="0 0 16 16"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="#00000"
+                class="bi bi-three-dots mr-2"
+              >
+                <path
+                  d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"
+                />
+              </svg>
+            </button>
+            <div class="dropdown-menu hidden absolute right-0 w-32 bg-white border border-gray-200 rounded shadow-lg z-10">
+              <ul class="text-sm text-gray-700">
+                <li>
+                  <button class="edit-btn block w-full text-left px-4 py-2 hover:bg-gray-100">
+                    Edit
+                  </button>
+                </li>
+                <li>
+                  <button class="delete-btn block w-full text-left px-4 py-2 hover:bg-gray-100">
+                    Delete
+                  </button>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-
-      <div
-        class="card-footer flex justify-between items-center text-sm text-gray-400"
-      >
-        <div class="flex items-center gap-2">
-          <span
-
-            class="type-tag bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm"
-            >${task.key}</span
-          >
-
-          <select
-            class="type-selector text-sm border border-gray-300 rounded px-1 py-1 focus:outline-none"
-          >
-            <option value="story" selected>Story</option>
-            <option value="task">Task</option>
-          </select>
+        <div class="card-footer flex justify-between items-center text-sm text-gray-400">
+          <div class="flex items-center gap-2">
+            <span class="type-tag bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm">${
+              task.key
+            }</span>
+            <select class="type-selector text-sm border border-gray-300 rounded px-1 py-1 focus:outline-none">
+              <option value="story" selected>Story</option>
+              <option value="task">Task</option>
+            </select>
+          </div>
+          <div class="flex items-center">
+            <span class="w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center">
+              <img src="${
+                'http://localhost:3001/uploads/profile/' + assignee.profileImage
+              }" class="w-8 h-8 object-cover" title="${assignee.name}"/>
+            </span>
+          </div>
         </div>
-
-        <!-- Avatar -->
-        <div class="flex items-center">
-          <span
-  class="w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center"
->
-  <img src="${'http://localhost:3001/uploads/profile/' + imgUrl
-        }" class="w-8 h-8 object-cover" title="${username}"/>
-</span>
-          
-        </div>
-      </div>`;
+      `;
 
       const menuButton = taskEl.querySelector('.menu-button');
       const dropdownMenu = taskEl.querySelector('.dropdown-menu');
@@ -726,19 +725,14 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         console.log(task._id);
         openEditModal(task._id);
       });
-      taskEl
-        .querySelector('.delete-btn')
-        .addEventListener('click', async () => {
-          dropdownMenu.classList.add('hidden');
-          await taskService.deleteTask(task._id);
-          renderBoard(localStorage.getItem('selectedProject'));
-          renderTasksList();
-          renderDashBoardTasks();
-        });
+
+      taskEl.querySelector('.delete-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        showDeleteModal(task._id);
+      });
 
       typeSelector.addEventListener('change', (e) => {
         const value = e.target.value;
-
         if (value === 'task') {
           typeTag.className =
             'bg-blue-600 text-white text-xs font-semibold py-1 px-2 rounded-sm';
