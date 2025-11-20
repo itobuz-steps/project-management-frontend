@@ -6,6 +6,7 @@ import {
 import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
 import commentService from '../../services/CommentService.js';
+import axios from 'axios';
 
 const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
@@ -56,13 +57,6 @@ document.addEventListener('click', (e) => {
   e.stopPropagation();
 });
 
-openProjectBtn.addEventListener('click', () => {
-  createProjectModal.classList.remove('hidden');
-});
-closeProjectBtn.addEventListener('click', () => {
-  createProjectModal.classList.add('hidden');
-});
-
 // temp
 projectCreateForm.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -90,11 +84,23 @@ projectCreateForm.addEventListener('submit', async (e) => {
     const createdProject = await projectService.createProject(projectData);
     console.log(createdProject);
 
-    // form.reset();
-    // modal.classList.add('hidden');
+    createProjectModal.classList.add('hidden');
+
+    renderBoard(localStorage.getItem('selectedProject'));
+    renderTasksList();
+    renderDashBoardTasks();
+
+    console.log(createdProject);
   } catch (error) {
     console.error(error.message);
   }
+});
+
+openProjectBtn.addEventListener('click', () => {
+  createProjectModal.classList.remove('hidden');
+});
+closeProjectBtn.addEventListener('click', () => {
+  createProjectModal.classList.add('hidden');
 });
 
 // tmp
@@ -178,8 +184,11 @@ taskForm.addEventListener('submit', async (e) => {
           .map((t) => t.trim())
       : [],
 
-    dueDate: document.getElementById('dueDate').value,
-    assignee: document.getElementById('assignee').value.trim(),
+    dueDate: dateValue,
+    assignee:
+      document.getElementById('create-modal-assignee').value === 'Unassigned'
+        ? null
+        : document.getElementById('create-modal-assignee').value,
 
     attachments: input.files,
   };
@@ -190,13 +199,15 @@ taskForm.addEventListener('submit', async (e) => {
     const response = await taskService.createTask(task);
 
     console.log('Task created:', response);
-    alert('Task created successfully!');
-
-    taskForm.reset();
+    createTaskModal.classList.add('hidden');
+    renderBoard(localStorage.getItem('selectedProject'));
+    renderTasksList();
+    renderDashBoardTasks();
+    // taskForm.reset();
     fileName.textContent = 'No file chosen';
   } catch (error) {
     console.error(error);
-    alert('Failed to create task');
+    console.log('No task created ');
   }
 });
 
@@ -292,9 +303,11 @@ editForm.addEventListener('submit', async (e) => {
     console.log('Task updated successfully:', response.data);
 
     editModal.classList.add('hidden');
+    renderBoard(localStorage.getItem('selectedProject'));
+    renderTasksList();
+    renderDashBoardTasks();
   } catch (error) {
     console.error(error);
-    alert('Failed to update task');
   }
 });
 
@@ -304,10 +317,6 @@ closeEditTask.addEventListener('click', () => {
 });
 
 //update task
-
-// create sprint modal
-
-//update sprint modal
 
 const listTableBody = document.getElementById('table-body');
 
@@ -327,7 +336,9 @@ document.addEventListener('click', (e) => {
 });
 
 const projectsMenu = document.getElementById('projectsMenu');
-const dropdown = document.getElementById('projectsDropdown');
+const usersMenu = document.getElementById('usersMenu');
+const projectsDropdown = document.getElementById('projectsDropdown');
+const userListContainer = document.getElementById('usersDropdown');
 
 // dropdown.classList.add(
 //   'transition-all',
@@ -340,24 +351,49 @@ projectsMenu.addEventListener('click', (e) => {
   e.stopPropagation();
   e.preventDefault();
 
-  const isOpen = dropdown.classList.contains('max-h-60');
+  const isOpen = projectsDropdown.classList.contains('max-h-60');
 
   if (isOpen) {
-    dropdown.classList.remove('max-h-60');
-    dropdown.classList.add('max-h-0');
-    setTimeout(() => dropdown.classList.add('hidden'), 200);
+    projectsDropdown.classList.remove('max-h-60');
+    projectsDropdown.classList.add('max-h-0');
+    setTimeout(() => projectsDropdown.classList.add('hidden'), 200);
   } else {
-    dropdown.classList.remove('hidden');
-    dropdown.classList.remove('max-h-0');
-    dropdown.classList.add('max-h-60');
+    projectsDropdown.classList.remove('hidden');
+    projectsDropdown.classList.remove('max-h-0');
+    projectsDropdown.classList.add('max-h-60');
+  }
+});
+
+usersMenu.addEventListener('click', (e) => {
+  e.stopPropagation();
+  e.preventDefault();
+
+  const isOpen = userListContainer.classList.contains('max-h-60');
+
+  if (isOpen) {
+    userListContainer.classList.remove('max-h-60');
+    userListContainer.classList.add('max-h-0');
+    setTimeout(() => userListContainer.classList.add('hidden'), 200);
+  } else {
+    userListContainer.classList.remove('hidden');
+    userListContainer.classList.remove('max-h-0');
+    userListContainer.classList.add('max-h-60');
   }
 });
 
 document.addEventListener('click', (e) => {
-  if (!projectsMenu.contains(e.target) && !dropdown.contains(e.target)) {
-    dropdown.classList.remove('max-h-60');
-    dropdown.classList.add('max-h-0');
-    setTimeout(() => dropdown.classList.add('hidden'), 200);
+  if (
+    !projectsMenu.contains(e.target) &&
+    !projectsDropdown.contains(e.target)
+  ) {
+    projectsDropdown.classList.remove('max-h-60');
+    projectsDropdown.classList.add('max-h-0');
+    setTimeout(() => projectsDropdown.classList.add('hidden'), 200);
+  }
+  if (!usersMenu.contains(e.target) && !userListContainer.contains(e.target)) {
+    userListContainer.classList.remove('max-h-60');
+    userListContainer.classList.add('max-h-0');
+    setTimeout(() => userListContainer.classList.add('hidden'), 200);
   }
 });
 
@@ -377,6 +413,29 @@ export function dropdownEvent(sprint = {}) {
       dropdownIcon.classList.add('rotate-270');
     }
   });
+}
+
+async function showUserList() {
+  const users = await projectService.getProjectMembers(
+    localStorage.getItem('selectedProject')
+  );
+
+  userListContainer.innerHTML = '';
+  console.log('users: ', users);
+
+  if (!users.result.length) {
+    userListContainer.innerHTML = 'No user assigned';
+    userListContainer.className = 'block p-2 text-gray-900 hover:bg-gray-100';
+  } else {
+    users.result.forEach((user) => {
+      const item = document.createElement('li');
+      item.dataset.id = user._id;
+      item.id = user.name;
+      item.textContent = user.name;
+      item.className = 'block p-2 text-gray-900 hover:bg-gray-100 rounded-lg';
+      userListContainer.appendChild(item);
+    });
+  }
 }
 
 async function showProjectList() {
@@ -650,6 +709,9 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         .addEventListener('click', async () => {
           dropdownMenu.classList.add('hidden');
           await taskService.deleteTask(task._id);
+          renderBoard(localStorage.getItem('selectedProject'));
+          renderTasksList();
+          renderDashBoardTasks();
         });
 
       typeSelector.addEventListener('change', (e) => {
@@ -852,6 +914,56 @@ async function handleAssigneeFilter() {
   });
 }
 
+const createModalAssigneeDropdown = document.getElementById(
+  'create-modal-assignee'
+);
+async function handleModalAssignee() {
+  const assignees = await projectService.getProjectMembers(currentProject);
+  createModalAssigneeDropdown.innerHTML = '';
+  const unassigned = document.createElement('option');
+  unassigned.innerText = 'Unassigned';
+  unassigned.selected = true;
+  createModalAssigneeDropdown.appendChild(unassigned);
+
+  assignees.result.forEach((assignee) => {
+    const option = document.createElement('option');
+
+    option.value = assignee._id;
+
+    if (assignee.email === localStorage.getItem('userEmail')) {
+      option.innerText = `${assignee.email} (assign to me)`;
+    } else {
+      option.innerText = `${assignee.email}`;
+    }
+
+    createModalAssigneeDropdown.appendChild(option);
+    option.addEventListener('click', () => {
+      option.selected = true;
+    });
+  });
+}
+
+const createModalStatusDropdown = document.getElementById(
+  'status-create-task-modal'
+);
+async function handleModalStatus() {
+  const project = (await projectService.getProjectById(currentProject)).result;
+  createModalStatusDropdown.innerHTML = '';
+
+  project.columns.forEach((column) => {
+    const option = document.createElement('option');
+    option.innerText = column;
+    option.value = column;
+    createModalStatusDropdown.appendChild(option);
+
+    option.addEventListener('click', () => {
+      option.selected = true;
+    });
+  });
+
+  createModalStatusDropdown.firstChild.selected = true;
+}
+
 const priorityDropdown = document.getElementById('priorityDropdown');
 const lowFilterBtn = document.getElementById('low-filter');
 const midFilterBtn = document.getElementById('medium-filter');
@@ -884,6 +996,44 @@ removeFilterBtn.addEventListener('click', () => {
   removeElementChildren(statusDropDown);
   removeElementChildren(assigneeDropdown);
   renderBoard(currentProject, '', '');
+});
+
+// add  user to the project
+
+const toggleInviteButton = document.getElementById('toggleInviteForm');
+const inviteForm = document.getElementById('inviteForm');
+const emailInput = inviteForm.querySelector('input[type="email"]');
+
+toggleInviteButton.addEventListener('click', () => {
+  inviteForm.classList.toggle('hidden');
+});
+
+inviteForm.addEventListener('submit', function (event) {
+  event.preventDefault();
+
+  const email = emailInput.value.trim();
+  if (email === '') {
+    console.log('please enter a valid emil'); // add a confimation
+    return;
+  }
+  axios
+    .post('http://localhost:3001/invite/email', {
+      email: email,
+    })
+    .then((response) => {
+      if (response.data.success) {
+        console.log('Email sent successfully'); // add conf.
+      } else {
+        // alert('Failed to send invitation. Please try again.');
+        console.log('falied to sent invitation'); // need conff
+      }
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      alert('There was an error sending the invitation.');
+    });
+  inviteForm.classList.add('hidden');
+  emailInput.value = '';
 });
 
 renderBoard(currentProject);
