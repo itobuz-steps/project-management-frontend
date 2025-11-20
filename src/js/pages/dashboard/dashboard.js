@@ -140,30 +140,30 @@ taskForm.addEventListener('submit', async (e) => {
 
     tags: document.getElementById('tags').value
       ? document
-        .getElementById('tags')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('tags')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     block: document.getElementById('block').value
       ? document
-        .getElementById('block')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('block')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     blockedBy: document.getElementById('BlockedBy').value
       ? document
-        .getElementById('BlockedBy')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('BlockedBy')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     relatesTo: document.getElementById('relatesTo').value
       ? document
-        .getElementById('relatesTo')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('relatesTo')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     dueDate: document.getElementById('dueDate').value,
@@ -511,8 +511,11 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
       const assignee = task.assignee
         ? (await taskService.getUserDetailsById(task.assignee)).data.result
         : null;
-      const imgUrl = assignee.profileImage;
-      const username = assignee.name;
+
+      if (!assignee) return;
+      if (!assignee.profileImage) {
+        assignee.profileImage = '../../../assets/img/profile.png';
+      }
 
       const taskEl = document.createElement('div');
       taskEl.className =
@@ -585,8 +588,8 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
   class="w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center"
 >
   <img src="${
-    'http://localhost:3001/uploads/profile/' + imgUrl
-  }" class="w-8 h-8 object-cover" title="${username}"/>
+    'http://localhost:3001/uploads/profile/' + assignee.profileImage
+  }" class="w-8 h-8 object-cover" title="${assignee.name}"/>
 </span>
           
         </div>
@@ -724,9 +727,10 @@ async function showTaskDrawer(taskId) {
       'flex gap-3 items-start bg-white rounded-lg shadow-md pl-3 py-3';
     commentEl.innerHTML = `
             <img
-              src="${'http://localhost:3001/uploads/profile/' +
-      comment.author.profileImage
-      }"
+              src="${
+                'http://localhost:3001/uploads/profile/' +
+                comment.author.profileImage
+              }"
               alt="Avatar"
               class="w-7 h-7 rounded-full"
             />
@@ -814,7 +818,6 @@ async function handleStatusFilter() {
     });
   });
 }
-
 
 async function handleAssigneeFilter() {
   const assignees = await projectService.getProjectMembers(currentProject);
