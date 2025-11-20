@@ -641,6 +641,7 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
   });
 
   handleStatusFilter();
+  handleAssigneeFilter();
 }
 
 const searchForm = document.getElementById('search-input-form');
@@ -779,6 +780,11 @@ loadProjectMembers(localStorage.getItem('selectedProject'));
 const currentProject = localStorage.getItem('selectedProject');
 
 const statusDropDown = document.getElementById('statusDropdown');
+const assigneeDropdown = document.getElementById('asigneeDropdown');
+
+function removeElementChildren(element) {
+  element.innerHTML = '';
+}
 
 async function handleStatusFilter() {
   const project = (await projectService.getProjectById(currentProject)).result;
@@ -787,16 +793,39 @@ async function handleStatusFilter() {
     const dropdownEl = renderSubDropdown(column);
     statusDropDown.appendChild(dropdownEl);
     dropdownEl.addEventListener('click', () => {
-      statusDropDown.innerHTML = '';
-      renderBoard(currentProject, 'status', `${column}`)
+      removeElementChildren(statusDropDown);
+      removeElementChildren(assigneeDropdown);
+      renderBoard(currentProject, 'status', `${column}`);
     });
   });
 }
 
+
+async function handleAssigneeFilter() {
+  const assignees = await projectService.getProjectMembers(currentProject);
+
+  assignees.result.forEach((assignee) => {
+    const dropdownEl = renderSubDropdown(assignee.name);
+    assigneeDropdown.appendChild(dropdownEl);
+    dropdownEl.addEventListener('click', () => {
+      removeElementChildren(statusDropDown);
+      removeElementChildren(assigneeDropdown);
+      renderBoard(currentProject, 'assignee', `${assignee._id}`);
+    });
+  });
+}
+
+const priorityDropdown = document.getElementById('priorityDropdown');
 const lowFilterBtn = document.getElementById('low-filter');
 const midFilterBtn = document.getElementById('medium-filter');
 const highFilterBtn = document.getElementById('high-filter');
 const criticalFilterBtn = document.getElementById('critical-filter');
+const removeFilterBtn = document.getElementById('remove-filter-btn');
+
+priorityDropdown.addEventListener('click', () => {
+  removeElementChildren(statusDropDown);
+  removeElementChildren(assigneeDropdown);
+});
 
 lowFilterBtn.addEventListener('click', () => {
   renderBoard(currentProject, 'priority', 'low');
@@ -812,6 +841,12 @@ highFilterBtn.addEventListener('click', () => {
 
 criticalFilterBtn.addEventListener('click', () => {
   renderBoard(currentProject, 'priority', 'critical');
+});
+
+removeFilterBtn.addEventListener('click', () => {
+  removeElementChildren(statusDropDown);
+  removeElementChildren(assigneeDropdown);
+  renderBoard(currentProject, '', '');
 });
 
 renderBoard(currentProject);
