@@ -684,11 +684,16 @@ async function showTaskDrawer(taskId) {
   const profileImageEl = taskDrawer.querySelector('.profile-image');
   const dueDateEl = taskDrawer.querySelector('.due-date');
   const closeButton = taskDrawer.querySelector('.close-btn');
+  const status = taskDrawer.querySelector('#statusSelect');
+  const priority = taskDrawer.querySelector('#prioritySelect');
 
   const commentContainer = taskDrawer.querySelector('#commentsContainer');
   const comments = (await commentService.getAllComments(task._id)).result;
 
   commentContainer.innerHTML = `<div id="commentContainerHeaderText" class="ml-4 font-semibold">Comments</div>`;
+
+  status.value = task.status;
+  priority.value = task.priority;
 
   taskDrawer.dataset.id = task._id;
   titleEl.textContent = task.title;
