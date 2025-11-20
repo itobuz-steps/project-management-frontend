@@ -501,7 +501,13 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
     `;
 
     const tasks = columns[column];
-    tasks.forEach((task) => {
+    tasks.forEach(async (task) => {
+      const assignee = task.assignee
+        ? (await taskService.getUserDetailsById(task.assignee)).data.result
+        : null;
+      const imgUrl = assignee.profileImage;
+      const username = assignee.name;
+
       const taskEl = document.createElement('div');
       taskEl.className =
         'task flex flex-col max-w-sm p-4 bg-gray-100 text-black gap-4 relative cursor-pointer';
@@ -570,9 +576,13 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         <!-- Avatar -->
         <div class="flex items-center">
           <span
-            class="w-8 h-8 text-white font-semibold rounded-full bg-blue-500 flex items-center justify-center"
-            >SG</span
-          >
+  class="w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center"
+>
+  <img src="${
+    'http://localhost:3001/uploads/profile/' + imgUrl
+  }" class="w-8 h-8 object-cover" title="${username}"/>
+</span>
+          
         </div>
       </div>`;
 
@@ -679,7 +689,7 @@ async function showTaskDrawer(taskId) {
     : '';
 
   !assignee && profileImageEl.classList.add('hidden');
-  
+
   dueDateEl.textContent = task.dueDate.split('T')[0];
 
   taskDrawer.classList.remove('translate-x-full');
