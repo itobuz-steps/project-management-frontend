@@ -126,6 +126,7 @@ input.addEventListener('change', () => {
     fileName.textContent = 'No Files Chosen';
   }
 });
+
 taskForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -215,6 +216,7 @@ async function openEditModal(taskId) {
     editModal.querySelector('#block').value = task.block || '';
     editModal.querySelector('#BlockedBy').value = task.blockedBy || '';
     editModal.querySelector('#relatesTo').value = task.relatesTo || '';
+
     if (task.dueDate) {
       console.log(task.dueDate);
       const dueDate = new Date(task.dueDate);
@@ -308,7 +310,9 @@ document.addEventListener('click', (e) => {
 });
 
 const projectsMenu = document.getElementById('projectsMenu');
-const dropdown = document.getElementById('projectsDropdown');
+const usersMenu = document.getElementById('usersMenu');
+const projectsDropdown = document.getElementById('projectsDropdown');
+const userListContainer = document.getElementById('usersDropdown');
 
 // dropdown.classList.add(
 //   'transition-all',
@@ -321,24 +325,46 @@ projectsMenu.addEventListener('click', (e) => {
   e.stopPropagation();
   e.preventDefault();
 
-  const isOpen = dropdown.classList.contains('max-h-60');
+  const isOpen = projectsDropdown.classList.contains('max-h-60');
 
   if (isOpen) {
-    dropdown.classList.remove('max-h-60');
-    dropdown.classList.add('max-h-0');
-    setTimeout(() => dropdown.classList.add('hidden'), 200);
+    projectsDropdown.classList.remove('max-h-60');
+    projectsDropdown.classList.add('max-h-0');
+    setTimeout(() => projectsDropdown.classList.add('hidden'), 200);
   } else {
-    dropdown.classList.remove('hidden');
-    dropdown.classList.remove('max-h-0');
-    dropdown.classList.add('max-h-60');
+    projectsDropdown.classList.remove('hidden');
+    projectsDropdown.classList.remove('max-h-0');
+    projectsDropdown.classList.add('max-h-60');
+  }
+});
+
+usersMenu.addEventListener('click', (e) => {
+  e.stopPropagation();
+  e.preventDefault();
+
+  const isOpen = userListContainer.classList.contains('max-h-60');
+
+  if (isOpen) {
+    userListContainer.classList.remove('max-h-60');
+    userListContainer.classList.add('max-h-0');
+    setTimeout(() => userListContainer.classList.add('hidden'), 200);
+  } else {
+    userListContainer.classList.remove('hidden');
+    userListContainer.classList.remove('max-h-0');
+    userListContainer.classList.add('max-h-60');
   }
 });
 
 document.addEventListener('click', (e) => {
-  if (!projectsMenu.contains(e.target) && !dropdown.contains(e.target)) {
-    dropdown.classList.remove('max-h-60');
-    dropdown.classList.add('max-h-0');
-    setTimeout(() => dropdown.classList.add('hidden'), 200);
+  if (!projectsMenu.contains(e.target) && !projectsDropdown.contains(e.target)) {
+    projectsDropdown.classList.remove('max-h-60');
+    projectsDropdown.classList.add('max-h-0');
+    setTimeout(() => projectsDropdown.classList.add('hidden'), 200);
+  }
+  if (!usersMenu.contains(e.target) && !userListContainer.contains(e.target)) {
+    userListContainer.classList.remove('max-h-60');
+    userListContainer.classList.add('max-h-0');
+    setTimeout(() => userListContainer.classList.add('hidden'), 200);
   }
 });
 
@@ -360,16 +386,37 @@ export function dropdownEvent(sprint = {}) {
   });
 }
 
+async function showUserList() {
+  const users = await projectService.getProjectMembers(localStorage.getItem('selectedProject'));
+
+  userListContainer.innerHTML = '';
+  console.log('users: ', users);
+
+  if (!users.result.length) {
+    userListContainer.innerHTML = 'No user assigned';
+    userListContainer.className = 'block p-2 text-gray-900 hover:bg-gray-100';
+  } else {
+    users.result.forEach((user) => {
+      const item = document.createElement('li');
+      item.dataset.id = user._id;
+      item.id = user.name;
+      item.textContent = user.name;
+      item.className =
+        'block p-2 text-gray-900 hover:bg-gray-100 rounded-lg';
+      userListContainer.appendChild(item);
+    });
+  }
+}
+
 async function showProjectList() {
   try {
     const projects = await projectService.getAllProjects();
-    const listContainer = document.getElementById('projectsDropdown');
-    listContainer.innerHTML = '';
+    projectsDropdown.innerHTML = '';
     console.log('projects: ', projects);
 
     if (!projects.length) {
-      listContainer.innerHTML = 'No project Found';
-      listContainer.className = 'block p-2 text-gray-900 hover:bg-gray-100';
+      projectsDropdown.innerHTML = 'No project Found';
+      projectsDropdown.className = 'block p-2 text-gray-900 hover:bg-gray-100';
     } else {
       projects.forEach((project) => {
         const item = document.createElement('li');
@@ -380,7 +427,7 @@ async function showProjectList() {
         if (project._id === localStorage.getItem('selectedProject')) {
           item.classList.toggle('selected');
         }
-        listContainer.appendChild(item);
+        projectsDropdown.appendChild(item);
       });
     }
   } catch (err) {
@@ -584,9 +631,8 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
           <span
   class="w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center"
 >
-  <img src="${
-    'http://localhost:3001/uploads/profile/' + imgUrl
-  }" class="w-8 h-8 object-cover" title="${username}"/>
+  <img src="${'http://localhost:3001/uploads/profile/' + imgUrl
+        }" class="w-8 h-8 object-cover" title="${username}"/>
 </span>
           
         </div>
@@ -861,5 +907,6 @@ removeFilterBtn.addEventListener('click', () => {
 
 renderBoard(currentProject);
 showProjectList();
+showUserList();
 renderTasksList();
 renderDashBoardTasks();
