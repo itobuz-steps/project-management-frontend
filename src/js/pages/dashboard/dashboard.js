@@ -56,13 +56,6 @@ document.addEventListener('click', (e) => {
   e.stopPropagation();
 });
 
-openProjectBtn.addEventListener('click', () => {
-  createProjectModal.classList.remove('hidden');
-});
-closeProjectBtn.addEventListener('click', () => {
-  createProjectModal.classList.add('hidden');
-});
-
 // temp
 projectCreateForm.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -90,11 +83,23 @@ projectCreateForm.addEventListener('submit', async (e) => {
     const createdProject = await projectService.createProject(projectData);
     console.log(createdProject);
 
-    // form.reset();
-    // modal.classList.add('hidden');
+    createProjectModal.classList.add('hidden');
+
+    renderBoard(localStorage.getItem('selectedProject'));
+    renderTasksList();
+    renderDashBoardTasks();
+
+    console.log(createdProject);
   } catch (error) {
     console.error(error.message);
   }
+});
+
+openProjectBtn.addEventListener('click', () => {
+  createProjectModal.classList.remove('hidden');
+});
+closeProjectBtn.addEventListener('click', () => {
+  createProjectModal.classList.add('hidden');
 });
 
 // tmp
@@ -190,13 +195,15 @@ taskForm.addEventListener('submit', async (e) => {
     const response = await taskService.createTask(task);
 
     console.log('Task created:', response);
-    alert('Task created successfully!');
-
-    taskForm.reset();
+    createTaskModal.classList.add('hidden');
+    renderBoard(localStorage.getItem('selectedProject'));
+    renderTasksList();
+    renderDashBoardTasks();
+    // taskForm.reset();
     fileName.textContent = 'No file chosen';
   } catch (error) {
     console.error(error);
-    alert('Failed to create task');
+    console.log('No task created ');
   }
 });
 
@@ -292,9 +299,11 @@ editForm.addEventListener('submit', async (e) => {
     console.log('Task updated successfully:', response.data);
 
     editModal.classList.add('hidden');
+    renderBoard(localStorage.getItem('selectedProject'));
+    renderTasksList();
+    renderDashBoardTasks();
   } catch (error) {
     console.error(error);
-    alert('Failed to update task');
   }
 });
 
@@ -304,10 +313,6 @@ closeEditTask.addEventListener('click', () => {
 });
 
 //update task
-
-// create sprint modal
-
-//update sprint modal
 
 const listTableBody = document.getElementById('table-body');
 
@@ -650,6 +655,9 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         .addEventListener('click', async () => {
           dropdownMenu.classList.add('hidden');
           await taskService.deleteTask(task._id);
+          renderBoard(localStorage.getItem('selectedProject'));
+          renderTasksList();
+          renderDashBoardTasks();
         });
 
       typeSelector.addEventListener('change', (e) => {
