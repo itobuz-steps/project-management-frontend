@@ -245,6 +245,7 @@ async function openEditModal(taskId) {
     editModal.querySelector('#block').value = task.block || '';
     editModal.querySelector('#BlockedBy').value = task.blockedBy || '';
     editModal.querySelector('#relatesTo').value = task.relatesTo || '';
+
     if (task.dueDate) {
       console.log(task.dueDate);
       const dueDate = new Date(task.dueDate);
@@ -441,13 +442,12 @@ async function showUserList() {
 async function showProjectList() {
   try {
     const projects = await projectService.getAllProjects();
-    const listContainer = document.getElementById('projectsDropdown');
-    listContainer.innerHTML = '';
+    projectsDropdown.innerHTML = '';
     console.log('projects: ', projects);
 
     if (!projects.length) {
-      listContainer.innerHTML = 'No project Found';
-      listContainer.className = 'block p-2 text-gray-900 hover:bg-gray-100';
+      projectsDropdown.innerHTML = 'No project Found';
+      projectsDropdown.className = 'block p-2 text-gray-900 hover:bg-gray-100';
     } else {
       projects.forEach((project) => {
         const item = document.createElement('li');
@@ -458,7 +458,7 @@ async function showProjectList() {
         if (project._id === localStorage.getItem('selectedProject')) {
           item.classList.toggle('selected');
         }
-        listContainer.appendChild(item);
+        projectsDropdown.appendChild(item);
       });
     }
   } catch (err) {
@@ -665,9 +665,8 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
           <span
   class="w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center"
 >
-  <img src="${
-    'http://localhost:3001/uploads/profile/' + assignee.profileImage
-  }" class="w-8 h-8 object-cover" title="${assignee.name}"/>
+  <img src="${'http://localhost:3001/uploads/profile/' + imgUrl
+        }" class="w-8 h-8 object-cover" title="${username}"/>
 </span>
           
         </div>
@@ -1038,5 +1037,6 @@ inviteForm.addEventListener('submit', function (event) {
 
 renderBoard(currentProject);
 showProjectList();
+showUserList();
 renderTasksList();
 renderDashBoardTasks();
