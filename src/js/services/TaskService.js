@@ -1,5 +1,3 @@
-//todo:-  update the throw err.response.data to throw new Error('Message')
-
 import axios from 'axios';
 const API_BASE_URL = 'http://localhost:3001/tasks';
 
@@ -146,11 +144,6 @@ class TaskService {
       formData.append('relatesTo[]', relatedTask);
     });
 
-    // if (task.attachments && task.attachments.length > 0) {
-    //   for (let i = 0; i < task.attachments.length; i++) {
-    //     formData.append('attachments', task.attachments[i]);
-    //   }
-    // }
     try {
       const response = await this.api.post(`/`, formData);
 
