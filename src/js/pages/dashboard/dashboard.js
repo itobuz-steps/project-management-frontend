@@ -103,13 +103,6 @@ const openTaskCreate = document.getElementById('create-task');
 const closeTaskModal = document.getElementById('close-task-modal');
 const createTaskModal = document.getElementById('create-task-modal');
 
-openTaskCreate.addEventListener('click', () => {
-  createTaskModal.classList.remove('hidden');
-});
-closeTaskModal.addEventListener('click', () => {
-  createTaskModal.classList.add('hidden');
-});
-
 //temp form submission // submission yet to be handled correctly
 const input = document.getElementById('attachments');
 const fileName = document.getElementById('file-name');
@@ -124,6 +117,25 @@ input.addEventListener('change', () => {
     fileName.textContent = 'No Files Chosen';
   }
 });
+
+async function populateAssigneeDropDown() {
+  const projectId = localStorage.getItem('selectedProject');
+  const assigneeDropdown = document.getElementById('assignee');
+
+  const data = await projectService.getProjectMembers(projectId);
+  console.log('projectMembers =', data);
+
+  assigneeDropdown.innerHTML = `<option value="">Select an assignee</option>`;
+
+  data.result.forEach((member) => {
+    const option = document.createElement('option');
+    console.log(member._id);
+    option.value = member._id;
+    option.textContent = member.email;
+    assigneeDropdown.appendChild(option);
+  });
+}
+
 taskForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -186,6 +198,13 @@ taskForm.addEventListener('submit', async (e) => {
   }
 });
 
+openTaskCreate.addEventListener('click', () => {
+  populateAssigneeDropDown();
+  createTaskModal.classList.remove('hidden');
+});
+closeTaskModal.addEventListener('click', () => {
+  createTaskModal.classList.add('hidden');
+});
 //end for create tasks
 
 //update task details
