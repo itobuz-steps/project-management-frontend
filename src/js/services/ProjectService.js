@@ -130,8 +130,7 @@ class ProjectService {
   async getProjectMembers(projectId) {
     try {
       const response = await this.api.get(`/get-user/${projectId}`);
-      console.log('response data');
-      console.log(response.data);
+
       return response.data;
     } catch (error) {
       throw new Error(
