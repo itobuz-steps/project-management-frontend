@@ -110,6 +110,16 @@ const openTaskCreate = document.getElementById('create-task');
 const closeTaskModal = document.getElementById('close-task-modal');
 const createTaskModal = document.getElementById('create-task-modal');
 
+openTaskCreate.addEventListener('click', () => {
+  createTaskModal.classList.remove('hidden');
+  handleModalStatus();
+  handleModalAssignee();
+});
+
+closeTaskModal.addEventListener('click', () => {
+  createTaskModal.classList.add('hidden');
+});
+
 //temp form submission // submission yet to be handled correctly
 const input = document.getElementById('attachments');
 const fileName = document.getElementById('file-name');
@@ -124,26 +134,25 @@ input.addEventListener('change', () => {
     fileName.textContent = 'No Files Chosen';
   }
 });
-
-async function populateAssigneeDropDown() {
-  const projectId = localStorage.getItem('selectedProject');
-  const assigneeDropdown = document.getElementById('assignee');
-  const data = await projectService.getProjectMembers(projectId);
-
-  assigneeDropdown.innerHTML = `<option value="">Select an assignee</option>`;
-
-  data.result.forEach((member) => {
-    const option = document.createElement('option');
-    console.log(member._id);
-    option.value = member._id;
-    option.textContent = member.email;
-    assigneeDropdown.appendChild(option);
-  });
-}
-
 taskForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
+  console.log(document.getElementById('dueDate'));
+  console.log(document.getElementById('dueDate').value);
+  let dateValue;
+  if (document.getElementById('dueDate').value === "1999-10-10") {
+    dateValue = new Date().toLocaleDateString();
+
+    const splitVal = dateValue.split('/');
+    console.log(splitVal);
+    const newDateValue = new Date(splitVal[2], splitVal[1], splitVal[0]);
+    console.log(newDateValue);
+    dateValue = newDateValue;
+    dateValue = splitVal[2] + "-" + splitVal[1] + "-" + splitVal[0];
+  } else {
+    dateValue = document.getElementById('dueDate').value;
+  }
+  console.log(dateValue);
   // Build the task object from form inputs
   const task = {
     projectId: localStorage.getItem('selectedProject'),
@@ -155,34 +164,34 @@ taskForm.addEventListener('submit', async (e) => {
 
     tags: document.getElementById('tags').value
       ? document
-          .getElementById('tags')
-          .value.split(',')
-          .map((t) => t.trim())
+        .getElementById('tags')
+        .value.split(',')
+        .map((t) => t.trim())
       : [],
 
     block: document.getElementById('block').value
       ? document
-          .getElementById('block')
-          .value.split(',')
-          .map((t) => t.trim())
+        .getElementById('block')
+        .value.split(',')
+        .map((t) => t.trim())
       : [],
 
     blockedBy: document.getElementById('BlockedBy').value
       ? document
-          .getElementById('BlockedBy')
-          .value.split(',')
-          .map((t) => t.trim())
+        .getElementById('BlockedBy')
+        .value.split(',')
+        .map((t) => t.trim())
       : [],
 
     relatesTo: document.getElementById('relatesTo').value
       ? document
-          .getElementById('relatesTo')
-          .value.split(',')
-          .map((t) => t.trim())
+        .getElementById('relatesTo')
+        .value.split(',')
+        .map((t) => t.trim())
       : [],
 
-    dueDate: document.getElementById('dueDate').value,
-    assignee: document.getElementById('assignee').value.trim(),
+    dueDate: dateValue,
+    assignee: document.getElementById('create-modal-assignee').value === "Unassigned" ? null : document.getElementById('create-modal-assignee').value,
 
     attachments: input.files,
   };
@@ -206,8 +215,8 @@ taskForm.addEventListener('submit', async (e) => {
 });
 
 openTaskCreate.addEventListener('click', () => {
-  populateAssigneeDropDown();
   createTaskModal.classList.remove('hidden');
+
 });
 closeTaskModal.addEventListener('click', () => {
   createTaskModal.classList.add('hidden');
@@ -239,6 +248,7 @@ async function openEditModal(taskId) {
     editModal.querySelector('#block').value = task.block || '';
     editModal.querySelector('#BlockedBy').value = task.blockedBy || '';
     editModal.querySelector('#relatesTo').value = task.relatesTo || '';
+
     if (task.dueDate) {
       console.log(task.dueDate);
       const dueDate = new Date(task.dueDate);
@@ -330,7 +340,9 @@ document.addEventListener('click', (e) => {
 });
 
 const projectsMenu = document.getElementById('projectsMenu');
-const dropdown = document.getElementById('projectsDropdown');
+const usersMenu = document.getElementById('usersMenu');
+const projectsDropdown = document.getElementById('projectsDropdown');
+const userListContainer = document.getElementById('usersDropdown');
 
 // dropdown.classList.add(
 //   'transition-all',
@@ -343,24 +355,46 @@ projectsMenu.addEventListener('click', (e) => {
   e.stopPropagation();
   e.preventDefault();
 
-  const isOpen = dropdown.classList.contains('max-h-60');
+  const isOpen = projectsDropdown.classList.contains('max-h-60');
 
   if (isOpen) {
-    dropdown.classList.remove('max-h-60');
-    dropdown.classList.add('max-h-0');
-    setTimeout(() => dropdown.classList.add('hidden'), 200);
+    projectsDropdown.classList.remove('max-h-60');
+    projectsDropdown.classList.add('max-h-0');
+    setTimeout(() => projectsDropdown.classList.add('hidden'), 200);
   } else {
-    dropdown.classList.remove('hidden');
-    dropdown.classList.remove('max-h-0');
-    dropdown.classList.add('max-h-60');
+    projectsDropdown.classList.remove('hidden');
+    projectsDropdown.classList.remove('max-h-0');
+    projectsDropdown.classList.add('max-h-60');
+  }
+});
+
+usersMenu.addEventListener('click', (e) => {
+  e.stopPropagation();
+  e.preventDefault();
+
+  const isOpen = userListContainer.classList.contains('max-h-60');
+
+  if (isOpen) {
+    userListContainer.classList.remove('max-h-60');
+    userListContainer.classList.add('max-h-0');
+    setTimeout(() => userListContainer.classList.add('hidden'), 200);
+  } else {
+    userListContainer.classList.remove('hidden');
+    userListContainer.classList.remove('max-h-0');
+    userListContainer.classList.add('max-h-60');
   }
 });
 
 document.addEventListener('click', (e) => {
-  if (!projectsMenu.contains(e.target) && !dropdown.contains(e.target)) {
-    dropdown.classList.remove('max-h-60');
-    dropdown.classList.add('max-h-0');
-    setTimeout(() => dropdown.classList.add('hidden'), 200);
+  if (!projectsMenu.contains(e.target) && !projectsDropdown.contains(e.target)) {
+    projectsDropdown.classList.remove('max-h-60');
+    projectsDropdown.classList.add('max-h-0');
+    setTimeout(() => projectsDropdown.classList.add('hidden'), 200);
+  }
+  if (!usersMenu.contains(e.target) && !userListContainer.contains(e.target)) {
+    userListContainer.classList.remove('max-h-60');
+    userListContainer.classList.add('max-h-0');
+    setTimeout(() => userListContainer.classList.add('hidden'), 200);
   }
 });
 
@@ -382,16 +416,37 @@ export function dropdownEvent(sprint = {}) {
   });
 }
 
+async function showUserList() {
+  const users = await projectService.getProjectMembers(localStorage.getItem('selectedProject'));
+
+  userListContainer.innerHTML = '';
+  console.log('users: ', users);
+
+  if (!users.result.length) {
+    userListContainer.innerHTML = 'No user assigned';
+    userListContainer.className = 'block p-2 text-gray-900 hover:bg-gray-100';
+  } else {
+    users.result.forEach((user) => {
+      const item = document.createElement('li');
+      item.dataset.id = user._id;
+      item.id = user.name;
+      item.textContent = user.name;
+      item.className =
+        'block p-2 text-gray-900 hover:bg-gray-100 rounded-lg';
+      userListContainer.appendChild(item);
+    });
+  }
+}
+
 async function showProjectList() {
   try {
     const projects = await projectService.getAllProjects();
-    const listContainer = document.getElementById('projectsDropdown');
-    listContainer.innerHTML = '';
+    projectsDropdown.innerHTML = '';
     console.log('projects: ', projects);
 
     if (!projects.length) {
-      listContainer.innerHTML = 'No project Found';
-      listContainer.className = 'block p-2 text-gray-900 hover:bg-gray-100';
+      projectsDropdown.innerHTML = 'No project Found';
+      projectsDropdown.className = 'block p-2 text-gray-900 hover:bg-gray-100';
     } else {
       projects.forEach((project) => {
         const item = document.createElement('li');
@@ -402,7 +457,7 @@ async function showProjectList() {
         if (project._id === localStorage.getItem('selectedProject')) {
           item.classList.toggle('selected');
         }
-        listContainer.appendChild(item);
+        projectsDropdown.appendChild(item);
       });
     }
   } catch (err) {
@@ -486,7 +541,7 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
   const result = {};
 
   project.columns.forEach((column) => (result[column] = []));
-
+  console.log(project.columns);
   const tasks = await taskService.getTaskByProjectId(
     projectId,
     filter,
@@ -599,9 +654,8 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         </div>
         <div class="card-footer flex justify-between items-center text-sm text-gray-400">
           <div class="flex items-center gap-2">
-            <span class="type-tag bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm">${
-              task.key
-            }</span>
+            <span class="type-tag bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm">${task.key
+        }</span>
             <select class="type-selector text-sm border border-gray-300 rounded px-1 py-1 focus:outline-none">
               <option value="story" selected>Story</option>
               <option value="task">Task</option>
@@ -609,9 +663,8 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
           </div>
           <div class="flex items-center">
             <span class="w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center">
-              <img src="${
-                'http://localhost:3001/uploads/profile/' + assignee.profileImage
-              }" class="w-8 h-8 object-cover" title="${assignee.name}"/>
+              <img src="${'http://localhost:3001/uploads/profile/' + assignee.profileImage
+        }" class="w-8 h-8 object-cover" title="${assignee.name}"/>
             </span>
           </div>
         </div>
@@ -747,10 +800,9 @@ async function showTaskDrawer(taskId) {
       'flex gap-3 items-start bg-white rounded-lg shadow-md pl-3 py-3';
     commentEl.innerHTML = `
             <img
-              src="${
-                'http://localhost:3001/uploads/profile/' +
-                comment.author.profileImage
-              }"
+              src="${'http://localhost:3001/uploads/profile/' +
+      comment.author.profileImage
+      }"
               alt="Avatar"
               class="w-7 h-7 rounded-full"
             />
@@ -853,6 +905,52 @@ async function handleAssigneeFilter() {
   });
 }
 
+const createModalAssigneeDropdown = document.getElementById('create-modal-assignee');
+async function handleModalAssignee() {
+  const assignees = await projectService.getProjectMembers(currentProject);
+  createModalAssigneeDropdown.innerHTML = '';
+  const unassigned = document.createElement('option');
+  unassigned.innerText = 'Unassigned';
+  unassigned.selected = true;
+  createModalAssigneeDropdown.appendChild(unassigned);
+
+  assignees.result.forEach((assignee) => {
+    const option = document.createElement('option');
+
+    option.value = assignee._id;
+
+    if (assignee.email === localStorage.getItem('userEmail')) {
+      option.innerText = `${assignee.email} (assign to me)`;
+    } else {
+      option.innerText = `${assignee.email}`;
+    }
+
+    createModalAssigneeDropdown.appendChild(option);
+    option.addEventListener('click', () => {
+      option.selected = true;
+    });
+  });
+}
+
+const createModalStatusDropdown = document.getElementById('status-create-task-modal');
+async function handleModalStatus() {
+  const project = (await projectService.getProjectById(currentProject)).result;
+  createModalStatusDropdown.innerHTML = '';
+
+  project.columns.forEach((column) => {
+    const option = document.createElement('option');
+    option.innerText = column;
+    option.value = column;
+    createModalStatusDropdown.appendChild(option);
+
+    option.addEventListener('click', () => {
+      option.selected = true;
+    });
+  });
+
+  createModalStatusDropdown.firstChild.selected = true;
+}
+
 const priorityDropdown = document.getElementById('priorityDropdown');
 const lowFilterBtn = document.getElementById('low-filter');
 const midFilterBtn = document.getElementById('medium-filter');
@@ -889,5 +987,6 @@ removeFilterBtn.addEventListener('click', () => {
 
 renderBoard(currentProject);
 showProjectList();
+showUserList();
 renderTasksList();
 renderDashBoardTasks();

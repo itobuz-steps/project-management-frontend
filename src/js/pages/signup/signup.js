@@ -123,6 +123,7 @@ async function handleLogin(event) {
 
   try {
     await authService.login(email, password);
+    localStorage.setItem('userEmail', email);
     showMessage('Login successful', 'success');
 
     setTimeout(() => {
@@ -131,7 +132,7 @@ async function handleLogin(event) {
   } catch (error) {
     showMessage(
       error.response?.data?.message ||
-        'Login failed. Please check your credentials.',
+      'Login failed. Please check your credentials.',
       'danger'
     );
   } finally {
