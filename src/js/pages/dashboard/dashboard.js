@@ -6,6 +6,7 @@ import {
 import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
 import commentService from '../../services/CommentService.js';
+import { setupSocketIo } from '../../utils/setupNotification.js';
 
 const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
@@ -140,7 +141,7 @@ taskForm.addEventListener('submit', async (e) => {
   console.log(document.getElementById('dueDate'));
   console.log(document.getElementById('dueDate').value);
   let dateValue;
-  if (document.getElementById('dueDate').value === "1999-10-10") {
+  if (document.getElementById('dueDate').value === '1999-10-10') {
     dateValue = new Date().toLocaleDateString();
 
     const splitVal = dateValue.split('/');
@@ -148,7 +149,7 @@ taskForm.addEventListener('submit', async (e) => {
     const newDateValue = new Date(splitVal[2], splitVal[1], splitVal[0]);
     console.log(newDateValue);
     dateValue = newDateValue;
-    dateValue = splitVal[2] + "-" + splitVal[1] + "-" + splitVal[0];
+    dateValue = splitVal[2] + '-' + splitVal[1] + '-' + splitVal[0];
   } else {
     dateValue = document.getElementById('dueDate').value;
   }
@@ -164,34 +165,37 @@ taskForm.addEventListener('submit', async (e) => {
 
     tags: document.getElementById('tags').value
       ? document
-        .getElementById('tags')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('tags')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     block: document.getElementById('block').value
       ? document
-        .getElementById('block')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('block')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     blockedBy: document.getElementById('BlockedBy').value
       ? document
-        .getElementById('BlockedBy')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('BlockedBy')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     relatesTo: document.getElementById('relatesTo').value
       ? document
-        .getElementById('relatesTo')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('relatesTo')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     dueDate: dateValue,
-    assignee: document.getElementById('create-modal-assignee').value === "Unassigned" ? null : document.getElementById('create-modal-assignee').value,
+    assignee:
+      document.getElementById('create-modal-assignee').value === 'Unassigned'
+        ? null
+        : document.getElementById('create-modal-assignee').value,
 
     attachments: input.files,
   };
@@ -216,7 +220,6 @@ taskForm.addEventListener('submit', async (e) => {
 
 openTaskCreate.addEventListener('click', () => {
   createTaskModal.classList.remove('hidden');
-
 });
 closeTaskModal.addEventListener('click', () => {
   createTaskModal.classList.add('hidden');
@@ -386,7 +389,10 @@ usersMenu.addEventListener('click', (e) => {
 });
 
 document.addEventListener('click', (e) => {
-  if (!projectsMenu.contains(e.target) && !projectsDropdown.contains(e.target)) {
+  if (
+    !projectsMenu.contains(e.target) &&
+    !projectsDropdown.contains(e.target)
+  ) {
     projectsDropdown.classList.remove('max-h-60');
     projectsDropdown.classList.add('max-h-0');
     setTimeout(() => projectsDropdown.classList.add('hidden'), 200);
@@ -417,7 +423,9 @@ export function dropdownEvent(sprint = {}) {
 }
 
 async function showUserList() {
-  const users = await projectService.getProjectMembers(localStorage.getItem('selectedProject'));
+  const users = await projectService.getProjectMembers(
+    localStorage.getItem('selectedProject')
+  );
 
   userListContainer.innerHTML = '';
   console.log('users: ', users);
@@ -431,8 +439,7 @@ async function showUserList() {
       item.dataset.id = user._id;
       item.id = user.name;
       item.textContent = user.name;
-      item.className =
-        'block p-2 text-gray-900 hover:bg-gray-100 rounded-lg';
+      item.className = 'block p-2 text-gray-900 hover:bg-gray-100 rounded-lg';
       userListContainer.appendChild(item);
     });
   }
@@ -654,8 +661,9 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         </div>
         <div class="card-footer flex justify-between items-center text-sm text-gray-400">
           <div class="flex items-center gap-2">
-            <span class="type-tag bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm">${task.key
-        }</span>
+            <span class="type-tag bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm">${
+              task.key
+            }</span>
             <select class="type-selector text-sm border border-gray-300 rounded px-1 py-1 focus:outline-none">
               <option value="story" selected>Story</option>
               <option value="task">Task</option>
@@ -663,8 +671,9 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
           </div>
           <div class="flex items-center">
             <span class="w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center">
-              <img src="${'http://localhost:3001/uploads/profile/' + assignee.profileImage
-        }" class="w-8 h-8 object-cover" title="${assignee.name}"/>
+              <img src="${
+                'http://localhost:3001/uploads/profile/' + assignee.profileImage
+              }" class="w-8 h-8 object-cover" title="${assignee.name}"/>
             </span>
           </div>
         </div>
@@ -800,9 +809,10 @@ async function showTaskDrawer(taskId) {
       'flex gap-3 items-start bg-white rounded-lg shadow-md pl-3 py-3';
     commentEl.innerHTML = `
             <img
-              src="${'http://localhost:3001/uploads/profile/' +
-      comment.author.profileImage
-      }"
+              src="${
+                'http://localhost:3001/uploads/profile/' +
+                comment.author.profileImage
+              }"
               alt="Avatar"
               class="w-7 h-7 rounded-full"
             />
@@ -905,7 +915,9 @@ async function handleAssigneeFilter() {
   });
 }
 
-const createModalAssigneeDropdown = document.getElementById('create-modal-assignee');
+const createModalAssigneeDropdown = document.getElementById(
+  'create-modal-assignee'
+);
 async function handleModalAssignee() {
   const assignees = await projectService.getProjectMembers(currentProject);
   createModalAssigneeDropdown.innerHTML = '';
@@ -932,7 +944,9 @@ async function handleModalAssignee() {
   });
 }
 
-const createModalStatusDropdown = document.getElementById('status-create-task-modal');
+const createModalStatusDropdown = document.getElementById(
+  'status-create-task-modal'
+);
 async function handleModalStatus() {
   const project = (await projectService.getProjectById(currentProject)).result;
   createModalStatusDropdown.innerHTML = '';
@@ -985,6 +999,22 @@ removeFilterBtn.addEventListener('click', () => {
   renderBoard(currentProject, '', '');
 });
 
+function showNotification(message) {
+  const notification = document.querySelector('.notification');
+  const messageEl = notification.querySelector('.message');
+  const dismissButton = notification.querySelector('.dismiss');
+
+  messageEl.textContent = message;
+  notification.classList.remove('hidden');
+
+  dismissButton.addEventListener('click', () =>
+    notification.classList.add('hidden')
+  );
+
+  setTimeout(() => notification.classList.add('hidden'), 5000);
+}
+
+setupSocketIo(showNotification);
 renderBoard(currentProject);
 showProjectList();
 showUserList();
