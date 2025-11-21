@@ -262,11 +262,12 @@ function createBacklogTable() {
   return backlogContainer;
 }
 
-export async function renderTasksList() {
+export async function renderTasksList(tasksArray = []) {
   try {
-    let tasksArray = [];
-    const tasks = await TaskService.getTaskByProjectId(localStorage.getItem('selectedProject'));
-    tasksArray.push(...tasks.data.result);
+    listTableBody.innerHTML = '';
+    // let tasksArray = [];
+    // const tasks = await TaskService.getTaskByProjectId(localStorage.getItem('selectedProject'));
+    // tasksArray.push(...tasks.data.result);
 
     if (!tasksArray.length) {
       emptyListContainer.classList.remove('hidden');
@@ -299,7 +300,7 @@ async function renderBacklogTasks(backlogTasks) {
 
 export async function renderDashBoardTasks() {
   try {
-    sprintBacklogWrapper.innerHTML = "";
+    sprintBacklogWrapper.innerHTML = '';
     const projectId = localStorage.getItem('selectedProject');
     const tasks = await TaskService.getTaskByProjectId(projectId);
     const allTasks = tasks.data.result.map((task) => task._id);

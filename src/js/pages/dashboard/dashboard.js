@@ -7,9 +7,11 @@ import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
 import commentService from '../../services/CommentService.js';
 import axios from 'axios';
+import { setupSocketIo } from '../../utils/setupNotification.js';
 
 const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
+const drawerBackdrop = document.querySelector('.drawer-backdrop');
 
 profileBtn.addEventListener('click', () => {
   dropdownMenu.classList.toggle('hidden');
@@ -87,7 +89,7 @@ projectCreateForm.addEventListener('submit', async (e) => {
     createProjectModal.classList.add('hidden');
 
     renderBoard(localStorage.getItem('selectedProject'));
-    renderTasksList();
+    // renderTasksList();
     renderDashBoardTasks();
 
     console.log(createdProject);
@@ -110,11 +112,13 @@ closeProjectBtn.addEventListener('click', () => {
 const openTaskCreate = document.getElementById('create-task');
 const closeTaskModal = document.getElementById('close-task-modal');
 const createTaskModal = document.getElementById('create-task-modal');
+const createModalStatusDropdown = document.getElementById('status-create-task-modal');
+const createModalAssigneeDropdown = document.getElementById('create-modal-assignee');
 
 openTaskCreate.addEventListener('click', () => {
   createTaskModal.classList.remove('hidden');
-  handleModalStatus();
-  handleModalAssignee();
+  handleModalStatus(createModalStatusDropdown);
+  handleModalAssignee(createModalAssigneeDropdown);
 });
 
 closeTaskModal.addEventListener('click', () => {
@@ -155,8 +159,6 @@ async function populateAssigneeDropDown() {
 taskForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  console.log(document.getElementById('dueDate'));
-  console.log(document.getElementById('dueDate').value);
   let dateValue;
   if (document.getElementById('dueDate').value === '1999-10-10') {
     dateValue = new Date().toLocaleDateString();
@@ -174,10 +176,11 @@ taskForm.addEventListener('submit', async (e) => {
   // Build the task object from form inputs
   const task = {
     projectId: localStorage.getItem('selectedProject'),
-    title: document.getElementById('title').value.trim(),
+    title: document.getElementById('create-task-modal-title').value.trim(),
     description: document.getElementById('description').value.trim(),
     type: document.getElementById('type').value,
     priority: document.getElementById('priority').value,
+
     status: document.getElementById('status-create-task-modal').value,
 
     tags: document.getElementById('tags').value
@@ -210,7 +213,9 @@ taskForm.addEventListener('submit', async (e) => {
 
     dueDate: dateValue,
     assignee:
+
       document.getElementById('create-modal-assignee').value === 'null'
+
         ? null
         : document.getElementById('create-modal-assignee').value,
 
@@ -225,7 +230,7 @@ taskForm.addEventListener('submit', async (e) => {
     console.log('Task created:', response);
     createTaskModal.classList.add('hidden');
     renderBoard(localStorage.getItem('selectedProject'));
-    renderTasksList();
+    // renderTasksList();
     renderDashBoardTasks();
     // taskForm.reset();
     fileName.textContent = 'No file chosen';
@@ -263,7 +268,11 @@ async function openEditModal(taskId) {
     editModal.querySelector('#description').value = task.description;
     editModal.querySelector('#type').value = task.type;
     editModal.querySelector('#priority').value = task.priority;
-    editModal.querySelector('#status').value = task.status;
+    const status = editModal.querySelector('#status');
+    await handleModalStatus(status);
+    const selectedStatus = editModal.querySelector(`[value="${task.status}"]`);
+    selectedStatus.selected = true;
+
     editModal.querySelector('#tags').value = task.tags?.join(', ') || '';
     editModal.querySelector('#block').value = task.block || '';
     editModal.querySelector('#BlockedBy').value = task.blockedBy || '';
@@ -274,11 +283,16 @@ async function openEditModal(taskId) {
       const dueDate = new Date(task.dueDate);
 
       const formattedDate = dueDate.toISOString().slice(0, 10);
+      console.log(formattedDate);
       editModal.querySelector('#dueDate').value = formattedDate;
     } else {
       editModal.querySelector('#dueDate').value = '';
     }
-    editModal.querySelector('#assignee').value = task.assignee || null;
+    const assignee = editModal.querySelector('#assignee');
+    const selectedAssignee = await handleModalAssignee(assignee);
+    const selectedAssigned = editModal.querySelector(`[value="${task.assignee}"]`);
+    selectedAssigned.selected = true;
+    console.log(selectedAssignee);
 
     editModal.classList.remove('hidden');
   } catch (error) {
@@ -317,7 +331,7 @@ editForm.addEventListener('submit', async (e) => {
       .map((t) => t.trim()),
 
     dueDate: editModal.querySelector('#dueDate').value,
-    assignee: editModal.querySelector('#assignee').value,
+    assignee: editModal.querySelector('#assignee').value === "null" ? null : editModal.querySelector('#assignee').value,
   };
 
   console.log(updatedTask);
@@ -328,8 +342,17 @@ editForm.addEventListener('submit', async (e) => {
 
     editModal.classList.add('hidden');
     renderBoard(localStorage.getItem('selectedProject'));
-    renderTasksList();
+    // renderTasksList();
     renderDashBoardTasks();
+    //hide side bar
+    setTimeout(() => {
+      const taskDrawer = document.getElementById('task-side-drawer');
+      const profileImageEl = taskDrawer.querySelector('.profile-image');
+      taskDrawer.classList.add('translate-x-full');
+      taskDrawer.classList.remove('transform-none');
+      drawerBackdrop.classList.add('hidden');
+      profileImageEl.classList.remove('hidden');
+    }, 100);
   } catch (error) {
     console.error(error);
   }
@@ -548,7 +571,7 @@ projectDropdownContainer.addEventListener('click', (event) => {
   targetLi.classList.toggle('selected');
   listTableBody.innerHTML = '';
   renderDashBoardTasks();
-  renderTasksList();
+  // renderTasksList();
   renderBoard(localStorage.getItem('selectedProject'));
   loadProjectMembers(localStorage.getItem('selectedProject'));
 });
@@ -590,20 +613,23 @@ let taskToDelete = null;
 async function showDeleteModal(taskId) {
   taskToDelete = taskId;
   deleteModal.classList.remove('hidden');
+  drawerBackdrop.classList.remove("hidden");
 }
 
 cancelDeleteBtn.addEventListener('click', () => {
   deleteModal.classList.add('hidden');
+  drawerBackdrop.classList.add("hidden");
 });
 
 confirmDeleteBtn.addEventListener('click', async () => {
   if (taskToDelete) {
     await taskService.deleteTask(taskToDelete);
     renderBoard(localStorage.getItem('selectedProject'));
-    renderTasksList();
+    // renderTasksList();
     renderDashBoardTasks();
   }
   deleteModal.classList.add('hidden');
+  drawerBackdrop.classList.add("hidden");
 });
 
 async function renderBoard(projectId, filter = '', searchInput = '') {
@@ -614,6 +640,8 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
 
   const columnContainer = document.getElementById('columns');
   columnContainer.innerHTML = '';
+
+  let filteredTasks = [];
 
   project.columns.forEach((column) => {
     const columnEl = document.createElement('div');
@@ -630,16 +658,19 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
 
     const tasks = columns[column];
     tasks.forEach(async (task) => {
+      filteredTasks.push(task);
+
       const assignee = task.assignee
         ? (await taskService.getUserDetailsById(task.assignee)).data.result
         : null;
 
       const taskEl = document.createElement('div');
+      taskEl.dataset._id = task._id;
       taskEl.className =
         'task flex flex-col max-w-sm p-4 bg-gray-100 text-black gap-4 relative cursor-pointer';
       taskEl.innerHTML = `
         <div class="card-header flex justify-between items-center">
-          <p class="text-lg font-medium">${task.title}</p>
+          <p class="text-lg border border-transparent rounded-lg font-medium hover:border-gray-400 ">${task.title}</p>
           <div class="relative">
             <button class="outline-none menu-button">
               <svg
@@ -681,9 +712,10 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
               <option value="task">Task</option>
             </select>
           </div>
-          <div class="flex items-center">
+          <div class="flex items-center" >
             <span class="w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center">
               <img src="${
+
                 assignee?.profileImage
                   ? 'http://localhost:3001/uploads/profile/' +
                     assignee.profileImage
@@ -691,6 +723,7 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
               }" class="w-8 h-8 object-cover" title="${
         assignee?.name ? assignee.name : 'Unassigned'
       }"/>
+
             </span>
           </div>
         </div>
@@ -754,6 +787,10 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
 
   handleStatusFilter();
   handleAssigneeFilter();
+
+  console.log(filteredTasks);
+  renderTasksList(filteredTasks);
+  // renderDashBoardTasks();
 }
 
 const searchForm = document.getElementById('search-input-form');
@@ -778,7 +815,7 @@ async function showTaskDrawer(taskId) {
   console.log(assignee);
 
   const taskDrawer = document.querySelector('.task-drawer');
-  const drawerBackdrop = document.querySelector('.drawer-backdrop');
+
 
   const titleEl = taskDrawer.querySelector('.title');
   const descriptionEl = taskDrawer.querySelector('.description');
@@ -788,6 +825,12 @@ async function showTaskDrawer(taskId) {
   const closeButton = taskDrawer.querySelector('.close-btn');
   const status = taskDrawer.querySelector('#statusSelect');
   const priority = taskDrawer.querySelector('#prioritySelect');
+
+  const editTaskButton = document.querySelector('#edit-task-button');
+  editTaskButton.addEventListener('click', () => {
+    editModal.classList.remove('hidden');
+    openEditModal(taskId);
+  });
 
   const commentContainer = taskDrawer.querySelector('#commentsContainer');
   const comments = (await commentService.getAllComments(task._id)).result;
@@ -878,10 +921,7 @@ async function loadProjectMembers(projectId) {
   }
 }
 
-const editTaskButton = document.getElementById('edit-task-button');
-editTaskButton.addEventListener('click', () => {
-  editModal.classList.remove('hidden');
-});
+
 
 function renderSubDropdown(item) {
   const subDropdown = document.createElement('div');
@@ -898,13 +938,15 @@ loadProjectMembers(localStorage.getItem('selectedProject'));
 const currentProject = localStorage.getItem('selectedProject');
 
 const statusDropDown = document.getElementById('statusDropdown');
-const assigneeDropdown = document.getElementById('asigneeDropdown');
+const assigneeDropdown = document.getElementById('assigneeDropdown');
 
 function removeElementChildren(element) {
   element.innerHTML = '';
 }
 
 async function handleStatusFilter() {
+  removeElementChildren(statusDropDown);
+  removeElementChildren(assigneeDropdown);
   const project = (await projectService.getProjectById(currentProject)).result;
 
   project.columns.forEach((column) => {
@@ -919,6 +961,8 @@ async function handleStatusFilter() {
 }
 
 async function handleAssigneeFilter() {
+  removeElementChildren(statusDropDown);
+  removeElementChildren(assigneeDropdown);
   const assignees = await projectService.getProjectMembers(currentProject);
 
   assignees.result.forEach((assignee) => {
@@ -932,18 +976,20 @@ async function handleAssigneeFilter() {
   });
 }
 
-const createModalAssigneeDropdown = document.getElementById(
-  'create-modal-assignee'
-);
-async function handleModalAssignee() {
+
+async function handleModalAssignee(modalAssigneeDropdown) {
+
   const assignees = await projectService.getProjectMembers(currentProject);
-  createModalAssigneeDropdown.innerHTML = '';
+  modalAssigneeDropdown.innerHTML = '';
   const unassigned = document.createElement('option');
   unassigned.innerText = 'Unassigned';
   unassigned.selected = true;
+
   unassigned.value = 'null';
   createModalAssigneeDropdown.appendChild(unassigned);
 
+
+  let selectedAssignee;
   assignees.result.forEach((assignee) => {
     const option = document.createElement('option');
 
@@ -951,36 +997,31 @@ async function handleModalAssignee() {
 
     if (assignee.email === localStorage.getItem('userEmail')) {
       option.innerText = `${assignee.email} (assign to me)`;
+      selectedAssignee = assignee;
     } else {
       option.innerText = `${assignee.email}`;
     }
 
-    createModalAssigneeDropdown.appendChild(option);
-    option.addEventListener('click', () => {
-      option.selected = true;
-    });
+    modalAssigneeDropdown.appendChild(option);
   });
+  return selectedAssignee;
 }
 
-const createModalStatusDropdown = document.getElementById(
-  'status-create-task-modal'
-);
-async function handleModalStatus() {
+
+
+async function handleModalStatus(modalStatusDropdown) {
   const project = (await projectService.getProjectById(currentProject)).result;
-  createModalStatusDropdown.innerHTML = '';
+  modalStatusDropdown.innerHTML = '';
 
   project.columns.forEach((column) => {
     const option = document.createElement('option');
     option.innerText = column;
     option.value = column;
-    createModalStatusDropdown.appendChild(option);
+    modalStatusDropdown.appendChild(option);
 
-    option.addEventListener('click', () => {
-      option.selected = true;
-    });
   });
 
-  createModalStatusDropdown.firstChild.selected = true;
+  modalStatusDropdown.firstChild.selected = true;
 }
 
 const priorityDropdown = document.getElementById('priorityDropdown');
@@ -1055,8 +1096,24 @@ inviteForm.addEventListener('submit', function (event) {
   emailInput.value = '';
 });
 
+function showNotification(message) {
+  const notification = document.querySelector('.notification');
+  const messageEl = notification.querySelector('.message');
+  const dismissButton = notification.querySelector('.dismiss');
+
+  messageEl.textContent = message;
+  notification.classList.remove('hidden');
+
+  dismissButton.addEventListener('click', () =>
+    notification.classList.add('hidden')
+  );
+
+  setTimeout(() => notification.classList.add('hidden'), 5000);
+}
+
+setupSocketIo(showNotification);
 renderBoard(currentProject);
 showProjectList();
 showUserList();
-renderTasksList();
+// renderTasksList();
 renderDashBoardTasks();
