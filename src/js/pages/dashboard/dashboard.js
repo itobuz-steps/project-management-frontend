@@ -107,7 +107,10 @@ const createTaskModal = document.getElementById('create-task-modal');
 
 openTaskCreate.addEventListener('click', () => {
   createTaskModal.classList.remove('hidden');
+  handleModalStatus();
+  handleModalAssignee();
 });
+
 closeTaskModal.addEventListener('click', () => {
   createTaskModal.classList.add('hidden');
 });
@@ -130,6 +133,22 @@ input.addEventListener('change', () => {
 taskForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
+  console.log(document.getElementById('dueDate'));
+  console.log(document.getElementById('dueDate').value);
+  let dateValue;
+  if (document.getElementById('dueDate').value === "1999-10-10") {
+    dateValue = new Date().toLocaleDateString();
+
+    const splitVal = dateValue.split('/');
+    console.log(splitVal);
+    const newDateValue = new Date(splitVal[2], splitVal[1], splitVal[0]);
+    console.log(newDateValue);
+    dateValue = newDateValue;
+    dateValue = splitVal[2] + "-" + splitVal[1] + "-" + splitVal[0];
+  } else {
+    dateValue = document.getElementById('dueDate').value;
+  }
+  console.log(dateValue);
   // Build the task object from form inputs
   const task = {
     projectId: localStorage.getItem('selectedProject'),
@@ -167,8 +186,8 @@ taskForm.addEventListener('submit', async (e) => {
         .map((t) => t.trim())
       : [],
 
-    dueDate: document.getElementById('dueDate').value,
-    assignee: document.getElementById('assignee').value.trim(),
+    dueDate: dateValue,
+    assignee: document.getElementById('create-modal-assignee').value === "Unassigned" ? null : document.getElementById('create-modal-assignee').value,
 
     attachments: input.files,
   };
@@ -511,7 +530,7 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
   const result = {};
 
   project.columns.forEach((column) => (result[column] = []));
-
+  console.log(project.columns);
   const tasks = await taskService.getTaskByProjectId(
     projectId,
     filter,
@@ -869,6 +888,52 @@ async function handleAssigneeFilter() {
       renderBoard(currentProject, 'assignee', `${assignee._id}`);
     });
   });
+}
+
+const createModalAssigneeDropdown = document.getElementById('create-modal-assignee');
+async function handleModalAssignee() {
+  const assignees = await projectService.getProjectMembers(currentProject);
+  createModalAssigneeDropdown.innerHTML = '';
+  const unassigned = document.createElement('option');
+  unassigned.innerText = 'Unassigned';
+  unassigned.selected = true;
+  createModalAssigneeDropdown.appendChild(unassigned);
+
+  assignees.result.forEach((assignee) => {
+    const option = document.createElement('option');
+
+    option.value = assignee._id;
+
+    if (assignee.email === localStorage.getItem('userEmail')) {
+      option.innerText = `${assignee.email} (assign to me)`;
+    } else {
+      option.innerText = `${assignee.email}`;
+    }
+
+    createModalAssigneeDropdown.appendChild(option);
+    option.addEventListener('click', () => {
+      option.selected = true;
+    });
+  });
+}
+
+const createModalStatusDropdown = document.getElementById('status-create-task-modal');
+async function handleModalStatus() {
+  const project = (await projectService.getProjectById(currentProject)).result;
+  createModalStatusDropdown.innerHTML = '';
+
+  project.columns.forEach((column) => {
+    const option = document.createElement('option');
+    option.innerText = column;
+    option.value = column;
+    createModalStatusDropdown.appendChild(option);
+
+    option.addEventListener('click', () => {
+      option.selected = true;
+    });
+  });
+
+  createModalStatusDropdown.firstChild.selected = true;
 }
 
 const priorityDropdown = document.getElementById('priorityDropdown');
