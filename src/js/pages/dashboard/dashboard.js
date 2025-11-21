@@ -182,30 +182,30 @@ taskForm.addEventListener('submit', async (e) => {
 
     tags: document.getElementById('tags').value
       ? document
-          .getElementById('tags')
-          .value.split(',')
-          .map((t) => t.trim())
+        .getElementById('tags')
+        .value.split(',')
+        .map((t) => t.trim())
       : [],
 
     block: document.getElementById('block').value
       ? document
-          .getElementById('block')
-          .value.split(',')
-          .map((t) => t.trim())
+        .getElementById('block')
+        .value.split(',')
+        .map((t) => t.trim())
       : [],
 
     blockedBy: document.getElementById('BlockedBy').value
       ? document
-          .getElementById('BlockedBy')
-          .value.split(',')
-          .map((t) => t.trim())
+        .getElementById('BlockedBy')
+        .value.split(',')
+        .map((t) => t.trim())
       : [],
 
     relatesTo: document.getElementById('relatesTo').value
       ? document
-          .getElementById('relatesTo')
-          .value.split(',')
-          .map((t) => t.trim())
+        .getElementById('relatesTo')
+        .value.split(',')
+        .map((t) => t.trim())
       : [],
 
     dueDate: dateValue,
@@ -233,8 +233,8 @@ taskForm.addEventListener('submit', async (e) => {
 });
 
 openTaskCreate.addEventListener('click', () => {
-  populateAssigneeDropDown();
   createTaskModal.classList.remove('hidden');
+
 });
 closeTaskModal.addEventListener('click', () => {
   createTaskModal.classList.add('hidden');
@@ -438,9 +438,7 @@ export function dropdownEvent(sprint = {}) {
 }
 
 async function showUserList() {
-  const users = await projectService.getProjectMembers(
-    localStorage.getItem('selectedProject')
-  );
+  const users = await projectService.getProjectMembers(localStorage.getItem('selectedProject'));
 
   userListContainer.innerHTML = '';
   console.log('users: ', users);
@@ -454,7 +452,8 @@ async function showUserList() {
       item.dataset.id = user._id;
       item.id = user.name;
       item.textContent = user.name;
-      item.className = 'block p-2 text-gray-900 hover:bg-gray-100 rounded-lg';
+      item.className =
+        'block p-2 text-gray-900 hover:bg-gray-100 rounded-lg';
       userListContainer.appendChild(item);
     });
   }
@@ -676,9 +675,8 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         </div>
         <div class="card-footer flex justify-between items-center text-sm text-gray-400">
           <div class="flex items-center gap-2">
-            <span class="type-tag bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm">${
-              task.key
-            }</span>
+            <span class="type-tag bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm">${task.key
+        }</span>
             <select class="type-selector text-sm border border-gray-300 rounded px-1 py-1 focus:outline-none">
               <option value="story" selected>Story</option>
               <option value="task">Task</option>
@@ -686,9 +684,8 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
           </div>
           <div class="flex items-center">
             <span class="w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center">
-              <img src="${
-                'http://localhost:3001/uploads/profile/' + assignee.profileImage
-              }" class="w-8 h-8 object-cover" title="${assignee.name}"/>
+              <img src="${'http://localhost:3001/uploads/profile/' + assignee.profileImage
+        }" class="w-8 h-8 object-cover" title="${assignee.name}"/>
             </span>
           </div>
         </div>
@@ -824,10 +821,9 @@ async function showTaskDrawer(taskId) {
       'flex gap-3 items-start bg-white rounded-lg shadow-md pl-3 py-3';
     commentEl.innerHTML = `
             <img
-              src="${
-                'http://localhost:3001/uploads/profile/' +
-                comment.author.profileImage
-              }"
+              src="${'http://localhost:3001/uploads/profile/' +
+      comment.author.profileImage
+      }"
               alt="Avatar"
               class="w-7 h-7 rounded-full"
             />
