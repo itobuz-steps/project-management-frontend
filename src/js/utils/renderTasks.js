@@ -64,7 +64,7 @@ async function createTaskList(task) {
                         </svg>
                       </td>
                       <td class="px-6 py-4">${task.key}</td>
-                      <td class="px-6 py-4">${task.description}</td>
+                      <td class="px-6 py-4">${task.title}</td>
                       <td class="px-6 py-4">${task.status}</td>
                       <td class="px-6 py-4">${task.comments}</td>
                       <td class="px-6 py-4">${task.sprint}</td>
