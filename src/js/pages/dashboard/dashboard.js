@@ -6,6 +6,7 @@ import {
 import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
 import commentService from '../../services/CommentService.js';
+import axios from 'axios';
 import { setupSocketIo } from '../../utils/setupNotification.js';
 
 const profileBtn = document.getElementById('profileBtn');
@@ -139,6 +140,22 @@ input.addEventListener('change', () => {
   }
 });
 
+async function populateAssigneeDropDown() {
+  const projectId = localStorage.getItem('selectedProject');
+  const assigneeDropdown = document.getElementById('assignee');
+  const data = await projectService.getProjectMembers(projectId);
+
+  assigneeDropdown.innerHTML = `<option value="">Select an assignee</option>`;
+
+  data.result.forEach((member) => {
+    const option = document.createElement('option');
+    console.log(member._id);
+    option.value = member._id;
+    option.textContent = member.email;
+    assigneeDropdown.appendChild(option);
+  });
+}
+
 taskForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -163,7 +180,8 @@ taskForm.addEventListener('submit', async (e) => {
     description: document.getElementById('description').value.trim(),
     type: document.getElementById('type').value,
     priority: document.getElementById('priority').value,
-    status: (document.getElementById('status-create-task-modal').value) ? document.getElementById('status-create-task-modal').value : "todo",
+
+    status: document.getElementById('status-create-task-modal').value,
 
     tags: document.getElementById('tags').value
       ? document
@@ -195,7 +213,9 @@ taskForm.addEventListener('submit', async (e) => {
 
     dueDate: dateValue,
     assignee:
-      document.getElementById('create-modal-assignee').value === 'Unassigned'
+
+      document.getElementById('create-modal-assignee').value === 'null'
+
         ? null
         : document.getElementById('create-modal-assignee').value,
 
@@ -695,8 +715,15 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
           <div class="flex items-center" >
             <span class="w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center">
               <img src="${
-                'http://localhost:3001/uploads/profile/' + assignee.profileImage
-              }" class="w-8 h-8 object-cover" title="${assignee.name}"/>
+
+                assignee?.profileImage
+                  ? 'http://localhost:3001/uploads/profile/' +
+                    assignee.profileImage
+                  : "'../../../assets/img/profile.png'"
+              }" class="w-8 h-8 object-cover" title="${
+        assignee?.name ? assignee.name : 'Unassigned'
+      }"/>
+
             </span>
           </div>
         </div>
@@ -949,14 +976,18 @@ async function handleAssigneeFilter() {
   });
 }
 
+
 async function handleModalAssignee(modalAssigneeDropdown) {
+
   const assignees = await projectService.getProjectMembers(currentProject);
   modalAssigneeDropdown.innerHTML = '';
   const unassigned = document.createElement('option');
   unassigned.innerText = 'Unassigned';
   unassigned.selected = true;
-  unassigned.value = "null";
-  modalAssigneeDropdown.appendChild(unassigned);
+
+  unassigned.value = 'null';
+  createModalAssigneeDropdown.appendChild(unassigned);
+
 
   let selectedAssignee;
   assignees.result.forEach((assignee) => {
@@ -975,6 +1006,8 @@ async function handleModalAssignee(modalAssigneeDropdown) {
   });
   return selectedAssignee;
 }
+
+
 
 async function handleModalStatus(modalStatusDropdown) {
   const project = (await projectService.getProjectById(currentProject)).result;
@@ -1023,6 +1056,44 @@ removeFilterBtn.addEventListener('click', () => {
   removeElementChildren(statusDropDown);
   removeElementChildren(assigneeDropdown);
   renderBoard(currentProject, '', '');
+});
+
+// add  user to the project
+
+const toggleInviteButton = document.getElementById('toggleInviteForm');
+const inviteForm = document.getElementById('inviteForm');
+const emailInput = inviteForm.querySelector('input[type="email"]');
+
+toggleInviteButton.addEventListener('click', () => {
+  inviteForm.classList.toggle('hidden');
+});
+
+inviteForm.addEventListener('submit', function (event) {
+  event.preventDefault();
+
+  const email = emailInput.value.trim();
+  if (email === '') {
+    console.log('please enter a valid emil'); // add a confimation
+    return;
+  }
+  axios
+    .post('http://localhost:3001/invite/email', {
+      email: email,
+    })
+    .then((response) => {
+      if (response.data.success) {
+        console.log('Email sent successfully'); // add conf.
+      } else {
+        // alert('Failed to send invitation. Please try again.');
+        console.log('falied to sent invitation'); // need conff
+      }
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      alert('There was an error sending the invitation.');
+    });
+  inviteForm.classList.add('hidden');
+  emailInput.value = '';
 });
 
 function showNotification(message) {
