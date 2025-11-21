@@ -722,7 +722,7 @@
             <div
               class="flex items-center justify-between p-2 md:p-5 border-b rounded-t border-black relative top-0 bg-white z-10"
             >
-              <h3 class="text-xl font-semibold text-black">Create Task</h3>
+              <h3 class="text-xl font-semibold text-black">Create Issue</h3>
               <button
                 id="close-task-modal"
                 type="button"
@@ -1339,13 +1339,17 @@
               <span class="text-gray-500 text-md">Status</span>
               <select
                 id="statusSelect"
-                class="appearance-none bg-purple-500/20 text-purple-500 px-3 py-1 rounded-full text-md font-medium focus:outline-none cursor-pointer"
+                class="appearance-none bg-purple-500/20 text-purple-500 px-2 py-1 w-auto rounded-full text-md font-medium focus:outline-none cursor-pointer"
               >
-                <option value="todo" class="text-gray-500">To Do</option>
-                <option value="inprogress" selected class="text-purple-500">
+                <option value="todo" class="text-gray-500 text-center">
+                  To Do
+                </option>
+                <option value="in-progress" class="text-purple-500 text-center">
                   In Progress
                 </option>
-                <option value="done" class="text-green-500">Done</option>
+                <option value="done" class="text-green-500 text-center">
+                  Done
+                </option>
               </select>
             </div>
 
@@ -1353,11 +1357,24 @@
               <span class="text-gray-500 text-md">Priority</span>
               <select
                 id="prioritySelect"
-                class="appearance-none bg-green-500/20 text-green-500 px-3 py-1 rounded-full text-md font-medium focus:outline-none cursor-pointer"
+                class="appearance-none bg-green-500/20 text-green-500 px-2 py-1 w-auto rounded-full text-md font-medium focus:outline-none cursor-pointer"
               >
-                <option value="high" class="text-red-500">High</option>
-                <option value="medium" class="text-yellow-500">Medium</option>
-                <option value="low" selected class="text-green-500">Low</option>
+                <option value="high" class="text-red-500 text-center">
+                  High
+                </option>
+                <option value="medium" class="text-yellow-500 text-center">
+                  Medium
+                </option>
+                <option value="low" selected class="text-green-500 text-center">
+                  Low
+                </option>
+                <option
+                  value="critical"
+                  selected
+                  class="text-green-100 text-center"
+                >
+                  Critical
+                </option>
               </select>
             </div>
           </div>
@@ -1421,6 +1438,32 @@
       </div>
     </div>
 
+    <!-- delete modal -->
+
+    <div
+      id="deleteModal"
+      class="modal absolute top-50 z-10 right-150 flex justify-center items-center hidden"
+    >
+      <div class="bg-gray-200 p-6 rounded-lg shadow-xl w-96">
+        <h2 class="text-lg font-semibold mb-4">
+          Are you sure you want to delete this task?
+        </h2>
+        <div class="flex justify-between">
+          <button
+            id="cancelDelete"
+            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-gray-300"
+          >
+            Cancel
+          </button>
+          <button
+            id="confirmDelete"
+            class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-red-300"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
     <div
       class="drawer-backdrop hidden bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-30"
     ></div>
