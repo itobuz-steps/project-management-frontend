@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { showNotification } from '../pages/dashboard/dashboard';
 const API_BASE_URL = 'http://localhost:3001/tasks';
 
 class TaskService {
@@ -146,7 +147,9 @@ class TaskService {
 
     try {
       const response = await this.api.post(`/`, formData);
+      const email = response.data?.user?.email;
 
+      showNotification(`Task created by ${email}!`);
       return response;
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Failed to create task');
@@ -156,7 +159,7 @@ class TaskService {
   async updateTask(id, updatedTask) {
     try {
       const response = await this.api.put(`/${id}`, updatedTask);
-
+      // showNotification('Task Updated by ');
       return response;
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Failed to update task');
@@ -166,6 +169,9 @@ class TaskService {
   async deleteTask(id) {
     try {
       const response = await this.api.delete(`/${id}`);
+      const email = response.data?.user?.email;
+
+      showNotification(`Task deleted by ${email}!`);
 
       return response;
     } catch (error) {
