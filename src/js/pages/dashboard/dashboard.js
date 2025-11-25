@@ -112,8 +112,12 @@ closeProjectBtn.addEventListener('click', () => {
 const openTaskCreate = document.getElementById('create-task');
 const closeTaskModal = document.getElementById('close-task-modal');
 const createTaskModal = document.getElementById('create-task-modal');
-const createModalStatusDropdown = document.getElementById('status-create-task-modal');
-const createModalAssigneeDropdown = document.getElementById('create-modal-assignee');
+const createModalStatusDropdown = document.getElementById(
+  'status-create-task-modal'
+);
+const createModalAssigneeDropdown = document.getElementById(
+  'create-modal-assignee'
+);
 
 openTaskCreate.addEventListener('click', () => {
   createTaskModal.classList.remove('hidden');
@@ -213,9 +217,7 @@ taskForm.addEventListener('submit', async (e) => {
 
     dueDate: dateValue,
     assignee:
-
       document.getElementById('create-modal-assignee').value === 'null'
-
         ? null
         : document.getElementById('create-modal-assignee').value,
 
@@ -290,7 +292,9 @@ async function openEditModal(taskId) {
     }
     const assignee = editModal.querySelector('#assignee');
     const selectedAssignee = await handleModalAssignee(assignee);
-    const selectedAssigned = editModal.querySelector(`[value="${task.assignee}"]`);
+    const selectedAssigned = editModal.querySelector(
+      `[value="${task.assignee}"]`
+    );
     selectedAssigned.selected = true;
     console.log(selectedAssignee);
 
@@ -331,7 +335,10 @@ editForm.addEventListener('submit', async (e) => {
       .map((t) => t.trim()),
 
     dueDate: editModal.querySelector('#dueDate').value,
-    assignee: editModal.querySelector('#assignee').value === "null" ? null : editModal.querySelector('#assignee').value,
+    assignee:
+      editModal.querySelector('#assignee').value === 'null'
+        ? null
+        : editModal.querySelector('#assignee').value,
   };
 
   console.log(updatedTask);
@@ -613,12 +620,12 @@ let taskToDelete = null;
 async function showDeleteModal(taskId) {
   taskToDelete = taskId;
   deleteModal.classList.remove('hidden');
-  drawerBackdrop.classList.remove("hidden");
+  drawerBackdrop.classList.remove('hidden');
 }
 
 cancelDeleteBtn.addEventListener('click', () => {
   deleteModal.classList.add('hidden');
-  drawerBackdrop.classList.add("hidden");
+  drawerBackdrop.classList.add('hidden');
 });
 
 confirmDeleteBtn.addEventListener('click', async () => {
@@ -629,7 +636,7 @@ confirmDeleteBtn.addEventListener('click', async () => {
     renderDashBoardTasks();
   }
   deleteModal.classList.add('hidden');
-  drawerBackdrop.classList.add("hidden");
+  drawerBackdrop.classList.add('hidden');
 });
 
 async function renderBoard(projectId, filter = '', searchInput = '') {
@@ -670,7 +677,9 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         'task flex flex-col max-w-sm p-4 bg-gray-100 text-black gap-4 relative cursor-pointer';
       taskEl.innerHTML = `
         <div class="card-header flex justify-between items-center">
-          <p class="text-lg border border-transparent rounded-lg font-medium hover:border-gray-400 ">${task.title}</p>
+          <p class="text-lg border border-transparent rounded-lg font-medium hover:border-gray-400 ">${
+            task.title
+          }</p>
           <div class="relative">
             <button class="outline-none menu-button">
               <svg
@@ -715,7 +724,6 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
           <div class="flex items-center" >
             <span class="w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center">
               <img src="${
-
                 assignee?.profileImage
                   ? 'http://localhost:3001/uploads/profile/' +
                     assignee.profileImage
@@ -723,11 +731,17 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
               }" class="w-8 h-8 object-cover" title="${
         assignee?.name ? assignee.name : 'Unassigned'
       }"/>
-
             </span>
           </div>
         </div>
       `;
+
+      // drag wala task
+      taskEl.setAttribute('draggable', 'true');
+      taskEl.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('taskId', task._id);
+        e.dataTransfer.effectAllowed = 'move';
+      });
 
       const menuButton = taskEl.querySelector('.menu-button');
       const dropdownMenu = taskEl.querySelector('.dropdown-menu');
@@ -779,7 +793,19 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         }
       });
 
-      columnEl.querySelector('#task-list').appendChild(taskEl);
+      const taskList = columnEl.querySelector('#task-list');
+      taskList.appendChild(taskEl);
+
+      // column k liye
+      taskList.addEventListener('dragover', (e) => {
+        e.preventDefault();
+      });
+      taskList.addEventListener('drop', async (e) => {
+        e.preventDefault();
+        const taskId = e.dataTransfer.getData('taskId');
+        await taskService.updateTask(taskId, { status: column });
+        renderBoard(localStorage.getItem('selectedProject'));
+      });
     });
 
     columnContainer.appendChild(columnEl);
@@ -815,7 +841,6 @@ async function showTaskDrawer(taskId) {
   console.log(assignee);
 
   const taskDrawer = document.querySelector('.task-drawer');
-
 
   const titleEl = taskDrawer.querySelector('.title');
   const descriptionEl = taskDrawer.querySelector('.description');
@@ -921,8 +946,6 @@ async function loadProjectMembers(projectId) {
   }
 }
 
-
-
 function renderSubDropdown(item) {
   const subDropdown = document.createElement('div');
   subDropdown.className = `px-4 py-2 hover:bg-gray-100 cursor-pointer ${item}-filter`;
@@ -976,9 +999,7 @@ async function handleAssigneeFilter() {
   });
 }
 
-
 async function handleModalAssignee(modalAssigneeDropdown) {
-
   const assignees = await projectService.getProjectMembers(currentProject);
   modalAssigneeDropdown.innerHTML = '';
   const unassigned = document.createElement('option');
@@ -987,7 +1008,6 @@ async function handleModalAssignee(modalAssigneeDropdown) {
 
   unassigned.value = 'null';
   createModalAssigneeDropdown.appendChild(unassigned);
-
 
   let selectedAssignee;
   assignees.result.forEach((assignee) => {
@@ -1007,8 +1027,6 @@ async function handleModalAssignee(modalAssigneeDropdown) {
   return selectedAssignee;
 }
 
-
-
 async function handleModalStatus(modalStatusDropdown) {
   const project = (await projectService.getProjectById(currentProject)).result;
   modalStatusDropdown.innerHTML = '';
@@ -1018,7 +1036,6 @@ async function handleModalStatus(modalStatusDropdown) {
     option.innerText = column;
     option.value = column;
     modalStatusDropdown.appendChild(option);
-
   });
 
   modalStatusDropdown.firstChild.selected = true;
