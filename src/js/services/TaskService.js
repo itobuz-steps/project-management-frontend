@@ -7,14 +7,13 @@ class TaskService {
   });
 
   constructor() {
+    // Attach token
     this.api.interceptors.request.use(
       function (config) {
         const token = localStorage.getItem('access_token');
-
         if (token) {
           config.headers['Authorization'] = `Bearer ${token}`;
         }
-
         return config;
       },
       function (error) {
@@ -22,10 +21,9 @@ class TaskService {
       }
     );
 
+    // Refresh token logic
     this.api.interceptors.response.use(
-      (response) => {
-        return response;
-      },
+      (response) => response,
       async (error) => {
         const originalRequest = error.config;
 
@@ -46,7 +44,6 @@ class TaskService {
                 },
               }
             );
-            console.log(response); // to be removed
 
             if (response) {
               localStorage.setItem('access_token', response.data.accessToken);
@@ -58,11 +55,10 @@ class TaskService {
 
               return this.api(originalRequest);
             }
-          } catch (error) {
-            console.log(error);
+          } catch (err) {
+            console.log(err);
             localStorage.removeItem('access_token');
             localStorage.removeItem('refresh_token');
-
             window.location.reload();
           }
         }
@@ -73,47 +69,37 @@ class TaskService {
   }
 
   async getAllTasks() {
-    try {
-      const response = await this.api.get(`/`);
-
-      return response;
-    } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch tasks');
-    }
+    const response = await this.api.get(`/`);
+    return response;
   }
 
   async getTaskById(id) {
-    console.log(`task id ${id}`);
-    try {
-      const response = await this.api.get(`/${id}`);
-
-      return response;
-    } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch tasks');
-    }
+    const response = await this.api.get(`/${id}`);
+    return response;
   }
 
   async getUserDetailsById(userId) {
-    try {
-      const response = await this.api.get(`/user/${userId}`);
-
-      return response;
-    } catch (error) {
-      throw new Error(
-        error.response?.data?.message || 'Failed to fetch user details'
-      );
-    }
+    const response = await this.api.get(`/user/${userId}`);
+    return response;
   }
 
   async getTaskByProjectId(projectId, filter, searchInput) {
+    const response = await this.api.get(
+      `/?projectId=${projectId}&filter=${filter}&searchInput=${searchInput}`
+    );
+    return response;
+  }
+
+  async getMultipleUsers(userIds) {
     try {
       const response = await this.api.get(
-        `/?projectId=${projectId}&filter=${filter}&searchInput=${searchInput}`
+        `/users/batch?ids=${userIds.join(',')}`
       );
-
-      return response;
+      return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch tasks');
+      throw new Error(
+        error.response?.data?.message || 'Failed to fetch multiple users'
+      );
     }
   }
 
@@ -133,47 +119,26 @@ class TaskService {
 
     if (task.assignee) {
       formData.append('assignee', task.assignee);
-    } // change the service logic    }
-    task.block.forEach((blockingTask) => {
-      formData.append('block[]', blockingTask);
-    });
-    task.block.forEach((blockedTask) => {
-      formData.append('blockedBy[]', blockedTask);
-    });
-    task.block.forEach((relatedTask) => {
-      formData.append('relatesTo[]', relatedTask);
-    });
-
-    try {
-      const response = await this.api.post(`/`, formData);
-
-      return response;
-    } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to create task');
     }
+
+    task.block.forEach((t) => formData.append('block[]', t));
+    task.block.forEach((t) => formData.append('blockedBy[]', t));
+    task.block.forEach((t) => formData.append('relatesTo[]', t));
+
+    const response = await this.api.post(`/`, formData);
+    return response;
   }
 
   async updateTask(id, updatedTask) {
-    try {
-      const response = await this.api.put(`/${id}`, updatedTask);
-
-      return response;
-    } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to update task');
-    }
+    const response = await this.api.put(`/${id}`, updatedTask);
+    return response;
   }
 
   async deleteTask(id) {
-    try {
-      const response = await this.api.delete(`/${id}`);
-
-      return response;
-    } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to delete task');
-    }
+    const response = await this.api.delete(`/${id}`);
+    return response;
   }
 }
 
 const taskService = new TaskService();
-
 export default taskService;

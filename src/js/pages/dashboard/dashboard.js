@@ -112,8 +112,12 @@ closeProjectBtn.addEventListener('click', () => {
 const openTaskCreate = document.getElementById('create-task');
 const closeTaskModal = document.getElementById('close-task-modal');
 const createTaskModal = document.getElementById('create-task-modal');
-const createModalStatusDropdown = document.getElementById('status-create-task-modal');
-const createModalAssigneeDropdown = document.getElementById('create-modal-assignee');
+const createModalStatusDropdown = document.getElementById(
+  'status-create-task-modal'
+);
+const createModalAssigneeDropdown = document.getElementById(
+  'create-modal-assignee'
+);
 
 openTaskCreate.addEventListener('click', () => {
   createTaskModal.classList.remove('hidden');
@@ -213,9 +217,7 @@ taskForm.addEventListener('submit', async (e) => {
 
     dueDate: dateValue,
     assignee:
-
       document.getElementById('create-modal-assignee').value === 'null'
-
         ? null
         : document.getElementById('create-modal-assignee').value,
 
@@ -290,7 +292,9 @@ async function openEditModal(taskId) {
     }
     const assignee = editModal.querySelector('#assignee');
     const selectedAssignee = await handleModalAssignee(assignee);
-    const selectedAssigned = editModal.querySelector(`[value="${task.assignee}"]`);
+    const selectedAssigned = editModal.querySelector(
+      `[value="${task.assignee}"]`
+    );
     selectedAssigned.selected = true;
     console.log(selectedAssignee);
 
@@ -331,7 +335,10 @@ editForm.addEventListener('submit', async (e) => {
       .map((t) => t.trim()),
 
     dueDate: editModal.querySelector('#dueDate').value,
-    assignee: editModal.querySelector('#assignee').value === "null" ? null : editModal.querySelector('#assignee').value,
+    assignee:
+      editModal.querySelector('#assignee').value === 'null'
+        ? null
+        : editModal.querySelector('#assignee').value,
   };
 
   console.log(updatedTask);
@@ -613,12 +620,12 @@ let taskToDelete = null;
 async function showDeleteModal(taskId) {
   taskToDelete = taskId;
   deleteModal.classList.remove('hidden');
-  drawerBackdrop.classList.remove("hidden");
+  drawerBackdrop.classList.remove('hidden');
 }
 
 cancelDeleteBtn.addEventListener('click', () => {
   deleteModal.classList.add('hidden');
-  drawerBackdrop.classList.add("hidden");
+  drawerBackdrop.classList.add('hidden');
 });
 
 confirmDeleteBtn.addEventListener('click', async () => {
@@ -629,7 +636,7 @@ confirmDeleteBtn.addEventListener('click', async () => {
     renderDashBoardTasks();
   }
   deleteModal.classList.add('hidden');
-  drawerBackdrop.classList.add("hidden");
+  drawerBackdrop.classList.add('hidden');
 });
 
 async function renderBoard(projectId, filter = '', searchInput = '') {
@@ -642,27 +649,42 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
   columnContainer.innerHTML = '';
 
   let filteredTasks = [];
+  const allTasks = [];
+  project.columns.forEach((col) => {
+    allTasks.push(...(columns[col] || []));
+  });
+  const assigneeIds = [
+    ...new Set(allTasks.map((t) => t.assignee).filter(Boolean)),
+  ];
+
+  let userMap = {};
+  if (assigneeIds.length > 0) {
+    const usersResp = await taskService.getMultipleUsers(assigneeIds);
+    usersResp.result.forEach((u) => {
+      userMap[u._id] = u;
+    });
+  }
 
   project.columns.forEach((column) => {
     const columnEl = document.createElement('div');
     columnEl.innerHTML = `
-        <div class="w-72 bg-white rounded-lg shadow p-4 shrink-0 h-full overflow-y-auto">
-          <h2 class="text-lg font-semibold mb-3 border-b pb-2 sticky top-0 bg-white z-10 flex gap-2">
-            ${column.toUpperCase()}
-            <div class="issue-count rounded-full w-7 h-7 text-center text-md text-white bg-cyan-900"></div>
-          </h2>
-          <div class="space-y-3 pb-4 class" id="task-list"></div>
-        </div>
-      `;
-    columnEl.querySelector('.issue-count').innerText = columns[column].length;
+      <div class="w-72 bg-white rounded-lg shadow p-4 shrink-0 h-full overflow-y-auto">
+        <h2 class="text-lg font-semibold mb-3 border-b pb-2 sticky top-0 bg-white z-10 flex gap-2">
+          ${column.toUpperCase()}
+          <div class="issue-count rounded-full w-7 h-7 text-center text-md text-white bg-cyan-900"></div>
+        </h2>
+        <div class="space-y-3 pb-4 class" id="task-list"></div>
+      </div>
+    `;
+    columnEl.querySelector('.issue-count').innerText = (
+      columns[column] || []
+    ).length;
 
-    const tasks = columns[column];
-    tasks.forEach(async (task) => {
+    const tasks = columns[column] || [];
+    tasks.forEach((task) => {
       filteredTasks.push(task);
 
-      const assignee = task.assignee
-        ? (await taskService.getUserDetailsById(task.assignee)).data.result
-        : null;
+      const assignee = task.assignee ? userMap[task.assignee] : null;
 
       const taskEl = document.createElement('div');
       taskEl.dataset._id = task._id;
@@ -670,33 +692,22 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         'task flex flex-col max-w-sm p-4 bg-gray-100 text-black gap-4 relative cursor-pointer';
       taskEl.innerHTML = `
         <div class="card-header flex justify-between items-center">
-          <p class="text-lg border border-transparent rounded-lg font-medium hover:border-gray-400 ">${task.title}</p>
+          <p class="text-lg border border-transparent rounded-lg font-medium hover:border-gray-400">${
+            task.title
+          }</p>
           <div class="relative">
             <button class="outline-none menu-button">
-              <svg
-                width="18px"
-                height="18px"
-                viewBox="0 0 16 16"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="#00000"
-                class="bi bi-three-dots mr-2"
-              >
-                <path
-                  d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"
-                />
+              <svg width="18px" height="18px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#00000" class="bi bi-three-dots mr-2">
+                <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
               </svg>
             </button>
             <div class="dropdown-menu hidden absolute right-0 w-32 bg-white border border-gray-200 rounded shadow-lg z-10">
               <ul class="text-sm text-gray-700">
                 <li>
-                  <button class="edit-btn block w-full text-left px-4 py-2 hover:bg-gray-100">
-                    Edit
-                  </button>
+                  <button class="edit-btn block w-full text-left px-4 py-2 hover:bg-gray-100">Edit</button>
                 </li>
                 <li>
-                  <button class="delete-btn block w-full text-left px-4 py-2 hover:bg-gray-100">
-                    Delete
-                  </button>
+                  <button class="delete-btn block w-full text-left px-4 py-2 hover:bg-gray-100">Delete</button>
                 </li>
               </ul>
             </div>
@@ -708,26 +719,34 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
               task.key
             }</span>
             <select class="type-selector text-sm border border-gray-300 rounded px-1 py-1 focus:outline-none">
-              <option value="story" selected>Story</option>
-              <option value="task">Task</option>
+              <option value="story" ${
+                task.type === 'story' ? 'selected' : ''
+              }>Story</option>
+              <option value="task" ${
+                task.type === 'task' ? 'selected' : ''
+              }>Task</option>
             </select>
           </div>
-          <div class="flex items-center" >
+          <div class="flex items-center">
             <span class="w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center">
               <img src="${
-
                 assignee?.profileImage
                   ? 'http://localhost:3001/uploads/profile/' +
                     assignee.profileImage
-                  : "'../../../assets/img/profile.png'"
+                  : '../../../assets/img/profile.png'
               }" class="w-8 h-8 object-cover" title="${
-        assignee?.name ? assignee.name : 'Unassigned'
+        assignee?.name || 'Unassigned'
       }"/>
-
             </span>
           </div>
         </div>
       `;
+
+      taskEl.setAttribute('draggable', 'true');
+      taskEl.addEventListener('dragstart', (e) => {
+        e.dataTransfer.setData('taskId', task._id);
+        e.dataTransfer.effectAllowed = 'move';
+      });
 
       const menuButton = taskEl.querySelector('.menu-button');
       const dropdownMenu = taskEl.querySelector('.dropdown-menu');
@@ -739,28 +758,19 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         e.stopPropagation();
         dropdownMenu.classList.toggle('hidden');
       });
-
-      document.addEventListener('click', (e) => {
-        dropdownMenu.classList.add('hidden');
-        e.stopPropagation();
-      });
+      document.addEventListener('click', () =>
+        dropdownMenu.classList.add('hidden')
+      );
 
       taskEl.addEventListener('click', (e) => {
-        if (e.target === taskEl) {
-          showTaskDrawer(task._id);
-        }
+        if (e.target === taskEl) showTaskDrawer(task._id);
       });
-
-      cardHeader.addEventListener('click', () => {
-        showTaskDrawer(task._id);
-      });
+      cardHeader.addEventListener('click', () => showTaskDrawer(task._id));
 
       taskEl.querySelector('.edit-btn').addEventListener('click', () => {
         dropdownMenu.classList.add('hidden');
-        console.log(task._id);
         openEditModal(task._id);
       });
-
       taskEl.querySelector('.delete-btn').addEventListener('click', (e) => {
         e.stopPropagation();
         showDeleteModal(task._id);
@@ -779,7 +789,28 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         }
       });
 
-      columnEl.querySelector('#task-list').appendChild(taskEl);
+      const taskList = columnEl.querySelector('#task-list');
+      taskList.appendChild(taskEl);
+
+      taskList.addEventListener('dragover', (e) => e.preventDefault());
+
+      taskList.addEventListener('drop', async (e) => {
+        e.preventDefault();
+        const taskId = e.dataTransfer.getData('taskId');
+        const taskEl = document.querySelector(`[data-_id="${taskId}"]`);
+
+        taskList.appendChild(taskEl);
+
+        taskService.updateTask(taskId, { status: column }).catch((err) => {
+          console.error('Failed to update task status', err);
+        });
+
+        const countEls = document.querySelectorAll('.issue-count');
+        project.columns.forEach((col, idx) => {
+          const colTasks = columns[col] || [];
+          countEls[idx].innerText = colTasks.length;
+        });
+      });
     });
 
     columnContainer.appendChild(columnEl);
@@ -787,10 +818,7 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
 
   handleStatusFilter();
   handleAssigneeFilter();
-
-  console.log(filteredTasks);
   renderTasksList(filteredTasks);
-  // renderDashBoardTasks();
 }
 
 const searchForm = document.getElementById('search-input-form');
@@ -815,7 +843,6 @@ async function showTaskDrawer(taskId) {
   console.log(assignee);
 
   const taskDrawer = document.querySelector('.task-drawer');
-
 
   const titleEl = taskDrawer.querySelector('.title');
   const descriptionEl = taskDrawer.querySelector('.description');
@@ -921,8 +948,6 @@ async function loadProjectMembers(projectId) {
   }
 }
 
-
-
 function renderSubDropdown(item) {
   const subDropdown = document.createElement('div');
   subDropdown.className = `px-4 py-2 hover:bg-gray-100 cursor-pointer ${item}-filter`;
@@ -976,9 +1001,7 @@ async function handleAssigneeFilter() {
   });
 }
 
-
 async function handleModalAssignee(modalAssigneeDropdown) {
-
   const assignees = await projectService.getProjectMembers(currentProject);
   modalAssigneeDropdown.innerHTML = '';
   const unassigned = document.createElement('option');
@@ -987,7 +1010,6 @@ async function handleModalAssignee(modalAssigneeDropdown) {
 
   unassigned.value = 'null';
   createModalAssigneeDropdown.appendChild(unassigned);
-
 
   let selectedAssignee;
   assignees.result.forEach((assignee) => {
@@ -1007,8 +1029,6 @@ async function handleModalAssignee(modalAssigneeDropdown) {
   return selectedAssignee;
 }
 
-
-
 async function handleModalStatus(modalStatusDropdown) {
   const project = (await projectService.getProjectById(currentProject)).result;
   modalStatusDropdown.innerHTML = '';
@@ -1018,7 +1038,6 @@ async function handleModalStatus(modalStatusDropdown) {
     option.innerText = column;
     option.value = column;
     modalStatusDropdown.appendChild(option);
-
   });
 
   modalStatusDropdown.firstChild.selected = true;
