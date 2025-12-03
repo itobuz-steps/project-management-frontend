@@ -14,32 +14,61 @@
   </head>
 
   <body
-    class="w-screen h-screen flex items-center justify-center bg-[#90e0ef] font-[Libre_Baskerville,serif] min-h-[100vh]"
+    class="w-screen h-screen flex items-center justify-center bg-[#90e0ef] min-h-[100vh]"
   >
-    <div
-      class="container h-full grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-5 bg-[#90e0ef]"
-    >
-      <div class="test-box p-5 flex items-center justify-center">
-        <div class="text-center text-[#03045e] content-holder">
+    <div class="w-full h-full grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-5">
+      <div
+        class="absolute top-2 md:top-6 left-6 z-20 flex items-center gap-2 md:gap-3"
+      >
+        <img
+          src="../assets/img/logo.png"
+          class="w-12 h-12 md:w-16 md:h-16 object-contain"
+        />
+        <span
+          class="text-xl sm:text-2xl md:text-3xl font-bold italic underline text-[#03045e]"
+        >
+          TaskPulse
+        </span>
+      </div>
+
+      <div
+        class="test-box p-3 sm:p-5 flex items-center justify-center relative overflow-hidden"
+      >
+        <img
+          src="../assets/img/lock.png"
+          alt="Lock"
+          class="absolute inset-0 w-full h-full object-cover opacity-10 z-0"
+        />
+
+        <div class="text-center text-[#03045e] relative z-10">
           <h2
-            class="text-[60px] mb-5 text-[#0077b6] font-bold libre-baskerville-bold"
+            class="text-3xl sm:text-4xl md:text-[60px] mb-5 text-[#0077b6] font-bold libre-baskerville-bold"
           >
             Verify OTP
           </h2>
-
-          <p class="text-2xl text-[#03045e] libre-baskerville-regular-italic">
+          <p
+            class="text-lg sm:text-xl md:text-2xl text-[#03045e] libre-baskerville-regular-italic"
+          >
             Please enter the OTP sent to your email to continue.
           </p>
         </div>
       </div>
 
       <div
-        class="form-box p-5 bg-white rounded-xl flex flex-col justify-center items-center shadow-[0_8px_20px_rgba(0,180,216,0.15),_inset_0_0_10px_rgba(0,180,216,0.05)]"
+        class="form-box p-3 sm:p-5 bg-white rounded-xl flex flex-col justify-center items-center shadow-[0_8px_20px_rgba(0,180,216,0.15),_inset_0_0_10px_rgba(0,180,216,0.05)] relative overflow-hidden"
       >
+        <img
+          src="../assets/img/otp.png"
+          alt="OTP Background"
+          class="absolute inset-0 w-full h-full object-cover opacity-10 z-0"
+        />
+
         <div
-          class="verify-form-container active-form w-full max-w-md text-center p-5 box-border"
+          class="verify-form-container active-form w-full max-w-md text-center p-3 sm:p-5 box-border relative z-10"
         >
-          <h1 class="text-[45px] text-[#03045e] mb-8 libre-baskerville-bold">
+          <h1
+            class="text-2xl sm:text-3xl md:text-[45px] text-[#03045e] mb-8 libre-baskerville-bold"
+          >
             Enter OTP
           </h1>
 
@@ -51,14 +80,14 @@
               maxlength="6"
               placeholder="Enter OTP"
               required
-              class="text-sm p-3 rounded-lg border border-[#90e0ef] min-w-[250px] max-w-[250px] w-full outline-none text-[#03045e] text-center tracking-widest focus:border-[#0077b6] focus:shadow-[0_0_8px_#0077b6] transition-all duration-300"
+              class="text-sm sm:text-base p-2 sm:p-3 rounded-lg border border-[#90e0ef] min-w-[180px] sm:min-w-[250px] max-w-[250px] w-full outline-none text-[#03045e] text-center tracking-widest focus:border-[#0077b6] focus:shadow-[0_0_8px_#0077b6] transition-all duration-300"
             />
 
             <p id="message" class="text-center"></p>
 
             <button
               type="submit"
-              class="verify-button text-[16px] p-3 mt-5 rounded-lg w-[80%] max-w-[250px] bg-[#0077b6] text-white cursor-pointer transition-all duration-300 hover:bg-[#00b4d8] hover:shadow-[0_0_5px_#00b4d8,0_0_5px_#0077b6] border-none"
+              class="verify-button text-[14px] sm:text-[16px] p-2 sm:p-3 mt-5 rounded-lg w-[70%] sm:w-[80%] max-w-[250px] bg-[#0077b6] text-white cursor-pointer transition-all duration-300 hover:bg-[#00b4d8] hover:shadow-[0_0_5px_#00b4d8,0_0_5px_#0077b6] border-none"
             >
               Verify
             </button>
