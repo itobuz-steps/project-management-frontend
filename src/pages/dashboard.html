@@ -52,7 +52,7 @@
           </button>
         </div>
 
-        <div class="flex gap-3 items-center">
+        <div class="flex gap-5 items-center max-md:gap-4">
           <div class="search-icon flex items-center justify-between">
             <form
               class="search-input-form rounded-lg w-40 xs:w-60 md:w-80 lg:w-100 bg-gray-200"
@@ -68,7 +68,7 @@
                 <input
                   type="search"
                   id="search-input-field"
-                  class="block w-full p-3 ps-6 bg-neutral-secondary-medium focus:border-cyan-200 text-heading text-sm placeholder:text-body"
+                  class="block w-full p-3 ps-6 bg-neutral-secondary-medium focus:border-cyan-200 text-heading text-sm placeholder:text-body max-md:p-2"
                   placeholder="Search"
                   required
                 />
@@ -98,14 +98,14 @@
               </g>
             </svg>
           </div>
-          <div class="notification-icon">
+          <div class="notification-icon relative">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              class="size-6"
+              class="h-8 w-8 max-md:size-6"
             >
               <path
                 stroke-linecap="round"
@@ -113,6 +113,11 @@
                 d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
               />
             </svg>
+            <div
+              class="notification-badge absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5"
+            >
+              0
+            </div>
           </div>
           <!-- <div class="profile-image w-7 h-7 bg-blue-400 rounded-full"></div> -->
           <div class="relative">
@@ -156,7 +161,7 @@
           <div
             class="h-full px-3 py-4 overflow-y-auto flex flex-col justify-between"
           >
-            <ul class="space-y-2 font-medium">
+            <ul class="font-medium flex flex-col gap-4">
               <li>
                 <a
                   href="#"
@@ -176,12 +181,42 @@
                   class="hidden max-h-0 overflow-y-auto transition-all duration-300 bg-white shadow-md rounded-lg mt-2"
                 ></ul>
               </li>
-              <li>
+              <li id="usersMenu">
                 <a
                   href="#"
                   class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100"
                   >Users</a
                 >
+                <ul
+                  id="usersDropdown"
+                  class="hidden max-h-0 overflow-y-auto transition-all duration-300 bg-white shadow-md rounded-lg mt-2"
+                ></ul>
+              </li>
+              <li>
+                <div
+                  id="toggleInviteForm"
+                  ,
+                  class="add-user-to-project-button w-fit p-2 bg-blue-400 text-white hover:bg-blue-200 cursor-pointer"
+                >
+                  Invite User
+                </div>
+                <form id="inviteForm" class="p-4 bg-gray-50 hidden w-full">
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >User Email</label
+                  >
+                  <input
+                    type="email"
+                    class="w-full p-2 border rounded mb-3 focus:ring-2 focus:ring-blue-400 outline-none"
+                    placeholder="Enter email"
+                    required
+                  />
+                  <button
+                    type="submit"
+                    class="w-full bg-blue-500 text-white py-2 rounded-md font-semibold hover:bg-blue-600"
+                  >
+                    Send Invite
+                  </button>
+                </form>
               </li>
             </ul>
             <div class="py-5">
@@ -252,10 +287,10 @@
         <div class="flex flex-row gap-3">
           <div
             id="create-task"
-            class="form-container border border-gray-300 p-2 rounded w-full md:w-1/6 xl:w-1/12 bg-blue-400 hover:bg-blue-300 cursor-pointer"
+            class="items-center form-container border border-gray-300 p-2 rounded w-full md:w-1/6 xl:w-1/12 bg-blue-400 hover:bg-blue-300 cursor-pointer"
           >
-            <div class="flex justify-between task-create">
-              <div>Add Task</div>
+            <div class="flex justify-between items-center task-create">
+              <div class="text-white">Add Task</div>
 
               <div class="plus-icon">
                 <svg
@@ -282,7 +317,7 @@
             id="filterBox"
           >
             <div class="flex justify-between">
-              <div>Filter</div>
+              <div class="text-white">Filter</div>
               <div class="filter-icon">
                 <svg
                   fill="#000000"
@@ -313,9 +348,9 @@
               </div>
               <div
                 class="dropdown-item px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                data-target="asigneeDropdown"
+                data-target="assigneeDropdown"
               >
-                Asignee
+                Assignee
               </div>
               <div
                 class="dropdown-item px-4 py-2 hover:bg-gray-100 cursor-pointer"
@@ -339,7 +374,7 @@
             ></div>
 
             <div
-              id="asigneeDropdown"
+              id="assigneeDropdown"
               class="subDropdown hidden bg-white shadow border rounded w-35 sm:w-40 absolute md:left-[200px] md:top-0 -left-32 sm:-left-40 top-full z-50"
             ></div>
 
@@ -597,7 +632,8 @@
           </div>
         </div>
       </div>
-      <!-- updte project modal -->
+
+      <!-- update project modal -->
       <div
         id="create-project-modal"
         tabindex="-1"
@@ -742,192 +778,201 @@
                 <span class="sr-only">Close modal</span>
               </button>
             </div>
+
             <!--  input forms  -->
             <div class="py-3 px-4 md:p-3 overflow-scroll">
-              <form id="task-form" class="space-y-3" action="submit">
-                <div>
-                  <label
-                    for="title"
-                    class="block mb-2 text-sm font-medium text-black"
-                    >Title</label
-                  >
-                  <input
-                    type="text"
-                    name="title"
-                    id="title"
-                    class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder="Enter title"
-                    required
-                    maxlength="100"
-                  />
-                </div>
-                <div>
-                  <label
-                    for="description"
-                    class="block mb-2 text-sm font-medium text-black"
-                    >Description</label
-                  >
-                  <input
-                    type="text"
-                    name="description"
-                    id="description"
-                    class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder="Enter details"
-                    required
-                    maxlength="1000"
-                  />
-                </div>
-                <!-- type -->
-                <div>
-                  <label
-                    for="type"
-                    class="block mb-2 text-sm font-medium text-black"
-                    >Type</label
-                  >
-                  <select
-                    name="type"
-                    id="type"
-                    class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    required
-                  >
-                    <option value="">Select a type</option>
-                    <option value="bug">Bug</option>
-                    <option value="feature">Feature</option>
-                    <option value="task">Task</option>
-                    <option value="story">Story</option>
-                  </select>
-                </div>
-                <!-- priority -->
-                <div>
-                  <label
-                    for="priority"
-                    class="block mb-2 text-sm font-medium text-black"
-                    >Priority</label
-                  >
-                  <select
-                    name="priority"
-                    id="priority"
-                    class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    required
-                  >
-                    <option value="">Select a type</option>
-                    <option value="low">low</option>
-                    <option value="medium">medium</option>
-                    <option value="high">high</option>
-                    <option value="critical">critical</option>
-                  </select>
+              <form id="task-form" class="space-y-3 px-3" action="submit">
+                <div
+                  class="flex flex-col gap-2 md:flex-row md:justify-start md:gap-5"
+                >
+                  <div class="md:w-70">
+                    <label
+                      for="create-task-modal-title"
+                      class="block mb-2 text-sm font-medium text-black"
+                      >Title</label
+                    >
+                    <input
+                      type="text"
+                      name="title"
+                      id="create-task-modal-title"
+                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      placeholder="Enter title"
+                      required
+                      maxlength="100"
+                    />
+                  </div>
+
+                  <div class="md:w-110">
+                    <label
+                      for="description"
+                      class="block mb-2 text-sm font-medium text-black"
+                      >Description</label
+                    >
+                    <input
+                      type="text"
+                      name="description"
+                      id="description"
+                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      placeholder="Enter details"
+                      maxlength="1000"
+                    />
+                  </div>
                 </div>
 
-                <div>
-                  <label
-                    for="status"
-                    class="block mb-2 text-sm font-medium text-black"
-                    >Status</label
-                  >
-                  <select
-                    name="status"
-                    id="status"
-                    class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    required
-                  >
-                    <option value="">Select a type</option>
-                    <option value="todo">todo</option>
-                    <option value="in-progress">in-progress</option>
-                    <option value="done">done</option>
-                    <option value="review">review</option>
-                  </select>
-                </div>
-                <!-- arrays -->
-                <div>
-                  <label
-                    for="tags"
-                    class="block mb-2 text-sm font-medium text-black"
-                    >Tags</label
-                  >
-                  <input
-                    type="text"
-                    name="tags"
-                    id="tags"
-                    class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder="Enter tags"
-                  />
+                <div
+                  class="flex flex-col gap-2 md:flex-row md:justify-start md:gap-5"
+                >
+                  <div class="md:w-60">
+                    <label
+                      for="type"
+                      class="block mb-2 text-sm font-medium text-black"
+                      >Type</label
+                    >
+                    <select
+                      name="type"
+                      id="type"
+                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      required
+                    >
+                      <option value="bug">Bug</option>
+                      <option value="feature">Feature</option>
+                      <option value="task" selected>Task</option>
+                      <option value="story">Story</option>
+                    </select>
+                  </div>
+
+                  <div class="md:w-60">
+                    <label
+                      for="priority"
+                      class="block mb-2 text-sm font-medium text-black"
+                      >Priority</label
+                    >
+                    <select
+                      name="priority"
+                      id="priority"
+                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      required
+                    >
+                      <option value="low">low</option>
+                      <option value="medium" selected>medium</option>
+                      <option value="high">high</option>
+                      <option value="critical">critical</option>
+                    </select>
+                  </div>
+
+                  <div class="md:w-60">
+                    <label
+                      for="status"
+                      class="block mb-2 text-sm font-medium text-black"
+                      >Status</label
+                    >
+                    <select
+                      name="status"
+                      id="status-create-task-modal"
+                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      required
+                    ></select>
+                  </div>
                 </div>
 
-                <div>
-                  <label
-                    for="block"
-                    class="block mb-2 text-sm font-medium text-black"
-                    >Blocks</label
-                  >
-                  <input
-                    type="text"
-                    name="block"
-                    id="block"
-                    class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder=""
-                  />
+                <div
+                  class="flex flex-col gap-2 md:flex-row md:justify-start md:gap-5"
+                >
+                  <div class="md:w-60">
+                    <label
+                      for="tags"
+                      class="block mb-2 text-sm font-medium text-black"
+                      >Tags</label
+                    >
+                    <input
+                      type="text"
+                      name="tags"
+                      id="tags"
+                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      placeholder="Enter tags"
+                    />
+                  </div>
+
+                  <div class="md:w-60">
+                    <label
+                      for="due date"
+                      class="block mb-2 text-sm font-medium text-black"
+                      >Due Date</label
+                    >
+                    <input
+                      type="date"
+                      name="dueDate"
+                      id="dueDate"
+                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      placeholder="Enter the due date"
+                      value="2025-12-01"
+                    />
+                  </div>
+
+                  <div class="md:w-60">
+                    <label
+                      for="assignee"
+                      class="block mb-2 text-sm font-medium text-black"
+                      >Assignee</label
+                    >
+                    <select
+                      name="assignee"
+                      id="create-modal-assignee"
+                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      required
+                    ></select>
+                  </div>
                 </div>
 
-                <div>
-                  <label
-                    for="BlockedBy"
-                    class="block mb-2 text-sm font-medium text-black"
-                    >Blocked by Issue</label
-                  >
-                  <input
-                    type="text"
-                    name="BlockedBy"
-                    id="BlockedBy"
-                    class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder=""
-                  />
+                <div
+                  class="flex flex-col gap-2 md:flex-row md:justify-start md:gap-5"
+                >
+                  <div class="md:w-60">
+                    <label
+                      for="block"
+                      class="block mb-2 text-sm font-medium text-black"
+                      >Blocks</label
+                    >
+                    <input
+                      type="text"
+                      name="block"
+                      id="block"
+                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      placeholder=""
+                    />
+                  </div>
+
+                  <div class="md:w-60">
+                    <label
+                      for="BlockedBy"
+                      class="block mb-2 text-sm font-medium text-black"
+                      >Blocked by Issue</label
+                    >
+                    <input
+                      type="text"
+                      name="BlockedBy"
+                      id="BlockedBy"
+                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      placeholder=""
+                    />
+                  </div>
+
+                  <div class="md:w-60">
+                    <label
+                      for="relatesTo"
+                      class="block mb-2 text-sm font-medium text-black"
+                      >Related To</label
+                    >
+                    <input
+                      type="text"
+                      name="relatesTo"
+                      id="relatesTo"
+                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      placeholder=""
+                    />
+                  </div>
                 </div>
 
-                <div>
-                  <label
-                    for="relatesTo"
-                    class="block mb-2 text-sm font-medium text-black"
-                    >Related To</label
-                  >
-                  <input
-                    type="text"
-                    name="relatesTo"
-                    id="relatesTo"
-                    class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder=""
-                  />
-                </div>
-                <!-- end of aray -->
-
-                <div>
-                  <label
-                    for="due date"
-                    class="block mb-2 text-sm font-medium text-black"
-                    >Due Date</label
-                  >
-                  <input
-                    type="date"
-                    name="dueDate"
-                    id="dueDate"
-                    class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder="Enter the due date"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    for="assignee"
-                    class="block mb-2 text-sm font-medium text-black"
-                    >Assignee</label
-                  >
-                  <select
-                    id="assignee"
-                    name="assignee"
-                    class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                  >
-                    <option value="" disabled>Select an assignee</option>
-                  </select>
-                </div>
                 <!-- attachments -->
                 <div>
                   <label
@@ -970,6 +1015,7 @@
           </div>
         </div>
       </div>
+
       <!-- update task -->
       <div
         id="update-task-modal"
@@ -1007,191 +1053,203 @@
                 <span class="sr-only">Close modal</span>
               </button>
             </div>
+
             <!--  input forms  -->
             <div class="py-3 px-4 md:p-3 overflow-scroll">
-              <form id="edit-task-form" class="space-y-3" action="submit">
-                <div>
-                  <label
-                    for="title"
-                    class="block mb-2 text-sm font-medium text-black"
-                    >Title</label
-                  >
-                  <input
-                    type="text"
-                    name="title"
-                    id="title"
-                    class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder="Enter title"
-                    required
-                    maxlength="100"
-                  />
-                </div>
-                <div>
-                  <label
-                    for="description"
-                    class="block mb-2 text-sm font-medium text-black"
-                    >Description</label
-                  >
-                  <input
-                    type="text"
-                    name="description"
-                    id="description"
-                    class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder="Enter details"
-                    required
-                    maxlength="1000"
-                  />
-                </div>
-                <!-- type -->
-                <div>
-                  <label
-                    for="type"
-                    class="block mb-2 text-sm font-medium text-black"
-                    >Type</label
-                  >
-                  <select
-                    name="type"
-                    id="type"
-                    class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    required
-                  >
-                    <option value="">Select a type</option>
-                    <option value="bug">Bug</option>
-                    <option value="feature">Feature</option>
-                    <option value="task">Task</option>
-                    <option value="story">Story</option>
-                  </select>
-                </div>
-                <!-- priority -->
-                <div>
-                  <label
-                    for="priority"
-                    class="block mb-2 text-sm font-medium text-black"
-                    >Priority</label
-                  >
-                  <select
-                    name="priority"
-                    id="priority"
-                    class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    required
-                  >
-                    <option value="">Select a type</option>
-                    <option value="low">low</option>
-                    <option value="medium">medium</option>
-                    <option value="high">high</option>
-                    <option value="critical">critical</option>
-                  </select>
+              <form id="edit-task-form" class="space-y-3 px-3" action="submit">
+                <div
+                  class="flex flex-col gap-2 md:flex-row md:justify-start md:gap-5"
+                >
+                  <div class="md:w-70">
+                    <label
+                      for="title"
+                      class="block mb-2 text-sm font-medium text-black"
+                      >Title</label
+                    >
+                    <input
+                      type="text"
+                      name="title"
+                      id="title"
+                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      placeholder="Enter title"
+                      required
+                      maxlength="100"
+                    />
+                  </div>
+
+                  <div class="md:w-110">
+                    <label
+                      for="description"
+                      class="block mb-2 text-sm font-medium text-black"
+                      >Description</label
+                    >
+                    <input
+                      type="text"
+                      name="description"
+                      id="description"
+                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      placeholder="Enter details"
+                      maxlength="1000"
+                    />
+                  </div>
                 </div>
 
-                <div>
-                  <label
-                    for="status"
-                    class="block mb-2 text-sm font-medium text-black"
-                    >Status</label
-                  >
-                  <select
-                    name="status"
-                    id="status"
-                    class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    required
-                  >
-                    <option value="">Select a type</option>
-                    <option value="todo">todo</option>
-                    <option value="in-progress">in-progress</option>
-                    <option value="done">done</option>
-                    <option value="review">review</option>
-                  </select>
-                </div>
-                <!-- arrays -->
-                <div>
-                  <label
-                    for="tags"
-                    class="block mb-2 text-sm font-medium text-black"
-                    >Tags</label
-                  >
-                  <input
-                    type="text"
-                    name="tags"
-                    id="tags"
-                    class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder="Enter tags"
-                  />
+                <div
+                  class="flex flex-col gap-2 md:flex-row md:justify-start md:gap-5"
+                >
+                  <div class="md:w-60">
+                    <label
+                      for="type"
+                      class="block mb-2 text-sm font-medium text-black"
+                      >Type</label
+                    >
+                    <select
+                      name="type"
+                      id="type"
+                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                    >
+                      <option value="">Select a type</option>
+                      <option value="bug">Bug</option>
+                      <option value="feature">Feature</option>
+                      <option value="task">Task</option>
+                      <option value="story">Story</option>
+                    </select>
+                  </div>
+
+                  <div class="md:w-60">
+                    <label
+                      for="priority"
+                      class="block mb-2 text-sm font-medium text-black"
+                      >Priority</label
+                    >
+                    <select
+                      name="priority"
+                      id="priority"
+                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                    >
+                      <option value="">Select a type</option>
+                      <option value="low">low</option>
+                      <option value="medium">medium</option>
+                      <option value="high">high</option>
+                      <option value="critical">critical</option>
+                    </select>
+                  </div>
+
+                  <div class="md:w-60">
+                    <label
+                      for="status"
+                      class="block mb-2 text-sm font-medium text-black"
+                      >Status</label
+                    >
+                    <select
+                      name="status"
+                      id="status"
+                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                    >
+                      <option value="">Select a type</option>
+                      <option value="todo">todo</option>
+                      <option value="in-progress">in-progress</option>
+                      <option value="done">done</option>
+                      <option value="review">review</option>
+                    </select>
+                  </div>
                 </div>
 
-                <div>
-                  <label
-                    for="block"
-                    class="block mb-2 text-sm font-medium text-black"
-                    >Blocks</label
-                  >
-                  <input
-                    type="text"
-                    name="block"
-                    id="block"
-                    class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder=""
-                  />
+                <div
+                  class="flex flex-col gap-2 md:flex-row md:justify-start md:gap-5"
+                >
+                  <div class="md:w-60">
+                    <label
+                      for="tags"
+                      class="block mb-2 text-sm font-medium text-black"
+                      >Tags</label
+                    >
+                    <input
+                      type="text"
+                      name="tags"
+                      id="tags"
+                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      placeholder="Enter tags"
+                    />
+                  </div>
+
+                  <div class="md:w-60">
+                    <label
+                      for="due date"
+                      class="block mb-2 text-sm font-medium text-black"
+                      >Due Date</label
+                    >
+                    <input
+                      type="date"
+                      name="dueDate"
+                      id="dueDate"
+                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      placeholder="Enter the due date"
+                    />
+                  </div>
+
+                  <div class="md:w-60">
+                    <label
+                      for="assignee"
+                      class="block mb-2 text-sm font-medium text-black"
+                      >Assignee</label
+                    >
+                    <select
+                      name="assignee"
+                      id="assignee"
+                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      required
+                    ></select>
+                  </div>
                 </div>
 
-                <div>
-                  <label
-                    for="BlockedBy"
-                    class="block mb-2 text-sm font-medium text-black"
-                    >Blocked by Issue</label
-                  >
-                  <input
-                    type="text"
-                    name="BlockedBy"
-                    id="BlockedBy"
-                    class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder=""
-                  />
-                </div>
+                <div
+                  class="flex flex-col gap-2 md:flex-row md:justify-start md:gap-5"
+                >
+                  <div class="md:w-60">
+                    <label
+                      for="block"
+                      class="block mb-2 text-sm font-medium text-black"
+                      >Blocks</label
+                    >
+                    <input
+                      type="text"
+                      name="block"
+                      id="block"
+                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      placeholder=""
+                    />
+                  </div>
 
-                <div>
-                  <label
-                    for="relatesTo"
-                    class="block mb-2 text-sm font-medium text-black"
-                    >Related To</label
-                  >
-                  <input
-                    type="text"
-                    name="relatesTo"
-                    id="relatesTo"
-                    class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder=""
-                  />
-                </div>
-                <!-- end of aray -->
+                  <div class="md:w-60">
+                    <label
+                      for="BlockedBy"
+                      class="block mb-2 text-sm font-medium text-black"
+                      >Blocked by Issue</label
+                    >
+                    <input
+                      type="text"
+                      name="BlockedBy"
+                      id="BlockedBy"
+                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      placeholder=""
+                    />
+                  </div>
 
-                <div>
-                  <label
-                    for="due date"
-                    class="block mb-2 text-sm font-medium text-black"
-                    >Due Date</label
-                  >
-                  <input
-                    type="date"
-                    name="dueDate"
-                    id="dueDate"
-                    class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder="Enter the due date"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    for="assignee"
-                    class="block mb-2 text-sm font-medium text-black"
-                    >Assignee</label
-                  >
-                  <input
-                    type="text"
-                    name="assignee"
-                    id="assignee"
-                    class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
-                    placeholder="Enter whom to assign"
-                  />
+                  <div class="md:w-60">
+                    <label
+                      for="relatesTo"
+                      class="block mb-2 text-sm font-medium text-black"
+                      >Related To</label
+                    >
+                    <input
+                      type="text"
+                      name="relatesTo"
+                      id="relatesTo"
+                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      placeholder=""
+                    />
+                  </div>
                 </div>
 
                 <div class="flex justify-between"></div>
@@ -1211,6 +1269,7 @@
     <div
       class="task-drawer fixed top-0 right-0 z-40 h-screen overflow-y-auto transition-transform translate-x-full bg-white w-[320px] lg:w-[400px]"
       tabindex="-1"
+      id="task-side-drawer"
     >
       <button
         type="button"
@@ -1421,8 +1480,71 @@
       </div>
     </div>
 
+    <!-- delete modal -->
+
     <div
-      class="drawer-backdrop hidden bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-30"
+      id="deleteModal"
+      class="modal fixed z-21 flex justify-center items-center hidden right-0 left-0 top-[40%] mx-auto w-fit"
+    >
+      <div class="bg-gray-200 p-6 rounded-lg shadow-xl w-96">
+        <h2 class="text-lg font-semibold mb-4">
+          Are you sure you want to delete this task?
+        </h2>
+        <div class="flex justify-between">
+          <button
+            id="cancelDelete"
+            class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-gray-300"
+          >
+            Cancel
+          </button>
+          <button
+            id="confirmDelete"
+            class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-red-300"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="drawer-backdrop hidden bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-20"
+    ></div>
+    <div
+      class="notification hidden fixed bottom-5 right-5 z-50 p-4 bg-gray-200 text-slate-800 rounded-lg shadow-lg flex items-center space-x-3"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="#000000"
+        viewBox="0 0 24 24"
+        class="w-6 h-6"
+      >
+        <path
+          d="M10,20h4a2,2,0,0,1-4,0Zm8-4V10a6,6,0,0,0-5-5.91V3a1,1,0,0,0-2,0V4.09A6,6,0,0,0,6,10v6L4,18H20Z"
+        />
+      </svg>
+      <p class="message font-semibold"></p>
+      <button
+        class="dismiss ml-auto text-slate-600 hover:text-black focus:outline-none"
+      >
+        <svg
+          class="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
+        </svg>
+      </button>
+    </div>
+    <div
+      id="toast-container"
+      class="fixed bottom-4 right-4 z-50 flex flex-col gap-3"
     ></div>
   </body>
 </html>

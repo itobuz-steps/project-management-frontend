@@ -64,7 +64,7 @@ async function createTaskList(task) {
                         </svg>
                       </td>
                       <td class="px-6 py-4">${task.key}</td>
-                      <td class="px-6 py-4">${task.description}</td>
+                      <td class="px-6 py-4">${task.title}</td>
                       <td class="px-6 py-4">${task.status}</td>
                       <td class="px-6 py-4">${task.comments}</td>
                       <td class="px-6 py-4">${task.sprint}</td>
@@ -262,11 +262,12 @@ function createBacklogTable() {
   return backlogContainer;
 }
 
-export async function renderTasksList() {
+export async function renderTasksList(tasksArray = []) {
   try {
-    let tasksArray = [];
-    const tasks = await TaskService.getTaskByProjectId(localStorage.getItem('selectedProject'));
-    tasksArray.push(...tasks.data.result);
+    listTableBody.innerHTML = '';
+    // let tasksArray = [];
+    // const tasks = await TaskService.getTaskByProjectId(localStorage.getItem('selectedProject'));
+    // tasksArray.push(...tasks.data.result);
 
     if (!tasksArray.length) {
       emptyListContainer.classList.remove('hidden');
@@ -299,7 +300,7 @@ async function renderBacklogTasks(backlogTasks) {
 
 export async function renderDashBoardTasks() {
   try {
-    sprintBacklogWrapper.innerHTML = "";
+    sprintBacklogWrapper.innerHTML = '';
     const projectId = localStorage.getItem('selectedProject');
     const tasks = await TaskService.getTaskByProjectId(projectId);
     const allTasks = tasks.data.result.map((task) => task._id);

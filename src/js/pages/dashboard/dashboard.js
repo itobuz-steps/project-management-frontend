@@ -6,9 +6,13 @@ import {
 import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
 import commentService from '../../services/CommentService.js';
+import axios from 'axios';
+import { setupSocketIo } from '../../utils/setupNotification.js';
+import showToast from '../../utils/showToast.js';
 
 const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
+const drawerBackdrop = document.querySelector('.drawer-backdrop');
 
 profileBtn.addEventListener('click', () => {
   dropdownMenu.classList.toggle('hidden');
@@ -86,7 +90,7 @@ projectCreateForm.addEventListener('submit', async (e) => {
     createProjectModal.classList.add('hidden');
 
     renderBoard(localStorage.getItem('selectedProject'));
-    renderTasksList();
+    // renderTasksList();
     renderDashBoardTasks();
 
     console.log(createdProject);
@@ -109,6 +113,22 @@ closeProjectBtn.addEventListener('click', () => {
 const openTaskCreate = document.getElementById('create-task');
 const closeTaskModal = document.getElementById('close-task-modal');
 const createTaskModal = document.getElementById('create-task-modal');
+const createModalStatusDropdown = document.getElementById(
+  'status-create-task-modal'
+);
+const createModalAssigneeDropdown = document.getElementById(
+  'create-modal-assignee'
+);
+
+openTaskCreate.addEventListener('click', () => {
+  createTaskModal.classList.remove('hidden');
+  handleModalStatus(createModalStatusDropdown);
+  handleModalAssignee(createModalAssigneeDropdown);
+});
+
+closeTaskModal.addEventListener('click', () => {
+  createTaskModal.classList.add('hidden');
+});
 
 //temp form submission // submission yet to be handled correctly
 const input = document.getElementById('attachments');
@@ -128,9 +148,7 @@ input.addEventListener('change', () => {
 async function populateAssigneeDropDown() {
   const projectId = localStorage.getItem('selectedProject');
   const assigneeDropdown = document.getElementById('assignee');
-
   const data = await projectService.getProjectMembers(projectId);
-  console.log('projectMembers =', data);
 
   assigneeDropdown.innerHTML = `<option value="">Select an assignee</option>`;
 
@@ -146,14 +164,29 @@ async function populateAssigneeDropDown() {
 taskForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
+  let dateValue;
+  if (document.getElementById('dueDate').value === '1999-10-10') {
+    dateValue = new Date().toLocaleDateString();
+
+    const splitVal = dateValue.split('/');
+    console.log(splitVal);
+    const newDateValue = new Date(splitVal[2], splitVal[1], splitVal[0]);
+    console.log(newDateValue);
+    dateValue = newDateValue;
+    dateValue = splitVal[2] + '-' + splitVal[1] + '-' + splitVal[0];
+  } else {
+    dateValue = document.getElementById('dueDate').value;
+  }
+  console.log(dateValue);
   // Build the task object from form inputs
   const task = {
     projectId: localStorage.getItem('selectedProject'),
-    title: document.getElementById('title').value.trim(),
+    title: document.getElementById('create-task-modal-title').value.trim(),
     description: document.getElementById('description').value.trim(),
     type: document.getElementById('type').value,
     priority: document.getElementById('priority').value,
-    status: document.getElementById('status').value,
+
+    status: document.getElementById('status-create-task-modal').value,
 
     tags: document.getElementById('tags').value
       ? document
@@ -183,8 +216,11 @@ taskForm.addEventListener('submit', async (e) => {
           .map((t) => t.trim())
       : [],
 
-    dueDate: document.getElementById('dueDate').value,
-    assignee: document.getElementById('assignee').value.trim(),
+    dueDate: dateValue,
+    assignee:
+      document.getElementById('create-modal-assignee').value === 'null'
+        ? null
+        : document.getElementById('create-modal-assignee').value,
 
     attachments: input.files,
   };
@@ -197,7 +233,7 @@ taskForm.addEventListener('submit', async (e) => {
     console.log('Task created:', response);
     createTaskModal.classList.add('hidden');
     renderBoard(localStorage.getItem('selectedProject'));
-    renderTasksList();
+    // renderTasksList();
     renderDashBoardTasks();
     // taskForm.reset();
     fileName.textContent = 'No file chosen';
@@ -208,7 +244,6 @@ taskForm.addEventListener('submit', async (e) => {
 });
 
 openTaskCreate.addEventListener('click', () => {
-  populateAssigneeDropDown();
   createTaskModal.classList.remove('hidden');
 });
 closeTaskModal.addEventListener('click', () => {
@@ -236,21 +271,33 @@ async function openEditModal(taskId) {
     editModal.querySelector('#description').value = task.description;
     editModal.querySelector('#type').value = task.type;
     editModal.querySelector('#priority').value = task.priority;
-    editModal.querySelector('#status').value = task.status;
+    const status = editModal.querySelector('#status');
+    await handleModalStatus(status);
+    const selectedStatus = editModal.querySelector(`[value="${task.status}"]`);
+    selectedStatus.selected = true;
+
     editModal.querySelector('#tags').value = task.tags?.join(', ') || '';
     editModal.querySelector('#block').value = task.block || '';
     editModal.querySelector('#BlockedBy').value = task.blockedBy || '';
     editModal.querySelector('#relatesTo').value = task.relatesTo || '';
+
     if (task.dueDate) {
       console.log(task.dueDate);
       const dueDate = new Date(task.dueDate);
 
       const formattedDate = dueDate.toISOString().slice(0, 10);
+      console.log(formattedDate);
       editModal.querySelector('#dueDate').value = formattedDate;
     } else {
       editModal.querySelector('#dueDate').value = '';
     }
-    editModal.querySelector('#assignee').value = task.assignee || null;
+    const assignee = editModal.querySelector('#assignee');
+    const selectedAssignee = await handleModalAssignee(assignee);
+    const selectedAssigned = editModal.querySelector(
+      `[value="${task.assignee}"]`
+    );
+    selectedAssigned.selected = true;
+    console.log(selectedAssignee);
 
     editModal.classList.remove('hidden');
   } catch (error) {
@@ -289,7 +336,10 @@ editForm.addEventListener('submit', async (e) => {
       .map((t) => t.trim()),
 
     dueDate: editModal.querySelector('#dueDate').value,
-    assignee: editModal.querySelector('#assignee').value,
+    assignee:
+      editModal.querySelector('#assignee').value === 'null'
+        ? null
+        : editModal.querySelector('#assignee').value,
   };
 
   console.log(updatedTask);
@@ -300,8 +350,17 @@ editForm.addEventListener('submit', async (e) => {
 
     editModal.classList.add('hidden');
     renderBoard(localStorage.getItem('selectedProject'));
-    renderTasksList();
+    // renderTasksList();
     renderDashBoardTasks();
+    //hide side bar
+    setTimeout(() => {
+      const taskDrawer = document.getElementById('task-side-drawer');
+      const profileImageEl = taskDrawer.querySelector('.profile-image');
+      taskDrawer.classList.add('translate-x-full');
+      taskDrawer.classList.remove('transform-none');
+      drawerBackdrop.classList.add('hidden');
+      profileImageEl.classList.remove('hidden');
+    }, 100);
   } catch (error) {
     console.error(error);
   }
@@ -332,7 +391,9 @@ document.addEventListener('click', (e) => {
 });
 
 const projectsMenu = document.getElementById('projectsMenu');
-const dropdown = document.getElementById('projectsDropdown');
+const usersMenu = document.getElementById('usersMenu');
+const projectsDropdown = document.getElementById('projectsDropdown');
+const userListContainer = document.getElementById('usersDropdown');
 
 // dropdown.classList.add(
 //   'transition-all',
@@ -345,24 +406,49 @@ projectsMenu.addEventListener('click', (e) => {
   e.stopPropagation();
   e.preventDefault();
 
-  const isOpen = dropdown.classList.contains('max-h-60');
+  const isOpen = projectsDropdown.classList.contains('max-h-60');
 
   if (isOpen) {
-    dropdown.classList.remove('max-h-60');
-    dropdown.classList.add('max-h-0');
-    setTimeout(() => dropdown.classList.add('hidden'), 200);
+    projectsDropdown.classList.remove('max-h-60');
+    projectsDropdown.classList.add('max-h-0');
+    setTimeout(() => projectsDropdown.classList.add('hidden'), 200);
   } else {
-    dropdown.classList.remove('hidden');
-    dropdown.classList.remove('max-h-0');
-    dropdown.classList.add('max-h-60');
+    projectsDropdown.classList.remove('hidden');
+    projectsDropdown.classList.remove('max-h-0');
+    projectsDropdown.classList.add('max-h-60');
+  }
+});
+
+usersMenu.addEventListener('click', (e) => {
+  e.stopPropagation();
+  e.preventDefault();
+
+  const isOpen = userListContainer.classList.contains('max-h-60');
+
+  if (isOpen) {
+    userListContainer.classList.remove('max-h-60');
+    userListContainer.classList.add('max-h-0');
+    setTimeout(() => userListContainer.classList.add('hidden'), 200);
+  } else {
+    userListContainer.classList.remove('hidden');
+    userListContainer.classList.remove('max-h-0');
+    userListContainer.classList.add('max-h-60');
   }
 });
 
 document.addEventListener('click', (e) => {
-  if (!projectsMenu.contains(e.target) && !dropdown.contains(e.target)) {
-    dropdown.classList.remove('max-h-60');
-    dropdown.classList.add('max-h-0');
-    setTimeout(() => dropdown.classList.add('hidden'), 200);
+  if (
+    !projectsMenu.contains(e.target) &&
+    !projectsDropdown.contains(e.target)
+  ) {
+    projectsDropdown.classList.remove('max-h-60');
+    projectsDropdown.classList.add('max-h-0');
+    setTimeout(() => projectsDropdown.classList.add('hidden'), 200);
+  }
+  if (!usersMenu.contains(e.target) && !userListContainer.contains(e.target)) {
+    userListContainer.classList.remove('max-h-60');
+    userListContainer.classList.add('max-h-0');
+    setTimeout(() => userListContainer.classList.add('hidden'), 200);
   }
 });
 
@@ -384,16 +470,38 @@ export function dropdownEvent(sprint = {}) {
   });
 }
 
+async function showUserList() {
+  const users = await projectService.getProjectMembers(
+    localStorage.getItem('selectedProject')
+  );
+
+  userListContainer.innerHTML = '';
+  console.log('users: ', users);
+
+  if (!users.result.length) {
+    userListContainer.innerHTML = 'No user assigned';
+    userListContainer.className = 'block p-2 text-gray-900 hover:bg-gray-100';
+  } else {
+    users.result.forEach((user) => {
+      const item = document.createElement('li');
+      item.dataset.id = user._id;
+      item.id = user.name;
+      item.textContent = user.name;
+      item.className = 'block p-2 text-gray-900 hover:bg-gray-100 rounded-lg';
+      userListContainer.appendChild(item);
+    });
+  }
+}
+
 async function showProjectList() {
   try {
     const projects = await projectService.getAllProjects();
-    const listContainer = document.getElementById('projectsDropdown');
-    listContainer.innerHTML = '';
+    projectsDropdown.innerHTML = '';
     console.log('projects: ', projects);
 
     if (!projects.length) {
-      listContainer.innerHTML = 'No project Found';
-      listContainer.className = 'block p-2 text-gray-900 hover:bg-gray-100';
+      projectsDropdown.innerHTML = 'No project Found';
+      projectsDropdown.className = 'block p-2 text-gray-900 hover:bg-gray-100';
     } else {
       projects.forEach((project) => {
         const item = document.createElement('li');
@@ -404,7 +512,7 @@ async function showProjectList() {
         if (project._id === localStorage.getItem('selectedProject')) {
           item.classList.toggle('selected');
         }
-        listContainer.appendChild(item);
+        projectsDropdown.appendChild(item);
       });
     }
   } catch (err) {
@@ -471,7 +579,7 @@ projectDropdownContainer.addEventListener('click', (event) => {
   targetLi.classList.toggle('selected');
   listTableBody.innerHTML = '';
   renderDashBoardTasks();
-  renderTasksList();
+  // renderTasksList();
   renderBoard(localStorage.getItem('selectedProject'));
   loadProjectMembers(localStorage.getItem('selectedProject'));
 });
@@ -488,7 +596,7 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
   const result = {};
 
   project.columns.forEach((column) => (result[column] = []));
-
+  console.log(project.columns);
   const tasks = await taskService.getTaskByProjectId(
     projectId,
     filter,
@@ -504,6 +612,34 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
   return result;
 }
 
+const deleteModal = document.getElementById('deleteModal');
+const cancelDeleteBtn = document.getElementById('cancelDelete');
+const confirmDeleteBtn = document.getElementById('confirmDelete');
+
+let taskToDelete = null;
+
+async function showDeleteModal(taskId) {
+  taskToDelete = taskId;
+  deleteModal.classList.remove('hidden');
+  drawerBackdrop.classList.remove('hidden');
+}
+
+cancelDeleteBtn.addEventListener('click', () => {
+  deleteModal.classList.add('hidden');
+  drawerBackdrop.classList.add('hidden');
+});
+
+confirmDeleteBtn.addEventListener('click', async () => {
+  if (taskToDelete) {
+    await taskService.deleteTask(taskToDelete);
+    renderBoard(localStorage.getItem('selectedProject'));
+    // renderTasksList();
+    renderDashBoardTasks();
+  }
+  deleteModal.classList.add('hidden');
+  drawerBackdrop.classList.add('hidden');
+});
+
 async function renderBoard(projectId, filter = '', searchInput = '') {
   const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const project = (await projectService.getProjectById(projectId)).result;
@@ -513,111 +649,94 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
   const columnContainer = document.getElementById('columns');
   columnContainer.innerHTML = '';
 
+  let filteredTasks = [];
+
   project.columns.forEach((column) => {
     const columnEl = document.createElement('div');
-    columnEl.innerHTML = `<div
-                class="w-72 bg-white rounded-lg shadow p-4 shrink-0 h-full overflow-y-auto"
-              >
-                <h2
-                  class="text-lg font-semibold mb-3 border-b pb-2 sticky top-0 bg-white z-10 flex gap-2"
-                >
-                  ${column.toUpperCase()}
-                  <div class="issue-count rounded-full  w-7 h-7 text-center text-md text-white bg-cyan-900"></div>
-                </h2>
-                <div class="space-y-3 pb-4 class" id="task-list">
-                </div>
-              </div>
-    `;
+    columnEl.innerHTML = `
+        <div class="w-72 bg-white rounded-lg shadow p-4 shrink-0 h-full overflow-y-auto">
+          <h2 class="text-lg font-semibold mb-3 border-b pb-2 sticky top-0 bg-white z-10 flex gap-2">
+            ${column.toUpperCase()}
+            <div class="issue-count rounded-full w-7 h-7 text-center text-md text-white bg-cyan-900"></div>
+          </h2>
+          <div class="space-y-3 pb-4 class" id="task-list"></div>
+        </div>
+      `;
     columnEl.querySelector('.issue-count').innerText = columns[column].length;
 
     const tasks = columns[column];
     tasks.forEach(async (task) => {
+      filteredTasks.push(task);
+
       const assignee = task.assignee
         ? (await taskService.getUserDetailsById(task.assignee)).data.result
         : null;
 
-      if (!assignee) return;
-      if (!assignee.profileImage) {
-        assignee.profileImage = '../../../assets/img/profile.png';
-      }
-
       const taskEl = document.createElement('div');
+      taskEl.dataset._id = task._id;
       taskEl.className =
         'task flex flex-col max-w-sm p-4 bg-gray-100 text-black gap-4 relative cursor-pointer';
       taskEl.innerHTML = `
-      <div class="card-header flex justify-between items-center">
-        <p class="text-lg font-medium">${task.title}</p>
-
-        <!-- Menu -->
-        <div class="relative">
-          <button class="outline-none menu-button">
-            <svg
-              width="18px"
-              height="18px"
-              viewBox="0 0 16 16"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="#00000"
-              class="bi bi-three-dots mr-2"
-            >
-              <path
-                d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"
-              />
-            </svg>
-          </button>
-
-          <div
-            class="dropdown-menu hidden absolute right-0 w-32 bg-white border border-gray-200 rounded shadow-lg z-10 "
-          >
-            <ul class="text-sm text-gray-700">
-              <li>
-                <button
-                  class="edit-btn block w-full text-left px-4 py-2 hover:bg-gray-100"
-                >
-                  Edit
-                </button>
-              </li>
-              <li>
-                <button
-                  class="delete-btn block w-full text-left px-4 py-2 hover:bg-gray-100"
-                >
-                  Delete
-                </button>
-              </li>
-            </ul>
+        <div class="card-header flex justify-between items-center">
+          <p class="text-lg border border-transparent rounded-lg font-medium hover:border-gray-400 ">${
+            task.title
+          }</p>
+          <div class="relative">
+            <button class="outline-none menu-button">
+              <svg
+                width="18px"
+                height="18px"
+                viewBox="0 0 16 16"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="#00000"
+                class="bi bi-three-dots mr-2"
+              >
+                <path
+                  d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"
+                />
+              </svg>
+            </button>
+            <div class="dropdown-menu hidden absolute right-0 w-32 bg-white border border-gray-200 rounded shadow-lg z-10">
+              <ul class="text-sm text-gray-700">
+                <li>
+                  <button class="edit-btn block w-full text-left px-4 py-2 hover:bg-gray-100">
+                    Edit
+                  </button>
+                </li>
+                <li>
+                  <button class="delete-btn block w-full text-left px-4 py-2 hover:bg-gray-100">
+                    Delete
+                  </button>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
+        <div class="card-footer flex justify-between items-center text-sm text-gray-400">
+          <div class="flex items-center gap-2">
+            <span class="type-tag bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm">${
+              task.key
+            }</span>
+            <select class="type-selector text-sm border border-gray-300 rounded px-1 py-1 focus:outline-none">
+              <option value="story" selected>Story</option>
+              <option value="task">Task</option>
+            </select>
+          </div>
+          <div class="flex items-center" >
+            <span class="w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center">
+              <img src="${
+                assignee?.profileImage
+                  ? 'http://localhost:3001/uploads/profile/' +
+                    assignee.profileImage
+                  : "'../../../assets/img/profile.png'"
+              }" class="w-8 h-8 object-cover" title="${
+        assignee?.name ? assignee.name : 'Unassigned'
+      }"/>
 
-      <div
-        class="card-footer flex justify-between items-center text-sm text-gray-400"
-      >
-        <div class="flex items-center gap-2">
-          <span
-
-            class="type-tag bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm"
-            >${task.key}</span
-          >
-
-          <select
-            class="type-selector text-sm border border-gray-300 rounded px-1 py-1 focus:outline-none"
-          >
-            <option value="story" selected>Story</option>
-            <option value="task">Task</option>
-          </select>
+            </span>
+          </div>
         </div>
-
-        <!-- Avatar -->
-        <div class="flex items-center">
-          <span
-  class="w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center"
->
-  <img src="${
-    'http://localhost:3001/uploads/profile/' + assignee.profileImage
-  }" class="w-8 h-8 object-cover" title="${assignee.name}"/>
-</span>
-          
-        </div>
-      </div>`;
+      `;
 
       const menuButton = taskEl.querySelector('.menu-button');
       const dropdownMenu = taskEl.querySelector('.dropdown-menu');
@@ -650,19 +769,14 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         console.log(task._id);
         openEditModal(task._id);
       });
-      taskEl
-        .querySelector('.delete-btn')
-        .addEventListener('click', async () => {
-          dropdownMenu.classList.add('hidden');
-          await taskService.deleteTask(task._id);
-          renderBoard(localStorage.getItem('selectedProject'));
-          renderTasksList();
-          renderDashBoardTasks();
-        });
+
+      taskEl.querySelector('.delete-btn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        showDeleteModal(task._id);
+      });
 
       typeSelector.addEventListener('change', (e) => {
         const value = e.target.value;
-
         if (value === 'task') {
           typeTag.className =
             'bg-blue-600 text-white text-xs font-semibold py-1 px-2 rounded-sm';
@@ -682,6 +796,10 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
 
   handleStatusFilter();
   handleAssigneeFilter();
+
+  console.log(filteredTasks);
+  renderTasksList(filteredTasks);
+  // renderDashBoardTasks();
 }
 
 const searchForm = document.getElementById('search-input-form');
@@ -706,7 +824,6 @@ async function showTaskDrawer(taskId) {
   console.log(assignee);
 
   const taskDrawer = document.querySelector('.task-drawer');
-  const drawerBackdrop = document.querySelector('.drawer-backdrop');
 
   const titleEl = taskDrawer.querySelector('.title');
   const descriptionEl = taskDrawer.querySelector('.description');
@@ -716,6 +833,12 @@ async function showTaskDrawer(taskId) {
   const closeButton = taskDrawer.querySelector('.close-btn');
   const status = taskDrawer.querySelector('#statusSelect');
   const priority = taskDrawer.querySelector('#prioritySelect');
+
+  const editTaskButton = document.querySelector('#edit-task-button');
+  editTaskButton.addEventListener('click', () => {
+    editModal.classList.remove('hidden');
+    openEditModal(taskId);
+  });
 
   const commentContainer = taskDrawer.querySelector('#commentsContainer');
   const comments = (await commentService.getAllComments(task._id)).result;
@@ -806,11 +929,6 @@ async function loadProjectMembers(projectId) {
   }
 }
 
-const editTaskButton = document.getElementById('edit-task-button');
-editTaskButton.addEventListener('click', () => {
-  editModal.classList.remove('hidden');
-});
-
 function renderSubDropdown(item) {
   const subDropdown = document.createElement('div');
   subDropdown.className = `px-4 py-2 hover:bg-gray-100 cursor-pointer ${item}-filter`;
@@ -826,13 +944,15 @@ loadProjectMembers(localStorage.getItem('selectedProject'));
 const currentProject = localStorage.getItem('selectedProject');
 
 const statusDropDown = document.getElementById('statusDropdown');
-const assigneeDropdown = document.getElementById('asigneeDropdown');
+const assigneeDropdown = document.getElementById('assigneeDropdown');
 
 function removeElementChildren(element) {
   element.innerHTML = '';
 }
 
 async function handleStatusFilter() {
+  removeElementChildren(statusDropDown);
+  removeElementChildren(assigneeDropdown);
   const project = (await projectService.getProjectById(currentProject)).result;
 
   project.columns.forEach((column) => {
@@ -847,6 +967,8 @@ async function handleStatusFilter() {
 }
 
 async function handleAssigneeFilter() {
+  removeElementChildren(statusDropDown);
+  removeElementChildren(assigneeDropdown);
   const assignees = await projectService.getProjectMembers(currentProject);
 
   assignees.result.forEach((assignee) => {
@@ -858,6 +980,48 @@ async function handleAssigneeFilter() {
       renderBoard(currentProject, 'assignee', `${assignee._id}`);
     });
   });
+}
+
+async function handleModalAssignee(modalAssigneeDropdown) {
+  const assignees = await projectService.getProjectMembers(currentProject);
+  modalAssigneeDropdown.innerHTML = '';
+  const unassigned = document.createElement('option');
+  unassigned.innerText = 'Unassigned';
+  unassigned.selected = true;
+
+  unassigned.value = 'null';
+  createModalAssigneeDropdown.appendChild(unassigned);
+
+  let selectedAssignee;
+  assignees.result.forEach((assignee) => {
+    const option = document.createElement('option');
+
+    option.value = assignee._id;
+
+    if (assignee.email === localStorage.getItem('userEmail')) {
+      option.innerText = `${assignee.email} (assign to me)`;
+      selectedAssignee = assignee;
+    } else {
+      option.innerText = `${assignee.email}`;
+    }
+
+    modalAssigneeDropdown.appendChild(option);
+  });
+  return selectedAssignee;
+}
+
+async function handleModalStatus(modalStatusDropdown) {
+  const project = (await projectService.getProjectById(currentProject)).result;
+  modalStatusDropdown.innerHTML = '';
+
+  project.columns.forEach((column) => {
+    const option = document.createElement('option');
+    option.innerText = column;
+    option.value = column;
+    modalStatusDropdown.appendChild(option);
+  });
+
+  modalStatusDropdown.firstChild.selected = true;
 }
 
 const priorityDropdown = document.getElementById('priorityDropdown');
@@ -894,7 +1058,101 @@ removeFilterBtn.addEventListener('click', () => {
   renderBoard(currentProject, '', '');
 });
 
+// add  user to the project
+
+const toggleInviteButton = document.getElementById('toggleInviteForm');
+const inviteForm = document.getElementById('inviteForm');
+const emailInput = inviteForm.querySelector('input[type="email"]');
+
+toggleInviteButton.addEventListener('click', () => {
+  inviteForm.classList.toggle('hidden');
+});
+
+inviteForm.addEventListener('submit', function (event) {
+  event.preventDefault();
+
+  const email = emailInput.value.trim();
+  if (email === '') {
+    console.log('please enter a valid emil'); // add a confimation
+    return;
+  }
+  axios
+    .post('http://localhost:3001/invite/email', {
+      email: email,
+      projectId: localStorage.getItem('selectedProject'),
+    })
+    .then((response) => {
+      if (response.data.success) {
+        showToast('Email sent successfully', 'success');
+        console.log('Email sent successfully');
+      } else {
+        showToast('failed to send invitation', 'error');
+        console.log('failed to sent invitation');
+      }
+    })
+    .catch((error) => {
+      showToast('Could not sent invitation');
+      console.error('Error:', error);
+    });
+  inviteForm.classList.add('hidden');
+  emailInput.value = '';
+});
+
+export function showNotification(message) {
+  const notification = document.querySelector('.notification');
+  const messageEl = notification.querySelector('.message');
+  const dismissButton = notification.querySelector('.dismiss');
+
+  messageEl.textContent = message;
+  notification.classList.remove('hidden');
+  increaseNotificationCount();
+
+  if (dismissButton) {
+    dismissButton.addEventListener('click', () => {
+      if (notification) notification.classList.add('hidden');
+    });
+  }
+  setTimeout(() => notification.classList.add('hidden'), 5000);
+}
+
+let notificationCount =
+  parseInt(localStorage.getItem('notificationCount')) || 0;
+
+const badge = document.querySelector('.notification-badge');
+if (badge && notificationCount > 0) {
+  badge.textContent = notificationCount;
+  badge.classList.remove('hidden');
+}
+
+function increaseNotificationCount() {
+  notificationCount++;
+  localStorage.setItem('notificationCount', notificationCount);
+
+  const badge = document.querySelector('.notification-badge');
+  if (!badge) return;
+
+  badge.textContent = notificationCount;
+  badge.classList.remove('hidden');
+}
+
+const notificationIcon = document.querySelector('.notification-icon');
+if (notificationIcon) {
+  notificationIcon.addEventListener('click', () => {
+    notificationCount = 0;
+    localStorage.setItem('notificationCount', 0);
+    const badge = document.querySelector('.notification-badge');
+    if (!badge) {
+      return;
+    }
+
+    badge.textContent = 0;
+    badge.classList.add('hidden');
+  });
+}
+
+setupSocketIo(showNotification);
 renderBoard(currentProject);
 showProjectList();
-renderTasksList();
+showUserList();
+// renderTasksList();
 renderDashBoardTasks();
