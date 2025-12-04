@@ -643,6 +643,7 @@ confirmDeleteBtn.addEventListener('click', async () => {
 async function renderBoard(projectId, filter = '', searchInput = '') {
   const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const project = (await projectService.getProjectById(projectId)).result;
+  let draggedColumn = null;
 
   renderDashboard(project);
 
@@ -745,8 +746,10 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
 
       taskEl.setAttribute('draggable', 'true');
       taskEl.addEventListener('dragstart', (e) => {
+        const currentCol = e.target.parentElement.parentElement; // getting the whole column dynamically 
         e.dataTransfer.setData('taskId', task._id);
         e.dataTransfer.effectAllowed = 'move';
+        draggedColumn = currentCol;
       });
 
       const menuButton = taskEl.querySelector('.menu-button');
@@ -810,11 +813,11 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         console.error('Failed to update task status', err);
       });
 
-      const countEls = document.querySelectorAll('.issue-count');
-      project.columns.forEach((col, idx) => {
-        const colTasks = columns[col] || [];
-        countEls[idx].innerText = colTasks.length;
-      });
+      columnEl.querySelector('.issue-count').innerText =
+        +columnEl.querySelector('.issue-count').innerText + 1;
+
+      draggedColumn.querySelector('.issue-count').innerText =
+        +draggedColumn.querySelector('.issue-count').innerText - 1; // converted from string to number using
     });
 
     columnContainer.appendChild(columnEl);
