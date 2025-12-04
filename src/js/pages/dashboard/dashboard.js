@@ -643,6 +643,7 @@ confirmDeleteBtn.addEventListener('click', async () => {
 async function renderBoard(projectId, filter = '', searchInput = '') {
   const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const project = (await projectService.getProjectById(projectId)).result;
+  let draggedColumn = null;
 
   renderDashboard(project);
 
@@ -729,7 +730,7 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
             </select>
           </div>
           <div class="flex items-center">
-            <span class="w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center">
+            <span class="user-avatar cursor-pointer w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center">
               <img src="${
                 assignee?.profileImage
                   ? 'http://localhost:3001/uploads/profile/' +
@@ -739,14 +740,59 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         assignee?.name || 'Unassigned'
       }"/>
             </span>
+            <select class="avatar-dropdown absolute top-20 right-0 bg-gray-200 border rounded text-sm"></select>
+
           </div>
         </div>
       `;
+      // add drop down upon clicking the image
 
+      const avatar = taskEl.querySelector('.assignee-avatar');
+      const dropdown = taskEl.querySelector('.assignee-dropdown');
+      async function fetchUserFromProject() {
+        return await projectService(currentProject);
+      }
+      const assignees = fetchUserFromProject();
+      assignees.result.forEach((a) => {
+        const opt = document.createElement('option');
+        opt.value = a._id;
+        opt.textContent = a.email;
+        dropdown.appendChild(opt);
+      });
+
+      avatar.addEventListener('click', () => {
+        dropdown.classList.toggle('hidden');
+      });
+
+      dropdown.addEventListener('change', async () => {
+        const userId = dropdown.value;
+
+        await taskService.updateTask(task._id, { assigneeId: userId });
+
+        const selected = assignees.result.find((a) => a._id === userId);
+
+        const img = taskEl.querySelector('.assignee-avatar img');
+
+        img.src = selected?.profileImage
+          ? 'http://localhost:3001/uploads/profile/' + selected.profileImage
+          : '../../../assets/img/profile.png';
+
+        img.title = selected?.name || 'Unassigned';
+
+        dropdown.classList.add('hidden');
+      });
+
+      avatar.addEventListener('click', () => {
+        dropdown.classList.toggle('hidden');
+      });
+      // end
+      
       taskEl.setAttribute('draggable', 'true');
       taskEl.addEventListener('dragstart', (e) => {
+        const currentCol = e.target.parentElement.parentElement; // getting the whole column dynamically
         e.dataTransfer.setData('taskId', task._id);
         e.dataTransfer.effectAllowed = 'move';
+        draggedColumn = currentCol;
       });
 
       const menuButton = taskEl.querySelector('.menu-button');
@@ -810,11 +856,11 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         console.error('Failed to update task status', err);
       });
 
-      const countEls = document.querySelectorAll('.issue-count');
-      project.columns.forEach((col, idx) => {
-        const colTasks = columns[col] || [];
-        countEls[idx].innerText = colTasks.length;
-      });
+      columnEl.querySelector('.issue-count').innerText =
+        +columnEl.querySelector('.issue-count').innerText + 1;
+
+      draggedColumn.querySelector('.issue-count').innerText =
+        +draggedColumn.querySelector('.issue-count').innerText - 1; // converted from string to number using
     });
 
     columnContainer.appendChild(columnEl);
