@@ -730,7 +730,7 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
             </select>
           </div>
           <div class="flex items-center">
-            <span class="w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center">
+            <span class="user-avatar cursor-pointer w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center">
               <img src="${
                 assignee?.profileImage
                   ? 'http://localhost:3001/uploads/profile/' +
@@ -740,13 +740,56 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         assignee?.name || 'Unassigned'
       }"/>
             </span>
+            <select class="avatar-dropdown absolute top-20 right-0 bg-gray-200 border rounded text-sm"></select>
+
           </div>
         </div>
       `;
+      // add drop down upon clicking the image
 
+      const avatar = taskEl.querySelector('.assignee-avatar');
+      const dropdown = taskEl.querySelector('.assignee-dropdown');
+      async function fetchUserFromProject() {
+        return await projectService(currentProject);
+      }
+      const assignees = fetchUserFromProject();
+      assignees.result.forEach((a) => {
+        const opt = document.createElement('option');
+        opt.value = a._id;
+        opt.textContent = a.email;
+        dropdown.appendChild(opt);
+      });
+
+      avatar.addEventListener('click', () => {
+        dropdown.classList.toggle('hidden');
+      });
+
+      dropdown.addEventListener('change', async () => {
+        const userId = dropdown.value;
+
+        await taskService.updateTask(task._id, { assigneeId: userId });
+
+        const selected = assignees.result.find((a) => a._id === userId);
+
+        const img = taskEl.querySelector('.assignee-avatar img');
+
+        img.src = selected?.profileImage
+          ? 'http://localhost:3001/uploads/profile/' + selected.profileImage
+          : '../../../assets/img/profile.png';
+
+        img.title = selected?.name || 'Unassigned';
+
+        dropdown.classList.add('hidden');
+      });
+
+      avatar.addEventListener('click', () => {
+        dropdown.classList.toggle('hidden');
+      });
+      // end
+      
       taskEl.setAttribute('draggable', 'true');
       taskEl.addEventListener('dragstart', (e) => {
-        const currentCol = e.target.parentElement.parentElement; // getting the whole column dynamically 
+        const currentCol = e.target.parentElement.parentElement; // getting the whole column dynamically
         e.dataTransfer.setData('taskId', task._id);
         e.dataTransfer.effectAllowed = 'move';
         draggedColumn = currentCol;
