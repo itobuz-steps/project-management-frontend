@@ -98,6 +98,7 @@
               </g>
             </svg>
           </div>
+
           <div class="notification-icon">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -232,7 +233,7 @@
         <div class="project-info items-center flex flex-row justify-between">
           <div class="flex flex-row items-center gap-3">
             <div class="project-name text-2xl font-semibold" id="projectName">
-              Project Name
+              No Project Selected
             </div>
             <div id="plus-icon" class="plus-icon cursor-pointer add-project">
               <svg
@@ -593,10 +594,7 @@
                     class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
                     required
                   >
-                    <option value="" selected disabled>
-                      Select a project type
-                    </option>
-                    <option value="kanban">kanban</option>
+                    <option value="kanban" selected>kanban</option>
                     <option value="scrum">scrum</option>
                   </select>
                 </div>
@@ -1501,6 +1499,7 @@
         </div>
       </div>
     </div>
+
     <div
       class="drawer-backdrop hidden bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-20"
     ></div>
