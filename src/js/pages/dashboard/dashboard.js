@@ -8,6 +8,7 @@ import taskService from '../../services/TaskService.js';
 import commentService from '../../services/CommentService.js';
 import axios from 'axios';
 import { setupSocketIo } from '../../utils/setupNotification.js';
+import showToast from '../../utils/showToast.js';
 
 const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
@@ -112,8 +113,12 @@ closeProjectBtn.addEventListener('click', () => {
 const openTaskCreate = document.getElementById('create-task');
 const closeTaskModal = document.getElementById('close-task-modal');
 const createTaskModal = document.getElementById('create-task-modal');
-const createModalStatusDropdown = document.getElementById('status-create-task-modal');
-const createModalAssigneeDropdown = document.getElementById('create-modal-assignee');
+const createModalStatusDropdown = document.getElementById(
+  'status-create-task-modal'
+);
+const createModalAssigneeDropdown = document.getElementById(
+  'create-modal-assignee'
+);
 
 openTaskCreate.addEventListener('click', () => {
   createTaskModal.classList.remove('hidden');
@@ -213,9 +218,7 @@ taskForm.addEventListener('submit', async (e) => {
 
     dueDate: dateValue,
     assignee:
-
       document.getElementById('create-modal-assignee').value === 'null'
-
         ? null
         : document.getElementById('create-modal-assignee').value,
 
@@ -290,7 +293,9 @@ async function openEditModal(taskId) {
     }
     const assignee = editModal.querySelector('#assignee');
     const selectedAssignee = await handleModalAssignee(assignee);
-    const selectedAssigned = editModal.querySelector(`[value="${task.assignee}"]`);
+    const selectedAssigned = editModal.querySelector(
+      `[value="${task.assignee}"]`
+    );
     selectedAssigned.selected = true;
     console.log(selectedAssignee);
 
@@ -331,7 +336,10 @@ editForm.addEventListener('submit', async (e) => {
       .map((t) => t.trim()),
 
     dueDate: editModal.querySelector('#dueDate').value,
-    assignee: editModal.querySelector('#assignee').value === "null" ? null : editModal.querySelector('#assignee').value,
+    assignee:
+      editModal.querySelector('#assignee').value === 'null'
+        ? null
+        : editModal.querySelector('#assignee').value,
   };
 
   console.log(updatedTask);
@@ -613,12 +621,12 @@ let taskToDelete = null;
 async function showDeleteModal(taskId) {
   taskToDelete = taskId;
   deleteModal.classList.remove('hidden');
-  drawerBackdrop.classList.remove("hidden");
+  drawerBackdrop.classList.remove('hidden');
 }
 
 cancelDeleteBtn.addEventListener('click', () => {
   deleteModal.classList.add('hidden');
-  drawerBackdrop.classList.add("hidden");
+  drawerBackdrop.classList.add('hidden');
 });
 
 confirmDeleteBtn.addEventListener('click', async () => {
@@ -629,7 +637,7 @@ confirmDeleteBtn.addEventListener('click', async () => {
     renderDashBoardTasks();
   }
   deleteModal.classList.add('hidden');
-  drawerBackdrop.classList.add("hidden");
+  drawerBackdrop.classList.add('hidden');
 });
 
 async function renderBoard(projectId, filter = '', searchInput = '') {
@@ -670,7 +678,9 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         'task flex flex-col max-w-sm p-4 bg-gray-100 text-black gap-4 relative cursor-pointer';
       taskEl.innerHTML = `
         <div class="card-header flex justify-between items-center">
-          <p class="text-lg border border-transparent rounded-lg font-medium hover:border-gray-400 ">${task.title}</p>
+          <p class="text-lg border border-transparent rounded-lg font-medium hover:border-gray-400 ">${
+            task.title
+          }</p>
           <div class="relative">
             <button class="outline-none menu-button">
               <svg
@@ -715,7 +725,6 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
           <div class="flex items-center" >
             <span class="w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center">
               <img src="${
-
                 assignee?.profileImage
                   ? 'http://localhost:3001/uploads/profile/' +
                     assignee.profileImage
@@ -815,7 +824,6 @@ async function showTaskDrawer(taskId) {
   console.log(assignee);
 
   const taskDrawer = document.querySelector('.task-drawer');
-
 
   const titleEl = taskDrawer.querySelector('.title');
   const descriptionEl = taskDrawer.querySelector('.description');
@@ -921,8 +929,6 @@ async function loadProjectMembers(projectId) {
   }
 }
 
-
-
 function renderSubDropdown(item) {
   const subDropdown = document.createElement('div');
   subDropdown.className = `px-4 py-2 hover:bg-gray-100 cursor-pointer ${item}-filter`;
@@ -976,9 +982,7 @@ async function handleAssigneeFilter() {
   });
 }
 
-
 async function handleModalAssignee(modalAssigneeDropdown) {
-
   const assignees = await projectService.getProjectMembers(currentProject);
   modalAssigneeDropdown.innerHTML = '';
   const unassigned = document.createElement('option');
@@ -987,7 +991,6 @@ async function handleModalAssignee(modalAssigneeDropdown) {
 
   unassigned.value = 'null';
   createModalAssigneeDropdown.appendChild(unassigned);
-
 
   let selectedAssignee;
   assignees.result.forEach((assignee) => {
@@ -1007,8 +1010,6 @@ async function handleModalAssignee(modalAssigneeDropdown) {
   return selectedAssignee;
 }
 
-
-
 async function handleModalStatus(modalStatusDropdown) {
   const project = (await projectService.getProjectById(currentProject)).result;
   modalStatusDropdown.innerHTML = '';
@@ -1018,7 +1019,6 @@ async function handleModalStatus(modalStatusDropdown) {
     option.innerText = column;
     option.value = column;
     modalStatusDropdown.appendChild(option);
-
   });
 
   modalStatusDropdown.firstChild.selected = true;
@@ -1079,36 +1079,75 @@ inviteForm.addEventListener('submit', function (event) {
   axios
     .post('http://localhost:3001/invite/email', {
       email: email,
+      projectId: localStorage.getItem('selectedProject'),
     })
     .then((response) => {
       if (response.data.success) {
-        console.log('Email sent successfully'); // add conf.
+        showToast('Email sent successfully', 'success');
+        console.log('Email sent successfully');
       } else {
-        // alert('Failed to send invitation. Please try again.');
-        console.log('falied to sent invitation'); // need conff
+        showToast('failed to send invitation', 'error');
+        console.log('failed to sent invitation');
       }
     })
     .catch((error) => {
+      showToast('Could not sent invitation');
       console.error('Error:', error);
-      alert('There was an error sending the invitation.');
     });
   inviteForm.classList.add('hidden');
   emailInput.value = '';
 });
 
-function showNotification(message) {
+export function showNotification(message) {
   const notification = document.querySelector('.notification');
   const messageEl = notification.querySelector('.message');
   const dismissButton = notification.querySelector('.dismiss');
 
   messageEl.textContent = message;
   notification.classList.remove('hidden');
+  increaseNotificationCount();
 
-  dismissButton.addEventListener('click', () =>
-    notification.classList.add('hidden')
-  );
-
+  if (dismissButton) {
+    dismissButton.addEventListener('click', () => {
+      if (notification) notification.classList.add('hidden');
+    });
+  }
   setTimeout(() => notification.classList.add('hidden'), 5000);
+}
+
+let notificationCount =
+  parseInt(localStorage.getItem('notificationCount')) || 0;
+
+const badge = document.querySelector('.notification-badge');
+if (badge && notificationCount > 0) {
+  badge.textContent = notificationCount;
+  badge.classList.remove('hidden');
+}
+
+function increaseNotificationCount() {
+  notificationCount++;
+  localStorage.setItem('notificationCount', notificationCount);
+
+  const badge = document.querySelector('.notification-badge');
+  if (!badge) return;
+
+  badge.textContent = notificationCount;
+  badge.classList.remove('hidden');
+}
+
+const notificationIcon = document.querySelector('.notification-icon');
+if (notificationIcon) {
+  notificationIcon.addEventListener('click', () => {
+    notificationCount = 0;
+    localStorage.setItem('notificationCount', 0);
+    const badge = document.querySelector('.notification-badge');
+    if (!badge) {
+      return;
+    }
+
+    badge.textContent = 0;
+    badge.classList.add('hidden');
+  });
 }
 
 setupSocketIo(showNotification);
