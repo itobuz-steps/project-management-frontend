@@ -11,3 +11,17 @@ export function setupSocketIo(callback) {
 
   socket.on('notification', (message) => callback(message));
 }
+
+// have to implement lazy loading in the front end how can we we need tp look into it
+
+let currentPage = 1;
+let loading = false;
+
+async function loadNotification() {
+  if (loading) {
+    return;
+  }
+  loading = true;
+
+  const req = axios.get("")
+}

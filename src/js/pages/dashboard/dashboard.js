@@ -8,6 +8,7 @@ import taskService from '../../services/TaskService.js';
 import commentService from '../../services/CommentService.js';
 import axios from 'axios';
 import { setupSocketIo } from '../../utils/setupNotification.js';
+import showToast from '../../utils/showToast.js';
 
 const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
@@ -1098,36 +1099,75 @@ inviteForm.addEventListener('submit', function (event) {
   axios
     .post('http://localhost:3001/invite/email', {
       email: email,
+      projectId: localStorage.getItem('selectedProject'),
     })
     .then((response) => {
       if (response.data.success) {
-        console.log('Email sent successfully'); // add conf.
+        showToast('Email sent successfully', 'success');
+        console.log('Email sent successfully');
       } else {
-        // alert('Failed to send invitation. Please try again.');
-        console.log('falied to sent invitation'); // need conff
+        showToast('failed to send invitation', 'error');
+        console.log('failed to sent invitation');
       }
     })
     .catch((error) => {
+      showToast('Could not sent invitation');
       console.error('Error:', error);
-      alert('There was an error sending the invitation.');
     });
   inviteForm.classList.add('hidden');
   emailInput.value = '';
 });
 
-function showNotification(message) {
+export function showNotification(message) {
   const notification = document.querySelector('.notification');
   const messageEl = notification.querySelector('.message');
   const dismissButton = notification.querySelector('.dismiss');
 
   messageEl.textContent = message;
   notification.classList.remove('hidden');
+  increaseNotificationCount();
 
-  dismissButton.addEventListener('click', () =>
-    notification.classList.add('hidden')
-  );
-
+  if (dismissButton) {
+    dismissButton.addEventListener('click', () => {
+      if (notification) notification.classList.add('hidden');
+    });
+  }
   setTimeout(() => notification.classList.add('hidden'), 5000);
+}
+
+let notificationCount =
+  parseInt(localStorage.getItem('notificationCount')) || 0;
+
+const badge = document.querySelector('.notification-badge');
+if (badge && notificationCount > 0) {
+  badge.textContent = notificationCount;
+  badge.classList.remove('hidden');
+}
+
+function increaseNotificationCount() {
+  notificationCount++;
+  localStorage.setItem('notificationCount', notificationCount);
+
+  const badge = document.querySelector('.notification-badge');
+  if (!badge) return;
+
+  badge.textContent = notificationCount;
+  badge.classList.remove('hidden');
+}
+
+const notificationIcon = document.querySelector('.notification-icon');
+if (notificationIcon) {
+  notificationIcon.addEventListener('click', () => {
+    notificationCount = 0;
+    localStorage.setItem('notificationCount', 0);
+    const badge = document.querySelector('.notification-badge');
+    if (!badge) {
+      return;
+    }
+
+    badge.textContent = 0;
+    badge.classList.add('hidden');
+  });
 }
 
 setupSocketIo(showNotification);

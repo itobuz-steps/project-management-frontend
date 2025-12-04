@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { showNotification } from '../pages/dashboard/dashboard';
 const API_BASE_URL = 'http://localhost:3001/tasks';
 
 class TaskService {
@@ -121,6 +122,38 @@ class TaskService {
       formData.append('assignee', task.assignee);
     }
 
+    try {
+      const response = await this.api.post(`/`, formData);
+      const email = response.data?.user?.email;
+
+      showNotification(`Task created by ${email}!`);
+      return response;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to create task');
+    }
+  }
+
+  async updateTask(id, updatedTask) {
+    try {
+      const response = await this.api.put(`/${id}`, updatedTask);
+      // showNotification('Task Updated by ');
+      return response;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to update task');
+    }
+  }
+
+  async deleteTask(id) {
+    try {
+      const response = await this.api.delete(`/${id}`);
+      const email = response.data?.user?.email;
+
+      showNotification(`Task deleted by ${email}!`);
+
+      return response;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to delete task');
+    }
     task.block.forEach((t) => formData.append('block[]', t));
     task.block.forEach((t) => formData.append('blockedBy[]', t));
     task.block.forEach((t) => formData.append('relatesTo[]', t));
