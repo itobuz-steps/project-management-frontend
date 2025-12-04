@@ -10,6 +10,7 @@ import axios from 'axios';
 import { setupSocketIo } from '../../utils/setupNotification.js';
 import showToast from '../../utils/showToast.js';
 import { profileNameIcon } from '../../utils/profileIcon.js';
+import authService from '../../services/AuthService.js';
 
 const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
@@ -890,7 +891,6 @@ async function showTaskDrawer(taskId) {
   const assignee = task.assignee
     ? (await taskService.getUserDetailsById(task.assignee)).data.result
     : null;
-  console.log(assignee);
 
   const taskDrawer = document.querySelector('.task-drawer');
 
@@ -910,10 +910,19 @@ async function showTaskDrawer(taskId) {
     openEditModal(taskId);
   });
 
-  const commentContainer = taskDrawer.querySelector('#commentsContainer');
-  const comments = (await commentService.getAllComments(task._id)).result;
+  const commentInput = taskDrawer.querySelector('#commentInput');
+  const commentSubmit = taskDrawer.querySelector('#submitButton');
 
-  commentContainer.innerHTML = `<div id="commentContainerHeaderText" class="ml-4 font-semibold">Comments</div>`;
+  commentSubmit.addEventListener('click', async () => {
+    const commentBody = {
+      taskId: task._id,
+      message: commentInput.value.trim(),
+    };
+
+    await commentService.createComment(commentBody);
+    commentInput.value = '';
+    updateCommentList();
+  });
 
   status.value = task.status;
   priority.value = task.priority;
@@ -947,15 +956,28 @@ async function showTaskDrawer(taskId) {
     profileImageEl.classList.remove('hidden');
   });
 
-  comments.forEach((comment) => {
+  async function updateCommentList() {
+    const comments = (await commentService.getAllComments(task._id)).result;
+
+    const commentContainer = taskDrawer.querySelector('#commentsContainer');
+    commentContainer.innerHTML = `<div id="commentContainerHeaderText" class="ml-4 font-semibold">Comments</div>`;
+
+    comments.forEach((comment) =>
+      appendCommentToContainer(comment, commentContainer)
+    );
+  }
+
+  function appendCommentToContainer(comment, container) {
     const commentEl = document.createElement('div');
     commentEl.className =
       'flex gap-3 items-start bg-white rounded-lg shadow-md pl-3 py-3';
     commentEl.innerHTML = `
             <img
               src="${
-                'http://localhost:3001/uploads/profile/' +
                 comment.author.profileImage
+                  ? 'http://localhost:3001/uploads/profile/' +
+                    comment.author.profileImage
+                  : `../../../assets/img/profile.png`
               }"
               alt="Avatar"
               class="w-7 h-7 rounded-full"
@@ -972,8 +994,10 @@ async function showTaskDrawer(taskId) {
                 ${comment.message}
               </p>
             </div>`;
-    commentContainer.appendChild(commentEl);
-  });
+    container.appendChild(commentEl);
+  }
+
+  updateCommentList();
 }
 
 async function loadProjectMembers(projectId) {
