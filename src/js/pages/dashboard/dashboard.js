@@ -9,6 +9,7 @@ import commentService from '../../services/CommentService.js';
 import axios from 'axios';
 import { setupSocketIo } from '../../utils/setupNotification.js';
 import showToast from '../../utils/showToast.js';
+import { profileNameIcon } from '../../utils/profileIcon.js';
 
 const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
@@ -252,11 +253,9 @@ closeTaskModal.addEventListener('click', () => {
 //end for create tasks
 
 //update task details
-
 const closeEditTask = document.getElementById('close-update-task-modal');
 const editModal = document.getElementById('update-task-modal');
 const editForm = document.getElementById('edit-task-form');
-
 let currentTaskId = null;
 
 async function openEditModal(taskId) {
@@ -856,6 +855,7 @@ async function showTaskDrawer(taskId) {
   const closeButton = taskDrawer.querySelector('.close-btn');
   const status = taskDrawer.querySelector('#statusSelect');
   const priority = taskDrawer.querySelector('#prioritySelect');
+  const profileName = taskDrawer.querySelector('.profile-name');
 
   const editTaskButton = document.querySelector('#edit-task-button');
   editTaskButton.addEventListener('click', () => {
@@ -874,12 +874,18 @@ async function showTaskDrawer(taskId) {
   taskDrawer.dataset.id = task._id;
   titleEl.textContent = task.title;
   descriptionEl.textContent = task.description;
-  assigneeEl.textContent = assignee ? assignee.name : 'No assignee';
-  profileImageEl.src = assignee
-    ? 'http://localhost:3001/uploads/profile/' + assignee.profileImage
-    : '';
 
-  !assignee && profileImageEl.classList.add('hidden');
+  if (assignee) {
+    assigneeEl.textContent = assignee.name;
+    if (assignee.profileImage) {
+      profileImageEl.src =
+        'http://localhost:3001/uploads/profile/' + assignee.profileImage;
+    } else {
+      profileNameIcon(profileName);
+    }
+  } else {
+    assigneeEl.textContent = 'No assignee';
+  }
 
   dueDateEl.textContent = task.dueDate.split('T')[0];
 
