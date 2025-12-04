@@ -14,13 +14,30 @@
   </head>
 
   <body class="w-screen h-screen flex items-center justify-center bg-[#caf0f8]">
-    <div
-      class="w-full h-full grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-5 bg-gradient-to-b from-[#90e0ef] to-[#caf0f8]"
-    >
+    <div class="w-full h-full grid grid-cols-1 md:grid-cols-[1fr_2fr] gap-5">
       <div
-        class="p-6 flex items-center justify-center text-center text-[#03045e]"
+        class="p-6 flex flex-col items-center justify-center text-center text-[#03045e] relative overflow-hidden bg-[#90e0ef]"
       >
-        <div>
+        <img
+          src="../assets/img/Picture1.png"
+          class="absolute top-0 left-0 w-full h-full object-cover pointer-events-none opacity-5"
+        />
+
+        <div
+          class="absolute top-2 sm:top-2 md:top-6 left-2 sm:left-4 md:left-6 flex items-center gap-2 sm:gap-3 z-20"
+        >
+          <img
+            src="../assets/img/logo.png"
+            class="w-10 sm:w-12 md:w-16 h-10 sm:h-12 md:h-16 object-contain"
+          />
+          <span
+            class="text-lg sm:text-2xl md:text-3xl font-bold italic underline text-[#03045e]"
+          >
+            TaskPulse
+          </span>
+        </div>
+
+        <div class="relative z-10 mt-10 sm:mt-32 md:mt-10">
           <h2
             class="libre-baskerville-bold text-[60px] mb-5 text-[#0077b6] font-bold"
           >
@@ -33,106 +50,113 @@
       </div>
 
       <div
-        class="p-6 bg-white rounded-xl flex flex-col justify-center items-center shadow-[0_8px_20px_rgba(0,180,216,0.15),_inset_0_0_10px_rgba(0,180,216,0.05)]"
+        class="p-6 bg-white rounded-xl flex flex-col justify-center items-center shadow-[0_8px_20px_rgba(0,180,216,0.15),_inset_0_0_10px_rgba(0,180,216,0.05)] relative overflow-hidden"
       >
-        <div id="toastContainer"></div>
+        <img
+          src="../assets/img/project-management.png"
+          class="absolute top-0 left-0 w-full h-full object-cover pointer-events-none opacity-10"
+        />
 
-        <div
-          class="w-[90%] max-w-[300px] flex bg-[#90e0ef] rounded-lg overflow-hidden mb-12"
-        >
-          <button
-            class="sign-up flex-1 py-3 text-lg font-medium bg-[#0077b6] text-white shadow-[0_0_5px_#00b4d8,0_0_5px_#0077b6] transition-all duration-300 hover:bg-[#90e0ef] hover:text-[#0077b6]"
+        <div class="relative z-10 w-full flex flex-col items-center">
+          <div id="toastContainer"></div>
+
+          <div
+            class="w-[90%] max-w-[300px] flex bg-[#90e0ef] rounded-lg overflow-hidden mb-12"
           >
-            Sign up
-          </button>
-          <button
-            class="login flex-1 py-3 text-lg font-medium bg-[#0077b6] text-white shadow-[0_0_5px_#00b4d8,0_0_5px_#0077b6] transition-all duration-300 hover:bg-[#00b4d8]"
-          >
-            Login
-          </button>
-        </div>
-
-        <div class="login-form-container w-full text-center block">
-          <h1 class="libre-baskerville-bold text-[36px] text-[#03045e] mb-5">
-            Login Form
-          </h1>
-
-          <form class="login-form flex flex-col items-center">
-            <input
-              id="email-input"
-              type="email"
-              placeholder="Email"
-              required
-              class="input-field text-sm p-3 my-2 rounded-lg border border-[#90e0ef] min-w-[250px] max-w-[250px] outline-none focus:border-[#0077b6] focus:shadow-[0_0_8px_#0077b6] transition-all duration-300"
-            />
-
-            <input
-              id="password-input"
-              type="password"
-              placeholder="Password"
-              required
-              class="input-field text-sm p-3 my-2 rounded-lg border border-[#90e0ef] min-w-[250px] max-w-[250px] outline-none focus:border-[#0077b6] focus:shadow-[0_0_8px_#0077b6] transition-all duration-300"
-            />
-
-            <div class="forgot-password mt-3">
-              <a
-                href="./forgotPasswordPage.html"
-                class="text-sm text-[#0077b6] hover:text-[#00b4d8] transition-colors duration-300"
-              >
-                Forgot password?
-              </a>
-            </div>
-
-            <p id="message" class="text-center min-h-4"></p>
-
             <button
-              class="login-button mt-5 py-3 rounded-lg w-[80%] max-w-[250px] cursor-pointer bg-[#0077b6] text-white text-[16px] hover:bg-[#00b4d8] shadow-[0_0_5px_#00b4d8,0_0_5px_#0077b6] transition-all duration-300"
-              type="submit"
+              class="sign-up flex-1 py-3 text-lg font-medium bg-[#0077b6] text-white shadow-[0_0_5px_#00b4d8,0_0_5px_#0077b6] transition-all duration-300 hover:bg-[#90e0ef] hover:text-[#0077b6]"
+            >
+              Sign up
+            </button>
+            <button
+              class="login flex-1 py-3 text-lg font-medium bg-[#0077b6] text-white shadow-[0_0_5px_#00b4d8,0_0_5px_#0077b6] transition-all duration-300 hover:bg-[#00b4d8]"
             >
               Login
             </button>
-          </form>
-        </div>
+          </div>
 
-        <div class="signup-form-container w-full text-center hidden">
-          <h1 class="libre-baskerville-bold text-[36px] text-[#03045e] mb-5">
-            Sign Up Form
-          </h1>
+          <div class="login-form-container w-full text-center block">
+            <h1 class="libre-baskerville-bold text-[36px] text-[#03045e] mb-5">
+              Login Form
+            </h1>
 
-          <form class="signup-form flex flex-col items-center">
-            <input
-              id="username"
-              type="text"
-              placeholder="Username"
-              required
-              class="input-field text-sm p-3 my-2 rounded-lg border border-[#90e0ef] min-w-[250px] max-w-[250px] outline-none focus:border-[#0077b6] focus:shadow-[0_0_8px_#0077b6] transition-all duration-300"
-            />
+            <form class="login-form flex flex-col items-center">
+              <input
+                id="email-input"
+                type="email"
+                placeholder="Email"
+                required
+                class="input-field text-sm p-3 my-2 rounded-lg border border-[#90e0ef] min-w-[250px] max-w-[250px] outline-none focus:border-[#0077b6] focus:shadow-[0_0_8px_#0077b6] transition-all duration-300"
+              />
 
-            <input
-              id="email"
-              type="email"
-              placeholder="Email"
-              required
-              class="input-field text-sm p-3 my-2 rounded-lg border border-[#90e0ef] min-w-[250px] max-w-[250px] outline-none focus:border-[#0077b6] focus:shadow-[0_0_8px_#0077b6] transition-all duration-300"
-            />
+              <input
+                id="password-input"
+                type="password"
+                placeholder="Password"
+                required
+                class="input-field text-sm p-3 my-2 rounded-lg border border-[#90e0ef] min-w-[250px] max-w-[250px] outline-none focus:border-[#0077b6] focus:shadow-[0_0_8px_#0077b6] transition-all duration-300"
+              />
 
-            <input
-              id="password"
-              type="password"
-              placeholder="Password"
-              required
-              class="input-field text-sm p-3 my-2 rounded-lg border border-[#90e0ef] min-w-[250px] max-w-[250px] outline-none focus:border-[#0077b6] focus:shadow-[0_0_8px_#0077b6] transition-all duration-300"
-            />
+              <div class="forgot-password mt-3">
+                <a
+                  href="./forgotPasswordPage.html"
+                  class="text-sm text-[#0077b6] hover:text-[#00b4d8] transition-colors duration-300"
+                >
+                  Forgot password?
+                </a>
+              </div>
 
-            <p id="signup-message" class="text-center mt-3"></p>
+              <p id="message" class="text-center min-h-4"></p>
 
-            <button
-              class="signup-button mt-5 py-3 rounded-lg w-[80%] max-w-[250px] cursor-pointer bg-[#0077b6] text-white text-[16px] hover:bg-[#00b4d8] shadow-[0_0_5px_#00b4d8,0_0_5px_#0077b6] transition-all duration-300"
-              type="submit"
-            >
-              Sign Up
-            </button>
-          </form>
+              <button
+                class="login-button mt-5 py-3 rounded-lg w-[80%] max-w-[250px] cursor-pointer bg-[#0077b6] text-white text-[16px] hover:bg-[#00b4d8] shadow-[0_0_5px_#00b4d8,0_0_5px_#0077b6] transition-all duration-300"
+                type="submit"
+              >
+                Login
+              </button>
+            </form>
+          </div>
+
+          <div class="signup-form-container w-full text-center hidden">
+            <h1 class="libre-baskerville-bold text-[36px] text-[#03045e] mb-5">
+              Sign Up Form
+            </h1>
+
+            <form class="signup-form flex flex-col items-center">
+              <input
+                id="username"
+                type="text"
+                placeholder="Username"
+                required
+                class="input-field text-sm p-3 my-2 rounded-lg border border-[#90e0ef] min-w-[250px] max-w-[250px] outline-none focus:border-[#0077b6] focus:shadow-[0_0_8px_#0077b6] transition-all duration-300"
+              />
+
+              <input
+                id="email"
+                type="email"
+                placeholder="Email"
+                required
+                class="input-field text-sm p-3 my-2 rounded-lg border border-[#90e0ef] min-w-[250px] max-w-[250px] outline-none focus:border-[#0077b6] focus:shadow-[0_0_8px_#0077b6] transition-all duration-300"
+              />
+
+              <input
+                id="password"
+                type="password"
+                placeholder="Password"
+                required
+                class="input-field text-sm p-3 my-2 rounded-lg border border-[#90e0ef] min-w-[250px] max-w-[250px] outline-none focus:border-[#0077b6] focus:shadow-[0_0_8px_#0077b6] transition-all duration-300"
+              />
+
+              <p id="signup-message" class="text-center mt-3"></p>
+
+              <button
+                class="signup-button mt-5 py-3 rounded-lg w-[80%] max-w-[250px] cursor-pointer bg-[#0077b6] text-white text-[16px] hover:bg-[#00b4d8] shadow-[0_0_5px_#00b4d8,0_0_5px_#0077b6] transition-all duration-300"
+                type="submit"
+              >
+                Sign Up
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
