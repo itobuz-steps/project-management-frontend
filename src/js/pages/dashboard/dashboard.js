@@ -741,53 +741,92 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         assignee?.name || 'Unassigned'
       }"/>
             </span>
-            <select class="avatar-dropdown absolute top-20 right-0 bg-gray-200 border rounded text-sm"></select>
-
+            <div class="avatar-dropdown hidden absolute top-20 right-0 bg-white border border-gray-200 rounded">
+              <ul class="assignee-list text-sm text-gray-700"></ul>
+            </div>
           </div>
         </div>
       `;
+
       // add drop down upon clicking the image
 
-      const avatar = taskEl.querySelector('.assignee-avatar');
-      const dropdown = taskEl.querySelector('.assignee-dropdown');
-      async function fetchUserFromProject() {
-        return await projectService(currentProject);
+      const userAvatar = taskEl.querySelector('.user-avatar');
+      const avatarDropdown = taskEl.querySelector('.avatar-dropdown');
+      const list = taskEl.querySelector('.assignee-list');
+
+      let activeProjectMembers;
+
+      async function populateAvatarDropdown(dropdownList) {
+        try {
+          const response = await projectService.getProjectMembers(
+            currentProject
+          );
+          activeProjectMembers = response.result;
+
+          dropdownList.innerHTML = '';
+
+          activeProjectMembers.forEach((user) => {
+            const li = document.createElement('li');
+            li.className = 'px-7 py-2 hover:bg-gray-100 cursor-pointer';
+            li.textContent = user.name;
+            li.dataset.id = user._id;
+            dropdownList.appendChild(li);
+          });
+        } catch (err) {
+          console.error('Error loading users:', err);
+        }
       }
-      const assignees = fetchUserFromProject();
-      assignees.result.forEach((a) => {
-        const opt = document.createElement('option');
-        opt.value = a._id;
-        opt.textContent = a.email;
-        dropdown.appendChild(opt);
+
+      userAvatar.addEventListener('click', async () => {
+        avatarDropdown.classList.toggle('hidden');
+        if (!avatarDropdown.classList.contains('hidden')) {
+          await populateAvatarDropdown(list);
+        }
       });
 
-      avatar.addEventListener('click', () => {
-        dropdown.classList.toggle('hidden');
+      list.addEventListener('click', (e) => {
+        if (e.target.tagName === 'LI') {
+          const selectedUserId = e.target.dataset.id;
+
+          //serach for the selecte users
+          const selectedUser = activeProjectMembers.find(
+            (u) => u._id == selectedUserId
+          );
+
+          if (selectedUser) {
+            const avatarImg = userAvatar.querySelector('img');
+
+            if (selectedUser.profileImage) {
+              avatarImg.src = `http://localhost:3001/uploads/profile/${selectedUser.profileImage}`;
+            } else {
+              avatarImg.src = '../../../assets/img/profile.png';
+            }
+          }
+
+          console.log('Assigned user:', selectedUserId);
+
+          avatarDropdown.classList.add('hidden');
+        }
       });
 
-      dropdown.addEventListener('change', async () => {
-        const userId = dropdown.value;
+      // const updateAssignee = async(()=>
+      // {
+      //   await taskService.updateTask(taskId, {
+      //   assignee: selectedUserId
+      //   });
+      // })
 
-        await taskService.updateTask(task._id, { assigneeId: userId });
+      document.addEventListener('click', (e) => {
+        const isAvatar = userAvatar.contains(e.target);
+        const isDropdown = avatarDropdown.contains(e.target);
 
-        const selected = assignees.result.find((a) => a._id === userId);
-
-        const img = taskEl.querySelector('.assignee-avatar img');
-
-        img.src = selected?.profileImage
-          ? 'http://localhost:3001/uploads/profile/' + selected.profileImage
-          : '../../../assets/img/profile.png';
-
-        img.title = selected?.name || 'Unassigned';
-
-        dropdown.classList.add('hidden');
+        if (!isAvatar && !isDropdown) {
+          avatarDropdown.classList.add('hidden');
+        }
       });
 
-      avatar.addEventListener('click', () => {
-        dropdown.classList.toggle('hidden');
-      });
-      // end
-      
+      // end of avatar drop down
+
       taskEl.setAttribute('draggable', 'true');
       taskEl.addEventListener('dragstart', (e) => {
         const currentCol = e.target.parentElement.parentElement; // getting the whole column dynamically
