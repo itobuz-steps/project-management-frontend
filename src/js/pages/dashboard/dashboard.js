@@ -151,7 +151,7 @@ async function populateAssigneeDropDown() {
   const assigneeDropdown = document.getElementById('assignee');
   const data = await projectService.getProjectMembers(projectId);
 
-  assigneeDropdown.innerHTML = `<option value="">Select an assignee</option>`;
+  assigneeDropdown.innerHTML = `<option value="null">Select an assignee</option>`;
 
   data.result.forEach((member) => {
     const option = document.createElement('option');
@@ -265,7 +265,7 @@ async function openEditModal(taskId) {
     const response = await taskService.getTaskById(taskId);
     const task = response.data.result;
     console.log(taskId, task);
-
+    debugger;
     editModal.querySelector('#title').value = task.title;
     editModal.querySelector('#description').value = task.description;
     editModal.querySelector('#type').value = task.type;
@@ -290,6 +290,7 @@ async function openEditModal(taskId) {
     } else {
       editModal.querySelector('#dueDate').value = '';
     }
+
     const assignee = editModal.querySelector('#assignee');
     const selectedAssignee = await handleModalAssignee(assignee);
     const selectedAssigned = editModal.querySelector(
@@ -982,7 +983,9 @@ function removeElementChildren(element) {
 async function handleStatusFilter() {
   removeElementChildren(statusDropDown);
   removeElementChildren(assigneeDropdown);
-  const project = (await projectService.getProjectById(currentProject)).result;
+  const project = (
+    await projectService.getProjectById(localStorage.getItem('selectedProject'))
+  ).result;
 
   project.columns.forEach((column) => {
     const dropdownEl = renderSubDropdown(column);
@@ -998,7 +1001,9 @@ async function handleStatusFilter() {
 async function handleAssigneeFilter() {
   removeElementChildren(statusDropDown);
   removeElementChildren(assigneeDropdown);
-  const assignees = await projectService.getProjectMembers(currentProject);
+  const assignees = await projectService.getProjectMembers(
+    localStorage.getItem('selectedProject')
+  );
 
   assignees.result.forEach((assignee) => {
     const dropdownEl = renderSubDropdown(assignee.name);
@@ -1006,20 +1011,26 @@ async function handleAssigneeFilter() {
     dropdownEl.addEventListener('click', () => {
       removeElementChildren(statusDropDown);
       removeElementChildren(assigneeDropdown);
-      renderBoard(currentProject, 'assignee', `${assignee._id}`);
+      renderBoard(
+        localStorage.getItem('selectedProject'),
+        'assignee',
+        `${assignee._id}`
+      );
     });
   });
 }
 
 async function handleModalAssignee(modalAssigneeDropdown) {
-  const assignees = await projectService.getProjectMembers(currentProject);
+  const assignees = await projectService.getProjectMembers(
+    localStorage.getItem('selectedProject')
+  );
   modalAssigneeDropdown.innerHTML = '';
   const unassigned = document.createElement('option');
   unassigned.innerText = 'Unassigned';
   unassigned.selected = true;
 
   unassigned.value = 'null';
-  createModalAssigneeDropdown.appendChild(unassigned);
+  modalAssigneeDropdown.appendChild(unassigned);
 
   let selectedAssignee;
   assignees.result.forEach((assignee) => {
@@ -1040,7 +1051,9 @@ async function handleModalAssignee(modalAssigneeDropdown) {
 }
 
 async function handleModalStatus(modalStatusDropdown) {
-  const project = (await projectService.getProjectById(currentProject)).result;
+  const project = (
+    await projectService.getProjectById(localStorage.getItem('selectedProject'))
+  ).result;
   modalStatusDropdown.innerHTML = '';
 
   project.columns.forEach((column) => {
@@ -1066,25 +1079,25 @@ priorityDropdown.addEventListener('click', () => {
 });
 
 lowFilterBtn.addEventListener('click', () => {
-  renderBoard(currentProject, 'priority', 'low');
+  renderBoard(localStorage.getItem('selectedProject'), 'priority', 'low');
 });
 
 midFilterBtn.addEventListener('click', () => {
-  renderBoard(currentProject, 'priority', 'medium');
+  renderBoard(localStorage.getItem('selectedProject'), 'priority', 'medium');
 });
 
 highFilterBtn.addEventListener('click', () => {
-  renderBoard(currentProject, 'priority', 'high');
+  renderBoard(localStorage.getItem('selectedProject'), 'priority', 'high');
 });
 
 criticalFilterBtn.addEventListener('click', () => {
-  renderBoard(currentProject, 'priority', 'critical');
+  renderBoard(localStorage.getItem('selectedProject'), 'priority', 'critical');
 });
 
 removeFilterBtn.addEventListener('click', () => {
   removeElementChildren(statusDropDown);
   removeElementChildren(assigneeDropdown);
-  renderBoard(currentProject, '', '');
+  renderBoard(localStorage.getItem('selectedProject'), '', '');
 });
 
 // add  user to the project
@@ -1180,7 +1193,7 @@ if (notificationIcon) {
 }
 
 setupSocketIo(showNotification);
-renderBoard(currentProject);
+renderBoard(localStorage.getItem('selectedProject'));
 showProjectList();
 showUserList();
 // renderTasksList();
