@@ -674,7 +674,7 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
           ${column.toUpperCase()}
           <div class="issue-count rounded-full w-7 h-7 text-center text-md text-white bg-cyan-900"></div>
         </h2>
-        <div class="space-y-3 pb-4 class" id="task-list"></div>
+        <div class="space-y-3 pb-4 h-full" id="task-list"></div>
       </div>
     `;
     columnEl.querySelector('.issue-count').innerText = (
@@ -792,25 +792,28 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
 
       const taskList = columnEl.querySelector('#task-list');
       taskList.appendChild(taskEl);
+    });
 
-      taskList.addEventListener('dragover', (e) => e.preventDefault());
+    const taskList = columnEl.querySelector('#task-list');
 
-      taskList.addEventListener('drop', async (e) => {
-        e.preventDefault();
-        const taskId = e.dataTransfer.getData('taskId');
-        const taskEl = document.querySelector(`[data-_id="${taskId}"]`);
+    taskList.addEventListener('dragover', (e) => e.preventDefault());
+    console.log(taskList);
+    taskList.addEventListener('drop', async (e) => {
+      e.preventDefault();
+      const taskId = e.dataTransfer.getData('taskId');
+      console.log(`Dropped ${taskId} into column`);
+      const taskEl = document.querySelector(`[data-_id="${taskId}"]`);
 
-        taskList.appendChild(taskEl);
+      taskList.appendChild(taskEl);
 
-        taskService.updateTask(taskId, { status: column }).catch((err) => {
-          console.error('Failed to update task status', err);
-        });
+      taskService.updateTask(taskId, { status: column }).catch((err) => {
+        console.error('Failed to update task status', err);
+      });
 
-        const countEls = document.querySelectorAll('.issue-count');
-        project.columns.forEach((col, idx) => {
-          const colTasks = columns[col] || [];
-          countEls[idx].innerText = colTasks.length;
-        });
+      const countEls = document.querySelectorAll('.issue-count');
+      project.columns.forEach((col, idx) => {
+        const colTasks = columns[col] || [];
+        countEls[idx].innerText = colTasks.length;
       });
     });
 
