@@ -1064,32 +1064,31 @@ async function showTaskDrawer(taskId) {
 
   updateCommentList();
 
-  function createSubtask() {
-    const subtaskBtn = taskDrawer.querySelector('#subtaskButton');
-    const subtaskDropdown = taskDrawer.querySelector('#subtaskDropdown');
-    const subtaskList = taskDrawer.querySelector('#subtaskList');
-    const saveSubtasksBtn = taskDrawer.querySelector('#saveSubtasksBtn');
+  const subtaskBtn = taskDrawer.querySelector('#subtaskButton');
+  const subtaskDropdown = taskDrawer.querySelector('#subtaskDropdown');
+  const subtaskList = taskDrawer.querySelector('#subtaskList');
+  const saveSubtasksBtn = taskDrawer.querySelector('#saveSubtasksBtn');
 
-    subtaskBtn.addEventListener('click', async () => {
-      subtaskDropdown.classList.toggle('hidden');
+  async function showTasklist() {
+    subtaskDropdown.classList.toggle('hidden');
 
-      const allTasks = (
-        await taskService.getTaskByProjectId(
-          localStorage.getItem('selectedProject')
-        )
-      ).data.result;
+    const allTasks = (
+      await taskService.getTaskByProjectId(
+        localStorage.getItem('selectedProject')
+      )
+    ).data.result;
 
-      subtaskList.innerHTML = '';
+    subtaskList.innerHTML = '';
 
-      allTasks.forEach((t) => {
-        if (t._id === task._id) return;
+    allTasks.forEach((t) => {
+      if (t._id === task._id) return;
 
-        const isChecked = task.subTask?.includes(t._id);
+      const isChecked = task.subTask?.includes(t._id);
 
-        const subTask = document.createElement('div');
-        subTask.className = 'flex items-center gap-2 mb-1';
+      const subTask = document.createElement('div');
+      subTask.className = 'flex items-center gap-2 mb-1';
 
-        subTask.innerHTML = `
+      subTask.innerHTML = `
         <input
           type="checkbox"
           class="subtask-check"
@@ -1099,28 +1098,41 @@ async function showTaskDrawer(taskId) {
         <span>${t.title}</span>
       `;
 
-        subtaskList.appendChild(subTask);
-      });
-
-      saveSubtasksBtn.classList.remove('hidden');
+      subtaskList.appendChild(subTask);
     });
 
-    saveSubtasksBtn.addEventListener('click', async () => {
-      const selectedIds = [...taskDrawer.querySelectorAll('.subtask-check')]
-        .filter((c) => c.checked)
-        .map((c) => c.value);
+    saveSubtasksBtn.classList.remove('hidden');
 
-      await taskService.updateTask(task._id, { subTask: selectedIds });
-
-      showToast('Subtasks updated!', 'success');
-
-      subtaskDropdown.classList.add('hidden');
-
-      showTaskDrawer(task._id);
-    });
+    closeButton.addEventListener('click', () =>
+      subtaskBtn.removeEventListener('click', showTasklist)
+    );
   }
 
-  createSubtask();
+  async function updateSubtask() {
+    const selectedIds = [...taskDrawer.querySelectorAll('.subtask-check')]
+      .filter((c) => c.checked)
+      .map((c) => c.value);
+
+    await taskService.updateTask(task._id, { subTask: selectedIds });
+
+    showToast('Subtasks updated!', 'success');
+
+    subtaskDropdown.classList.add('hidden');
+    subtaskBtn.removeEventListener('click', showTasklist);
+    saveSubtasksBtn.removeEventListener('click', updateSubtask);
+
+    showTaskDrawer(task._id);
+  }
+
+  subtaskBtn.addEventListener('click', showTasklist);
+
+  saveSubtasksBtn.addEventListener('click', updateSubtask);
+
+  closeButton.addEventListener('click', () => {
+    subtaskBtn.removeEventListener('click', showTasklist);
+    subtaskDropdown.classList.add('hidden');
+    saveSubtasksBtn.classList.add('hidden');
+  });
 }
 
 async function loadProjectMembers(projectId) {
