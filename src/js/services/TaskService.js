@@ -154,22 +154,6 @@ class TaskService {
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Failed to delete task');
     }
-    task.block.forEach((t) => formData.append('block[]', t));
-    task.block.forEach((t) => formData.append('blockedBy[]', t));
-    task.block.forEach((t) => formData.append('relatesTo[]', t));
-
-    const response = await this.api.post(`/`, formData);
-    return response;
-  }
-
-  async updateTask(id, updatedTask) {
-    const response = await this.api.put(`/${id}`, updatedTask);
-    return response;
-  }
-
-  async deleteTask(id) {
-    const response = await this.api.delete(`/${id}`);
-    return response;
   }
 }
 
