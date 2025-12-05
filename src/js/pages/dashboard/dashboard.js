@@ -1250,6 +1250,7 @@ inviteForm.addEventListener('submit', function (event) {
 
   const email = emailInput.value.trim();
   if (email === '') {
+    showToast('please enter a valid email', 'error');
     console.log('please enter a valid emil'); // add a confimation
     return;
   }
@@ -1271,7 +1272,7 @@ inviteForm.addEventListener('submit', function (event) {
       showToast('Could not sent invitation');
       console.error('Error:', error);
     });
-  inviteForm.classList.add('hidden');
+  // inviteForm.classList.add('hidden');
   emailInput.value = '';
 });
 
