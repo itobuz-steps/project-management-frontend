@@ -753,7 +753,9 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
       const avatarDropdown = taskEl.querySelector('.avatar-dropdown');
       const list = taskEl.querySelector('.assignee-list');
 
-      let activeProjectMembers;
+      let activeProjectMembers = [];
+      let selectedUserId = null;
+      let selectedUser = null;
 
       async function populateAvatarDropdown(dropdownList) {
         try {
@@ -783,12 +785,13 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         }
       });
 
-      list.addEventListener('click', (e) => {
+      list.addEventListener('click', async (e) => {
         if (e.target.tagName === 'LI') {
-          const selectedUserId = e.target.dataset.id;
+          selectedUserId = e.target.dataset.id;
 
           //serach for the selecte users
-          const selectedUser = activeProjectMembers.find(
+
+          selectedUser = activeProjectMembers.find(
             (u) => u._id == selectedUserId
           );
 
@@ -802,18 +805,16 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
             }
           }
 
+          const taskId = taskEl.dataset._id;
+          await taskService.updateTask(taskId, {
+            assignee: selectedUserId,
+            profileImage: selectedUser?.profileImage || null,
+          });
           console.log('Assigned user:', selectedUserId);
 
           avatarDropdown.classList.add('hidden');
         }
       });
-
-      // const updateAssignee = async(()=>
-      // {
-      //   await taskService.updateTask(taskId, {
-      //   assignee: selectedUserId
-      //   });
-      // })
 
       document.addEventListener('click', (e) => {
         const isAvatar = userAvatar.contains(e.target);
