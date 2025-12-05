@@ -1299,7 +1299,7 @@
       >
         <div class="container flex justify-between">
           <div class="left-container flex flex-row items-center gap-2">
-            <h2 class="title text-2xl font-semibold"></h2>
+            <h2 class="title font-semibold"></h2>
             <!-- subtask -->
 
             <div class="relative">
@@ -1395,6 +1395,25 @@
           </div>
         </div>
 
+        <!-- subtasks -->
+        <div class="flex justify-between items-center px-1 mb-2">
+          <h2 class="text-xl font-semibold text-[#03045e] tracking-wide">
+            Subtasks
+          </h2>
+        </div>
+
+        <div
+          id="subtasksContainer"
+          class="flex flex-col gap-4 bg-gray-50 border border-[#e5e7eb] rounded-xl py-4 px-4 overflow-y-auto scrollbar-thin"
+          style="
+            min-height: min-content;
+            max-height: 260px;
+            background-color: #ffffff;
+          "
+        >
+          <div id="subtasksList" class="flex flex-col gap-3"></div>
+        </div>
+
         <div class="flex flex-col gap-3">
           <div class="text-gray-700 text-md font-semibold">Projects</div>
 
@@ -1468,17 +1487,21 @@
         </div>
         <!-- comments container -->
         <div
+          id="commentContainerHeaderText"
+          class="ml-4 mb-2 font-semibold text-[#03045e]"
+        >
+          Comments
+        </div>
+
+        <div
           id="commentsContainer"
           class="flex flex-col gap-3 bg-gray-50 border border-[#e5e7eb] rounded-xl pt-3 px-3 overflow-y-auto scrollbar-thin"
-          style="max-height: 260px; background-color: #ffffff"
+          style="
+            min-height: min-content;
+            max-height: 260px;
+            background-color: #ffffff;
+          "
         >
-          <div
-            id="commentContainerHeaderText"
-            class="ml-4 font-semibold text-[#03045e]"
-          >
-            Comments
-          </div>
-
           <div
             id="commentImage"
             class="flex gap-3 items-start bg-white rounded-lg shadow-md pl-3 py-3 border border-[#90e0ef] shadow-lg rounded-lg"
