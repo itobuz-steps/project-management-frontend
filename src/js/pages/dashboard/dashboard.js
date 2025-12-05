@@ -1078,12 +1078,10 @@ async function showTaskDrawer(taskId) {
           localStorage.getItem('selectedProject')
         )
       ).data.result;
-      console.log('all tasks : ', allTasks);
 
       subtaskList.innerHTML = '';
 
       allTasks.forEach((t) => {
-        console.log(t.title);
         if (t._id === task._id) return;
 
         const isChecked = task.subTask?.includes(t._id);
@@ -1114,7 +1112,7 @@ async function showTaskDrawer(taskId) {
 
       await taskService.updateTask(task._id, { subTask: selectedIds });
 
-      alert('Subtasks updated!');
+      showToast('Subtasks updated!', 'success');
 
       subtaskDropdown.classList.add('hidden');
 
