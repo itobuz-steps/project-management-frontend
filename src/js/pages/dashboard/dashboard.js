@@ -10,7 +10,6 @@ import axios from 'axios';
 import { setupSocketIo } from '../../utils/setupNotification.js';
 import showToast from '../../utils/showToast.js';
 import { profileNameIcon } from '../../utils/profileIcon.js';
-import authService from '../../services/AuthService.js';
 
 const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
@@ -266,7 +265,7 @@ async function openEditModal(taskId) {
     const response = await taskService.getTaskById(taskId);
     const task = response.data.result;
     console.log(taskId, task);
-    debugger;
+
     editModal.querySelector('#title').value = task.title;
     editModal.querySelector('#description').value = task.description;
     editModal.querySelector('#type').value = task.type;
@@ -1037,6 +1036,66 @@ async function showTaskDrawer(taskId) {
   }
 
   updateCommentList();
+
+  function createSubtask() {
+    const subtaskBtn = taskDrawer.querySelector('#subtaskButton');
+    const subtaskDropdown = taskDrawer.querySelector('#subtaskDropdown');
+    const subtaskList = taskDrawer.querySelector('#subtaskList');
+    const saveSubtasksBtn = taskDrawer.querySelector('#saveSubtasksBtn');
+
+    subtaskBtn.addEventListener('click', async () => {
+      subtaskDropdown.classList.toggle('hidden');
+
+      const allTasks = (
+        await taskService.getTaskByProjectId(
+          localStorage.getItem('selectedProject')
+        )
+      ).data.result;
+      console.log('all tasks : ', allTasks);
+
+      subtaskList.innerHTML = '';
+
+      allTasks.forEach((t) => {
+        console.log(t.title);
+        if (t._id === task._id) return;
+
+        const isChecked = task.subTask?.includes(t._id);
+
+        const subTask = document.createElement('div');
+        subTask.className = 'flex items-center gap-2 mb-1';
+
+        subTask.innerHTML = `
+        <input
+          type="checkbox"
+          class="subtask-check"
+          value="${t._id}"
+          ${isChecked ? 'checked' : ''}
+        />
+        <span>${t.title}</span>
+      `;
+
+        subtaskList.appendChild(subTask);
+      });
+
+      saveSubtasksBtn.classList.remove('hidden');
+    });
+
+    saveSubtasksBtn.addEventListener('click', async () => {
+      const selectedIds = [...taskDrawer.querySelectorAll('.subtask-check')]
+        .filter((c) => c.checked)
+        .map((c) => c.value);
+
+      await taskService.updateTask(task._id, { subTask: selectedIds });
+
+      alert('Subtasks updated!');
+
+      subtaskDropdown.classList.add('hidden');
+
+      showTaskDrawer(task._id);
+    });
+  }
+
+  createSubtask();
 }
 
 async function loadProjectMembers(projectId) {
