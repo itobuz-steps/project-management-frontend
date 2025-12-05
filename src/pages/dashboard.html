@@ -52,7 +52,7 @@
           </button>
         </div>
 
-        <div class="flex gap-3 items-center">
+        <div class="flex gap-5 items-center max-md:gap-4">
           <div class="search-icon flex items-center justify-between">
             <form
               class="search-input-form rounded-lg w-40 max-[420px]:w-40 max-[640px]:w-60 sm:w-80 md:w-100 lg:w-120 bg-gray-200"
@@ -68,7 +68,7 @@
                 <input
                   type="search"
                   id="search-input-field"
-                  class="block w-full p-3 ps-6 bg-neutral-secondary-medium focus:border-cyan-200 text-heading text-sm placeholder:text-body"
+                  class="block w-full p-3 ps-6 bg-neutral-secondary-medium focus:border-cyan-200 text-heading text-sm placeholder:text-body max-md:p-2"
                   placeholder="Search"
                   required
                 />
@@ -98,15 +98,14 @@
               </g>
             </svg>
           </div>
-
-          <div class="notification-icon">
+          <div class="notification-icon relative">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              class="size-6"
+              class="h-8 w-8 max-md:size-6"
             >
               <path
                 stroke-linecap="round"
@@ -114,6 +113,11 @@
                 d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0"
               />
             </svg>
+            <div
+              class="notification-badge absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5"
+            >
+              0
+            </div>
           </div>
           <!-- <div class="profile-image w-7 h-7 bg-blue-400 rounded-full"></div> -->
           <div class="relative">
@@ -1259,6 +1263,7 @@
       </div>
     </div>
 
+    <!-- task drawer -->
     <div
       class="task-drawer fixed top-0 right-0 z-40 h-screen overflow-y-auto transition-transform translate-x-full bg-white w-[320px] lg:w-[400px]"
       tabindex="-1"
@@ -1291,37 +1296,56 @@
       >
         <div class="container flex justify-between">
           <div class="left-container flex flex-row items-center gap-2">
-            <h2 class="title text-2xl font-semibold"></h2>
-            <button class="subtask">
-              <svg
-                fill="#000000"
-                width="60px"
-                height="60px"
-                viewBox="0 0 64 64"
-                enable-background="new 0 0 64 64"
-                id="Layer_1"
-                version="1.1"
-                xml:space="preserve"
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
+            <h2 class="title font-semibold"></h2>
+            <!-- subtask -->
+
+            <div class="relative">
+              <button id="subtaskButton" class="subtask">
+                <svg
+                  fill="#000000"
+                  width="60px"
+                  height="60px"
+                  viewBox="0 0 64 64"
+                  enable-background="new 0 0 64 64"
+                  id="Layer_1"
+                  version="1.1"
+                  xml:space="preserve"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                >
+                  <g>
+                    <path
+                      d="M34.509,33.048c-2.449,0-5.062-0.032-7.914-0.097c-0.552-0.012-0.99-0.47-0.977-1.022c0.012-0.544,0.458-0.978,0.999-0.978   c0.008,0,0.016,0,0.023,0c3.979,0.089,7.489,0.117,10.732,0.081c0.004,0,0.008,0,0.011,0c0.547,0,0.994,0.44,1,0.989   c0.006,0.552-0.437,1.005-0.989,1.011C36.456,33.043,35.496,33.048,34.509,33.048z"
+                    />
+                  </g>
+
+                  <g>
+                    <path
+                      d="M31.952,38.383c-0.008,0-0.016,0-0.023,0c-0.552-0.012-0.99-0.47-0.977-1.022c0.09-3.979,0.117-7.49,0.081-10.732   c-0.006-0.552,0.437-1.005,0.989-1.011c0.004,0,0.008,0,0.011,0c0.547,0,0.994,0.44,1,0.989c0.036,3.265,0.01,6.798-0.082,10.799   C32.939,37.95,32.494,38.383,31.952,38.383z"
+                    />
+                  </g>
+
+                  <path
+                    d="M40.835,47.818c-0.582,0-1.97-0.008-3.751-0.018c-4.401-0.025-11.215-0.065-14.206-0.03c0,0,0,0-0.001,0  c-3.324,0-7.83-2.253-7.842-6.482c-0.006-2.208,0.012-4.117,0.029-5.955c0.027-2.926,0.053-5.69-0.024-9.208  c-0.129-5.882,2.456-9.413,7.092-9.688c2.534-0.151,7.256-0.256,11.484-0.256c4.166,0,9.432,0.094,10.863,0.544  c2.574,0.808,4.038,3.591,4.308,5.835c0.31,2.564,0.142,11.354,0.052,16.077c-0.026,1.34-0.045,2.346-0.045,2.772  c0,1.804-0.802,3.443-2.259,4.618C45.081,47.199,43.109,47.818,40.835,47.818z M26.091,45.758c3.355,0,7.813,0.025,11.004,0.043  c1.776,0.01,3.159,0.018,3.74,0.018c1.787,0,3.366-0.479,4.445-1.348c0.991-0.798,1.514-1.856,1.514-3.059  c0-0.433,0.019-1.453,0.045-2.812c0.089-4.674,0.255-13.374-0.038-15.8c-0.202-1.678-1.271-3.648-2.921-4.166  c-0.696-0.219-3.758-0.452-10.265-0.452c-4.193,0-8.866,0.104-11.366,0.252c-4.439,0.264-5.284,4.305-5.21,7.648  c0.078,3.549,0.052,6.328,0.024,9.271c-0.017,1.831-0.035,3.731-0.029,5.93c0.008,2.89,3.416,4.489,5.768,4.489  C23.687,45.762,24.808,45.758,26.091,45.758z"
+                  />
+                </svg>
+              </button>
+
+              <div
+                id="subtaskDropdown"
+                class="hidden absolute top-12 left-0 bg-white border rounded-lg shadow-xl w-64 max-h-64 overflow-y-auto z-50 p-3"
               >
-                <g>
-                  <path
-                    d="M34.509,33.048c-2.449,0-5.062-0.032-7.914-0.097c-0.552-0.012-0.99-0.47-0.977-1.022c0.012-0.544,0.458-0.978,0.999-0.978   c0.008,0,0.016,0,0.023,0c3.979,0.089,7.489,0.117,10.732,0.081c0.004,0,0.008,0,0.011,0c0.547,0,0.994,0.44,1,0.989   c0.006,0.552-0.437,1.005-0.989,1.011C36.456,33.043,35.496,33.048,34.509,33.048z"
-                  />
-                </g>
+                <div class="font-semibold mb-2">Select Subtasks</div>
+                <div id="subtaskList"></div>
 
-                <g>
-                  <path
-                    d="M31.952,38.383c-0.008,0-0.016,0-0.023,0c-0.552-0.012-0.99-0.47-0.977-1.022c0.09-3.979,0.117-7.49,0.081-10.732   c-0.006-0.552,0.437-1.005,0.989-1.011c0.004,0,0.008,0,0.011,0c0.547,0,0.994,0.44,1,0.989c0.036,3.265,0.01,6.798-0.082,10.799   C32.939,37.95,32.494,38.383,31.952,38.383z"
-                  />
-                </g>
-
-                <path
-                  d="M40.835,47.818c-0.582,0-1.97-0.008-3.751-0.018c-4.401-0.025-11.215-0.065-14.206-0.03c0,0,0,0-0.001,0  c-3.324,0-7.83-2.253-7.842-6.482c-0.006-2.208,0.012-4.117,0.029-5.955c0.027-2.926,0.053-5.69-0.024-9.208  c-0.129-5.882,2.456-9.413,7.092-9.688c2.534-0.151,7.256-0.256,11.484-0.256c4.166,0,9.432,0.094,10.863,0.544  c2.574,0.808,4.038,3.591,4.308,5.835c0.31,2.564,0.142,11.354,0.052,16.077c-0.026,1.34-0.045,2.346-0.045,2.772  c0,1.804-0.802,3.443-2.259,4.618C45.081,47.199,43.109,47.818,40.835,47.818z M26.091,45.758c3.355,0,7.813,0.025,11.004,0.043  c1.776,0.01,3.159,0.018,3.74,0.018c1.787,0,3.366-0.479,4.445-1.348c0.991-0.798,1.514-1.856,1.514-3.059  c0-0.433,0.019-1.453,0.045-2.812c0.089-4.674,0.255-13.374-0.038-15.8c-0.202-1.678-1.271-3.648-2.921-4.166  c-0.696-0.219-3.758-0.452-10.265-0.452c-4.193,0-8.866,0.104-11.366,0.252c-4.439,0.264-5.284,4.305-5.21,7.648  c0.078,3.549,0.052,6.328,0.024,9.271c-0.017,1.831-0.035,3.731-0.029,5.93c0.008,2.89,3.416,4.489,5.768,4.489  C23.687,45.762,24.808,45.758,26.091,45.758z"
-                />
-              </svg>
-            </button>
+                <button
+                  id="saveSubtasksBtn"
+                  class="mt-3 w-full bg-blue-600 text-white py-1 rounded hidden"
+                >
+                  Save Subtasks
+                </button>
+              </div>
+            </div>
           </div>
           <div class="right-container flex items-center">
             <button
@@ -1334,11 +1358,13 @@
         </div>
 
         <div class="flex items-center gap-3">
-          <img
-            src="https://i.pravatar.cc/40"
-            alt="Avatar"
-            class="profile-image w-8 h-8 rounded-full"
-          />
+          <div class="profile-name">
+            <img
+              src="../assets/img/profile.png"
+              alt="Avatar"
+              class="profile-image w-8 h-8 rounded-full"
+            />
+          </div>
           <div class="flex flex-col leading-tight">
             <p class="text- md text-gray-500">Assignee</p>
             <p class="assignee text-gray-700 font-medium"></p>
@@ -1364,6 +1390,25 @@
             </svg>
             <span class="due-date text-gray-600"></span>
           </div>
+        </div>
+
+        <!-- subtasks -->
+        <div class="flex justify-between items-center px-1 mb-2">
+          <h2 class="text-xl font-semibold text-[#03045e] tracking-wide">
+            Subtasks
+          </h2>
+        </div>
+
+        <div
+          id="subtasksContainer"
+          class="flex flex-col gap-4 bg-gray-50 border border-[#e5e7eb] rounded-xl py-4 px-4 overflow-y-auto scrollbar-thin"
+          style="
+            min-height: min-content;
+            max-height: 260px;
+            background-color: #ffffff;
+          "
+        >
+          <div id="subtasksList" class="flex flex-col gap-3"></div>
         </div>
 
         <div class="flex flex-col gap-3">
@@ -1437,38 +1482,68 @@
             <p></p>
           </div>
         </div>
+        <!-- comments container -->
+        <div
+          id="commentContainerHeaderText"
+          class="ml-4 mb-2 font-semibold text-[#03045e]"
+        >
+          Comments
+        </div>
 
         <div
           id="commentsContainer"
-          class="flex flex-col gap-3 bg-gray-50 border border-[#e5e7eb] rounded-xl pt-3"
+          class="flex flex-col gap-3 bg-gray-50 border border-[#e5e7eb] rounded-xl pt-3 px-3 overflow-y-auto scrollbar-thin"
+          style="
+            min-height: min-content;
+            max-height: 260px;
+            background-color: #ffffff;
+          "
         >
-          <div id="commentContainerHeaderText" class="ml-4 font-semibold">
-            Comments
-          </div>
-
           <div
             id="commentImage"
-            class="flex gap-3 items-start bg-white rounded-lg shadow-md pl-3 py-3"
+            class="flex gap-3 items-start bg-white rounded-lg shadow-md pl-3 py-3 border border-[#90e0ef] shadow-lg rounded-lg"
           >
             <img
-              src="https://i.pravatar.cc/40?u=johnsmith"
+              src="../assets/img/profile.png"
               alt="Avatar"
-              class="w-7 h-7 rounded-full"
+              class="w-7 h-7 rounded-full border-2 border-[#00b4d8]"
             />
+
             <div id="CommentInformation" class="flex flex-col gap-1">
-              <div class="flex items-center gap-2 text-md text-gray-500">
-                <span id="" class="username font-medium text-gray-700"
-                  >John Smith</span
-                >
+              <div
+                class="flex items-center gap-2 text-md text-gray-500 text-[#03045e]"
+              >
+                <span class="username font-medium text-gray-700 text-[#03045e]">
+                  John Smith
+                </span>
                 <span>•</span>
-                <span class="text-sm">17th Feb 2024</span>
+                <span class="text-sm text-[#0077b6]">17th Feb 2024</span>
               </div>
-              <p class="message text-gray-700 text-sm">
-                Hi ,I’ll do that task now, you can start working on another
+
+              <p class="message text-gray-700 text-sm text-[#03045e]/70">
+                Hi, I’ll do that task now, you can start working on another
                 task!
               </p>
             </div>
           </div>
+        </div>
+
+        <div class="comment-create flex flex-row justify-between items-center">
+          <input
+            type="text"
+            id="commentInput"
+            minlength="3"
+            placeholder="Enter your Comment"
+            class="bg-gray-50 border border-[#90e0ef] p-3 rounded-xl placeholder-[#03045e]"
+          />
+
+          <button
+            type="button"
+            id="submitButton"
+            class="ml-3 bg-[#0077b6] text-white py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 hover:bg-[#005f91] shadow-md hover:shadow-lg"
+          >
+            Submit
+          </button>
         </div>
       </div>
     </div>
@@ -1536,5 +1611,9 @@
         </svg>
       </button>
     </div>
+    <div
+      id="toast-container"
+      class="fixed bottom-4 right-4 z-50 flex flex-col gap-3"
+    ></div>
   </body>
 </html>

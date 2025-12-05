@@ -8,10 +8,22 @@ import taskService from '../../services/TaskService.js';
 import commentService from '../../services/CommentService.js';
 import axios from 'axios';
 import { setupSocketIo } from '../../utils/setupNotification.js';
+import showToast from '../../utils/showToast.js';
+import { profileNameIcon } from '../../utils/profileIcon.js';
 
 const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
 const drawerBackdrop = document.querySelector('.drawer-backdrop');
+
+const commentInputEnter = document.getElementById('commentInput');
+const submitBtnEnter = document.getElementById('submitButton');
+
+commentInputEnter.addEventListener('keydown', function (event) {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    submitBtnEnter.click();
+  }
+});
 
 profileBtn.addEventListener('click', () => {
   dropdownMenu.classList.toggle('hidden');
@@ -147,7 +159,7 @@ input.addEventListener('change', () => {
 //   const assigneeDropdown = document.getElementById('assignee');
 //   const data = await projectService.getProjectMembers(projectId);
 
-//   assigneeDropdown.innerHTML = `<option value="">Select an assignee</option>`;
+  assigneeDropdown.innerHTML = `<option value="null">Select an assignee</option>`;
 
 //   data.result.forEach((member) => {
 //     const option = document.createElement('option');
@@ -249,11 +261,9 @@ closeTaskModal.addEventListener('click', () => {
 //end for create tasks
 
 //update task details
-
 const closeEditTask = document.getElementById('close-update-task-modal');
 const editModal = document.getElementById('update-task-modal');
 const editForm = document.getElementById('edit-task-form');
-
 let currentTaskId = null;
 
 async function openEditModal(taskId) {
@@ -288,6 +298,7 @@ async function openEditModal(taskId) {
     } else {
       editModal.querySelector('#dueDate').value = '';
     }
+
     const assignee = editModal.querySelector('#assignee');
     const selectedAssignee = await handleModalAssignee(assignee);
     const selectedAssigned = editModal.querySelector(
@@ -624,6 +635,7 @@ confirmDeleteBtn.addEventListener('click', async () => {
 async function renderBoard(projectId, filter = '', searchInput = '') {
   const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const project = (await projectService.getProjectById(projectId)).result;
+  let draggedColumn = null;
 
   renderDashboard(project);
 
@@ -655,7 +667,7 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
           ${column.toUpperCase()}
           <div class="issue-count rounded-full w-7 h-7 text-center text-md text-white bg-cyan-900"></div>
         </h2>
-        <div class="space-y-3 pb-4 class" id="task-list"></div>
+        <div class="space-y-3 pb-4 h-full" id="task-list"></div>
       </div>
     `;
     columnEl.querySelector('.issue-count').innerText = (
@@ -706,22 +718,109 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
             </select>
           </div>
           <div class="flex items-center">
-            <span class="w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center">
-              <img src="${assignee?.profileImage
-          ? 'http://localhost:3001/uploads/profile/' +
-          assignee.profileImage
-          : '../../../assets/img/profile.png'
-        }" class="w-8 h-8 object-cover" title="${assignee?.name || 'Unassigned'
-        }"/>
+            <span class="user-avatar cursor-pointer w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center">
+              <img src="${
+                assignee?.profileImage
+                  ? 'http://localhost:3001/uploads/profile/' +
+                    assignee.profileImage
+                  : '../../../assets/img/profile.png'
+              }" class="w-8 h-8 object-cover" title="${
+        assignee?.name || 'Unassigned'
+      }"/>
             </span>
+            <div class="avatar-dropdown hidden absolute top-20 right-0 bg-white border border-gray-200 rounded">
+              <ul class="assignee-list text-sm text-gray-700"></ul>
+            </div>
           </div>
         </div>
       `;
 
+      // add drop down upon clicking the image
+
+      const userAvatar = taskEl.querySelector('.user-avatar');
+      const avatarDropdown = taskEl.querySelector('.avatar-dropdown');
+      const list = taskEl.querySelector('.assignee-list');
+
+      let activeProjectMembers = [];
+      let selectedUserId = null;
+      let selectedUser = null;
+
+      async function populateAvatarDropdown(dropdownList) {
+        try {
+          const response = await projectService.getProjectMembers(
+            currentProject
+          );
+          activeProjectMembers = response.result;
+
+          dropdownList.innerHTML = '';
+
+          activeProjectMembers.forEach((user) => {
+            const li = document.createElement('li');
+            li.className = 'px-7 py-2 hover:bg-gray-100 cursor-pointer';
+            li.textContent = user.name;
+            li.dataset.id = user._id;
+            dropdownList.appendChild(li);
+          });
+        } catch (err) {
+          console.error('Error loading users:', err);
+        }
+      }
+
+      userAvatar.addEventListener('click', async () => {
+        avatarDropdown.classList.toggle('hidden');
+        if (!avatarDropdown.classList.contains('hidden')) {
+          await populateAvatarDropdown(list);
+        }
+      });
+
+      list.addEventListener('click', async (e) => {
+        if (e.target.tagName === 'LI') {
+          selectedUserId = e.target.dataset.id;
+
+          //serach for the selecte users
+
+          selectedUser = activeProjectMembers.find(
+            (u) => u._id == selectedUserId
+          );
+
+          if (selectedUser) {
+            const avatarImg = userAvatar.querySelector('img');
+
+            if (selectedUser.profileImage) {
+              avatarImg.src = `http://localhost:3001/uploads/profile/${selectedUser.profileImage}`;
+            } else {
+              avatarImg.src = '../../../assets/img/profile.png';
+            }
+          }
+
+          const taskId = taskEl.dataset._id;
+          await taskService.updateTask(taskId, {
+            assignee: selectedUserId,
+            profileImage: selectedUser?.profileImage || null,
+          });
+          console.log('Assigned user:', selectedUserId);
+
+          avatarDropdown.classList.add('hidden');
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        const isAvatar = userAvatar.contains(e.target);
+        const isDropdown = avatarDropdown.contains(e.target);
+
+        if (!isAvatar && !isDropdown) {
+          avatarDropdown.classList.add('hidden');
+        }
+      });
+
+      // end of avatar drop down
+
       taskEl.setAttribute('draggable', 'true');
       taskEl.addEventListener('dragstart', (e) => {
+        const currentCol = e.target.parentElement.parentElement; // getting the whole column dynamically
         e.dataTransfer.setData('taskId', task._id);
         e.dataTransfer.effectAllowed = 'move';
+        draggedColumn = currentCol;
       });
 
       const menuButton = taskEl.querySelector('.menu-button');
@@ -767,26 +866,29 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
 
       const taskList = columnEl.querySelector('#task-list');
       taskList.appendChild(taskEl);
+    });
 
-      taskList.addEventListener('dragover', (e) => e.preventDefault());
+    const taskList = columnEl.querySelector('#task-list');
 
-      taskList.addEventListener('drop', async (e) => {
-        e.preventDefault();
-        const taskId = e.dataTransfer.getData('taskId');
-        const taskEl = document.querySelector(`[data-_id="${taskId}"]`);
+    taskList.addEventListener('dragover', (e) => e.preventDefault());
+    console.log(taskList);
+    taskList.addEventListener('drop', async (e) => {
+      e.preventDefault();
+      const taskId = e.dataTransfer.getData('taskId');
+      console.log(`Dropped ${taskId} into column`);
+      const taskEl = document.querySelector(`[data-_id="${taskId}"]`);
 
-        taskList.appendChild(taskEl);
+      taskList.appendChild(taskEl);
 
-        taskService.updateTask(taskId, { status: column }).catch((err) => {
-          console.error('Failed to update task status', err);
-        });
-
-        const countEls = document.querySelectorAll('.issue-count');
-        project.columns.forEach((col, idx) => {
-          const colTasks = columns[col] || [];
-          countEls[idx].innerText = colTasks.length;
-        });
+      taskService.updateTask(taskId, { status: column }).catch((err) => {
+        console.error('Failed to update task status', err);
       });
+
+      columnEl.querySelector('.issue-count').innerText =
+        +columnEl.querySelector('.issue-count').innerText + 1;
+
+      draggedColumn.querySelector('.issue-count').innerText =
+        +draggedColumn.querySelector('.issue-count').innerText - 1; // converted from string to number using
     });
 
     columnContainer.appendChild(columnEl);
@@ -816,7 +918,6 @@ async function showTaskDrawer(taskId) {
   const assignee = task.assignee
     ? (await taskService.getUserDetailsById(task.assignee)).data.result
     : null;
-  console.log(assignee);
 
   const taskDrawer = document.querySelector('.task-drawer');
 
@@ -828,6 +929,7 @@ async function showTaskDrawer(taskId) {
   const closeButton = taskDrawer.querySelector('.close-btn');
   const status = taskDrawer.querySelector('#statusSelect');
   const priority = taskDrawer.querySelector('#prioritySelect');
+  const profileName = taskDrawer.querySelector('.profile-name');
 
   const editTaskButton = document.querySelector('#edit-task-button');
   editTaskButton.addEventListener('click', () => {
@@ -835,10 +937,22 @@ async function showTaskDrawer(taskId) {
     openEditModal(taskId);
   });
 
-  const commentContainer = taskDrawer.querySelector('#commentsContainer');
-  const comments = (await commentService.getAllComments(task._id)).result;
+  // subtasks render
+  renderSubtasks(task);
 
-  commentContainer.innerHTML = `<div id="commentContainerHeaderText" class="ml-4 font-semibold">Comments</div>`;
+  const commentInput = taskDrawer.querySelector('#commentInput');
+  const commentSubmit = taskDrawer.querySelector('#submitButton');
+
+  commentSubmit.addEventListener('click', async () => {
+    const commentBody = {
+      taskId: task._id,
+      message: commentInput.value.trim(),
+    };
+
+    await commentService.createComment(commentBody);
+    commentInput.value = '';
+    updateCommentList();
+  });
 
   status.value = task.status;
   priority.value = task.priority;
@@ -846,12 +960,19 @@ async function showTaskDrawer(taskId) {
   taskDrawer.dataset.id = task._id;
   titleEl.textContent = task.title;
   descriptionEl.textContent = task.description;
-  assigneeEl.textContent = assignee ? assignee.name : 'No assignee';
-  profileImageEl.src = assignee
-    ? 'http://localhost:3001/uploads/profile/' + assignee.profileImage
-    : '';
+  profileImageEl.src = '../../../assets/img/profile.png';
 
-  !assignee && profileImageEl.classList.add('hidden');
+  if (assignee) {
+    assigneeEl.textContent = assignee.name;
+    if (assignee.profileImage) {
+      profileImageEl.src =
+        'http://localhost:3001/uploads/profile/' + assignee.profileImage;
+    } else {
+      profileNameIcon(profileName);
+    }
+  } else {
+    assigneeEl.textContent = 'No assignee';
+  }
 
   dueDateEl.textContent = task.dueDate.split('T')[0];
 
@@ -866,32 +987,165 @@ async function showTaskDrawer(taskId) {
     profileImageEl.classList.remove('hidden');
   });
 
-  comments.forEach((comment) => {
+  // comments
+
+  async function updateCommentList() {
+    const comments = (await commentService.getAllComments(task._id)).result;
+
+    const commentContainer = taskDrawer.querySelector('#commentsContainer');
+    commentContainer.innerHTML = `
+    <div id="commentContainerHeaderText" 
+         class="ml-4 font-semibold text-[#03045e]">
+      Comments
+    </div>
+  `;
+
+    comments.forEach((comment) =>
+      appendCommentToContainer(comment, commentContainer)
+    );
+  }
+
+  function appendCommentToContainer(comment, container) {
     const commentEl = document.createElement('div');
     commentEl.className =
-      'flex gap-3 items-start bg-white rounded-lg shadow-md pl-3 py-3';
+      'flex gap-3 items-start bg-white rounded-lg shadow-md pl-3 py-3 ' +
+      'border border-[#90e0ef] shadow-lg rounded-lg';
+
     commentEl.innerHTML = `
-            <img
-              src="${'http://localhost:3001/uploads/profile/' +
-      comment.author.profileImage
+    <img
+      src="${
+        comment.author.profileImage
+          ? 'http://localhost:3001/uploads/profile/' +
+            comment.author.profileImage
+          : '../../../assets/img/profile.png'
       }"
-              alt="Avatar"
-              class="w-7 h-7 rounded-full"
-            />
-            <div id="CommentInformation" class="flex flex-col gap-1">
-              <div class="flex items-center gap-2 text-md text-gray-500">
-                <span id="" class="username font-medium text-gray-700"
-                  >${comment.author.name}</span
-                >
-                <span>•</span>
-                <span class="text-sm">${comment.createdAt.split('T')[0]}</span>
-              </div>
-              <p class="message text-gray-700 text-sm">
-                ${comment.message}
-              </p>
-            </div>`;
-    commentContainer.appendChild(commentEl);
-  });
+      alt="Avatar"
+      class="w-7 h-7 rounded-full border-2 border-[#00b4d8]"
+    />
+
+    <div id="CommentInformation" class="flex flex-col gap-1">
+      <div class="flex items-center gap-2 text-md text-gray-500 text-[#03045e]">
+        <span class="username font-medium text-gray-700 text-[#03045e]">
+          ${comment.author.name}
+        </span>
+        <span>•</span>
+        <span class="text-sm text-[#0077b6]">
+          ${comment.createdAt.split('T')[0]}
+        </span>
+      </div>
+
+      <p class="message text-gray-700 text-sm text-[#03045e]/70">
+        ${comment.message}
+      </p>
+    </div>
+  `;
+
+    container.appendChild(commentEl);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  updateCommentList();
+
+  function createSubtask() {
+    const subtaskBtn = taskDrawer.querySelector('#subtaskButton');
+    const subtaskDropdown = taskDrawer.querySelector('#subtaskDropdown');
+    const subtaskList = taskDrawer.querySelector('#subtaskList');
+    const saveSubtasksBtn = taskDrawer.querySelector('#saveSubtasksBtn');
+
+    subtaskBtn.addEventListener('click', async () => {
+      subtaskDropdown.classList.toggle('hidden');
+
+      const allTasks = (
+        await taskService.getTaskByProjectId(
+          localStorage.getItem('selectedProject')
+        )
+      ).data.result;
+
+      subtaskList.innerHTML = '';
+
+      allTasks.forEach((t) => {
+        if (t._id === task._id) return;
+
+        const isChecked = task.subTask?.includes(t._id);
+
+        const subTask = document.createElement('div');
+        subTask.className = 'flex items-center gap-2 mb-1';
+
+        subTask.innerHTML = `
+        <input
+          type="checkbox"
+          class="subtask-check"
+          value="${t._id}"
+          ${isChecked ? 'checked' : ''}
+        />
+        <span>${t.title}</span>
+      `;
+
+        subtaskList.appendChild(subTask);
+      });
+
+      saveSubtasksBtn.classList.remove('hidden');
+    });
+
+    saveSubtasksBtn.addEventListener('click', async () => {
+      const selectedIds = [...taskDrawer.querySelectorAll('.subtask-check')]
+        .filter((c) => c.checked)
+        .map((c) => c.value);
+
+      await taskService.updateTask(task._id, { subTask: selectedIds });
+
+      showToast('Subtasks updated!', 'success');
+
+      subtaskDropdown.classList.add('hidden');
+
+      showTaskDrawer(task._id);
+    });
+  }
+
+  createSubtask();
+
+  async function renderSubtasks(task) {
+    const list = document.getElementById('subtasksList');
+    list.innerHTML = '';
+    console.log(assignee);
+    if (!task.subTask || task.subTask.length === 0) {
+      list.innerHTML = "<p class='text-gray-500 text-sm'>No subtasks</p>";
+      return;
+    }
+
+    const all = (
+      await taskService.getTaskByProjectId(
+        localStorage.getItem('selectedProject')
+      )
+    ).data.result;
+
+    const subtasks = all.filter((t) => task.subTask.includes(t._id));
+
+    subtasks.forEach((st) => {
+      const div = document.createElement('div');
+      div.className =
+        'flex items-start bg-white rounded-lg shadow-md pl-3 py-4 border border-[#90e0ef]';
+      div.innerHTML = `
+      <img
+        src="${
+          assignee
+            ? assignee.profileImage
+              ? 'http://localhost:3001/uploads/profile/' + assignee.profileImage
+              : '../../../assets/img/profile.png'
+            : '../../../assets/img/profile.png'
+        }"
+         
+        class="w-8 h-8 rounded-full border-2 border-[#00b4d8]"
+        title = "${assignee ? assignee.name : 'unassigned'}"
+      />
+      <div class="ml-3">
+        <span class="font-medium text-[#03045e] text-md">${st.title}</span>
+        <p class="text-sm text-[#03045e]/70">${st.description || ''}</p>
+      </div>
+    `;
+      list.appendChild(div);
+    });
+  }
 }
 
 async function loadProjectMembers(projectId) {
@@ -947,7 +1201,9 @@ function removeElementChildren(element) {
 async function handleStatusFilter() {
   removeElementChildren(statusDropDown);
   removeElementChildren(assigneeDropdown);
-  const project = (await projectService.getProjectById(currentProject)).result;
+  const project = (
+    await projectService.getProjectById(localStorage.getItem('selectedProject'))
+  ).result;
 
   project.columns.forEach((column) => {
     const dropdownEl = renderSubDropdown(column);
@@ -963,7 +1219,9 @@ async function handleStatusFilter() {
 async function handleAssigneeFilter() {
   removeElementChildren(statusDropDown);
   removeElementChildren(assigneeDropdown);
-  const assignees = await projectService.getProjectMembers(currentProject);
+  const assignees = await projectService.getProjectMembers(
+    localStorage.getItem('selectedProject')
+  );
 
   assignees.result.forEach((assignee) => {
     const dropdownEl = renderSubDropdown(assignee.name);
@@ -971,20 +1229,26 @@ async function handleAssigneeFilter() {
     dropdownEl.addEventListener('click', () => {
       removeElementChildren(statusDropDown);
       removeElementChildren(assigneeDropdown);
-      renderBoard(currentProject, 'assignee', `${assignee._id}`);
+      renderBoard(
+        localStorage.getItem('selectedProject'),
+        'assignee',
+        `${assignee._id}`
+      );
     });
   });
 }
 
 async function handleModalAssignee(modalAssigneeDropdown) {
-  const assignees = await projectService.getProjectMembers(currentProject);
+  const assignees = await projectService.getProjectMembers(
+    localStorage.getItem('selectedProject')
+  );
   modalAssigneeDropdown.innerHTML = '';
   const unassigned = document.createElement('option');
   unassigned.innerText = 'Unassigned';
   unassigned.selected = true;
 
   unassigned.value = 'null';
-  createModalAssigneeDropdown.appendChild(unassigned);
+  modalAssigneeDropdown.appendChild(unassigned);
 
   let selectedAssignee;
   assignees.result.forEach((assignee) => {
@@ -1005,7 +1269,9 @@ async function handleModalAssignee(modalAssigneeDropdown) {
 }
 
 async function handleModalStatus(modalStatusDropdown) {
-  const project = (await projectService.getProjectById(currentProject)).result;
+  const project = (
+    await projectService.getProjectById(localStorage.getItem('selectedProject'))
+  ).result;
   modalStatusDropdown.innerHTML = '';
 
   project.columns.forEach((column) => {
@@ -1031,25 +1297,25 @@ priorityDropdown.addEventListener('click', () => {
 });
 
 lowFilterBtn.addEventListener('click', () => {
-  renderBoard(currentProject, 'priority', 'low');
+  renderBoard(localStorage.getItem('selectedProject'), 'priority', 'low');
 });
 
 midFilterBtn.addEventListener('click', () => {
-  renderBoard(currentProject, 'priority', 'medium');
+  renderBoard(localStorage.getItem('selectedProject'), 'priority', 'medium');
 });
 
 highFilterBtn.addEventListener('click', () => {
-  renderBoard(currentProject, 'priority', 'high');
+  renderBoard(localStorage.getItem('selectedProject'), 'priority', 'high');
 });
 
 criticalFilterBtn.addEventListener('click', () => {
-  renderBoard(currentProject, 'priority', 'critical');
+  renderBoard(localStorage.getItem('selectedProject'), 'priority', 'critical');
 });
 
 removeFilterBtn.addEventListener('click', () => {
   removeElementChildren(statusDropDown);
   removeElementChildren(assigneeDropdown);
-  renderBoard(currentProject, '', '');
+  renderBoard(localStorage.getItem('selectedProject'), '', '');
 });
 
 // add  user to the project
@@ -1073,36 +1339,75 @@ inviteForm.addEventListener('submit', function (event) {
   axios
     .post('http://localhost:3001/invite/email', {
       email: email,
+      projectId: localStorage.getItem('selectedProject'),
     })
     .then((response) => {
       if (response.data.success) {
-        console.log('Email sent successfully'); // add conf.
+        showToast('Email sent successfully', 'success');
+        console.log('Email sent successfully');
       } else {
-        // alert('Failed to send invitation. Please try again.');
-        console.log('falied to sent invitation'); // need conff
+        showToast('failed to send invitation', 'error');
+        console.log('failed to sent invitation');
       }
     })
     .catch((error) => {
+      showToast('Could not sent invitation');
       console.error('Error:', error);
-      alert('There was an error sending the invitation.');
     });
   inviteForm.classList.add('hidden');
   emailInput.value = '';
 });
 
-function showNotification(message) {
+export function showNotification(message) {
   const notification = document.querySelector('.notification');
   const messageEl = notification.querySelector('.message');
   const dismissButton = notification.querySelector('.dismiss');
 
   messageEl.textContent = message;
   notification.classList.remove('hidden');
+  increaseNotificationCount();
 
-  dismissButton.addEventListener('click', () =>
-    notification.classList.add('hidden')
-  );
-
+  if (dismissButton) {
+    dismissButton.addEventListener('click', () => {
+      if (notification) notification.classList.add('hidden');
+    });
+  }
   setTimeout(() => notification.classList.add('hidden'), 5000);
+}
+
+let notificationCount =
+  parseInt(localStorage.getItem('notificationCount')) || 0;
+
+const badge = document.querySelector('.notification-badge');
+if (badge && notificationCount > 0) {
+  badge.textContent = notificationCount;
+  badge.classList.remove('hidden');
+}
+
+function increaseNotificationCount() {
+  notificationCount++;
+  localStorage.setItem('notificationCount', notificationCount);
+
+  const badge = document.querySelector('.notification-badge');
+  if (!badge) return;
+
+  badge.textContent = notificationCount;
+  badge.classList.remove('hidden');
+}
+
+const notificationIcon = document.querySelector('.notification-icon');
+if (notificationIcon) {
+  notificationIcon.addEventListener('click', () => {
+    notificationCount = 0;
+    localStorage.setItem('notificationCount', 0);
+    const badge = document.querySelector('.notification-badge');
+    if (!badge) {
+      return;
+    }
+
+    badge.textContent = 0;
+    badge.classList.add('hidden');
+  });
 }
 
 setupSocketIo(showNotification);
