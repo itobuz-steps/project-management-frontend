@@ -105,14 +105,7 @@ function createSprintTable(sprint) {
 
 
                 <div class="relative flex justify-between text-left">
-                  <div class="flex align-middle ms-2 sm:ms-4">
-                    <div class="flex items-center">
-                      <input
-                        id="checkbox-all-search"
-                        type="checkbox"
-                        class="w-3.5 h-3.5 text-blue-600 bg-gray-100 border-gray-300 rounded-sm accent-cyan-500 focus:ring-cyan-600"
-                      />
-                    </div>
+                  <div class="flex align-middle ">
                     <button
                       type="button"
                       class="flex items-center w-30 gap-2 rounded-md px-2 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 focus:outline-none dropdownButton"
@@ -140,6 +133,9 @@ function createSprintTable(sprint) {
                     </button>
                   </div>
 
+                  <div class="flex flex-col md:flex-row md:items-center md:gap-3">
+                  <p id="${sprint.key}-due-date-preview" class="text-sm text-center"></p>
+                  
                   <button
                     type="button"
                     id="${sprint.key}-sprint-complete-button"
@@ -147,14 +143,15 @@ function createSprintTable(sprint) {
                   >
                     Complete Sprint
                   </button>
-
+                  
                   <button
-                    type="button"
-                    id="${sprint.key}-sprint-start-button"
-                    class="py-1 px-2 my-1 md:py-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-cyan-50 hover:text-gray-600"
+                  type="button"
+                  id="${sprint.key}-sprint-start-button"
+                  class="py-1 px-2 my-1 md:py-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-cyan-50 hover:text-gray-600"
                   >
-                    Start Sprint
+                  Start Sprint
                   </button>
+                  </div>
                 </div>
 
                 <div
@@ -221,14 +218,7 @@ function createBacklogTable() {
 
 
                 <div class="relative flex justify-between text-left">
-                  <div class="flex align-middle ms-2 sm:ms-4">
-                    <div class="flex items-center">
-                      <input
-                        id="checkbox-all-search"
-                        type="checkbox"
-                        class="w-3.5 h-3.5 text-blue-600 bg-gray-100 border-gray-300 rounded-sm accent-cyan-500 focus:ring-cyan-600"
-                      />
-                    </div>
+                  <div class="flex align-middle">
                     <button
                       type="button"
                       class="flex items-center w-30 gap-2 rounded-md px-2 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 focus:outline-none"
@@ -383,7 +373,8 @@ export async function renderDashBoardTasks() {
         toggleHidden(document.getElementById(`${sprint.key}-sprint-start-button`));
         toggleHidden(document.getElementById(`${sprint.key}-sprint-complete-button`));
         const completeSprintButton = document.getElementById(`${sprint.key}-sprint-complete-button`);
-
+        const dueDatePreview = document.getElementById(`${sprint.key}-due-date-preview`);
+        dueDatePreview.innerText = new Date(sprint.dueDate).toLocaleDateString();
         const response = await projectService.updateProject(projectId, { currentSprint: sprint._id });
 
         completeSprintButton.addEventListener('click', async (e) => {
