@@ -1,3 +1,4 @@
+import projectService from '../services/ProjectService.js';
 import SprintService from '../services/SprintService.js';
 import TaskService from '../services/TaskService.js';
 
@@ -83,6 +84,26 @@ function createSprintTable(sprint) {
 
   sprintContainer.dataset.id = sprint._id;
   sprintContainer.innerHTML = `
+                  <form class="hidden flex md:justify-end gap-1 h-7.5" id="${sprint.key}-start-form">
+                    <input
+                        type="date"
+                        name="dueDate"
+                        id="${sprint.key}-due-date"
+                        class="w-28 md:w-30 bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-1 required"
+                        placeholder="Enter the due date"
+                    />
+
+                    <button
+                    type="submit"
+                    id="${sprint.key}-start-form-button"
+                    class="w-20 text-sm px-0.5 text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-cyan-50 hover:text-gray-600"
+                    >
+                      Confirm
+                    </button>
+                    <svg id="${sprint.key}-start-close-svg" class="" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M16 8L8 16M8.00001 8L16 16" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                  </form>
+
+
                 <div class="relative flex justify-between text-left">
                   <div class="flex align-middle ms-2 sm:ms-4">
                     <div class="flex items-center">
@@ -118,12 +139,21 @@ function createSprintTable(sprint) {
                       ${sprint.key}
                     </button>
                   </div>
+
                   <button
                     type="button"
-                    id="sprint-complete-button"
-                    class="py-1 px-2 my-1 md:py-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-cyan-50 hover:text-gray-600"
+                    id="${sprint.key}-sprint-complete-button"
+                    class="hidden py-1 px-2 my-1 md:py-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-cyan-50 hover:text-gray-600"
                   >
                     Complete Sprint
+                  </button>
+
+                  <button
+                    type="button"
+                    id="${sprint.key}-sprint-start-button"
+                    class="py-1 px-2 my-1 md:py-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-cyan-50 hover:text-gray-600"
+                  >
+                    Start Sprint
                   </button>
                 </div>
 
@@ -176,19 +206,13 @@ function createBacklogTable() {
 
   backlogContainer.innerHTML = `
                   <form class="hidden flex md:justify-end gap-1 h-7.5" id="sprint-creation-form">
-                    <input
-                        type="date"
-                        name="dueDate"
-                        id="sprint-due-date"
-                        class="w-28 md:w-30 bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-1 required"
-                        placeholder="Enter the due date"
-                    />
-                    <input type="number" id="sprint-sp-input" aria-describedby="helper-text-explanation" class=" w-18 md:w-30 block rounded-lg text-center bg-neutral-secondary-medium border border-gray-400 text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body " placeholder="story point" required />
+
+                    <input type="number" id="sprint-sp-input" aria-describedby="helper-text-explanation" class=" w-23 md:w-30 block rounded-lg text-center bg-neutral-secondary-medium border border-gray-400 text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body " placeholder="story point" required />
 
                     <button
                     type="submit"
                     id="sprint-form-button"
-                    class="w-15 md:w-20 text-sm px-0.5 text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-cyan-50 hover:text-gray-600"
+                    class="w-20 text-sm px-0.5 text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-cyan-50 hover:text-gray-600"
                     >
                       Confirm
                     </button>
@@ -337,17 +361,35 @@ export async function renderDashBoardTasks() {
     const backlogTasks = allTasks.filter((task) => !allSprintTasks.includes(task));
     console.log({ allTasks, allSprintTasks, backlogTasks });
 
-    sprints.result.forEach((sprint) => {
+    const currentSprints = sprints.result.filter((sprint) => !sprint.isCompleted);
+    console.log(currentSprints, sprints);
+
+    currentSprints.forEach(async (sprint) => {
       const newSprint = createSprintTable(sprint);
       sprintBacklogWrapper.append(newSprint);
       const sprintTasks = [];
       sprint.tasks.forEach((task) => sprintTasks.push(task));
       dropdownEvent(sprint);
+
       if (!sprintTasks.length) {
         document.getElementById(`${sprint.key}-empty-message`).classList.remove('hidden');
       } else {
         document.getElementById(`${sprint.key}-empty-message`).classList.add('hidden');
         renderSprintTasks(sprint, sprintTasks);
+      }
+
+      await handleStartSprint(sprint);
+      if (sprint.dueDate) {
+        toggleHidden(document.getElementById(`${sprint.key}-sprint-start-button`));
+        toggleHidden(document.getElementById(`${sprint.key}-sprint-complete-button`));
+        const completeSprintButton = document.getElementById(`${sprint.key}-sprint-complete-button`);
+
+        const response = await projectService.updateProject(projectId, { currentSprint: sprint._id });
+
+        completeSprintButton.addEventListener('click', async (e) => {
+          e.preventDefault();
+          await handleCompleteSprint(sprint._id, response.result);
+        });
       }
     });
 
@@ -363,51 +405,48 @@ export async function renderDashBoardTasks() {
 
     const createSprintButton = document.getElementById('create-sprint-button');
     const sprintForm = document.getElementById('sprint-creation-form');
-    const sprintCloseSvg = document.getElementById('sprint-close-svg');
+    const sprintCreateCloseSvg = document.getElementById('sprint-close-svg');
     const sprintCreateSubmitButton = document.getElementById('sprint-form-button');
-    const dueDateInput = document.getElementById('sprint-due-date');
     const storyPointInput = document.getElementById('sprint-sp-input');
 
     function callCreateSprint() {
-      createSprint(createSprintButton, sprintForm);
-    }
-
-    function callHandleSprintCreate() {
-      handleSprintCreate(dueDateInput, storyPointInput);
+      toggleHidden(createSprintButton);
+      toggleHidden(sprintForm);
     }
 
     createSprintButton.addEventListener('click', callCreateSprint);
-    sprintCloseSvg.addEventListener('click', callCreateSprint);
-    sprintCreateSubmitButton.addEventListener('click', callHandleSprintCreate);
+    sprintCreateCloseSvg.addEventListener('click', callCreateSprint);
 
+    sprintCreateSubmitButton.addEventListener('click', async (e) => {
+      e.preventDefault();
+      await handleSprintCreate(storyPointInput);
+    });
 
   } catch (error) {
     console.error(error.message);
   }
 }
 
-async function createSprint(createSprintButton, sprintForm) {
-  createSprintButton.classList.toggle('hidden');
-  sprintForm.classList.toggle('hidden');
+function toggleHidden(element) {
+  element.classList.toggle('hidden');
 }
 
-async function handleSprintCreate(dueDateInput, storyPointInput) {
+async function handleSprintCreate(storyPointInput) {
   const newSprint = {
     projectId: localStorage.getItem('selectedProject'),
-    dueDate: dueDateInput.value,
     storyPoint: storyPointInput.value,
   };
-  await SprintService.createSprint(newSprint);
 
-  createSprint();
-  renderDashBoardTasks();
+  const response = await SprintService.createSprint(newSprint);
+  console.log("Sprint created", response);
+  await renderDashBoardTasks();
 }
 
 function dropdownEvent(sprint = {}) {
   const nameKey = sprint.key ? sprint.key : `backlog`;
   const dropdownButton = document.getElementById(`dropdownButton-${nameKey}`);
   const dropdownMenu = document.querySelector(`.dropdown-menu-${nameKey}`);
-  console.log(dropdownButton, dropdownMenu, `dropdownButton-${nameKey}`);
+
   dropdownButton.addEventListener('click', function () {
     dropdownMenu.classList.toggle('hidden');
   });
@@ -422,5 +461,61 @@ function dropdownEvent(sprint = {}) {
   });
 }
 
-// const completeSprintButton = document.getElementById('sprint-complete-button');
-// completeSprintButton
+async function handleCompleteSprint(sprintId, project) {
+
+  const sprint = await SprintService.getSprintById(sprintId);
+  console.log(sprint);
+  await SprintService.updateSprint(sprintId, { isCompleted: true });
+  await projectService.updateProject(project._id, { currentSprint: null });
+  await renderDashBoardTasks();
+}
+
+async function handleStartSprint(sprint) {
+  const startSprintButton = document.getElementById(`${sprint.key}-sprint-start-button`);
+  const sprintStartCloseSvg = document.getElementById(`${sprint.key}-start-close-svg`);
+  const startSprintForm = document.getElementById(`${sprint.key}-start-form`);
+  const dueDateInput = document.getElementById(`${sprint.key}-due-date`);
+  const startSprintSubmitButton = document.getElementById(`${sprint.key}-start-form-button`);
+  const completeSprintButton = document.getElementById(`${sprint.key}-sprint-complete-button`);
+
+  const project = await projectService.getProjectById(localStorage.getItem('selectedProject'));
+
+  startSprintButton.addEventListener('click', toggleStartSprintForm);
+  sprintStartCloseSvg.addEventListener('click', toggleStartSprintForm);
+
+  function toggleStartSprintForm() {
+    toggleHidden(startSprintButton);
+    toggleHidden(startSprintForm);
+  }
+
+  startSprintSubmitButton.addEventListener('click', async (e) => {
+    e.preventDefault();
+    await startSprintFunction();
+  });
+
+  async function startSprintFunction() {
+    if (project.result.currentSprint) {
+      console.log("A sprint is already is running");
+      toggleStartSprintForm();
+    } else {
+      sprint.dueDate = dueDateInput.value;
+      const response = await SprintService.updateSprint(sprint._id, sprint);
+      await checkIfSprintStarted(response.result);
+    }
+  }
+
+  async function checkIfSprintStarted(sprint) {
+    if (sprint.dueDate) {
+      toggleHidden(startSprintForm);
+      toggleHidden(completeSprintButton);
+
+      const response = await projectService.updateProject(project.result._id, { currentSprint: sprint._id });
+
+      completeSprintButton.addEventListener('click', async (e) => {
+        e.preventDefault();
+        await handleCompleteSprint(sprint._id, response.result);
+      });
+    }
+  }
+
+}

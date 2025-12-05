@@ -106,7 +106,6 @@ class SprintService {
   async updateSprint(id, updatedSprint) {
     try {
       const response = await this.api.put(`/${id}`, updatedSprint);
-
       return response.data;
     } catch (error) {
       throw new Error(

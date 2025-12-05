@@ -87,12 +87,10 @@ projectCreateForm.addEventListener('submit', async (e) => {
     console.log(createdProject);
 
     createProjectModal.classList.add('hidden');
-
+    localStorage.setItem('selectedProject', createdProject.result._id);
     renderBoard(localStorage.getItem('selectedProject'));
     // renderTasksList();
     renderDashBoardTasks();
-
-    console.log(createdProject);
   } catch (error) {
     console.error(error.message);
   }
@@ -1108,8 +1106,8 @@ function showNotification(message) {
 }
 
 setupSocketIo(showNotification);
-renderBoard(currentProject);
+await renderBoard(currentProject);
 showProjectList();
 showUserList();
 // renderTasksList();
-renderDashBoardTasks();
+await renderDashBoardTasks();
