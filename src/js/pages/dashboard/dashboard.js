@@ -959,6 +959,9 @@ async function showTaskDrawer(taskId) {
     openEditModal(taskId);
   });
 
+  // subtasks render
+  renderSubtasks(task);
+
   const commentInput = taskDrawer.querySelector('#commentInput');
   const commentSubmit = taskDrawer.querySelector('#submitButton');
 
@@ -979,6 +982,7 @@ async function showTaskDrawer(taskId) {
   taskDrawer.dataset.id = task._id;
   titleEl.textContent = task.title;
   descriptionEl.textContent = task.description;
+  profileImageEl.src = '../../../assets/img/profile.png';
 
   if (assignee) {
     assigneeEl.textContent = assignee.name;
@@ -1123,6 +1127,49 @@ async function showTaskDrawer(taskId) {
   }
 
   createSubtask();
+
+  async function renderSubtasks(task) {
+    const list = document.getElementById('subtasksList');
+    list.innerHTML = '';
+    console.log(assignee);
+    if (!task.subTask || task.subTask.length === 0) {
+      list.innerHTML = "<p class='text-gray-500 text-sm'>No subtasks</p>";
+      return;
+    }
+
+    const all = (
+      await taskService.getTaskByProjectId(
+        localStorage.getItem('selectedProject')
+      )
+    ).data.result;
+
+    const subtasks = all.filter((t) => task.subTask.includes(t._id));
+
+    subtasks.forEach((st) => {
+      const div = document.createElement('div');
+      div.className =
+        'flex items-start bg-white rounded-lg shadow-md pl-3 py-4 border border-[#90e0ef]';
+      div.innerHTML = `
+      <img
+        src="${
+          assignee
+            ? assignee.profileImage
+              ? 'http://localhost:3001/uploads/profile/' + assignee.profileImage
+              : '../../../assets/img/profile.png'
+            : '../../../assets/img/profile.png'
+        }"
+         
+        class="w-8 h-8 rounded-full border-2 border-[#00b4d8]"
+        title = "${assignee ? assignee.name : 'unassigned'}"
+      />
+      <div class="ml-3">
+        <span class="font-medium text-[#03045e] text-md">${st.title}</span>
+        <p class="text-sm text-[#03045e]/70">${st.description || ''}</p>
+      </div>
+    `;
+      list.appendChild(div);
+    });
+  }
 }
 
 async function loadProjectMembers(projectId) {
@@ -1393,3 +1440,39 @@ showProjectList();
 showUserList();
 // renderTasksList();
 renderDashBoardTasks();
+
+// subtasks display
+// async function renderSubtasks(task) {
+//   const list = document.getElementById('subtasksList');
+//   list.innerHTML = '';
+
+//   if (!task.subTask || task.subTask.length === 0) {
+//     list.innerHTML = "<p class='text-gray-500 text-sm'>No subtasks</p>";
+//     return;
+//   }
+
+//   const all = (
+//     await taskService.getTaskByProjectId(
+//       localStorage.getItem('selectedProject')
+//     )
+//   ).data.result;
+
+//   const subtasks = all.filter((t) => task.subTask.includes(t._id));
+
+//   subtasks.forEach((st) => {
+//     const div = document.createElement('div');
+//     div.className =
+//       'flex items-start bg-white rounded-lg shadow-md pl-3 py-4 border border-[#90e0ef]';
+//     div.innerHTML = `
+//       <img
+//         src="../assets/img/profile.png"
+//         class="w-8 h-8 rounded-full border-2 border-[#00b4d8]"
+//       />
+//       <div class="ml-3">
+//         <span class="font-medium text-[#03045e] text-md">${st.title}</span>
+//         <p class="text-sm text-[#03045e]/70">${st.description || ''}</p>
+//       </div>
+//     `;
+//     list.appendChild(div);
+//   });
+// }
