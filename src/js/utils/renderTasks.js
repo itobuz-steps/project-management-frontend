@@ -10,8 +10,12 @@ const sprintBacklogWrapper = document.getElementById('sprint-backlog-wrapper');
 async function createTaskList(task) {
   const tr = document.createElement('tr');
 
-  const reporter = task.reporter ? (await TaskService.getUserDetailsById(task.reporter)).data.result : "";
-  const assignee = task.assignee ? (await TaskService.getUserDetailsById(task.assignee)).data.result : "";
+  const reporter = task.reporter
+    ? (await TaskService.getUserDetailsById(task.reporter)).data.result
+    : '';
+  const assignee = task.assignee
+    ? (await TaskService.getUserDetailsById(task.assignee)).data.result
+    : '';
 
   tr.classList =
     'bg-white border-b border-gray-500 hover:bg-gray-100 whitespace-nowrap';
@@ -300,6 +304,7 @@ async function renderBacklogTasks(backlogTasks) {
 
 export async function renderDashBoardTasks() {
   try {
+    listTableBody.innerHTML = '';
     sprintBacklogWrapper.innerHTML = '';
     const projectId = localStorage.getItem('selectedProject');
     const tasks = await TaskService.getTaskByProjectId(projectId);
@@ -310,7 +315,9 @@ export async function renderDashBoardTasks() {
     const allSprintTasks = [];
     sprints.result.forEach((sprint) => allSprintTasks.push(...sprint.tasks));
 
-    const backlogTasks = allTasks.filter((task) => !allSprintTasks.includes(task));
+    const backlogTasks = allTasks.filter(
+      (task) => !allSprintTasks.includes(task)
+    );
     console.log({ allTasks, allSprintTasks, backlogTasks });
 
     sprints.result.forEach((sprint) => {
@@ -319,9 +326,13 @@ export async function renderDashBoardTasks() {
       const sprintTasks = [];
       sprint.tasks.forEach((task) => sprintTasks.push(task));
       if (!sprintTasks.length) {
-        document.getElementById(`${sprint.name}-empty-message`).classList.remove('hidden');
+        document
+          .getElementById(`${sprint.name}-empty-message`)
+          .classList.remove('hidden');
       } else {
-        document.getElementById(`${sprint.name}-empty-message`).classList.add('hidden');
+        document
+          .getElementById(`${sprint.name}-empty-message`)
+          .classList.add('hidden');
         renderSprintTasks(sprint, sprintTasks);
         dropdownEvent(sprint);
       }
@@ -330,13 +341,14 @@ export async function renderDashBoardTasks() {
     const backlogTable = createBacklogTable();
     sprintBacklogWrapper.append(backlogTable);
     if (!backlogTasks.length) {
-      document.getElementById('backlog-empty-message').classList.remove('hidden');
+      document
+        .getElementById('backlog-empty-message')
+        .classList.remove('hidden');
     } else {
       document.getElementById('backlog-empty-message').classList.add('hidden');
       renderBacklogTasks(backlogTasks);
       dropdownEvent();
     }
-
   } catch (error) {
     console.error(error.message);
   }

@@ -10,7 +10,7 @@ import axios from 'axios';
 import { setupSocketIo } from '../../utils/setupNotification.js';
 import showToast from '../../utils/showToast.js';
 import { profileNameIcon } from '../../utils/profileIcon.js';
-import authService from '../../services/AuthService.js';
+import { setupSidebar } from './sidebar/sidebar.js';
 
 const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
@@ -37,10 +37,6 @@ document.addEventListener('click', (e) => {
   e.stopPropagation();
 });
 
-const toggleBtn = document.querySelector('.toggle-sidebar-btn');
-const sidebar = document.querySelector('#sidebar');
-// const main = document.querySelector('.main');
-const body = document.querySelector('body');
 const openProjectBtn = document.getElementById('plus-icon');
 const createProjectModal = document.getElementById('create-project-modal');
 const closeProjectBtn = document.getElementById('close-button');
@@ -157,22 +153,6 @@ input.addEventListener('change', () => {
   }
 });
 
-async function populateAssigneeDropDown() {
-  const projectId = localStorage.getItem('selectedProject');
-  const assigneeDropdown = document.getElementById('assignee');
-  const data = await projectService.getProjectMembers(projectId);
-
-  assigneeDropdown.innerHTML = `<option value="null">Select an assignee</option>`;
-
-  data.result.forEach((member) => {
-    const option = document.createElement('option');
-    console.log(member._id);
-    option.value = member._id;
-    option.textContent = member.email;
-    assigneeDropdown.appendChild(option);
-  });
-}
-
 taskForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
@@ -275,8 +255,7 @@ async function openEditModal(taskId) {
   try {
     const response = await taskService.getTaskById(taskId);
     const task = response.data.result;
-    console.log(taskId, task);
-    debugger;
+
     editModal.querySelector('#title').value = task.title;
     editModal.querySelector('#description').value = task.description;
     editModal.querySelector('#type').value = task.type;
@@ -386,83 +365,6 @@ closeEditTask.addEventListener('click', () => {
 
 const listTableBody = document.getElementById('table-body');
 
-toggleBtn.addEventListener('click', () => {
-  sidebar.classList.toggle('-translate-x-full');
-  sidebar.classList.toggle('translate-x-0');
-  body.classList.toggle('overflow-hidden');
-});
-
-document.addEventListener('click', (e) => {
-  if (!sidebar.contains(e.target) && !toggleBtn?.contains(e.target)) {
-    sidebar.classList.add('-translate-x-full');
-    sidebar.classList.remove('translate-x-0');
-    body.classList.remove('overflow-hidden');
-  }
-  e.stopPropagation();
-});
-
-const projectsMenu = document.getElementById('projectsMenu');
-const usersMenu = document.getElementById('usersMenu');
-const projectsDropdown = document.getElementById('projectsDropdown');
-const userListContainer = document.getElementById('usersDropdown');
-
-// dropdown.classList.add(
-//   'transition-all',
-//   'duration-300',
-//   'overflow-y-auto',
-//   'max-h-0'
-// );
-
-projectsMenu.addEventListener('click', (e) => {
-  e.stopPropagation();
-  e.preventDefault();
-
-  const isOpen = projectsDropdown.classList.contains('max-h-60');
-
-  if (isOpen) {
-    projectsDropdown.classList.remove('max-h-60');
-    projectsDropdown.classList.add('max-h-0');
-    setTimeout(() => projectsDropdown.classList.add('hidden'), 200);
-  } else {
-    projectsDropdown.classList.remove('hidden');
-    projectsDropdown.classList.remove('max-h-0');
-    projectsDropdown.classList.add('max-h-60');
-  }
-});
-
-usersMenu.addEventListener('click', (e) => {
-  e.stopPropagation();
-  e.preventDefault();
-
-  const isOpen = userListContainer.classList.contains('max-h-60');
-
-  if (isOpen) {
-    userListContainer.classList.remove('max-h-60');
-    userListContainer.classList.add('max-h-0');
-    setTimeout(() => userListContainer.classList.add('hidden'), 200);
-  } else {
-    userListContainer.classList.remove('hidden');
-    userListContainer.classList.remove('max-h-0');
-    userListContainer.classList.add('max-h-60');
-  }
-});
-
-document.addEventListener('click', (e) => {
-  if (
-    !projectsMenu.contains(e.target) &&
-    !projectsDropdown.contains(e.target)
-  ) {
-    projectsDropdown.classList.remove('max-h-60');
-    projectsDropdown.classList.add('max-h-0');
-    setTimeout(() => projectsDropdown.classList.add('hidden'), 200);
-  }
-  if (!usersMenu.contains(e.target) && !userListContainer.contains(e.target)) {
-    userListContainer.classList.remove('max-h-60');
-    userListContainer.classList.add('max-h-0');
-    setTimeout(() => userListContainer.classList.add('hidden'), 200);
-  }
-});
-
 export function dropdownEvent(sprint = {}) {
   const nameKey = sprint.name ? sprint.name : `backlog`;
   const dropdownButton = document.getElementById(`dropdownButton-${nameKey}`);
@@ -479,56 +381,6 @@ export function dropdownEvent(sprint = {}) {
       dropdownIcon.classList.add('rotate-270');
     }
   });
-}
-
-async function showUserList() {
-  const users = await projectService.getProjectMembers(
-    localStorage.getItem('selectedProject')
-  );
-
-  userListContainer.innerHTML = '';
-  console.log('users: ', users);
-
-  if (!users.result.length) {
-    userListContainer.innerHTML = 'No user assigned';
-    userListContainer.className = 'block p-2 text-gray-900 hover:bg-gray-100';
-  } else {
-    users.result.forEach((user) => {
-      const item = document.createElement('li');
-      item.dataset.id = user._id;
-      item.id = user.name;
-      item.textContent = user.name;
-      item.className = 'block p-2 text-gray-900 hover:bg-gray-100 rounded-lg';
-      userListContainer.appendChild(item);
-    });
-  }
-}
-
-async function showProjectList() {
-  try {
-    const projects = await projectService.getAllProjects();
-    projectsDropdown.innerHTML = '';
-    console.log('projects: ', projects);
-
-    if (!projects.length) {
-      projectsDropdown.innerHTML = 'No project Found';
-      projectsDropdown.className = 'block p-2 text-gray-900 hover:bg-gray-100';
-    } else {
-      projects.forEach((project) => {
-        const item = document.createElement('li');
-        item.dataset.id = project._id;
-        item.textContent = project.name;
-        item.className =
-          'block p-2 text-gray-900 hover:bg-gray-100 rounded-lg [&.selected]:border [&.selected]:border-black-500 [&.selected]:bg-gray-300';
-        if (project._id === localStorage.getItem('selectedProject')) {
-          item.classList.toggle('selected');
-        }
-        projectsDropdown.appendChild(item);
-      });
-    }
-  } catch (err) {
-    console.error(err.message);
-  }
 }
 
 const backlogBtn = document.getElementById('backlog-li');
@@ -576,23 +428,6 @@ const logoutBtn = document.getElementById('logout-btn');
 logoutBtn.addEventListener('click', () => {
   localStorage.clear();
   checkIfToken();
-});
-
-const projectDropdownContainer = document.getElementById('projectsDropdown');
-projectDropdownContainer.addEventListener('click', (event) => {
-  const targetLi = event.target;
-  localStorage.setItem('selectedProject', targetLi.dataset.id);
-
-  [...targetLi.parentElement.children].forEach((child) => {
-    child.classList.remove('selected');
-  });
-
-  targetLi.classList.toggle('selected');
-  listTableBody.innerHTML = '';
-  renderDashBoardTasks();
-  // renderTasksList();
-  renderBoard(localStorage.getItem('selectedProject'));
-  loadProjectMembers(localStorage.getItem('selectedProject'));
 });
 
 async function renderDashboard(project) {
@@ -651,7 +486,7 @@ confirmDeleteBtn.addEventListener('click', async () => {
   drawerBackdrop.classList.add('hidden');
 });
 
-async function renderBoard(projectId, filter = '', searchInput = '') {
+export async function renderBoard(projectId, filter = '', searchInput = '') {
   const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const project = (await projectService.getProjectById(projectId)).result;
   let draggedColumn = null;
@@ -1065,7 +900,7 @@ async function showTaskDrawer(taskId) {
   updateCommentList();
 }
 
-async function loadProjectMembers(projectId) {
+export async function loadProjectMembers(projectId) {
   try {
     const data = await projectService.getProjectMembers(projectId);
     const members = data.result;
@@ -1328,8 +1163,7 @@ if (notificationIcon) {
 }
 
 setupSocketIo(showNotification);
+setupSidebar();
+
 renderBoard(localStorage.getItem('selectedProject'));
-showProjectList();
-showUserList();
-// renderTasksList();
 renderDashBoardTasks();
