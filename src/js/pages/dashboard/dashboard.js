@@ -99,12 +99,10 @@ projectCreateForm.addEventListener('submit', async (e) => {
     console.log(createdProject);
 
     createProjectModal.classList.add('hidden');
-
+    localStorage.setItem('selectedProject', createdProject.result._id);
     renderBoard(localStorage.getItem('selectedProject'));
     // renderTasksList();
     renderDashBoardTasks();
-
-    console.log(createdProject);
   } catch (error) {
     console.error(error.message);
   }
@@ -156,21 +154,21 @@ input.addEventListener('change', () => {
   }
 });
 
-async function populateAssigneeDropDown() {
-  const projectId = localStorage.getItem('selectedProject');
-  const assigneeDropdown = document.getElementById('assignee');
-  const data = await projectService.getProjectMembers(projectId);
+// async function populateAssigneeDropDown() {
+//   const projectId = localStorage.getItem('selectedProject');
+//   const assigneeDropdown = document.getElementById('assignee');
+//   const data = await projectService.getProjectMembers(projectId);
 
   assigneeDropdown.innerHTML = `<option value="null">Select an assignee</option>`;
 
-  data.result.forEach((member) => {
-    const option = document.createElement('option');
-    console.log(member._id);
-    option.value = member._id;
-    option.textContent = member.email;
-    assigneeDropdown.appendChild(option);
-  });
-}
+//   data.result.forEach((member) => {
+//     const option = document.createElement('option');
+//     console.log(member._id);
+//     option.value = member._id;
+//     option.textContent = member.email;
+//     assigneeDropdown.appendChild(option);
+//   });
+// }
 
 taskForm.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -201,30 +199,30 @@ taskForm.addEventListener('submit', async (e) => {
 
     tags: document.getElementById('tags').value
       ? document
-          .getElementById('tags')
-          .value.split(',')
-          .map((t) => t.trim())
+        .getElementById('tags')
+        .value.split(',')
+        .map((t) => t.trim())
       : [],
 
     block: document.getElementById('block').value
       ? document
-          .getElementById('block')
-          .value.split(',')
-          .map((t) => t.trim())
+        .getElementById('block')
+        .value.split(',')
+        .map((t) => t.trim())
       : [],
 
     blockedBy: document.getElementById('BlockedBy').value
       ? document
-          .getElementById('BlockedBy')
-          .value.split(',')
-          .map((t) => t.trim())
+        .getElementById('BlockedBy')
+        .value.split(',')
+        .map((t) => t.trim())
       : [],
 
     relatesTo: document.getElementById('relatesTo').value
       ? document
-          .getElementById('relatesTo')
-          .value.split(',')
-          .map((t) => t.trim())
+        .getElementById('relatesTo')
+        .value.split(',')
+        .map((t) => t.trim())
       : [],
 
     dueDate: dateValue,
@@ -462,23 +460,7 @@ document.addEventListener('click', (e) => {
   }
 });
 
-export function dropdownEvent(sprint = {}) {
-  const nameKey = sprint.name ? sprint.name : `backlog`;
-  const dropdownButton = document.getElementById(`dropdownButton-${nameKey}`);
-  const dropdownMenu = document.querySelector(`.dropdown-menu-${nameKey}`);
-  dropdownButton.addEventListener('click', function () {
-    dropdownMenu.classList.toggle('hidden');
-  });
 
-  const dropdownIcon = document.querySelector(`.dropdown-icon-${nameKey}`);
-  dropdownButton.addEventListener('click', function () {
-    if (dropdownIcon.classList.contains('rotate-270')) {
-      dropdownIcon.classList.remove('rotate-270');
-    } else {
-      dropdownIcon.classList.add('rotate-270');
-    }
-  });
-}
 
 async function showUserList() {
   const users = await projectService.getProjectMembers(
@@ -704,9 +686,8 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         'task flex flex-col max-w-sm p-4 bg-gray-100 text-black gap-4 relative cursor-pointer';
       taskEl.innerHTML = `
         <div class="card-header flex justify-between items-center">
-          <p class="text-lg border border-transparent rounded-lg font-medium hover:border-gray-400">${
-            task.title
-          }</p>
+          <p class="text-lg border border-transparent rounded-lg font-medium hover:border-gray-400">${task.title
+        }</p>
           <div class="relative">
             <button class="outline-none menu-button">
               <svg width="18px" height="18px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#00000" class="bi bi-three-dots mr-2">
@@ -727,16 +708,13 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         </div>
         <div class="card-footer flex justify-between items-center text-sm text-gray-400">
           <div class="flex items-center gap-2">
-            <span class="type-tag bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm">${
-              task.key
-            }</span>
+            <span class="type-tag bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm">${task.key
+        }</span>
             <select class="type-selector text-sm border border-gray-300 rounded px-1 py-1 focus:outline-none">
-              <option value="story" ${
-                task.type === 'story' ? 'selected' : ''
-              }>Story</option>
-              <option value="task" ${
-                task.type === 'task' ? 'selected' : ''
-              }>Task</option>
+              <option value="story" ${task.type === 'story' ? 'selected' : ''
+        }>Story</option>
+              <option value="task" ${task.type === 'task' ? 'selected' : ''
+        }>Task</option>
             </select>
           </div>
           <div class="flex items-center">
@@ -1433,44 +1411,8 @@ if (notificationIcon) {
 }
 
 setupSocketIo(showNotification);
-renderBoard(localStorage.getItem('selectedProject'));
+await renderBoard(currentProject);
 showProjectList();
 showUserList();
 // renderTasksList();
-renderDashBoardTasks();
-
-// subtasks display
-// async function renderSubtasks(task) {
-//   const list = document.getElementById('subtasksList');
-//   list.innerHTML = '';
-
-//   if (!task.subTask || task.subTask.length === 0) {
-//     list.innerHTML = "<p class='text-gray-500 text-sm'>No subtasks</p>";
-//     return;
-//   }
-
-//   const all = (
-//     await taskService.getTaskByProjectId(
-//       localStorage.getItem('selectedProject')
-//     )
-//   ).data.result;
-
-//   const subtasks = all.filter((t) => task.subTask.includes(t._id));
-
-//   subtasks.forEach((st) => {
-//     const div = document.createElement('div');
-//     div.className =
-//       'flex items-start bg-white rounded-lg shadow-md pl-3 py-4 border border-[#90e0ef]';
-//     div.innerHTML = `
-//       <img
-//         src="../assets/img/profile.png"
-//         class="w-8 h-8 rounded-full border-2 border-[#00b4d8]"
-//       />
-//       <div class="ml-3">
-//         <span class="font-medium text-[#03045e] text-md">${st.title}</span>
-//         <p class="text-sm text-[#03045e]/70">${st.description || ''}</p>
-//       </div>
-//     `;
-//     list.appendChild(div);
-//   });
-// }
+await renderDashBoardTasks();

@@ -55,7 +55,7 @@
         <div class="flex gap-5 items-center max-md:gap-4">
           <div class="search-icon flex items-center justify-between">
             <form
-              class="search-input-form rounded-lg w-40 xs:w-60 md:w-80 lg:w-100 bg-gray-200"
+              class="search-input-form rounded-lg w-40 max-[420px]:w-40 max-[640px]:w-60 sm:w-80 md:w-100 lg:w-120 bg-gray-200"
               id="search-input-form"
               autocomplete="off"
             >
@@ -237,7 +237,7 @@
         <div class="project-info items-center flex flex-row justify-between">
           <div class="flex flex-row items-center gap-3">
             <div class="project-name text-2xl font-semibold" id="projectName">
-              Project Name
+              No Project Selected
             </div>
             <div id="plus-icon" class="plus-icon cursor-pointer add-project">
               <svg
@@ -598,10 +598,7 @@
                     class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
                     required
                   >
-                    <option value="" selected disabled>
-                      Select a project type
-                    </option>
-                    <option value="kanban">kanban</option>
+                    <option value="kanban" selected>kanban</option>
                     <option value="scrum">scrum</option>
                   </select>
                 </div>
@@ -1577,6 +1574,7 @@
         </div>
       </div>
     </div>
+
     <div
       class="drawer-backdrop hidden bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-20"
     ></div>
