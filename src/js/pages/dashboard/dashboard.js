@@ -16,6 +16,16 @@ const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
 const drawerBackdrop = document.querySelector('.drawer-backdrop');
 
+const commentInputEnter = document.getElementById('commentInput');
+const submitBtnEnter = document.getElementById('submitButton');
+
+commentInputEnter.addEventListener('keydown', function (event) {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    submitBtnEnter.click();
+  }
+});
+
 profileBtn.addEventListener('click', () => {
   dropdownMenu.classList.toggle('hidden');
 });
@@ -1049,6 +1059,7 @@ async function showTaskDrawer(taskId) {
   `;
 
     container.appendChild(commentEl);
+    container.scrollTop = container.scrollHeight;
   }
 
   updateCommentList();
