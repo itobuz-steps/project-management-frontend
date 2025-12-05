@@ -1266,6 +1266,7 @@
       </div>
     </div>
 
+    <!-- task drawer -->
     <div
       class="task-drawer fixed top-0 right-0 z-40 h-screen overflow-y-auto transition-transform translate-x-full bg-white w-[320px] lg:w-[400px]"
       tabindex="-1"
@@ -1446,49 +1447,64 @@
             <p></p>
           </div>
         </div>
-
+        <!-- comments container -->
         <div
           id="commentsContainer"
-          class="flex flex-col gap-3 bg-gray-50 border border-[#e5e7eb] rounded-xl pt-3"
+          class="flex flex-col gap-3 bg-gray-50 border border-[#e5e7eb] rounded-xl pt-3 px-3 overflow-y-auto scrollbar-thin"
+          style="max-height: 260px; background-color: #ffffff"
         >
-          <div id="commentContainerHeaderText" class="ml-4 font-semibold">
+          <div
+            id="commentContainerHeaderText"
+            class="ml-4 font-semibold text-[#03045e]"
+          >
             Comments
           </div>
 
           <div
             id="commentImage"
-            class="flex gap-3 items-start bg-white rounded-lg shadow-md pl-3 py-3"
+            class="flex gap-3 items-start bg-white rounded-lg shadow-md pl-3 py-3 border border-[#90e0ef] shadow-lg rounded-lg"
           >
             <img
               src="../assets/img/profile.png"
               alt="Avatar"
-              class="w-7 h-7 rounded-full"
+              class="w-7 h-7 rounded-full border-2 border-[#00b4d8]"
             />
+
             <div id="CommentInformation" class="flex flex-col gap-1">
-              <div class="flex items-center gap-2 text-md text-gray-500">
-                <span id="" class="username font-medium text-gray-700"
-                  >John Smith</span
-                >
+              <div
+                class="flex items-center gap-2 text-md text-gray-500 text-[#03045e]"
+              >
+                <span class="username font-medium text-gray-700 text-[#03045e]">
+                  John Smith
+                </span>
                 <span>•</span>
-                <span class="text-sm">17th Feb 2024</span>
+                <span class="text-sm text-[#0077b6]">17th Feb 2024</span>
               </div>
-              <p class="message text-gray-700 text-sm">
-                Hi ,I’ll do that task now, you can start working on another
+
+              <p class="message text-gray-700 text-sm text-[#03045e]/70">
+                Hi, I’ll do that task now, you can start working on another
                 task!
               </p>
             </div>
           </div>
         </div>
 
-        <div class="comment-create flex flex-row justify-content-between">
+        <div class="comment-create flex flex-row justify-between items-center">
           <input
             type="text"
-            class="bg-gray-50 border border-[#e5e7eb] p-3 rounded-xl"
-            minlength="3"
             id="commentInput"
+            minlength="3"
             placeholder="Enter your Comment"
+            class="bg-gray-50 border border-[#90e0ef] p-3 rounded-xl placeholder-[#03045e]"
           />
-          <button type="button" id="submitButton">Submit</button>
+
+          <button
+            type="button"
+            id="submitButton"
+            class="ml-3 bg-[#0077b6] text-white py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 hover:bg-[#005f91] shadow-md hover:shadow-lg"
+          >
+            Submit
+          </button>
         </div>
       </div>
     </div>
