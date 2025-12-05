@@ -995,11 +995,18 @@ async function showTaskDrawer(taskId) {
     profileImageEl.classList.remove('hidden');
   });
 
+  // comments
+
   async function updateCommentList() {
     const comments = (await commentService.getAllComments(task._id)).result;
 
     const commentContainer = taskDrawer.querySelector('#commentsContainer');
-    commentContainer.innerHTML = `<div id="commentContainerHeaderText" class="ml-4 font-semibold">Comments</div>`;
+    commentContainer.innerHTML = `
+    <div id="commentContainerHeaderText" 
+         class="ml-4 font-semibold text-[#03045e]">
+      Comments
+    </div>
+  `;
 
     comments.forEach((comment) =>
       appendCommentToContainer(comment, commentContainer)
@@ -1009,30 +1016,38 @@ async function showTaskDrawer(taskId) {
   function appendCommentToContainer(comment, container) {
     const commentEl = document.createElement('div');
     commentEl.className =
-      'flex gap-3 items-start bg-white rounded-lg shadow-md pl-3 py-3';
+      'flex gap-3 items-start bg-white rounded-lg shadow-md pl-3 py-3 ' +
+      'border border-[#90e0ef] shadow-lg rounded-lg';
+
     commentEl.innerHTML = `
-            <img
-              src="${
-                comment.author.profileImage
-                  ? 'http://localhost:3001/uploads/profile/' +
-                    comment.author.profileImage
-                  : `../../../assets/img/profile.png`
-              }"
-              alt="Avatar"
-              class="w-7 h-7 rounded-full"
-            />
-            <div id="CommentInformation" class="flex flex-col gap-1">
-              <div class="flex items-center gap-2 text-md text-gray-500">
-                <span id="" class="username font-medium text-gray-700"
-                  >${comment.author.name}</span
-                >
-                <span>•</span>
-                <span class="text-sm">${comment.createdAt.split('T')[0]}</span>
-              </div>
-              <p class="message text-gray-700 text-sm">
-                ${comment.message}
-              </p>
-            </div>`;
+    <img
+      src="${
+        comment.author.profileImage
+          ? 'http://localhost:3001/uploads/profile/' +
+            comment.author.profileImage
+          : '../../../assets/img/profile.png'
+      }"
+      alt="Avatar"
+      class="w-7 h-7 rounded-full border-2 border-[#00b4d8]"
+    />
+
+    <div id="CommentInformation" class="flex flex-col gap-1">
+      <div class="flex items-center gap-2 text-md text-gray-500 text-[#03045e]">
+        <span class="username font-medium text-gray-700 text-[#03045e]">
+          ${comment.author.name}
+        </span>
+        <span>•</span>
+        <span class="text-sm text-[#0077b6]">
+          ${comment.createdAt.split('T')[0]}
+        </span>
+      </div>
+
+      <p class="message text-gray-700 text-sm text-[#03045e]/70">
+        ${comment.message}
+      </p>
+    </div>
+  `;
+
     container.appendChild(commentEl);
   }
 
