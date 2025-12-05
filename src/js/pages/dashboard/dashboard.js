@@ -10,6 +10,7 @@ import axios from 'axios';
 import { setupSocketIo } from '../../utils/setupNotification.js';
 import showToast from '../../utils/showToast.js';
 import { profileNameIcon } from '../../utils/profileIcon.js';
+import sprintService from '../../services/SprintService.js';
 
 const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
@@ -159,7 +160,7 @@ input.addEventListener('change', () => {
 //   const assigneeDropdown = document.getElementById('assignee');
 //   const data = await projectService.getProjectMembers(projectId);
 
-  assigneeDropdown.innerHTML = `<option value="null">Select an assignee</option>`;
+// assigneeDropdown.innerHTML = `<option value="null">Select an assignee</option>`;
 
 //   data.result.forEach((member) => {
 //     const option = document.createElement('option');
@@ -580,7 +581,6 @@ async function renderDashboard(project) {
   const projectName = document.getElementById('projectName');
 
   projectName.innerText = project.name;
-  projectName.innerText = project.name;
 }
 
 async function getTaskGroupedByStatus(projectId, filter, searchInput) {
@@ -597,10 +597,6 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
 
   tasks.data.result.forEach((task) => result[task.status].push(task));
 
-  // console.log(result);
-  // let emptyResult = [];
-  // emptyResult["todo"].push([{}]);
-  // console.log(emptyResult);
   return result;
 }
 
@@ -635,6 +631,7 @@ confirmDeleteBtn.addEventListener('click', async () => {
 async function renderBoard(projectId, filter = '', searchInput = '') {
   const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const project = (await projectService.getProjectById(projectId)).result;
+  const currentSprint = await sprintService.getSprintById(project.currentSprint);
   let draggedColumn = null;
 
   renderDashboard(project);
@@ -670,13 +667,17 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         <div class="space-y-3 pb-4 h-full" id="task-list"></div>
       </div>
     `;
-    columnEl.querySelector('.issue-count').innerText = (
-      columns[column] || []
-    ).length;
+    // columnEl.querySelector('.issue-count').innerText = (
+    //   columns[column] || []
+    // ).length;
 
     const tasks = columns[column] || [];
     tasks.forEach((task) => {
       filteredTasks.push(task);
+      console.log(task._id);
+      if (!currentSprint.result.tasks.includes(task._id)) {
+        return;
+      }
 
       const assignee = task.assignee ? userMap[task.assignee] : null;
 
@@ -719,14 +720,12 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
           </div>
           <div class="flex items-center">
             <span class="user-avatar cursor-pointer w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center">
-              <img src="${
-                assignee?.profileImage
-                  ? 'http://localhost:3001/uploads/profile/' +
-                    assignee.profileImage
-                  : '../../../assets/img/profile.png'
-              }" class="w-8 h-8 object-cover" title="${
-        assignee?.name || 'Unassigned'
-      }"/>
+              <img src="${assignee?.profileImage
+          ? 'http://localhost:3001/uploads/profile/' +
+          assignee.profileImage
+          : '../../../assets/img/profile.png'
+        }" class="w-8 h-8 object-cover" title="${assignee?.name || 'Unassigned'
+        }"/>
             </span>
             <div class="avatar-dropdown hidden absolute top-20 right-0 bg-white border border-gray-200 rounded">
               <ul class="assignee-list text-sm text-gray-700"></ul>
@@ -892,6 +891,8 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
     });
 
     columnContainer.appendChild(columnEl);
+
+    columnEl.querySelector('.issue-count').innerText = (taskList.childElementCount);
   });
 
   handleStatusFilter();
@@ -1013,11 +1014,10 @@ async function showTaskDrawer(taskId) {
 
     commentEl.innerHTML = `
     <img
-      src="${
+      src="${comment.author.profileImage
+        ? 'http://localhost:3001/uploads/profile/' +
         comment.author.profileImage
-          ? 'http://localhost:3001/uploads/profile/' +
-            comment.author.profileImage
-          : '../../../assets/img/profile.png'
+        : '../../../assets/img/profile.png'
       }"
       alt="Avatar"
       class="w-7 h-7 rounded-full border-2 border-[#00b4d8]"
@@ -1127,12 +1127,11 @@ async function showTaskDrawer(taskId) {
         'flex items-start bg-white rounded-lg shadow-md pl-3 py-4 border border-[#90e0ef]';
       div.innerHTML = `
       <img
-        src="${
-          assignee
-            ? assignee.profileImage
-              ? 'http://localhost:3001/uploads/profile/' + assignee.profileImage
-              : '../../../assets/img/profile.png'
+        src="${assignee
+          ? assignee.profileImage
+            ? 'http://localhost:3001/uploads/profile/' + assignee.profileImage
             : '../../../assets/img/profile.png'
+          : '../../../assets/img/profile.png'
         }"
          
         class="w-8 h-8 rounded-full border-2 border-[#00b4d8]"

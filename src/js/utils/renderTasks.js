@@ -66,10 +66,9 @@ async function createTaskList(task) {
                       <td class="px-6 py-4">${task.key}</td>
                       <td class="px-6 py-4">${task.title}</td>
                       <td class="px-6 py-4">${task.status}</td>
-                      <td class="px-6 py-4">${task.comments}</td>
                       <td class="px-6 py-4">${task.sprint}</td>
                       <td class="px-6 py-4">${assignee.name}</td>
-                      <td class="px-6 py-4">${task.dueDate.split('T')[0]}</td>
+                      <td class="px-4 py-4">${task.dueDate.split('T')[0]}</td>
                       <td class="px-6 py-4">${task.tags.join(' ')}</td>
                       <td class="px-6 py-4">${task.createdAt.split('T')[0]}</td>
                       <td class="px-6 py-4">${task.updatedAt.split('T')[0]}</td>
@@ -175,10 +174,9 @@ function createSprintTable(sprint) {
                         <th scope="col" class="px-6 py-3">Key</th>
                         <th scope="col" class="px-6 py-3">Summary</th>
                         <th scope="col" class="px-6 py-3">Status</th>
-                        <th scope="col" class="px-6 py-3">Comments</th>
                         <th scope="col" class="px-6 py-3">Sprint</th>
                         <th scope="col" class="px-6 py-3">Assignee</th>
-                        <th scope="col" class="px-6 py-3">Due Date</th>
+                        <th scope="col" class="px-4 py-3">Due Date</th>
                         <th scope="col" class="px-6 py-3">Labels</th>
                         <th scope="col" class="px-6 py-3">Created</th>
                         <th scope="col" class="px-6 py-3">Updated</th>
@@ -276,10 +274,9 @@ function createBacklogTable() {
                         <th scope="col" class="px-6 py-3">Key</th>
                         <th scope="col" class="px-6 py-3">Summary</th>
                         <th scope="col" class="px-6 py-3">Status</th>
-                        <th scope="col" class="px-6 py-3">Comments</th>
                         <th scope="col" class="px-6 py-3">Sprint</th>
                         <th scope="col" class="px-6 py-3">Assignee</th>
-                        <th scope="col" class="px-6 py-3">Due Date</th>
+                        <th scope="col" class="px-4 py-3">Due Date</th>
                         <th scope="col" class="px-6 py-3">Labels</th>
                         <th scope="col" class="px-6 py-3">Created</th>
                         <th scope="col" class="px-6 py-3">Updated</th>
@@ -325,7 +322,7 @@ async function renderSprintTasks(sprint, sprintTasks) {
   for (const taskId of sprintTasks) {
     const task = await TaskService.getTaskById(taskId);
     const tr = await createTaskList(task.data.result);
-    document.getElementById(`${sprint.name}-body`).append(tr);
+    document.getElementById(`${sprint.key}-body`).append(tr);
   }
 }
 async function renderBacklogTasks(backlogTasks) {
@@ -453,7 +450,6 @@ function dropdownEvent(sprint = {}) {
 }
 
 async function handleCompleteSprint(sprintId, project) {
-
   const sprint = await SprintService.getSprintById(sprintId);
   console.log(sprint);
   await SprintService.updateSprint(sprintId, { isCompleted: true });
