@@ -10,10 +10,11 @@ import axios from 'axios';
 import { setupNotification } from '../../utils/setupNotification.js';
 import showToast from '../../utils/showToast.js';
 import { profileNameIcon } from '../../utils/profileIcon.js';
-import { setupSidebar, updateProjectList } from './sidebar/sidebar.js';
+import { setupSidebar } from './sidebar/sidebar.js';
 import { setupNavbar } from './navbar/navbar.js';
 import { openUpdateTaskModal } from '../../utils/modals/updateTaskModal.js';
 import { openCreateTaskModal } from '../../utils/modals/createTaskModal.js';
+import { openCreateProjectModal } from '../../utils/modals/createProjectModal.js';
 
 const drawerBackdrop = document.querySelector('.drawer-backdrop');
 
@@ -26,11 +27,6 @@ commentInputEnter.addEventListener('keydown', function (event) {
     submitBtnEnter.click();
   }
 });
-
-const openProjectBtn = document.getElementById('plus-icon');
-const createProjectModal = document.getElementById('create-project-modal');
-const closeProjectBtn = document.getElementById('close-button');
-const projectCreateForm = document.getElementById('project-form');
 
 const filterBox = document.getElementById('filterBox');
 const mainDropdown = document.getElementById('mainDropdown');
@@ -58,54 +54,18 @@ document.addEventListener('click', (e) => {
   e.stopPropagation();
 });
 
-// temp
-projectCreateForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  const name = document.getElementById('name').value.trim();
-  const projectType = document.getElementById('projectType').value;
-  const columnInput = document.getElementById('project-columns').value;
-  console.log(columnInput);
-
-  let columns = ['todo', 'in-progress', 'done'];
-  if (columnInput) {
-    columns = columnInput
-      .split(',')
-      .map((col) => col.trim())
-      .filter((col) => col.length > 0);
-  }
-
-  const projectData = {
-    name,
-    projectType,
-    columns,
-  };
-
-  try {
-    await projectService.createProject(projectData);
-    createProjectModal.classList.add('hidden');
-    updateProjectList();
-  } catch (error) {
-    console.error(error.message);
-  }
-});
-
-openProjectBtn.addEventListener('click', () => {
-  createProjectModal.classList.remove('hidden');
-});
-closeProjectBtn.addEventListener('click', () => {
-  createProjectModal.classList.add('hidden');
-});
+const openProjectBtn = document.getElementById('plus-icon');
+openProjectBtn.addEventListener('click', openCreateProjectModal);
 
 const addTaskButton = document.getElementById('create-task');
-
 addTaskButton.addEventListener('click', openCreateTaskModal);
 
 export function dropdownEvent(sprint = {}) {
   const nameKey = sprint.name ? sprint.name : `backlog`;
   const dropdownButton = document.getElementById(`dropdownButton-${nameKey}`);
   const dropdownMenu = document.querySelector(`.dropdown-menu-${nameKey}`);
-  dropdownButton.addEventListener('click', function () {
+
+  dropdownButton.addEventListener('click', () => {
     dropdownMenu.classList.toggle('hidden');
   });
 
