@@ -1,4 +1,5 @@
 import { io } from 'socket.io-client';
+import { increaseNotificationCount } from '../pages/dashboard/navbar/navbar';
 
 export function setupSocketIo(callback) {
   const socket = io('http://localhost:3001/', {
@@ -12,16 +13,22 @@ export function setupSocketIo(callback) {
   socket.on('notification', (message) => callback(message));
 }
 
-// have to implement lazy loading in the front end how can we we need tp look into it
+export function showNotification(message) {
+  const notification = document.querySelector('.notification');
+  const messageEl = notification.querySelector('.message');
+  const dismissButton = notification.querySelector('.dismiss');
 
-let currentPage = 1;
-let loading = false;
+  messageEl.textContent = message;
+  notification.classList.remove('hidden');
+  increaseNotificationCount();
 
-async function loadNotification() {
-  if (loading) {
-    return;
-  }
-  loading = true;
+  dismissButton.addEventListener('click', () => {
+    notification.classList.add('hidden');
+  });
 
-  const req = axios.get("")
+  setTimeout(() => notification.classList.add('hidden'), 5000);
+}
+
+export function setupNotification() {
+  setupSocketIo(showNotification);
 }
