@@ -10,6 +10,7 @@ import axios from 'axios';
 import { setupSocketIo } from '../../utils/setupNotification.js';
 import showToast from '../../utils/showToast.js';
 import { profileNameIcon } from '../../utils/profileIcon.js';
+import { showDeleteModal } from '../../utils/confirmationModal.js';
 
 const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
@@ -153,22 +154,6 @@ input.addEventListener('change', () => {
     fileName.textContent = 'No Files Chosen';
   }
 });
-
-// async function populateAssigneeDropDown() {
-//   const projectId = localStorage.getItem('selectedProject');
-//   const assigneeDropdown = document.getElementById('assignee');
-//   const data = await projectService.getProjectMembers(projectId);
-
-//  assigneeDropdown.innerHTML = `<option value="null">Select an assignee</option>`;
-
-//   data.result.forEach((member) => {
-//     const option = document.createElement('option');
-//     console.log(member._id);
-//     option.value = member._id;
-//     option.textContent = member.email;
-//     assigneeDropdown.appendChild(option);
-//   });
-// }
 
 taskForm.addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -602,33 +587,33 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
   return result;
 }
 
-const deleteModal = document.getElementById('deleteModal');
-const cancelDeleteBtn = document.getElementById('cancelDelete');
-const confirmDeleteBtn = document.getElementById('confirmDelete');
+// const deleteModal = document.getElementById('deleteModal');
+// const cancelDeleteBtn = document.getElementById('cancelDelete');
+// const confirmDeleteBtn = document.getElementById('confirmDelete');
 
-let taskToDelete = null;
+// let taskToDelete = null;
 
-async function showDeleteModal(taskId) {
-  taskToDelete = taskId;
-  deleteModal.classList.remove('hidden');
-  drawerBackdrop.classList.remove('hidden');
-}
+// async function showDeleteModal(taskId) {
+//   taskToDelete = taskId;
+//   deleteModal.classList.remove('hidden');
+//   drawerBackdrop.classList.remove('hidden');
+// }
 
-cancelDeleteBtn.addEventListener('click', () => {
-  deleteModal.classList.add('hidden');
-  drawerBackdrop.classList.add('hidden');
-});
+// cancelDeleteBtn.addEventListener('click', () => {
+//   deleteModal.classList.add('hidden');
+//   drawerBackdrop.classList.add('hidden');
+// });
 
-confirmDeleteBtn.addEventListener('click', async () => {
-  if (taskToDelete) {
-    await taskService.deleteTask(taskToDelete);
-    renderBoard(localStorage.getItem('selectedProject'));
-    // renderTasksList();
-    renderDashBoardTasks();
-  }
-  deleteModal.classList.add('hidden');
-  drawerBackdrop.classList.add('hidden');
-});
+// confirmDeleteBtn.addEventListener('click', async () => {
+//   if (taskToDelete) {
+//     await taskService.deleteTask(taskToDelete);
+//     renderBoard(localStorage.getItem('selectedProject'));
+//     // renderTasksList();
+//     renderDashBoardTasks();
+//   }
+//   deleteModal.classList.add('hidden');
+//   drawerBackdrop.classList.add('hidden');
+// });
 
 async function renderBoard(projectId, filter = '', searchInput = '') {
   const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
