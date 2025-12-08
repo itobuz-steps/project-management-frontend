@@ -401,6 +401,7 @@ document.addEventListener('click', (e) => {
   e.stopPropagation();
 });
 
+
 const projectsMenu = document.getElementById('projectsMenu');
 const usersMenu = document.getElementById('usersMenu');
 const projectsDropdown = document.getElementById('projectsDropdown');

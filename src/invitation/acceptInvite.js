@@ -10,10 +10,10 @@ async function joinInvite() {
     return;
   }
 
-  const authToken = localStorage.getItem('accessToken');
+  const authToken = localStorage.getItem('access_token');
 
   if (!authToken) {
-    window.location.href = `./pages/login.html?redirectTo=${encodeURIComponent(
+    window.location.href = `/pages/signup.html?redirectTo=${encodeURIComponent(
       window.location.href
     )}`;
     return;
@@ -30,8 +30,8 @@ async function joinInvite() {
       messageEl.textContent = data.message;
 
       setTimeout(() => {
-        window.location.href = '../pages/dashboard.html';
-      }, 2000);
+        window.location.href = '/pages/dashboard.html';
+      }, 100);
     } else {
       messageEl.textContent = data.message;
     }
