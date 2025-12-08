@@ -1,5 +1,5 @@
 import authService from '../../services/AuthService.js';
-import { showMessage } from '../../utils/showMessage.js';
+import showToast from '../../utils/showToast.js';
 
 const signUpTab = document.querySelector('.sign-up');
 const loginTab = document.querySelector('.login');
@@ -85,17 +85,16 @@ async function handleSignup(event) {
     localStorage.setItem('pendingEmail', email);
     localStorage.setItem('username', name);
 
-    showMessage(
+    showToast(
       'Registration successful! Please check your email for OTP.',
-      'success',
-      'signup-message'
+      'success'
     );
 
     setTimeout(() => {
       window.location.href = 'verifyOtpPage.html';
     }, 1000);
   } catch (error) {
-    showMessage(error.message, 'danger', 'signup-message');
+    showToast(error.message, 'danger');
   } finally {
     signupBtn.textContent = originalText;
     signupBtn.disabled = false;
@@ -124,15 +123,15 @@ async function handleLogin(event) {
   try {
     await authService.login(email, password);
     localStorage.setItem('userEmail', email);
-    showMessage('Login successful', 'success');
+    showToast('Login successful', 'success');
 
     setTimeout(() => {
       window.location.href = 'dashboard';
     }, 2000);
   } catch (error) {
-    showMessage(
+    showToast(
       error.response?.data?.message ||
-      'Login failed. Please check your credentials.',
+        'Login failed. Please check your credentials.',
       'danger'
     );
   } finally {

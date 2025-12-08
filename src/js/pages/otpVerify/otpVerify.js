@@ -1,5 +1,5 @@
 import authService from '../../services/AuthService.js';
-import { showMessage } from '../../utils/showMessage.js';
+import { showToast } from '../../utils/showToast.js';
 
 const otpInput = document.getElementById('otp-input');
 const verifyForm = document.querySelector('.verify-form');
@@ -10,7 +10,7 @@ async function handleOtpVerification(event) {
   const email = localStorage.getItem('pendingEmail');
 
   if (!email) {
-    showMessage('Email not found. Please try registering again.', 'warning');
+    showToast('Email not found. Please try registering again.', 'warning');
     window.location.href = 'signup';
     return;
   }
@@ -25,13 +25,13 @@ async function handleOtpVerification(event) {
 
     localStorage.removeItem('pendingEmail');
 
-    showMessage('OTP verified successfully! Redirecting...', 'success');
+    showToast('OTP verified successfully! Redirecting...', 'success');
 
     setTimeout(() => {
       window.location.href = 'dashboard';
     }, 1000);
   } catch (error) {
-    showMessage(
+    showToast(
       error.message || 'OTP verification failed. Please try again.',
       'danger'
     );
@@ -45,7 +45,7 @@ async function handleResendOtp() {
   const email = localStorage.getItem('pendingEmail');
 
   if (!email) {
-    showMessage('Email not found. Please try registering again.', 'warning');
+    showToast('Email not found. Please try registering again.', 'warning');
     window.location.href = 'signup.html';
     return;
   }
@@ -53,9 +53,9 @@ async function handleResendOtp() {
   try {
     await authService.sendOtp(email);
 
-    showMessage('OTP has been resent to your email.');
+    showToast('OTP has been resent to your email.');
   } catch (error) {
-    showMessage(
+    showToast(
       error.message || 'Failed to resend OTP. Please try again.',
       'danger'
     );
