@@ -472,10 +472,7 @@ async function showTaskDrawer(taskId) {
   const profileName = taskDrawer.querySelector('.profile-name');
 
   const editTaskButton = document.querySelector('#edit-task-button');
-  editTaskButton.addEventListener('click', () => {
-    editModal.classList.remove('hidden');
-    openEditModal(taskId);
-  });
+  editTaskButton.addEventListener('click', () => openUpdateTaskModal(taskId));
 
   // subtasks render
   renderSubtasks(task);
