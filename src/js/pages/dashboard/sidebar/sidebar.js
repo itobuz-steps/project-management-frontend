@@ -5,7 +5,6 @@ import { renderBoard, loadProjectMembers } from '../dashboard';
 const body = document.querySelector('body');
 const sidebar = document.querySelector('#sidebar');
 const toggleBtn = document.querySelector('.toggle-sidebar-btn');
-
 const projectsDropdown = document.getElementById('projectsDropdown');
 const usersMenu = document.getElementById('usersMenu');
 const userListContainer = document.getElementById('usersDropdown');
@@ -24,9 +23,10 @@ function toggleSidebar(action = 'toggle') {
   }
 }
 
-async function updateProjectList() {
+export async function updateProjectList() {
   try {
     const projects = await projectService.getAllProjects();
+
     projectsDropdown.innerHTML = '';
     console.log('projects: ', projects);
 
@@ -130,7 +130,9 @@ function addEventListenersSidebar() {
     const clickedOnUserDropdown =
       usersMenu.contains(e.target) || userListContainer.contains(e.target);
 
-    if (clickedOnProjectDropdown || clickedOnUserDropdown) return;
+    if (clickedOnProjectDropdown || clickedOnUserDropdown) {
+      return;
+    }
 
     projectsDropdown.classList.remove('max-h-60');
     projectsDropdown.classList.add('max-h-0');
@@ -143,6 +145,7 @@ function addEventListenersSidebar() {
 
   projectDropdownContainer.addEventListener('click', (event) => {
     const targetLi = event.target;
+
     localStorage.setItem('selectedProject', targetLi.dataset.id);
 
     [...targetLi.parentElement.children].forEach((child) => {
