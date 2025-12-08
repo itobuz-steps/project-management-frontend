@@ -1,4 +1,4 @@
-import taskService from '../services/TaskService';
+import taskService from '../services/TaskService.js';
 
 const drawerBackdrop = document.querySelector('.drawer-backdrop');
 const deleteModal = document.getElementById('deleteModal');

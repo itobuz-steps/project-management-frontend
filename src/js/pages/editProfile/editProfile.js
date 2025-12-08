@@ -1,6 +1,6 @@
 import '../../../scss/main.css';
 import authService from '../../services/AuthService.js';
-import { showMessage } from '../../utils/showMessage.js';
+import showToast from '../../utils/showToast.js';
 
 async function editProfile() {
   const form = document.getElementById('edit-profile-form');
@@ -30,13 +30,13 @@ async function editProfile() {
     e.preventDefault();
     try {
       await authService.updateUserInfo(name.value, profileImage.files[0]);
-      showMessage('Profile Updated', 'success');
+      showToast('Profile Updated', 'success');
 
       setTimeout(() => {
         window.location.href = 'dashboard';
       }, 1500);
     } catch (err) {
-      showMessage(`${err.response.data.error}`, 'danger');
+      showToast(`${err.response.data.error}`, 'danger');
     }
   });
 }
