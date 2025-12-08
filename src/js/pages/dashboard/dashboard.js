@@ -159,7 +159,7 @@ input.addEventListener('change', () => {
 //   const assigneeDropdown = document.getElementById('assignee');
 //   const data = await projectService.getProjectMembers(projectId);
 
-  assigneeDropdown.innerHTML = `<option value="null">Select an assignee</option>`;
+//  assigneeDropdown.innerHTML = `<option value="null">Select an assignee</option>`;
 
 //   data.result.forEach((member) => {
 //     const option = document.createElement('option');
@@ -199,30 +199,30 @@ taskForm.addEventListener('submit', async (e) => {
 
     tags: document.getElementById('tags').value
       ? document
-        .getElementById('tags')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('tags')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     block: document.getElementById('block').value
       ? document
-        .getElementById('block')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('block')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     blockedBy: document.getElementById('BlockedBy').value
       ? document
-        .getElementById('BlockedBy')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('BlockedBy')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     relatesTo: document.getElementById('relatesTo').value
       ? document
-        .getElementById('relatesTo')
-        .value.split(',')
-        .map((t) => t.trim())
+          .getElementById('relatesTo')
+          .value.split(',')
+          .map((t) => t.trim())
       : [],
 
     dueDate: dateValue,
@@ -460,8 +460,6 @@ document.addEventListener('click', (e) => {
   }
 });
 
-
-
 async function showUserList() {
   const users = await projectService.getProjectMembers(
     localStorage.getItem('selectedProject')
@@ -686,8 +684,9 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         'task flex flex-col max-w-sm p-4 bg-gray-100 text-black gap-4 relative cursor-pointer';
       taskEl.innerHTML = `
         <div class="card-header flex justify-between items-center">
-          <p class="text-lg border border-transparent rounded-lg font-medium hover:border-gray-400">${task.title
-        }</p>
+          <p class="text-lg border border-transparent rounded-lg font-medium hover:border-gray-400">${
+            task.title
+          }</p>
           <div class="relative">
             <button class="outline-none menu-button">
               <svg width="18px" height="18px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#00000" class="bi bi-three-dots mr-2">
@@ -708,13 +707,16 @@ async function renderBoard(projectId, filter = '', searchInput = '') {
         </div>
         <div class="card-footer flex justify-between items-center text-sm text-gray-400">
           <div class="flex items-center gap-2">
-            <span class="type-tag bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm">${task.key
-        }</span>
+            <span class="type-tag bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm">${
+              task.key
+            }</span>
             <select class="type-selector text-sm border border-gray-300 rounded px-1 py-1 focus:outline-none">
-              <option value="story" ${task.type === 'story' ? 'selected' : ''
-        }>Story</option>
-              <option value="task" ${task.type === 'task' ? 'selected' : ''
-        }>Task</option>
+              <option value="story" ${
+                task.type === 'story' ? 'selected' : ''
+              }>Story</option>
+              <option value="task" ${
+                task.type === 'task' ? 'selected' : ''
+              }>Task</option>
             </select>
           </div>
           <div class="flex items-center">
