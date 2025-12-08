@@ -295,7 +295,9 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       const avatarDropdown = taskEl.querySelector('.avatar-dropdown');
       const list = taskEl.querySelector('.assignee-list');
 
-      let activeProjectMembers;
+      let activeProjectMembers = [];
+      let selectedUserId = null;
+      let selectedUser = null;
 
       async function populateAvatarDropdown(dropdownList) {
         try {
@@ -325,12 +327,13 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         }
       });
 
-      list.addEventListener('click', (e) => {
+      list.addEventListener('click', async (e) => {
         if (e.target.tagName === 'LI') {
-          const selectedUserId = e.target.dataset.id;
+          selectedUserId = e.target.dataset.id;
 
           //serach for the selecte users
-          const selectedUser = activeProjectMembers.find(
+
+          selectedUser = activeProjectMembers.find(
             (u) => u._id == selectedUserId
           );
 
@@ -344,18 +347,16 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
             }
           }
 
+          const taskId = taskEl.dataset._id;
+          await taskService.updateTask(taskId, {
+            assignee: selectedUserId,
+            profileImage: selectedUser?.profileImage || null,
+          });
           console.log('Assigned user:', selectedUserId);
 
           avatarDropdown.classList.add('hidden');
         }
       });
-
-      // const updateAssignee = async(()=>
-      // {
-      //   await taskService.updateTask(taskId, {
-      //   assignee: selectedUserId
-      //   });
-      // })
 
       document.addEventListener('click', (e) => {
         const isAvatar = userAvatar.contains(e.target);
@@ -472,8 +473,12 @@ async function showTaskDrawer(taskId) {
 
   const editTaskButton = document.querySelector('#edit-task-button');
   editTaskButton.addEventListener('click', () => {
-    openUpdateTaskModal(taskId);
+    editModal.classList.remove('hidden');
+    openEditModal(taskId);
   });
+
+  // subtasks render
+  renderSubtasks(task);
 
   const commentInput = taskDrawer.querySelector('#commentInput');
   const commentSubmit = taskDrawer.querySelector('#submitButton');
@@ -495,6 +500,7 @@ async function showTaskDrawer(taskId) {
   taskDrawer.dataset.id = task._id;
   titleEl.textContent = task.title;
   descriptionEl.textContent = task.description;
+  profileImageEl.src = '../../../assets/img/profile.png';
 
   if (assignee) {
     assigneeEl.textContent = assignee.name;
@@ -559,7 +565,7 @@ async function showTaskDrawer(taskId) {
 
     <div id="CommentInformation" class="flex flex-col gap-1">
       <div class="flex items-center gap-2 text-md text-gray-500 text-[#03045e]">
-        <span class="username font-medium text-gray-700 text-[#53549e]">
+        <span class="username font-medium text-gray-700 text-[#03045e]">
           ${comment.author.name}
         </span>
         <span>•</span>
@@ -579,6 +585,107 @@ async function showTaskDrawer(taskId) {
   }
 
   updateCommentList();
+
+  function createSubtask() {
+    const subtaskBtn = taskDrawer.querySelector('#subtaskButton');
+    const subtaskDropdown = taskDrawer.querySelector('#subtaskDropdown');
+    const subtaskList = taskDrawer.querySelector('#subtaskList');
+    const saveSubtasksBtn = taskDrawer.querySelector('#saveSubtasksBtn');
+
+    subtaskBtn.addEventListener('click', async () => {
+      subtaskDropdown.classList.toggle('hidden');
+
+      const allTasks = (
+        await taskService.getTaskByProjectId(
+          localStorage.getItem('selectedProject')
+        )
+      ).data.result;
+
+      subtaskList.innerHTML = '';
+
+      allTasks.forEach((t) => {
+        if (t._id === task._id) return;
+
+        const isChecked = task.subTask?.includes(t._id);
+
+        const subTask = document.createElement('div');
+        subTask.className = 'flex items-center gap-2 mb-1';
+
+        subTask.innerHTML = `
+        <input
+          type="checkbox"
+          class="subtask-check"
+          value="${t._id}"
+          ${isChecked ? 'checked' : ''}
+        />
+        <span>${t.title}</span>
+      `;
+
+        subtaskList.appendChild(subTask);
+      });
+
+      saveSubtasksBtn.classList.remove('hidden');
+    });
+
+    saveSubtasksBtn.addEventListener('click', async () => {
+      const selectedIds = [...taskDrawer.querySelectorAll('.subtask-check')]
+        .filter((c) => c.checked)
+        .map((c) => c.value);
+
+      await taskService.updateTask(task._id, { subTask: selectedIds });
+
+      showToast('Subtasks updated!', 'success');
+
+      subtaskDropdown.classList.add('hidden');
+
+      showTaskDrawer(task._id);
+    });
+  }
+
+  createSubtask();
+
+  async function renderSubtasks(task) {
+    const list = document.getElementById('subtasksList');
+    list.innerHTML = '';
+    console.log(assignee);
+    if (!task.subTask || task.subTask.length === 0) {
+      list.innerHTML = "<p class='text-gray-500 text-sm'>No subtasks</p>";
+      return;
+    }
+
+    const all = (
+      await taskService.getTaskByProjectId(
+        localStorage.getItem('selectedProject')
+      )
+    ).data.result;
+
+    const subtasks = all.filter((t) => task.subTask.includes(t._id));
+
+    subtasks.forEach((st) => {
+      const div = document.createElement('div');
+      div.className =
+        'flex items-start bg-white rounded-lg shadow-md pl-3 py-4 border border-[#90e0ef]';
+      div.innerHTML = `
+      <img
+        src="${
+          assignee
+            ? assignee.profileImage
+              ? 'http://localhost:3001/uploads/profile/' + assignee.profileImage
+              : '../../../assets/img/profile.png'
+            : '../../../assets/img/profile.png'
+        }"
+         
+        class="w-8 h-8 rounded-full border-2 border-[#00b4d8]"
+        title = "${assignee ? assignee.name : 'unassigned'}"
+      />
+      <div class="ml-3">
+        <span class="font-medium text-[#03045e] text-md">${st.title}</span>
+        <p class="text-sm text-[#03045e]/70">${st.description || ''}</p>
+      </div>
+    `;
+      list.appendChild(div);
+    });
+  }
 }
 
 export async function loadProjectMembers(projectId) {
