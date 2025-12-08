@@ -1,4 +1,4 @@
-import '../../../scss/main.css';
+import '../../../style/main.css';
 import {
   renderTasksList,
   renderDashBoardTasks,
@@ -7,13 +7,12 @@ import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
 import commentService from '../../services/CommentService.js';
 import axios from 'axios';
-import { setupSocketIo } from '../../utils/setupNotification.js';
+import { setupNotification } from '../../utils/setupNotification.js';
 import showToast from '../../utils/showToast.js';
 import { profileNameIcon } from '../../utils/profileIcon.js';
-import { setupSidebar } from './sidebar/sidebar.js';
+import { setupSidebar, updateProjectList } from './sidebar/sidebar.js';
+import { setupNavbar } from './navbar/navbar.js';
 
-const profileBtn = document.getElementById('profileBtn');
-const dropdownMenu = document.getElementById('dropdownMenu');
 const drawerBackdrop = document.querySelector('.drawer-backdrop');
 
 const commentInputEnter = document.getElementById('commentInput');
@@ -24,17 +23,6 @@ commentInputEnter.addEventListener('keydown', function (event) {
     event.preventDefault();
     submitBtnEnter.click();
   }
-});
-
-profileBtn.addEventListener('click', () => {
-  dropdownMenu.classList.toggle('hidden');
-});
-
-document.addEventListener('click', (e) => {
-  if (!profileBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
-    dropdownMenu.classList.add('hidden');
-  }
-  e.stopPropagation();
 });
 
 const openProjectBtn = document.getElementById('plus-icon');
@@ -77,7 +65,7 @@ projectCreateForm.addEventListener('submit', async (e) => {
   const columnInput = document.getElementById('project-columns').value;
   console.log(columnInput);
 
-  let columns = [];
+  let columns = ['todo', 'in-progress', 'done'];
   if (columnInput) {
     columns = columnInput
       .split(',')
@@ -92,16 +80,9 @@ projectCreateForm.addEventListener('submit', async (e) => {
   };
 
   try {
-    const createdProject = await projectService.createProject(projectData);
-    console.log(createdProject);
-
+    await projectService.createProject(projectData);
     createProjectModal.classList.add('hidden');
-
-    renderBoard(localStorage.getItem('selectedProject'));
-    // renderTasksList();
-    renderDashBoardTasks();
-
-    console.log(createdProject);
+    updateProjectList();
   } catch (error) {
     console.error(error.message);
   }
@@ -360,10 +341,6 @@ editForm.addEventListener('submit', async (e) => {
 closeEditTask.addEventListener('click', () => {
   editModal.classList.add('hidden');
 });
-
-//update task
-
-const listTableBody = document.getElementById('table-body');
 
 export function dropdownEvent(sprint = {}) {
   const nameKey = sprint.name ? sprint.name : `backlog`;
@@ -756,20 +733,6 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
   renderTasksList(filteredTasks);
 }
 
-const searchForm = document.getElementById('search-input-form');
-const searchInput = document.getElementById('search-input-field');
-searchInput.addEventListener('input', handleSearch);
-searchForm.addEventListener('submit', handleSearch);
-
-function handleSearch(e) {
-  e.preventDefault();
-  renderBoard(
-    localStorage.getItem('selectedProject'),
-    '',
-    searchInput.value.trim()
-  );
-}
-
 async function showTaskDrawer(taskId) {
   const task = (await taskService.getTaskById(taskId)).data.result;
   const assignee = task.assignee
@@ -1110,60 +1073,8 @@ inviteForm.addEventListener('submit', function (event) {
   emailInput.value = '';
 });
 
-export function showNotification(message) {
-  const notification = document.querySelector('.notification');
-  const messageEl = notification.querySelector('.message');
-  const dismissButton = notification.querySelector('.dismiss');
-
-  messageEl.textContent = message;
-  notification.classList.remove('hidden');
-  increaseNotificationCount();
-
-  if (dismissButton) {
-    dismissButton.addEventListener('click', () => {
-      if (notification) notification.classList.add('hidden');
-    });
-  }
-  setTimeout(() => notification.classList.add('hidden'), 5000);
-}
-
-let notificationCount =
-  parseInt(localStorage.getItem('notificationCount')) || 0;
-
-const badge = document.querySelector('.notification-badge');
-if (badge && notificationCount > 0) {
-  badge.textContent = notificationCount;
-  badge.classList.remove('hidden');
-}
-
-function increaseNotificationCount() {
-  notificationCount++;
-  localStorage.setItem('notificationCount', notificationCount);
-
-  const badge = document.querySelector('.notification-badge');
-  if (!badge) return;
-
-  badge.textContent = notificationCount;
-  badge.classList.remove('hidden');
-}
-
-const notificationIcon = document.querySelector('.notification-icon');
-if (notificationIcon) {
-  notificationIcon.addEventListener('click', () => {
-    notificationCount = 0;
-    localStorage.setItem('notificationCount', 0);
-    const badge = document.querySelector('.notification-badge');
-    if (!badge) {
-      return;
-    }
-
-    badge.textContent = 0;
-    badge.classList.add('hidden');
-  });
-}
-
-setupSocketIo(showNotification);
 setupSidebar();
-
+setupNotification();
+setupNavbar();
 renderBoard(localStorage.getItem('selectedProject'));
 renderDashBoardTasks();
