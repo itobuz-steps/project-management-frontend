@@ -8,6 +8,7 @@ import taskService from '../../services/TaskService.js';
 import axios from 'axios';
 import { setupNotification } from '../../utils/setupNotification.js';
 import showToast from '../../utils/showToast.js';
+import sprintService from '../../services/SprintService.js';
 import { showDeleteModal } from '../../utils/modals/confirmationModal.js';
 import { showTaskDrawer } from '../taskDrawer/taskDrawer.js';
 import { loadProjectMembers } from '../loadMembers/loadMembers.js';
@@ -119,7 +120,6 @@ async function renderDashboard(project) {
   const projectName = document.getElementById('projectName');
 
   projectName.innerText = project.name;
-  projectName.innerText = project.name;
 }
 
 async function getTaskGroupedByStatus(projectId, filter, searchInput) {
@@ -142,6 +142,7 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
 export async function renderBoard(projectId, filter = '', searchInput = '') {
   const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const project = (await projectService.getProjectById(projectId)).result;
+  const currentSprint = await sprintService.getSprintById(project.currentSprint);
   let draggedColumn = null;
 
   renderDashboard(project);
@@ -177,13 +178,17 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         <div class="space-y-3 pb-4 h-full" id="task-list"></div>
       </div>
     `;
-    columnEl.querySelector('.issue-count').innerText = (
-      columns[column] || []
-    ).length;
+    // columnEl.querySelector('.issue-count').innerText = (
+    //   columns[column] || []
+    // ).length;
 
     const tasks = columns[column] || [];
     tasks.forEach((task) => {
       filteredTasks.push(task);
+      console.log(task._id);
+      if (!currentSprint.result.tasks.includes(task._id)) {
+        return;
+      }
 
       const assignee = task.assignee ? userMap[task.assignee] : null;
 
@@ -230,14 +235,12 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
           </div>
           <div class="flex items-center">
             <span class="user-avatar cursor-pointer w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center">
-              <img src="${
-                assignee?.profileImage
-                  ? 'http://localhost:3001/uploads/profile/' +
-                    assignee.profileImage
-                  : '../../../assets/img/profile.png'
-              }" class="w-8 h-8 object-cover" title="${
-        assignee?.name || 'Unassigned'
-      }"/>
+              <img src="${assignee?.profileImage
+          ? 'http://localhost:3001/uploads/profile/' +
+          assignee.profileImage
+          : '../../../assets/img/profile.png'
+        }" class="w-8 h-8 object-cover" title="${assignee?.name || 'Unassigned'
+        }"/>
             </span>
             <div class="avatar-dropdown hidden absolute top-20 right-0 bg-white border border-gray-200 rounded">
               <ul class="assignee-list text-sm text-gray-700"></ul>
@@ -403,6 +406,8 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
     });
 
     columnContainer.appendChild(columnEl);
+
+    columnEl.querySelector('.issue-count').innerText = (taskList.childElementCount);
   });
 
   handleStatusFilter();
