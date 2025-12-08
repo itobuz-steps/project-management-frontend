@@ -2,6 +2,7 @@ import taskService from '../../services/TaskService';
 import commentService from '../../services/CommentService';
 import { profileNameIcon } from '../../utils/profileIcon';
 import showToast from '../../utils/showToast';
+import { openUpdateTaskModal } from '../../utils/modals/updateTaskModal';
 
 export async function showTaskDrawer(taskId) {
   const task = (await taskService.getTaskById(taskId)).data.result;
@@ -22,11 +23,11 @@ export async function showTaskDrawer(taskId) {
   const profileName = taskDrawer.querySelector('.profile-name');
   const commentInput = taskDrawer.querySelector('#commentInput');
   const commentSubmit = taskDrawer.querySelector('#submitButton');
-
+  const editModal = document.getElementById('update-task-modal');
   const editTaskButton = document.querySelector('#edit-task-button');
   editTaskButton.addEventListener('click', () => {
     editModal.classList.remove('hidden');
-    openEditModal(taskId);
+    openUpdateTaskModal(taskId);
   });
 
   // subtasks render

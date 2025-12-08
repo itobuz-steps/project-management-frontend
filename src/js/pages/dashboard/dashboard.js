@@ -5,11 +5,10 @@ import {
 } from '../../utils/renderTasks.js';
 import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
-// import commentService from '../../services/CommentService.js';
 import axios from 'axios';
 import { setupNotification } from '../../utils/setupNotification.js';
 import showToast from '../../utils/showToast.js';
-import { showDeleteModal } from '../../utils/confirmationModal.js';
+import { showDeleteModal } from '../../utils/modals/confirmationModal.js';
 import { showTaskDrawer } from '../taskDrawer/taskDrawer.js';
 import { loadProjectMembers } from '../loadMembers/loadMembers.js';
 import { setupSidebar } from './sidebar/sidebar.js';
@@ -17,8 +16,6 @@ import { setupNavbar } from './navbar/navbar.js';
 import { openUpdateTaskModal } from '../../utils/modals/updateTaskModal.js';
 import { openCreateTaskModal } from '../../utils/modals/createTaskModal.js';
 import { openCreateProjectModal } from '../../utils/modals/createProjectModal.js';
-
-const drawerBackdrop = document.querySelector('.drawer-backdrop');
 
 const filterBox = document.getElementById('filterBox');
 const mainDropdown = document.getElementById('mainDropdown');
@@ -139,40 +136,8 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
 
   tasks.data.result.forEach((task) => result[task.status].push(task));
 
-  // console.log(result);
-  // let emptyResult = [];
-  // emptyResult["todo"].push([{}]);
-  // console.log(emptyResult);
   return result;
 }
-
-// const deleteModal = document.getElementById('deleteModal');
-// const cancelDeleteBtn = document.getElementById('cancelDelete');
-// const confirmDeleteBtn = document.getElementById('confirmDelete');
-
-// let taskToDelete = null;
-
-// async function showDeleteModal(taskId) {
-//   taskToDelete = taskId;
-//   deleteModal.classList.remove('hidden');
-//   drawerBackdrop.classList.remove('hidden');
-// }
-
-// cancelDeleteBtn.addEventListener('click', () => {
-//   deleteModal.classList.add('hidden');
-//   drawerBackdrop.classList.add('hidden');
-// });
-
-// confirmDeleteBtn.addEventListener('click', async () => {
-//   if (taskToDelete) {
-//     await taskService.deleteTask(taskToDelete);
-//     renderBoard(localStorage.getItem('selectedProject'));
-//     // renderTasksList();
-//     renderDashBoardTasks();
-//   }
-//   deleteModal.classList.add('hidden');
-//   drawerBackdrop.classList.add('hidden');
-// });
 
 export async function renderBoard(projectId, filter = '', searchInput = '') {
   const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
@@ -323,7 +288,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         if (e.target.tagName === 'LI') {
           selectedUserId = e.target.dataset.id;
 
-          //serach for the selecte users
+          //search for the selected users
 
           selectedUser = activeProjectMembers.find(
             (u) => u._id == selectedUserId
@@ -445,270 +410,6 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
   renderTasksList(filteredTasks);
 }
 
-// async function showTaskDrawer(taskId) {
-//   const task = (await taskService.getTaskById(taskId)).data.result;
-//   const assignee = task.assignee
-//     ? (await taskService.getUserDetailsById(task.assignee)).data.result
-//     : null;
-
-//   const taskDrawer = document.querySelector('.task-drawer');
-
-//   const titleEl = taskDrawer.querySelector('.title');
-//   const descriptionEl = taskDrawer.querySelector('.description');
-//   const assigneeEl = taskDrawer.querySelector('.assignee');
-//   const profileImageEl = taskDrawer.querySelector('.profile-image');
-//   const dueDateEl = taskDrawer.querySelector('.due-date');
-//   const closeButton = taskDrawer.querySelector('.close-btn');
-//   const status = taskDrawer.querySelector('#statusSelect');
-//   const priority = taskDrawer.querySelector('#prioritySelect');
-//   const profileName = taskDrawer.querySelector('.profile-name');
-
-//   const editTaskButton = document.querySelector('#edit-task-button');
-//   editTaskButton.addEventListener('click', () => {
-//     editModal.classList.remove('hidden');
-//     openEditModal(taskId);
-//   });
-
-//   // subtasks render
-//   renderSubtasks(task);
-
-//   const commentInput = taskDrawer.querySelector('#commentInput');
-//   const commentSubmit = taskDrawer.querySelector('#submitButton');
-
-//   commentSubmit.addEventListener('click', async () => {
-//     const commentBody = {
-//       taskId: task._id,
-//       message: commentInput.value.trim(),
-//     };
-
-//     await commentService.createComment(commentBody);
-//     commentInput.value = '';
-//     updateCommentList();
-//   });
-
-//   status.value = task.status;
-//   priority.value = task.priority;
-
-//   taskDrawer.dataset.id = task._id;
-//   titleEl.textContent = task.title;
-//   descriptionEl.textContent = task.description;
-//   profileImageEl.src = '../../../assets/img/profile.png';
-
-//   if (assignee) {
-//     assigneeEl.textContent = assignee.name;
-//     if (assignee.profileImage) {
-//       profileImageEl.src =
-//         'http://localhost:3001/uploads/profile/' + assignee.profileImage;
-//     } else {
-//       profileNameIcon(profileName);
-//     }
-//   } else {
-//     assigneeEl.textContent = 'No assignee';
-//   }
-
-//   dueDateEl.textContent = task.dueDate.split('T')[0];
-
-//   taskDrawer.classList.remove('translate-x-full');
-//   taskDrawer.classList.add('transform-none');
-//   drawerBackdrop.classList.remove('hidden');
-
-//   closeButton.addEventListener('click', () => {
-//     taskDrawer.classList.add('translate-x-full');
-//     taskDrawer.classList.remove('transform-none');
-//     drawerBackdrop.classList.add('hidden');
-//     profileImageEl.classList.remove('hidden');
-//   });
-
-//   // comments
-
-//   async function updateCommentList() {
-//     const comments = (await commentService.getAllComments(task._id)).result;
-
-//     const commentContainer = taskDrawer.querySelector('#commentsContainer');
-//     commentContainer.innerHTML = `
-//     <div id="commentContainerHeaderText"
-//          class="ml-4 font-semibold text-[#03045e]">
-//       Comments
-//     </div>
-//   `;
-
-//     comments.forEach((comment) =>
-//       appendCommentToContainer(comment, commentContainer)
-//     );
-//   }
-
-//   function appendCommentToContainer(comment, container) {
-//     const commentEl = document.createElement('div');
-//     commentEl.className =
-//       'flex gap-3 items-start bg-white rounded-lg shadow-md pl-3 py-3 ' +
-//       'border border-[#90e0ef] shadow-lg rounded-lg';
-
-//     commentEl.innerHTML = `
-//     <img
-//       src="${
-//         comment.author.profileImage
-//           ? 'http://localhost:3001/uploads/profile/' +
-//             comment.author.profileImage
-//           : '../../../assets/img/profile.png'
-//       }"
-//       alt="Avatar"
-//       class="w-7 h-7 rounded-full border-2 border-[#00b4d8]"
-//     />
-
-//     <div id="CommentInformation" class="flex flex-col gap-1">
-//       <div class="flex items-center gap-2 text-md text-gray-500 text-[#03045e]">
-//         <span class="username font-medium text-gray-700 text-[#03045e]">
-//           ${comment.author.name}
-//         </span>
-//         <span>•</span>
-//         <span class="text-sm text-[#0077b6]">
-//           ${comment.createdAt.split('T')[0]}
-//         </span>
-//       </div>
-
-//       <p class="message text-gray-700 text-sm text-[#03045e]/70">
-//         ${comment.message}
-//       </p>
-//     </div>
-//   `;
-
-//     container.appendChild(commentEl);
-//     container.scrollTop = container.scrollHeight;
-//   }
-
-//   updateCommentList();
-
-//   function createSubtask() {
-//     const subtaskBtn = taskDrawer.querySelector('#subtaskButton');
-//     const subtaskDropdown = taskDrawer.querySelector('#subtaskDropdown');
-//     const subtaskList = taskDrawer.querySelector('#subtaskList');
-//     const saveSubtasksBtn = taskDrawer.querySelector('#saveSubtasksBtn');
-
-//     subtaskBtn.addEventListener('click', async () => {
-//       subtaskDropdown.classList.toggle('hidden');
-
-//       const allTasks = (
-//         await taskService.getTaskByProjectId(
-//           localStorage.getItem('selectedProject')
-//         )
-//       ).data.result;
-
-//       subtaskList.innerHTML = '';
-
-//       allTasks.forEach((t) => {
-//         if (t._id === task._id) return;
-
-//         const isChecked = task.subTask?.includes(t._id);
-
-//         const subTask = document.createElement('div');
-//         subTask.className = 'flex items-center gap-2 mb-1';
-
-//         subTask.innerHTML = `
-//         <input
-//           type="checkbox"
-//           class="subtask-check"
-//           value="${t._id}"
-//           ${isChecked ? 'checked' : ''}
-//         />
-//         <span>${t.title}</span>
-//       `;
-
-//         subtaskList.appendChild(subTask);
-//       });
-
-//       saveSubtasksBtn.classList.remove('hidden');
-//     });
-
-//     saveSubtasksBtn.addEventListener('click', async () => {
-//       const selectedIds = [...taskDrawer.querySelectorAll('.subtask-check')]
-//         .filter((c) => c.checked)
-//         .map((c) => c.value);
-
-//       await taskService.updateTask(task._id, { subTask: selectedIds });
-
-//       showToast('Subtasks updated!', 'success');
-
-//       subtaskDropdown.classList.add('hidden');
-
-//       showTaskDrawer(task._id);
-//     });
-//   }
-
-//   createSubtask();
-
-//   async function renderSubtasks(task) {
-//     const list = document.getElementById('subtasksList');
-//     list.innerHTML = '';
-//     console.log(assignee);
-//     if (!task.subTask || task.subTask.length === 0) {
-//       list.innerHTML = "<p class='text-gray-500 text-sm'>No subtasks</p>";
-//       return;
-//     }
-
-//     const all = (
-//       await taskService.getTaskByProjectId(
-//         localStorage.getItem('selectedProject')
-//       )
-//     ).data.result;
-
-//     const subtasks = all.filter((t) => task.subTask.includes(t._id));
-
-//     subtasks.forEach((st) => {
-//       const div = document.createElement('div');
-//       div.className =
-//         'flex items-start bg-white rounded-lg shadow-md pl-3 py-4 border border-[#90e0ef]';
-//       div.innerHTML = `
-//       <img
-//         src="${
-//           assignee
-//             ? assignee.profileImage
-//               ? 'http://localhost:3001/uploads/profile/' + assignee.profileImage
-//               : '../../../assets/img/profile.png'
-//             : '../../../assets/img/profile.png'
-//         }"
-
-//         class="w-8 h-8 rounded-full border-2 border-[#00b4d8]"
-//         title = "${assignee ? assignee.name : 'unassigned'}"
-//       />
-//       <div class="ml-3">
-//         <span class="font-medium text-[#03045e] text-md">${st.title}</span>
-//         <p class="text-sm text-[#03045e]/70">${st.description || ''}</p>
-//       </div>
-//     `;
-//       list.appendChild(div);
-//     });
-//   }
-// }
-
-// async function loadProjectMembers(projectId) {
-//   try {
-//     const data = await projectService.getProjectMembers(projectId);
-//     const members = data.result;
-//     const container = document.getElementById('memberAvatars');
-//     container.innerHTML = '';
-
-//     members.forEach((userInfo, index) => {
-//       const img = document.createElement('img');
-//       const imageUrl = userInfo.profileImage
-//         ? `http://localhost:3001/uploads/profile/${userInfo.profileImage}`
-//         : `../../../assets/img/profile.png`;
-
-//       img.src = imageUrl;
-//       img.alt = userInfo.name;
-//       img.title = userInfo.name;
-
-//       img.className =
-//         'w-10 h-10 rounded-full object-cover border-2 border-white shadow-md hover:z-1';
-
-//       img.style.marginLeft = index === 0 ? '0px' : '-10px';
-
-//       container.appendChild(img);
-//     });
-//   } catch (error) {
-//     console.error('Error loading images:', error);
-//   }
-// }
-
 function renderSubDropdown(item) {
   const subDropdown = document.createElement('div');
   subDropdown.className = `px-4 py-2 hover:bg-gray-100 cursor-pointer ${item}-filter`;
@@ -819,7 +520,7 @@ inviteForm.addEventListener('submit', function (event) {
 
   const email = emailInput.value.trim();
   if (email === '') {
-    console.log('please enter a valid emil'); // add a confimation
+    console.log('please enter a valid emil'); // add a confirmation
     return;
   }
   axios
