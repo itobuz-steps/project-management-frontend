@@ -15,6 +15,7 @@ async function createTaskList(task) {
 
   tr.classList =
     'bg-white border-b border-gray-500 hover:bg-gray-100 whitespace-nowrap';
+  console.log(task._id);
   tr.dataset.id = task._id;
   tr.innerHTML = `
     <td class="w-4 p-4">
@@ -23,6 +24,7 @@ async function createTaskList(task) {
             id="checkbox-all-search"
             type="checkbox"
             class="checkboxes w-3.5 h-3.5 text-blue-600 bg-gray-100 border-gray-300 rounded-sm accent-cyan-500 focus:ring-cyan-600"
+            data-id=${task._id}
         />
       </div>
     </td>
@@ -138,7 +140,7 @@ function createSprintTable(sprint) {
                   <button
                     type="button"
                     id="${sprint.key}-sprint-complete-button"
-                    class="hidden py-1 px-2 my-1 md:py-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-cyan-50 hover:text-gray-600"
+                    class="hidden py-1 px-2 my-1 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-cyan-50 hover:text-gray-600"
                   >
                     Complete Sprint
                   </button>
@@ -146,7 +148,7 @@ function createSprintTable(sprint) {
                   <button
                   type="button"
                   id="${sprint.key}-sprint-start-button"
-                  class="py-1 px-2 my-1 md:py-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-cyan-50 hover:text-gray-600"
+                  class="py-1 px-2 my-1 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-cyan-50 hover:text-gray-600"
                   >
                   Start Sprint
                   </button>
@@ -244,13 +246,42 @@ function createBacklogTable() {
                     </button>
                   </div>
 
+                  <div class="flex items-center gap-1 md:gap-2">
+                  <button
+                    type="button"
+                    id="add-to-sprint-button"
+                    title="Add to sprint"
+                    class="hidden p-1 my-1 text-sm  font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-cyan-50 hover:text-gray-600"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="size-5"
+                    >
+                      <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M12 4.5v15m7.5-7.5h-15"
+                      />
+                    </svg>
+                  </button>
+
+                  <div
+                    id="sprints-dropdown"
+                    class="hidden absolute list-none md:right-4  right-4 top-full bg-white shadow-lg border rounded w-35 sm:w-40 z-40"
+                  >
+                  </div>
                   <button
                     type="button"
                     id="create-sprint-button"
-                    class="py-1 px-2 my-1 text-sm md:py-2 font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-cyan-50 hover:text-gray-600"
+                    class="py-1 px-2 my-1 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-cyan-50 hover:text-gray-600"
                   >
-                  <p id="create-sprint-text">Create Sprint</p>
+                    <p id="create-sprint-text">Create Sprint</p>
                   </button>
+                  </div>
                 </div>
 
                 <div
@@ -411,12 +442,20 @@ export async function renderDashBoardTasks() {
     });
 
     const backlogCheckboxAll = document.getElementById('backlog-checkbox-all');
-    backlogCheckboxAll.addEventListener('change', () => {
+    const addToSprintButton = document.getElementById('add-to-sprint-button');
+    backlogCheckboxAll.addEventListener('change', (e) => {
       if (backlogCheckboxAll.checked) {
         handleBacklogCheckboxAll(true);
+        toggleHidden(addToSprintButton);
       } else {
         handleBacklogCheckboxAll(false);
+        toggleHidden(addToSprintButton);
       }
+      e.stopPropagation();
+    });
+
+    addToSprintButton.addEventListener('click', () => {
+      handleAddTaskToSprint(currentSprints);
     });
 
   } catch (error) {
@@ -518,6 +557,39 @@ async function handleStartSprint(sprint) {
 
 function handleBacklogCheckboxAll(isCheckedValue) {
   const backlogBodyChildren = document.getElementById('backlog-body');
-  [...backlogBodyChildren.children].forEach((child) => { child.querySelector('.checkboxes'); });
+  // [...backlogBodyChildren.children].forEach((child) => { child.querySelector('.checkboxes'); });
   backlogBodyChildren.querySelectorAll('.checkboxes').forEach((box) => { box.checked = isCheckedValue; });
+}
+
+function handleAddTaskToSprint(currentSprints) {
+  const sprintDropdown = document.getElementById('sprints-dropdown');
+  sprintDropdown.innerHTML = '';
+  toggleHidden(sprintDropdown);
+
+  currentSprints.forEach((sprint) => {
+    const dropdownEl = document.createElement('li');
+    dropdownEl.className = 'dropdown-item px-4 py-2 hover:bg-gray-100 cursor-pointer';
+    dropdownEl.dataset.id = sprint._id;
+    dropdownEl.id = `dropdown-${sprint.key}`;
+    dropdownEl.innerHTML = sprint.key;
+    sprintDropdown.appendChild(dropdownEl);
+    dropdownEl.addEventListener('click', async () => {
+      await handleAddTaskFromBacklogToSprint(dropdownEl);
+    });
+  });
+};
+
+async function handleAddTaskFromBacklogToSprint(dropdownEl) {
+  const backlogBodyChildren = document.getElementById('backlog-body');
+  let selectedRows = [];
+  backlogBodyChildren.querySelectorAll('.checkboxes').forEach((checkbox) => {
+    if (checkbox.checked) {
+      console.log(checkbox);
+      selectedRows.push(checkbox.dataset.id);
+    }
+  });
+
+  console.log(dropdownEl.dataset.id, selectedRows);
+  await SprintService.updateSprint(dropdownEl.dataset.id, { tasks: selectedRows });
+  await renderDashBoardTasks();
 }
