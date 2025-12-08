@@ -22,7 +22,7 @@ async function createTaskList(task) {
         <input
             id="checkbox-all-search"
             type="checkbox"
-            class="w-3.5 h-3.5 text-blue-600 bg-gray-100 border-gray-300 rounded-sm accent-cyan-500 focus:ring-cyan-600"
+            class="checkboxes w-3.5 h-3.5 text-blue-600 bg-gray-100 border-gray-300 rounded-sm accent-cyan-500 focus:ring-cyan-600"
         />
       </div>
     </td>
@@ -264,7 +264,7 @@ function createBacklogTable() {
                         <th scope="col" class="p-4">
                           <div class="flex items-center">
                             <input
-                              id="checkbox-all-search"
+                              id="backlog-checkbox-all"
                               type="checkbox"
                               class="w-3.5 h-3.5 text-blue-600 bg-gray-100 border-gray-300 rounded-sm accent-cyan-500 focus:ring-cyan-600"
                             />
@@ -410,6 +410,15 @@ export async function renderDashBoardTasks() {
       await handleSprintCreate(storyPointInput);
     });
 
+    const backlogCheckboxAll = document.getElementById('backlog-checkbox-all');
+    backlogCheckboxAll.addEventListener('change', () => {
+      if (backlogCheckboxAll.checked) {
+        handleBacklogCheckboxAll(true);
+      } else {
+        handleBacklogCheckboxAll(false);
+      }
+    });
+
   } catch (error) {
     console.error(error.message);
   }
@@ -505,4 +514,10 @@ async function handleStartSprint(sprint) {
     }
   }
 
+}
+
+function handleBacklogCheckboxAll(isCheckedValue) {
+  const backlogBodyChildren = document.getElementById('backlog-body');
+  [...backlogBodyChildren.children].forEach((child) => { child.querySelector('.checkboxes'); });
+  backlogBodyChildren.querySelectorAll('.checkboxes').forEach((box) => { box.checked = isCheckedValue; });
 }
