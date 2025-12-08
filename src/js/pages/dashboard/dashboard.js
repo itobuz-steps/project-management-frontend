@@ -12,6 +12,8 @@ import showToast from '../../utils/showToast.js';
 import { profileNameIcon } from '../../utils/profileIcon.js';
 import { setupSidebar, updateProjectList } from './sidebar/sidebar.js';
 import { setupNavbar } from './navbar/navbar.js';
+import { openUpdateTaskModal } from '../../utils/modals/updateTaskModal.js';
+import { openCreateTaskModal } from '../../utils/modals/createTaskModal.js';
 
 const drawerBackdrop = document.querySelector('.drawer-backdrop');
 
@@ -95,252 +97,9 @@ closeProjectBtn.addEventListener('click', () => {
   createProjectModal.classList.add('hidden');
 });
 
-// tmp
+const addTaskButton = document.getElementById('create-task');
 
-//task create
-
-const openTaskCreate = document.getElementById('create-task');
-const closeTaskModal = document.getElementById('close-task-modal');
-const createTaskModal = document.getElementById('create-task-modal');
-const createModalStatusDropdown = document.getElementById(
-  'status-create-task-modal'
-);
-const createModalAssigneeDropdown = document.getElementById(
-  'create-modal-assignee'
-);
-
-openTaskCreate.addEventListener('click', () => {
-  createTaskModal.classList.remove('hidden');
-  handleModalStatus(createModalStatusDropdown);
-  handleModalAssignee(createModalAssigneeDropdown);
-});
-
-closeTaskModal.addEventListener('click', () => {
-  createTaskModal.classList.add('hidden');
-});
-
-//temp form submission // submission yet to be handled correctly
-const input = document.getElementById('attachments');
-const fileName = document.getElementById('file-name');
-const taskForm = document.getElementById('task-form');
-
-input.addEventListener('change', () => {
-  if (input.files.length > 0) {
-    fileName.textContent = Array.from(input.files)
-      .map((file) => file.name)
-      .join(', ');
-  } else {
-    fileName.textContent = 'No Files Chosen';
-  }
-});
-
-taskForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  let dateValue;
-  if (document.getElementById('dueDate').value === '1999-10-10') {
-    dateValue = new Date().toLocaleDateString();
-
-    const splitVal = dateValue.split('/');
-    console.log(splitVal);
-    const newDateValue = new Date(splitVal[2], splitVal[1], splitVal[0]);
-    console.log(newDateValue);
-    dateValue = newDateValue;
-    dateValue = splitVal[2] + '-' + splitVal[1] + '-' + splitVal[0];
-  } else {
-    dateValue = document.getElementById('dueDate').value;
-  }
-  console.log(dateValue);
-  // Build the task object from form inputs
-  const task = {
-    projectId: localStorage.getItem('selectedProject'),
-    title: document.getElementById('create-task-modal-title').value.trim(),
-    description: document.getElementById('description').value.trim(),
-    type: document.getElementById('type').value,
-    priority: document.getElementById('priority').value,
-
-    status: document.getElementById('status-create-task-modal').value,
-
-    tags: document.getElementById('tags').value
-      ? document
-          .getElementById('tags')
-          .value.split(',')
-          .map((t) => t.trim())
-      : [],
-
-    block: document.getElementById('block').value
-      ? document
-          .getElementById('block')
-          .value.split(',')
-          .map((t) => t.trim())
-      : [],
-
-    blockedBy: document.getElementById('BlockedBy').value
-      ? document
-          .getElementById('BlockedBy')
-          .value.split(',')
-          .map((t) => t.trim())
-      : [],
-
-    relatesTo: document.getElementById('relatesTo').value
-      ? document
-          .getElementById('relatesTo')
-          .value.split(',')
-          .map((t) => t.trim())
-      : [],
-
-    dueDate: dateValue,
-    assignee:
-      document.getElementById('create-modal-assignee').value === 'null'
-        ? null
-        : document.getElementById('create-modal-assignee').value,
-
-    attachments: input.files,
-  };
-
-  console.log({ task });
-
-  try {
-    const response = await taskService.createTask(task);
-
-    console.log('Task created:', response);
-    createTaskModal.classList.add('hidden');
-    renderBoard(localStorage.getItem('selectedProject'));
-    // renderTasksList();
-    renderDashBoardTasks();
-    // taskForm.reset();
-    fileName.textContent = 'No file chosen';
-  } catch (error) {
-    console.error(error);
-    console.log('No task created ');
-  }
-});
-
-openTaskCreate.addEventListener('click', () => {
-  createTaskModal.classList.remove('hidden');
-});
-closeTaskModal.addEventListener('click', () => {
-  createTaskModal.classList.add('hidden');
-});
-//end for create tasks
-
-//update task details
-const closeEditTask = document.getElementById('close-update-task-modal');
-const editModal = document.getElementById('update-task-modal');
-const editForm = document.getElementById('edit-task-form');
-let currentTaskId = null;
-
-async function openEditModal(taskId) {
-  currentTaskId = taskId;
-
-  try {
-    const response = await taskService.getTaskById(taskId);
-    const task = response.data.result;
-
-    editModal.querySelector('#title').value = task.title;
-    editModal.querySelector('#description').value = task.description;
-    editModal.querySelector('#type').value = task.type;
-    editModal.querySelector('#priority').value = task.priority;
-    const status = editModal.querySelector('#status');
-    await handleModalStatus(status);
-    const selectedStatus = editModal.querySelector(`[value="${task.status}"]`);
-    selectedStatus.selected = true;
-
-    editModal.querySelector('#tags').value = task.tags?.join(', ') || '';
-    editModal.querySelector('#block').value = task.block || '';
-    editModal.querySelector('#BlockedBy').value = task.blockedBy || '';
-    editModal.querySelector('#relatesTo').value = task.relatesTo || '';
-
-    if (task.dueDate) {
-      console.log(task.dueDate);
-      const dueDate = new Date(task.dueDate);
-
-      const formattedDate = dueDate.toISOString().slice(0, 10);
-      console.log(formattedDate);
-      editModal.querySelector('#dueDate').value = formattedDate;
-    } else {
-      editModal.querySelector('#dueDate').value = '';
-    }
-
-    const assignee = editModal.querySelector('#assignee');
-    const selectedAssignee = await handleModalAssignee(assignee);
-    const selectedAssigned = editModal.querySelector(
-      `[value="${task.assignee}"]`
-    );
-    selectedAssigned.selected = true;
-    console.log(selectedAssignee);
-
-    editModal.classList.remove('hidden');
-  } catch (error) {
-    console.error('Failed to load task:', error);
-    alert('Error loading task data');
-  }
-}
-
-// Submit form
-editForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  const updatedTask = {
-    title: editModal.querySelector('#title').value,
-    description: editModal.querySelector('#description').value,
-    type: editModal.querySelector('#type').value,
-    priority: editModal.querySelector('#priority').value,
-    status: editModal.querySelector('#status').value,
-    tags: editModal
-      .querySelector('#tags')
-      .value.split(',')
-      .map((t) => t.trim()),
-    relatesTo: editModal
-      .querySelector('#relatesTo')
-      .value.split(',')
-      .map((t) => t.trim()),
-
-    blockedBy: editModal
-      .querySelector('#BlockedBy')
-      .value.split(',')
-      .map((t) => t.trim()),
-
-    block: editModal
-      .querySelector('#block')
-      .value.split(',')
-      .map((t) => t.trim()),
-
-    dueDate: editModal.querySelector('#dueDate').value,
-    assignee:
-      editModal.querySelector('#assignee').value === 'null'
-        ? null
-        : editModal.querySelector('#assignee').value,
-  };
-
-  console.log(updatedTask);
-
-  try {
-    const response = await taskService.updateTask(currentTaskId, updatedTask);
-    console.log('Task updated successfully:', response.data);
-
-    editModal.classList.add('hidden');
-    renderBoard(localStorage.getItem('selectedProject'));
-    // renderTasksList();
-    renderDashBoardTasks();
-    //hide side bar
-    setTimeout(() => {
-      const taskDrawer = document.getElementById('task-side-drawer');
-      const profileImageEl = taskDrawer.querySelector('.profile-image');
-      taskDrawer.classList.add('translate-x-full');
-      taskDrawer.classList.remove('transform-none');
-      drawerBackdrop.classList.add('hidden');
-      profileImageEl.classList.remove('hidden');
-    }, 100);
-  } catch (error) {
-    console.error(error);
-  }
-});
-
-// Close modal
-closeEditTask.addEventListener('click', () => {
-  editModal.classList.add('hidden');
-});
+addTaskButton.addEventListener('click', openCreateTaskModal);
 
 export function dropdownEvent(sprint = {}) {
   const nameKey = sprint.name ? sprint.name : `backlog`;
@@ -678,7 +437,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
       taskEl.querySelector('.edit-btn').addEventListener('click', () => {
         dropdownMenu.classList.add('hidden');
-        openEditModal(task._id);
+        openUpdateTaskModal(task._id);
       });
       taskEl.querySelector('.delete-btn').addEventListener('click', (e) => {
         e.stopPropagation();
@@ -753,8 +512,7 @@ async function showTaskDrawer(taskId) {
 
   const editTaskButton = document.querySelector('#edit-task-button');
   editTaskButton.addEventListener('click', () => {
-    editModal.classList.remove('hidden');
-    openEditModal(taskId);
+    openUpdateTaskModal(taskId);
   });
 
   const commentInput = taskDrawer.querySelector('#commentInput');
@@ -841,7 +599,7 @@ async function showTaskDrawer(taskId) {
 
     <div id="CommentInformation" class="flex flex-col gap-1">
       <div class="flex items-center gap-2 text-md text-gray-500 text-[#03045e]">
-        <span class="username font-medium text-gray-700 text-[#03045e]">
+        <span class="username font-medium text-gray-700 text-[#53549e]">
           ${comment.author.name}
         </span>
         <span>•</span>
@@ -951,52 +709,6 @@ async function handleAssigneeFilter() {
       );
     });
   });
-}
-
-async function handleModalAssignee(modalAssigneeDropdown) {
-  const assignees = await projectService.getProjectMembers(
-    localStorage.getItem('selectedProject')
-  );
-  modalAssigneeDropdown.innerHTML = '';
-  const unassigned = document.createElement('option');
-  unassigned.innerText = 'Unassigned';
-  unassigned.selected = true;
-
-  unassigned.value = 'null';
-  modalAssigneeDropdown.appendChild(unassigned);
-
-  let selectedAssignee;
-  assignees.result.forEach((assignee) => {
-    const option = document.createElement('option');
-
-    option.value = assignee._id;
-
-    if (assignee.email === localStorage.getItem('userEmail')) {
-      option.innerText = `${assignee.email} (assign to me)`;
-      selectedAssignee = assignee;
-    } else {
-      option.innerText = `${assignee.email}`;
-    }
-
-    modalAssigneeDropdown.appendChild(option);
-  });
-  return selectedAssignee;
-}
-
-async function handleModalStatus(modalStatusDropdown) {
-  const project = (
-    await projectService.getProjectById(localStorage.getItem('selectedProject'))
-  ).result;
-  modalStatusDropdown.innerHTML = '';
-
-  project.columns.forEach((column) => {
-    const option = document.createElement('option');
-    option.innerText = column;
-    option.value = column;
-    modalStatusDropdown.appendChild(option);
-  });
-
-  modalStatusDropdown.firstChild.selected = true;
 }
 
 const priorityDropdown = document.getElementById('priorityDropdown');
