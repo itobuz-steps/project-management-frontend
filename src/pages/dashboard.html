@@ -1549,25 +1549,25 @@
     <!-- delete modal -->
 
     <div
-      id="deleteModal"
+      id="confirmationModal"
       class="modal fixed z-21 flex justify-center items-center hidden right-0 left-0 top-[40%] mx-auto w-fit"
     >
       <div class="bg-gray-200 p-6 rounded-lg shadow-xl w-96">
-        <h2 class="text-lg font-semibold mb-4">
-          Are you sure you want to delete this task?
-        </h2>
+        <h2 id="confirmModalMessage" class="text-lg font-semibold mb-4"></h2>
+
         <div class="flex justify-between">
           <button
-            id="cancelDelete"
+            id="cancelConfirm"
             class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-gray-300"
           >
             Cancel
           </button>
+
           <button
-            id="confirmDelete"
+            id="confirm"
             class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-red-300"
           >
-            Delete
+            OK
           </button>
         </div>
       </div>

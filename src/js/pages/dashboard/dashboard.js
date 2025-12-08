@@ -9,7 +9,6 @@ import axios from 'axios';
 import { setupNotification } from '../../utils/setupNotification.js';
 import showToast from '../../utils/showToast.js';
 import sprintService from '../../services/SprintService.js';
-import { showDeleteModal } from '../../utils/modals/confirmationModal.js';
 import { showTaskDrawer } from '../taskDrawer/taskDrawer.js';
 import { loadProjectMembers } from '../loadMembers/loadMembers.js';
 import { setupSidebar } from './sidebar/sidebar.js';
@@ -17,6 +16,7 @@ import { setupNavbar } from './navbar/navbar.js';
 import { openUpdateTaskModal } from '../../utils/modals/updateTaskModal.js';
 import { openCreateTaskModal } from '../../utils/modals/createTaskModal.js';
 import { openCreateProjectModal } from '../../utils/modals/createProjectModal.js';
+import { showConfirmModal } from '../../utils/modals/confirmationModal.js';
 
 const filterBox = document.getElementById('filterBox');
 const mainDropdown = document.getElementById('mainDropdown');
@@ -142,7 +142,9 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
 export async function renderBoard(projectId, filter = '', searchInput = '') {
   const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const project = (await projectService.getProjectById(projectId)).result;
-  const currentSprint = await sprintService.getSprintById(project.currentSprint);
+  const currentSprint = await sprintService.getSprintById(
+    project.currentSprint
+  );
   let draggedColumn = null;
 
   renderDashboard(project);
@@ -235,12 +237,14 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
           </div>
           <div class="flex items-center">
             <span class="user-avatar cursor-pointer w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center">
-              <img src="${assignee?.profileImage
-          ? 'http://localhost:3001/uploads/profile/' +
-          assignee.profileImage
-          : '../../../assets/img/profile.png'
-        }" class="w-8 h-8 object-cover" title="${assignee?.name || 'Unassigned'
-        }"/>
+              <img src="${
+                assignee?.profileImage
+                  ? 'http://localhost:3001/uploads/profile/' +
+                    assignee.profileImage
+                  : '../../../assets/img/profile.png'
+              }" class="w-8 h-8 object-cover" title="${
+        assignee?.name || 'Unassigned'
+      }"/>
             </span>
             <div class="avatar-dropdown hidden absolute top-20 right-0 bg-white border border-gray-200 rounded">
               <ul class="assignee-list text-sm text-gray-700"></ul>
@@ -362,7 +366,15 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       });
       taskEl.querySelector('.delete-btn').addEventListener('click', (e) => {
         e.stopPropagation();
-        showDeleteModal(task._id);
+        // showDeleteModal(task._id);
+        showConfirmModal(
+          'Are you sure you want to delete this task?',
+          async () => {
+            await taskService.deleteTask(task._id);
+            renderBoard(localStorage.getItem('selectedProject'));
+            renderDashBoardTasks();
+          }
+        );
       });
 
       typeSelector.addEventListener('change', (e) => {
@@ -407,7 +419,8 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
     columnContainer.appendChild(columnEl);
 
-    columnEl.querySelector('.issue-count').innerText = (taskList.childElementCount);
+    columnEl.querySelector('.issue-count').innerText =
+      taskList.childElementCount;
   });
 
   handleStatusFilter();
