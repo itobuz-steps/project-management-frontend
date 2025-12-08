@@ -29,6 +29,8 @@ export function increaseNotificationCount() {
 }
 
 export async function setupNavbar() {
+  badge.classList.add('hidden');
+
   const notificationCount = localStorage.getItem("notificationCount'");
 
   searchInput.addEventListener('input', handleSearch);
