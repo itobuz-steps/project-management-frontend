@@ -1,4 +1,4 @@
-import '../../../scss/main.css';
+import '../../../style/main.css';
 import authService from '../../services/AuthService.js';
 import { showMessage } from '../../utils/showMessage.js';
 
