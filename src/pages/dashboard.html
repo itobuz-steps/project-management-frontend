@@ -155,49 +155,153 @@
       <div class="sidebar">
         <aside
           id="sidebar"
-          class="fixed top-[56] left-0 w-64 h-[calc(100vh-56px)] bg-gray-50 shadow-md transform -translate-x-full transition-transform duration-300 z-40"
+          class="fixed top-[56] left-0 w-64 h-[calc(100vh-56px)] bg-[#f8f8ff] transform -translate-x-full transition-transform duration-300 z-40"
         >
           <div
             class="h-full px-3 py-4 overflow-y-auto flex flex-col justify-between"
           >
             <ul class="font-medium flex flex-col gap-4">
-              <li>
-                <a
-                  href="#"
-                  class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100"
-                  >For You</a
-                >
+              <li
+                class="flex flex-row items-center gap-2 p-2 text-gray-900 rounded-lg border-l-2 border-l-transparent hover:border-l-blue-300 hover:bg-blue-50"
+              >
+                <a href="#" class="flex flex-row gap-4 items-center">
+                  <svg
+                    height="35"
+                    width="35"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 640 640"
+                  >
+                    <path
+                      d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z"
+                    />
+                  </svg>
+                  <p class="text-lg font-normal hover:text-blue-700">For You</p>
+                </a>
               </li>
               <li class="relative" id="projectsMenu">
-                <a
-                  href="#"
-                  class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100 cursor-pointer"
+                <div
+                  class="flex flex-row justify-between items-center border-l-2 border-l-transparent hover:border-l-blue-300 hover:bg-blue-50"
                 >
-                  Projects
-                </a>
+                  <div>
+                    <a
+                      href="#"
+                      class="flex items-center gap-4 p-2 text-gray-900 rounded-lg"
+                    >
+                      <svg
+                        class=""
+                        height="35px"
+                        width="35px"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 640 640"
+                      >
+                        <path
+                          d="M264 112L376 112C380.4 112 384 115.6 384 120L384 160L256 160L256 120C256 115.6 259.6 112 264 112zM208 120L208 160L128 160C92.7 160 64 188.7 64 224L64 320L369 320C402.8 290.1 447.3 272 496 272C524.6 272 551.6 278.2 576 289.4L576 224C576 188.7 547.3 160 512 160L432 160L432 120C432 89.1 406.9 64 376 64L264 64C233.1 64 208 89.1 208 120zM288 416C270.3 416 256 401.7 256 384L256 368L64 368L64 480C64 515.3 92.7 544 128 544L321.4 544C310.2 519.6 304 492.6 304 464C304 447.4 306.1 431.3 310 416L288 416zM640 464C640 384.5 575.5 320 496 320C416.5 320 352 384.5 352 464C352 543.5 416.5 608 496 608C575.5 608 640 543.5 640 464zM496 384C504.8 384 512 391.2 512 400L512 448L544 448C552.8 448 560 455.2 560 464C560 472.8 552.8 480 544 480L496 480C487.2 480 480 472.8 480 464L480 400C480 391.2 487.2 384 496 384z"
+                        />
+                      </svg>
+                      <p class="text-lg font-normal hover:text-blue-700">
+                        Projects
+                      </p>
+                    </a>
+                  </div>
+                  <div
+                    id="plus-icon"
+                    class="plus-icon cursor-pointer add-project relative group"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="2"
+                      stroke="currentColor"
+                      class="size-6 text-black rounded-md"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M12 4.5v15m7.5-7.5h-15"
+                      />
+                    </svg>
+                    <span
+                      class="absolute -left-1 -translate-x-1/2 mt-2 w-max invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-gray-800 text-white text-xs rounded p-1 transition-opacity"
+                    >
+                      Add project
+                    </span>
+                  </div>
+                </div>
+
                 <ul
                   id="projectsDropdown"
-                  class="hidden max-h-0 overflow-y-auto transition-all duration-300 bg-white shadow-md rounded-lg mt-2"
+                  class="hidden max-h-0 overflow-y-auto transition-all duration-300 bg-inherit rounded-md border-l-2 border-blue-300 mt-2 ml-3"
                 ></ul>
               </li>
               <li id="usersMenu">
                 <a
                   href="#"
-                  class="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-100"
-                  >Users</a
+                  class="flex items-center gap-4 p-2 text-gray-900 rounded-lg border-l-2 border-l-transparent hover:border-l-blue-300 hover:bg-blue-50"
                 >
+                  <svg
+                    height="35"
+                    width="35"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 640 640"
+                  >
+                    <path
+                      d="M376 88C376 57.1 350.9 32 320 32C289.1 32 264 57.1 264 88C264 118.9 289.1 144 320 144C350.9 144 376 118.9 376 88zM400 300.7L446.3 363.1C456.8 377.3 476.9 380.3 491.1 369.7C505.3 359.1 508.3 339.1 497.7 324.9L427.2 229.9C402 196 362.3 176 320 176C277.7 176 238 196 212.8 229.9L142.3 324.9C131.8 339.1 134.7 359.1 148.9 369.7C163.1 380.3 183.1 377.3 193.7 363.1L240 300.7L240 576C240 593.7 254.3 608 272 608C289.7 608 304 593.7 304 576L304 416C304 407.2 311.2 400 320 400C328.8 400 336 407.2 336 416L336 576C336 593.7 350.3 608 368 608C385.7 608 400 593.7 400 576L400 300.7z"
+                    />
+                  </svg>
+                  <p class="text-lg font-normal hover:text-blue-700">Users</p>
+                </a>
                 <ul
                   id="usersDropdown"
-                  class="hidden max-h-0 overflow-y-auto transition-all duration-300 bg-white shadow-md rounded-lg mt-2"
+                  class="hidden max-h-0 overflow-y-auto transition-all duration-300 bg-white rounded-lg border-l-2 border-l-blue-300 mt-2 ml-2"
                 ></ul>
               </li>
               <li>
                 <div
                   id="toggleInviteForm"
-                  ,
-                  class="add-user-to-project-button w-fit p-2 bg-blue-400 text-white hover:bg-blue-200 cursor-pointer"
+                  class="add-user-to-project-button flex items-center gap-4 p-2 text-black rounded-lg border-l-2 border-l-transparent hover:border-l-blue-300 hover:bg-blue-50 cursor-pointer"
                 >
-                  Invite User
+                  <svg
+                    fill="#000000"
+                    height="35px"
+                    width="35px"
+                    version="1.1"
+                    id="Capa_1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    viewBox="0 0 462 462"
+                    xml:space="preserve"
+                  >
+                    <g>
+                      <path
+                        d="M170,251c19.299,0,35-15.701,35-35s-15.701-35-35-35s-35,15.701-35,35S150.701,251,170,251z M170,201
+		                    c8.271,0,15,6.729,15,15s-6.729,15-15,15s-15-6.729-15-15S161.729,201,170,201z"
+                      />
+                      <path
+                        d="M120,331c5.523,0,10-4.477,10-10c0-18.604,12.767-34.282,30-38.734v13.11c0,5.523,4.477,10,10,10s10-4.477,10-10v-13.11
+                        c17.233,4.452,30,20.13,30,38.734c0,5.523,4.477,10,10,10s10-4.477,10-10c0-33.084-26.916-60-60-60s-60,26.916-60,60
+                        C110,326.523,114.477,331,120,331z"
+                      />
+                      <path
+                        d="M30,316.571H20V95.429h372v10c0,5.523,4.477,10,10,10s10-4.477,10-10v-20c0-5.523-4.477-10-10-10H10
+		                    c-5.523,0-10,4.477-10,10v241.143c0,5.523,4.477,10,10,10h20c5.523,0,10-4.477,10-10S35.523,316.571,30,316.571z"
+                      />
+                      <path
+                        d="M452,125.429H60c-5.523,0-10,4.477-10,10v241.143c0,5.523,4.477,10,10,10h392c5.523,0,10-4.477,10-10V135.429
+		                    C462,129.906,457.523,125.429,452,125.429z M442,366.571H70V145.429h372V366.571z"
+                      />
+                      <path
+                        d="M280,217.232h56c5.523,0,10-4.477,10-10s-4.477-10-10-10h-56c-5.523,0-10,4.477-10,10S274.477,217.232,280,217.232z"
+                      />
+                      <path
+                        d="M280,264.768h112c5.523,0,10-4.477,10-10s-4.477-10-10-10H280c-5.523,0-10,4.477-10,10S274.477,264.768,280,264.768z"
+                      />
+                      <path
+                        d="M280,314.768h112c5.523,0,10-4.477,10-10s-4.477-10-10-10H280c-5.523,0-10,4.477-10,10S274.477,314.768,280,314.768z"
+                      />
+                    </g>
+                  </svg>
+                  <p class="text-lg font-normal hover:text-blue-700">Invite</p>
                 </div>
                 <form id="inviteForm" class="p-4 bg-gray-50 hidden w-full">
                   <label class="block text-sm font-medium text-gray-700 mb-1"
@@ -221,20 +325,33 @@
             <div class="py-5">
               <a
                 href="#"
-                class="flex items-center p-2 text-red-600 rounded-lg hover:bg-red-100"
+                class="flex items-center gap-4 p-2 text-red-600 rounded-lg hover:bg-red-100"
                 id="logout-btn"
-                >Logout</a
               >
+                <svg
+                  fill="#000000"
+                  width="30px"
+                  height="30px"
+                  viewBox="0 0 32 32"
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3.651 16.989h17.326c0.553 0 1-0.448 1-1s-0.447-1-1-1h-17.264l3.617-3.617c0.391-0.39 0.391-1.024 0-1.414s-1.024-0.39-1.414 0l-5.907 6.062 5.907 6.063c0.196 0.195 0.451 0.293 0.707 0.293s0.511-0.098 0.707-0.293c0.391-0.39 0.391-1.023 0-1.414zM29.989 0h-17c-1.105 0-2 0.895-2 2v9h2.013v-7.78c0-0.668 0.542-1.21 1.21-1.21h14.523c0.669 0 1.21 0.542 1.21 1.21l0.032 25.572c0 0.668-0.541 1.21-1.21 1.21h-14.553c-0.668 0-1.21-0.542-1.21-1.21v-7.824l-2.013 0.003v9.030c0 1.105 0.895 2 2 2h16.999c1.105 0 2.001-0.895 2.001-2v-28c-0-1.105-0.896-2-2-2z"
+                  ></path>
+                </svg>
+                <p class="text-lg font-normal">Logout</p>
+              </a>
             </div>
           </div>
         </aside>
       </div>
 
       <div
-        class="main p-2 flex flex-col gap-4 transition-all duration-300 flex-1 overflow-auto"
+        class="main p-2 flex flex-col gap-6 transition-all duration-300 flex-1 overflow-auto sm:p-6"
       >
         <div class="project-info items-center flex flex-row justify-between">
-          <div class="flex flex-row items-center gap-3">
+          <div class="flex flex-row items-center gap-5">
             <div class="project-name text-2xl font-semibold" id="projectName">
               No Project Selected
             </div>
@@ -243,9 +360,9 @@
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
-                stroke-width="1.5"
+                stroke-width="2"
                 stroke="currentColor"
-                class="size-6"
+                class="size-6 bg-blue-500 text-white rounded-md"
               >
                 <path
                   stroke-linecap="round"
@@ -506,7 +623,7 @@
 
           <!-- board-view -->
           <div
-            class="kanban-board w-full bg-gray-100 p-4 overflow-x-auto overflow-y-hidden"
+            class="kanban-board w-full bg-[#d6e2f2] p-4 overflow-x-auto overflow-y-hidden"
             id="board-view"
           >
             <div class="flex space-x-4 min-w-max h-full" id="columns"></div>
@@ -677,9 +794,11 @@
                 <div>
                   <label
                     for="name"
-                    class="block mb-2 text-sm font-medium text-black"
-                    >Name</label
+                    class="block mb-2 text-sm font-medium text-black after:content-['*'] after:text-red-500 after:ml-1"
                   >
+                    Name
+                  </label>
+
                   <input
                     type="text"
                     name="name"
