@@ -8,7 +8,7 @@ const emptyListContainer = document.getElementById('empty-list-container');
 
 const sprintBacklogWrapper = document.getElementById('sprint-backlog-wrapper');
 
-async function createTaskList(task, type) {
+async function createTaskList(task, type, projectType) {
   let ifSprint = `hidden`;
   if (type === 'backlog' || type === 'list') {
     ifSprint = ``;
@@ -20,8 +20,11 @@ async function createTaskList(task, type) {
   } else {
     labels = task.tags.join(' ');
   }
-  console.log(task.tags);
-  console.log(labels);
+
+  let ifKanban = '';
+  if (projectType === 'kanban') {
+    ifKanban = 'hidden';
+  }
 
   const tr = document.createElement('tr');
 
@@ -37,7 +40,7 @@ async function createTaskList(task, type) {
   console.log(task._id);
   tr.dataset.id = task._id;
   tr.innerHTML = `
-    <td class="w-4 p-4 ${ifSprint}">
+    <td class="w-4 p-4 ${ifSprint} ${ifKanban}">
       <div class="flex items-center">
         <input
             id="checkbox-all-search"
@@ -208,7 +211,12 @@ function createSprintTable(sprint) {
   return sprintContainer;
 }
 
-function createBacklogTable() {
+function createBacklogTable(projectType) {
+  let ifKanban = '';
+  if (projectType === 'kanban') {
+    ifKanban = 'hidden';
+  }
+
   const backlogContainer = document.createElement('div');
 
   backlogContainer.innerHTML = `
@@ -287,7 +295,7 @@ function createBacklogTable() {
                   <button
                     type="button"
                     id="create-sprint-button"
-                    class="py-1 px-2 my-1 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-cyan-50 hover:text-gray-600"
+                    class="${ifKanban} py-1 px-2 my-1 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-cyan-50 hover:text-gray-600"
                   >
                     <p id="create-sprint-text">Create Sprint</p>
                   </button>
@@ -302,7 +310,7 @@ function createBacklogTable() {
                       class="text-xm text-gray-700 uppercase bg-gray-200 border-b border-gray-500 hover:bg-gray-100 sticky"
                     >
                       <tr>
-                        <th scope="col" class="p-4">
+                        <th scope="col" class="p-4 ${ifKanban}">
                           <div class="flex items-center">
                             <input
                               id="backlog-checkbox-all"
@@ -356,17 +364,17 @@ export async function renderTasksList(tasksArray = []) {
   }
 }
 
-async function renderSprintTasks(sprint, sprintTasks) {
+async function renderSprintTasks(sprint, sprintTasks, projectType) {
   for (const taskId of sprintTasks) {
     const task = await TaskService.getTaskById(taskId);
-    const tr = await createTaskList(task.data.result, '');
+    const tr = await createTaskList(task.data.result, '', projectType);
     document.getElementById(`${sprint.key}-body`).append(tr);
   }
 }
-async function renderBacklogTasks(backlogBody, backlogTasks, addToSprintButton) {
+async function renderBacklogTasks(backlogBody, backlogTasks, addToSprintButton, projectType) {
   for (const taskId of backlogTasks) {
     const task = await TaskService.getTaskById(taskId);
-    const tr = await createTaskList(task.data.result, 'backlog');
+    const tr = await createTaskList(task.data.result, 'backlog', projectType);
     backlogBody.append(tr);
 
     const checkbox = tr.querySelector('.checkboxes');
@@ -385,6 +393,7 @@ export async function renderDashBoardTasks() {
     sprintBacklogWrapper.innerHTML = '';
     const projectId = localStorage.getItem('selectedProject');
     const tasks = await TaskService.getTaskByProjectId(projectId);
+    const project = await projectService.getProjectById(projectId);
     const allTasks = tasks.data.result.map((task) => task._id);
 
     const sprints = await SprintService.getAllSprints(projectId);
@@ -417,7 +426,11 @@ export async function renderDashBoardTasks() {
         document
           .getElementById(`${sprint.key}-empty-message`)
           .classList.add('hidden');
-        renderSprintTasks(sprint, sprintTasks);
+        if (project.result.projectType === 'kanban') {
+          renderSprintTasks(sprint, sprintTasks, 'kanban');
+        } else {
+          renderSprintTasks(sprint, sprintTasks, '');
+        }
       }
 
       await handleStartSprint(sprint);
@@ -456,9 +469,15 @@ export async function renderDashBoardTasks() {
       }
     });
 
-    const backlogTable = createBacklogTable();
-    sprintBacklogWrapper.append(backlogTable);
+    if (project.result.projectType === 'kanban') {
+      const backlogTable = createBacklogTable('kanban');
+      sprintBacklogWrapper.append(backlogTable);
+    } else {
+      const backlogTable = createBacklogTable('');
+      sprintBacklogWrapper.append(backlogTable);
+    }
     dropdownEvent();
+
     const addToSprintButton = document.getElementById('add-to-sprint-button');
     const backlogBody = document.getElementById('backlog-body');
     if (!backlogTasks.length) {
@@ -467,7 +486,11 @@ export async function renderDashBoardTasks() {
         .classList.remove('hidden');
     } else {
       document.getElementById('backlog-empty-message').classList.add('hidden');
-      renderBacklogTasks(backlogBody, backlogTasks, addToSprintButton);
+      if (project.result.projectType === 'kanban') {
+        renderBacklogTasks(backlogBody, backlogTasks, addToSprintButton, 'kanban');
+      } else {
+        renderBacklogTasks(backlogBody, backlogTasks, addToSprintButton, '');
+      }
     }
 
     backlogBody.addEventListener('change', () => {
@@ -679,15 +702,3 @@ async function handleAddTaskFromBacklogToSprint(dropdownEl) {
   await SprintService.addTasksToSprint(dropdownEl.dataset.id, { tasks: selectedRows });
   await renderDashBoardTasks();
 }
-
-// function ifSelected(checkboxes, addToSprintButton) {
-//   checkboxes.forEach((checkbox) => {
-//     if (checkbox.selected) {
-//       toggleHidden(addToSprintButton);
-//     }
-//   });
-// }
-// const addToSprintButton = document.getElementById('add-to-sprint-button');
-// const checkboxes = document.querySelectorAll('.checkboxes');
-// console.log(checkboxes);
-// ifSelected(checkboxes, addToSprintButton);
