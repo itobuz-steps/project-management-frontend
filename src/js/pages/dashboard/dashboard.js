@@ -22,6 +22,7 @@ import {
   handleAssigneeFilter,
 } from './filter/dashboardFilter.js';
 import { checkToken } from '../../utils/checkToken.js';
+import { removeActive, hideAll } from '../../utils/elementUtils.js';
 
 const openProjectBtn = document.getElementById('plus-icon');
 openProjectBtn.addEventListener('click', openCreateProjectModal);
@@ -71,26 +72,6 @@ listBtn.addEventListener('click', () => {
   removeActive(listBtn);
   hideAll(listView);
 });
-
-function removeActive(element) {
-  [...element.parentElement.children].forEach((child) => {
-    child.classList.remove('active');
-  });
-  element.classList.toggle('active');
-}
-
-function hideAll(element) {
-  [...element.parentElement.children].forEach((child) => {
-    child.classList.add('hidden');
-  });
-  element.classList.remove('hidden');
-}
-
-// export function checkToken() {
-//   if (!localStorage.getItem('access_token')) {
-//     window.location.href = 'signup';
-//   }
-// }
 
 async function renderDashboard(project) {
   const projectName = document.getElementById('projectName');

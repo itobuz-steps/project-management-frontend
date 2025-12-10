@@ -1,4 +1,4 @@
-import { removeElementChildren } from '../../../utils/removeElement';
+import { removeElementChildren } from '../../../utils/elementUtils';
 import projectService from '../../../services/ProjectService';
 import { renderBoard } from '../dashboard';
 

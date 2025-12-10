@@ -1,7 +1,8 @@
 import projectService from '../../../services/ProjectService';
 import { renderDashBoardTasks } from '../../../utils/renderTasks';
-import { renderBoard, checkToken } from '../dashboard';
+import { renderBoard } from '../dashboard';
 import { loadProjectMembers } from '../../loadMembers/loadMembers';
+import { checkToken } from '../../../utils/checkToken';
 
 const body = document.querySelector('body');
 const sidebar = document.querySelector('#sidebar');
