@@ -3,7 +3,7 @@
  * @param {"success" | "error" | "info"} type
  * @param {number} delay
  */
-function showToast(message, type = 'info', delay = 3000) {
+function showToast(message, type = 'info', delay = 0) {
   const container = document.getElementById('toast-container');
   if (!container) return;
 

@@ -1335,10 +1335,11 @@ async function checkForInvite() {
         params: { token: inviteToken },
         headers: { Authorization: `Bearer ${authToken}` },
       });
-      alert('Joined the project');
-      localStorage.removeItem('inviteToken');
+      showToast('User Joined The Project Successfully', 'success');
     } catch (error) {
       console.error(error);
+    } finally {
+      localStorage.removeItem('inviteToken');
     }
   }
 }
