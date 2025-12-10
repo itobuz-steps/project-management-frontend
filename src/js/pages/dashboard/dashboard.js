@@ -17,32 +17,12 @@ import { openUpdateTaskModal } from '../../utils/modals/updateTaskModal.js';
 import { openCreateTaskModal } from '../../utils/modals/createTaskModal.js';
 import { openCreateProjectModal } from '../../utils/modals/createProjectModal.js';
 import { showConfirmModal } from '../../utils/modals/confirmationModal.js';
-
-const filterBox = document.getElementById('filterBox');
-const mainDropdown = document.getElementById('mainDropdown');
-const subDropdowns = document.querySelectorAll('.subDropdown');
-
-filterBox.addEventListener('click', (e) => {
-  e.stopPropagation();
-  mainDropdown.classList.toggle('hidden');
-  subDropdowns.forEach((d) => d.classList.add('hidden'));
-});
-
-document.querySelectorAll('.dropdown-item').forEach((item) => {
-  item.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const target = item.getAttribute('data-target');
-
-    subDropdowns.forEach((d) => d.id !== target && d.classList.add('hidden'));
-    document.getElementById(target).classList.toggle('hidden');
-  });
-});
-
-document.addEventListener('click', (e) => {
-  mainDropdown.classList.add('hidden');
-  subDropdowns.forEach((d) => d.classList.add('hidden'));
-  e.stopPropagation();
-});
+import {
+  handleStatusFilter,
+  handleAssigneeFilter,
+} from './filter/dashboardFilter.js';
+import { checkToken } from '../../utils/checkToken.js';
+import { removeActive, hideAll } from '../../utils/elementUtils.js';
 
 const openProjectBtn = document.getElementById('plus-icon');
 openProjectBtn.addEventListener('click', openCreateProjectModal);
@@ -71,6 +51,7 @@ export function dropdownEvent(sprint = {}) {
 
 const backlogBtn = document.getElementById('backlog-li');
 const backlogView = document.getElementById('backlog-view');
+
 backlogBtn.addEventListener('click', () => {
   removeActive(backlogBtn);
   hideAll(backlogView);
@@ -78,6 +59,7 @@ backlogBtn.addEventListener('click', () => {
 
 const boardBtn = document.getElementById('board-li');
 const boardView = document.getElementById('board-view');
+
 boardBtn.addEventListener('click', () => {
   removeActive(boardBtn);
   hideAll(boardView);
@@ -85,35 +67,10 @@ boardBtn.addEventListener('click', () => {
 
 const listBtn = document.getElementById('list-li');
 const listView = document.getElementById('list-view');
+
 listBtn.addEventListener('click', () => {
   removeActive(listBtn);
   hideAll(listView);
-});
-
-function removeActive(element) {
-  [...element.parentElement.children].forEach((child) => {
-    child.classList.remove('active');
-  });
-  element.classList.toggle('active');
-}
-
-function hideAll(element) {
-  [...element.parentElement.children].forEach((child) => {
-    child.classList.add('hidden');
-  });
-  element.classList.remove('hidden');
-}
-
-function checkIfToken() {
-  if (!localStorage.getItem('access_token')) {
-    window.location.href = 'signup';
-  }
-}
-
-const logoutBtn = document.getElementById('logout-btn');
-logoutBtn.addEventListener('click', () => {
-  localStorage.clear();
-  checkIfToken();
 });
 
 async function renderDashboard(project) {
@@ -140,11 +97,12 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
 }
 
 export async function renderBoard(projectId, filter = '', searchInput = '') {
+  const currentProject = localStorage.getItem('selectedProject');
   const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const project = (await projectService.getProjectById(projectId)).result;
-  const currentSprint = await sprintService.getSprintById(
-    project.currentSprint
-  );
+  const currentSprint = project.currentSprint
+    ? await sprintService.getSprintById(project.currentSprint)
+    : null;
   let draggedColumn = null;
 
   renderDashboard(project);
@@ -180,15 +138,12 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         <div class="space-y-3 pb-4 h-full" id="task-list"></div>
       </div>
     `;
-    // columnEl.querySelector('.issue-count').innerText = (
-    //   columns[column] || []
-    // ).length;
 
     const tasks = columns[column] || [];
     tasks.forEach((task) => {
       filteredTasks.push(task);
       console.log(task._id);
-      if (!currentSprint.result.tasks.includes(task._id)) {
+      if (!currentSprint || !currentSprint.result.tasks.includes(task._id)) {
         return;
       }
 
@@ -428,99 +383,6 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
   renderTasksList(filteredTasks);
 }
 
-function renderSubDropdown(item) {
-  const subDropdown = document.createElement('div');
-  subDropdown.className = `px-4 py-2 hover:bg-gray-100 cursor-pointer ${item}-filter`;
-  subDropdown.id = `${item}-filter`;
-  subDropdown.innerHTML = `
-    ${item.charAt(0).toUpperCase() + item.slice(1)}
-  `;
-  return subDropdown;
-}
-
-const currentProject = localStorage.getItem('selectedProject');
-
-const statusDropDown = document.getElementById('statusDropdown');
-const assigneeDropdown = document.getElementById('assigneeDropdown');
-
-function removeElementChildren(element) {
-  element.innerHTML = '';
-}
-
-async function handleStatusFilter() {
-  removeElementChildren(statusDropDown);
-  removeElementChildren(assigneeDropdown);
-  const project = (
-    await projectService.getProjectById(localStorage.getItem('selectedProject'))
-  ).result;
-
-  project.columns.forEach((column) => {
-    const dropdownEl = renderSubDropdown(column);
-    statusDropDown.appendChild(dropdownEl);
-    dropdownEl.addEventListener('click', () => {
-      removeElementChildren(statusDropDown);
-      removeElementChildren(assigneeDropdown);
-      renderBoard(currentProject, 'status', `${column}`);
-    });
-  });
-}
-
-async function handleAssigneeFilter() {
-  removeElementChildren(statusDropDown);
-  removeElementChildren(assigneeDropdown);
-  const assignees = await projectService.getProjectMembers(
-    localStorage.getItem('selectedProject')
-  );
-
-  assignees.result.forEach((assignee) => {
-    const dropdownEl = renderSubDropdown(assignee.name);
-    assigneeDropdown.appendChild(dropdownEl);
-    dropdownEl.addEventListener('click', () => {
-      removeElementChildren(statusDropDown);
-      removeElementChildren(assigneeDropdown);
-      renderBoard(
-        localStorage.getItem('selectedProject'),
-        'assignee',
-        `${assignee._id}`
-      );
-    });
-  });
-}
-
-const priorityDropdown = document.getElementById('priorityDropdown');
-const lowFilterBtn = document.getElementById('low-filter');
-const midFilterBtn = document.getElementById('medium-filter');
-const highFilterBtn = document.getElementById('high-filter');
-const criticalFilterBtn = document.getElementById('critical-filter');
-const removeFilterBtn = document.getElementById('remove-filter-btn');
-
-priorityDropdown.addEventListener('click', () => {
-  removeElementChildren(statusDropDown);
-  removeElementChildren(assigneeDropdown);
-});
-
-lowFilterBtn.addEventListener('click', () => {
-  renderBoard(localStorage.getItem('selectedProject'), 'priority', 'low');
-});
-
-midFilterBtn.addEventListener('click', () => {
-  renderBoard(localStorage.getItem('selectedProject'), 'priority', 'medium');
-});
-
-highFilterBtn.addEventListener('click', () => {
-  renderBoard(localStorage.getItem('selectedProject'), 'priority', 'high');
-});
-
-criticalFilterBtn.addEventListener('click', () => {
-  renderBoard(localStorage.getItem('selectedProject'), 'priority', 'critical');
-});
-
-removeFilterBtn.addEventListener('click', () => {
-  removeElementChildren(statusDropDown);
-  removeElementChildren(assigneeDropdown);
-  renderBoard(localStorage.getItem('selectedProject'), '', '');
-});
-
 async function checkForInvite() {
   const inviteToken = localStorage.getItem('inviteToken');
   const authToken = localStorage.getItem('access_token');
@@ -539,11 +401,10 @@ async function checkForInvite() {
   }
 }
 
-checkIfToken();
+checkToken();
 checkForInvite();
-loadProjectMembers(localStorage.getItem('selectedProject'));
-setupSocketIo(showNotification);
+setupSidebar();
+setupNotification();
+setupNavbar();
 renderBoard(localStorage.getItem('selectedProject'));
-showProjectList();
-showUserList();
 renderDashBoardTasks();

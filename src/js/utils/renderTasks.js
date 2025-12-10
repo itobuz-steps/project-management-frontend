@@ -8,7 +8,12 @@ const emptyListContainer = document.getElementById('empty-list-container');
 
 const sprintBacklogWrapper = document.getElementById('sprint-backlog-wrapper');
 
-async function createTaskList(task) {
+async function createTaskList(task, type) {
+  let ifSprint = `hidden`;
+  if (type === 'backlog') {
+    ifSprint = ``;
+  }
+
   const tr = document.createElement('tr');
 
   const reporter = task.reporter
@@ -23,7 +28,7 @@ async function createTaskList(task) {
   console.log(task._id);
   tr.dataset.id = task._id;
   tr.innerHTML = `
-    <td class="w-4 p-4">
+    <td class="w-4 p-4 ${ifSprint}">
       <div class="flex items-center">
         <input
             id="checkbox-all-search"
@@ -33,7 +38,7 @@ async function createTaskList(task) {
         />
       </div>
     </td>
-    <td>
+                      <td>
                         <svg
                           viewBox="0 0 24 24"
                           xmlns="http://www.w3.org/2000/svg"
@@ -167,15 +172,7 @@ function createSprintTable(sprint) {
                       class="text-xm text-gray-700 uppercase bg-gray-200 border-b border-gray-500 hover:bg-gray-100 sticky"
                     >
                       <tr>
-                        <th scope="col" class="p-4">
-                          <div class="flex items-center">
-                            <input
-                              id="checkbox-all-search"
-                              type="checkbox"
-                              class="w-3.5 h-3.5 text-blue-600 bg-gray-100 border-gray-300 rounded-sm accent-cyan-500 focus:ring-cyan-600"
-                            />
-                          </div>
-                        </th>
+                        
                         <th scope="col" class="px-6 py-3">Type</th>
                         <th scope="col" class="px-6 py-3">Key</th>
                         <th scope="col" class="px-6 py-3">Summary</th>
@@ -356,16 +353,24 @@ export async function renderTasksList(tasksArray = []) {
 async function renderSprintTasks(sprint, sprintTasks) {
   for (const taskId of sprintTasks) {
     const task = await TaskService.getTaskById(taskId);
-    const tr = await createTaskList(task.data.result);
+    const tr = await createTaskList(task.data.result, '');
     document.getElementById(`${sprint.key}-body`).append(tr);
   }
 }
-async function renderBacklogTasks(backlogTasks) {
+async function renderBacklogTasks(backlogBody, backlogTasks, addToSprintButton) {
   for (const taskId of backlogTasks) {
     const task = await TaskService.getTaskById(taskId);
-    const tr = await createTaskList(task.data.result);
-    document.getElementById('backlog-body').append(tr);
+    const tr = await createTaskList(task.data.result, 'backlog');
+    backlogBody.append(tr);
+
+    const checkbox = tr.querySelector('.checkboxes');
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked && addToSprintButton.classList.contains('hidden')) {
+        toggleHidden(addToSprintButton);
+      }
+    });
   }
+
 }
 
 export async function renderDashBoardTasks() {
@@ -448,14 +453,28 @@ export async function renderDashBoardTasks() {
     const backlogTable = createBacklogTable();
     sprintBacklogWrapper.append(backlogTable);
     dropdownEvent();
+    const addToSprintButton = document.getElementById('add-to-sprint-button');
+    const backlogBody = document.getElementById('backlog-body');
     if (!backlogTasks.length) {
       document
         .getElementById('backlog-empty-message')
         .classList.remove('hidden');
     } else {
       document.getElementById('backlog-empty-message').classList.add('hidden');
-      renderBacklogTasks(backlogTasks);
+      renderBacklogTasks(backlogBody, backlogTasks, addToSprintButton);
     }
+
+    backlogBody.addEventListener('change', () => {
+      let isChecked = false;
+      backlogBody.querySelectorAll('.checkboxes').forEach((checkbox) => {
+        if (checkbox.checked) {
+          isChecked = true;
+        }
+      });
+      if (!isChecked) {
+        toggleHidden(addToSprintButton);
+      }
+    });
 
     const createSprintButton = document.getElementById('create-sprint-button');
     const sprintForm = document.getElementById('sprint-creation-form');
@@ -478,14 +497,17 @@ export async function renderDashBoardTasks() {
     });
 
     const backlogCheckboxAll = document.getElementById('backlog-checkbox-all');
-    const addToSprintButton = document.getElementById('add-to-sprint-button');
     backlogCheckboxAll.addEventListener('change', (e) => {
       if (backlogCheckboxAll.checked) {
         handleBacklogCheckboxAll(true);
-        toggleHidden(addToSprintButton);
+        if (addToSprintButton.classList.contains('hidden')) {
+          toggleHidden(addToSprintButton);
+        }
       } else {
         handleBacklogCheckboxAll(false);
-        toggleHidden(addToSprintButton);
+        if (!addToSprintButton.classList.contains('hidden')) {
+          toggleHidden(addToSprintButton);
+        }
       }
       e.stopPropagation();
     });
@@ -493,6 +515,14 @@ export async function renderDashBoardTasks() {
     addToSprintButton.addEventListener('click', () => {
       handleAddTaskToSprint(currentSprints);
     });
+
+    const checkboxes = document.querySelectorAll('.checkboxes');
+    checkboxes.forEach((checkbox) => {
+      if (checkbox.checked) {
+        toggleHidden(addToSprintButton);
+      }
+    });
+
   } catch (error) {
     console.error(error.message);
   }
@@ -640,8 +670,18 @@ async function handleAddTaskFromBacklogToSprint(dropdownEl) {
   });
 
   console.log(dropdownEl.dataset.id, selectedRows);
-  await SprintService.updateSprint(dropdownEl.dataset.id, {
-    tasks: selectedRows,
-  });
+  await SprintService.addTasksToSprint(dropdownEl.dataset.id, { tasks: selectedRows });
   await renderDashBoardTasks();
 }
+
+// function ifSelected(checkboxes, addToSprintButton) {
+//   checkboxes.forEach((checkbox) => {
+//     if (checkbox.selected) {
+//       toggleHidden(addToSprintButton);
+//     }
+//   });
+// }
+// const addToSprintButton = document.getElementById('add-to-sprint-button');
+// const checkboxes = document.querySelectorAll('.checkboxes');
+// console.log(checkboxes);
+// ifSelected(checkboxes, addToSprintButton);

@@ -114,6 +114,28 @@ class SprintService {
     }
   }
 
+  async addTasksToSprint(id, updatedSprint) {
+    try {
+      const response = await this.api.patch(`/${id}/addTasks`, updatedSprint);
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || 'Failed to update sprint'
+      );
+    }
+  }
+
+  async removeTaskFromSprint(id, updatedSprint) {
+    try {
+      const response = await this.api.patch(`/${id}/removeTasks`, updatedSprint);
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || 'Failed to update sprint'
+      );
+    }
+  }
+
   async deleteSprint(id) {
     try {
       const response = await this.api.delete(`/${id}`);
