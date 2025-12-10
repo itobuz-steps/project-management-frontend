@@ -97,6 +97,7 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
 }
 
 export async function renderBoard(projectId, filter = '', searchInput = '') {
+  const currentProject = localStorage.getItem('selectedProject');
   const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const project = (await projectService.getProjectById(projectId)).result;
   const currentSprint = await sprintService.getSprintById(
@@ -384,7 +385,6 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
 checkToken();
 loadProjectMembers(localStorage.getItem('selectedProject'));
-const currentProject = localStorage.getItem('selectedProject');
 
 // add  user to the project
 
