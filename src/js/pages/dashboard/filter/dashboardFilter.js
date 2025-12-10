@@ -62,6 +62,31 @@ const midFilterBtn = document.getElementById('medium-filter');
 const highFilterBtn = document.getElementById('high-filter');
 const criticalFilterBtn = document.getElementById('critical-filter');
 const removeFilterBtn = document.getElementById('remove-filter-btn');
+const filterBox = document.getElementById('filterBox');
+const mainDropdown = document.getElementById('mainDropdown');
+const subDropdowns = document.querySelectorAll('.subDropdown');
+
+filterBox.addEventListener('click', (e) => {
+  e.stopPropagation();
+  mainDropdown.classList.toggle('hidden');
+  subDropdowns.forEach((d) => d.classList.add('hidden'));
+});
+
+document.querySelectorAll('.dropdown-item').forEach((item) => {
+  item.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const target = item.getAttribute('data-target');
+
+    subDropdowns.forEach((d) => d.id !== target && d.classList.add('hidden'));
+    document.getElementById(target).classList.toggle('hidden');
+  });
+});
+
+document.addEventListener('click', (e) => {
+  mainDropdown.classList.add('hidden');
+  subDropdowns.forEach((d) => d.classList.add('hidden'));
+  e.stopPropagation();
+});
 
 priorityDropdown.addEventListener('click', () => {
   removeElementChildren(statusDropDown);

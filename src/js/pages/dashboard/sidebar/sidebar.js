@@ -1,6 +1,6 @@
 import projectService from '../../../services/ProjectService';
 import { renderDashBoardTasks } from '../../../utils/renderTasks';
-import { renderBoard } from '../dashboard';
+import { renderBoard, checkToken } from '../dashboard';
 import { loadProjectMembers } from '../../loadMembers/loadMembers';
 
 const body = document.querySelector('body');
@@ -23,6 +23,12 @@ function toggleSidebar(action = 'toggle') {
     body.classList.remove('overflow-hidden');
   }
 }
+
+const logoutBtn = document.getElementById('logout-btn');
+logoutBtn.addEventListener('click', () => {
+  localStorage.clear();
+  checkToken();
+});
 
 export async function updateProjectList() {
   try {

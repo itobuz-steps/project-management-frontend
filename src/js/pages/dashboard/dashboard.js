@@ -21,32 +21,7 @@ import {
   handleStatusFilter,
   handleAssigneeFilter,
 } from './filter/dashboardFilter.js';
-
-const filterBox = document.getElementById('filterBox');
-const mainDropdown = document.getElementById('mainDropdown');
-const subDropdowns = document.querySelectorAll('.subDropdown');
-
-filterBox.addEventListener('click', (e) => {
-  e.stopPropagation();
-  mainDropdown.classList.toggle('hidden');
-  subDropdowns.forEach((d) => d.classList.add('hidden'));
-});
-
-document.querySelectorAll('.dropdown-item').forEach((item) => {
-  item.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const target = item.getAttribute('data-target');
-
-    subDropdowns.forEach((d) => d.id !== target && d.classList.add('hidden'));
-    document.getElementById(target).classList.toggle('hidden');
-  });
-});
-
-document.addEventListener('click', (e) => {
-  mainDropdown.classList.add('hidden');
-  subDropdowns.forEach((d) => d.classList.add('hidden'));
-  e.stopPropagation();
-});
+import { checkToken } from '../../utils/checkToken.js';
 
 const openProjectBtn = document.getElementById('plus-icon');
 openProjectBtn.addEventListener('click', openCreateProjectModal);
@@ -75,6 +50,7 @@ export function dropdownEvent(sprint = {}) {
 
 const backlogBtn = document.getElementById('backlog-li');
 const backlogView = document.getElementById('backlog-view');
+
 backlogBtn.addEventListener('click', () => {
   removeActive(backlogBtn);
   hideAll(backlogView);
@@ -82,6 +58,7 @@ backlogBtn.addEventListener('click', () => {
 
 const boardBtn = document.getElementById('board-li');
 const boardView = document.getElementById('board-view');
+
 boardBtn.addEventListener('click', () => {
   removeActive(boardBtn);
   hideAll(boardView);
@@ -89,6 +66,7 @@ boardBtn.addEventListener('click', () => {
 
 const listBtn = document.getElementById('list-li');
 const listView = document.getElementById('list-view');
+
 listBtn.addEventListener('click', () => {
   removeActive(listBtn);
   hideAll(listView);
@@ -108,17 +86,11 @@ function hideAll(element) {
   element.classList.remove('hidden');
 }
 
-function checkIfToken() {
-  if (!localStorage.getItem('access_token')) {
-    window.location.href = 'signup';
-  }
-}
-
-const logoutBtn = document.getElementById('logout-btn');
-logoutBtn.addEventListener('click', () => {
-  localStorage.clear();
-  checkIfToken();
-});
+// export function checkToken() {
+//   if (!localStorage.getItem('access_token')) {
+//     window.location.href = 'signup';
+//   }
+// }
 
 async function renderDashboard(project) {
   const projectName = document.getElementById('projectName');
@@ -429,7 +401,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
   renderTasksList(filteredTasks);
 }
 
-checkIfToken();
+checkToken();
 loadProjectMembers(localStorage.getItem('selectedProject'));
 const currentProject = localStorage.getItem('selectedProject');
 
