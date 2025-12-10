@@ -1,31 +1,33 @@
-import taskService from '../../services/TaskService.js';
-import { renderBoard } from '../../pages/dashboard/dashboard.js';
-import { renderDashBoardTasks } from '../renderTasks.js';
-
 const drawerBackdrop = document.querySelector('.drawer-backdrop');
-const deleteModal = document.getElementById('deleteModal');
-const cancelDeleteBtn = document.getElementById('cancelDelete');
-const confirmDeleteBtn = document.getElementById('confirmDelete');
+const confirmationModal = document.getElementById('confirmationModal');
+const cancelConfirmBtn = document.getElementById('cancelConfirm');
+const confirmBtn = document.getElementById('confirm');
+const confirmMessage = document.getElementById('confirmModalMessage');
 
-let taskToDelete = null;
+let confirmCallback = null;
 
-export async function showDeleteModal(taskId) {
-  taskToDelete = taskId;
-  deleteModal.classList.remove('hidden');
+export function showConfirmModal(message, callback) {
+  confirmMessage.textContent = message;
+  confirmCallback = callback;
+
+  confirmationModal.classList.remove('hidden');
   drawerBackdrop.classList.remove('hidden');
 }
 
-cancelDeleteBtn.addEventListener('click', () => {
-  deleteModal.classList.add('hidden');
+cancelConfirmBtn.addEventListener('click', () => {
+  confirmationModal.classList.add('hidden');
   drawerBackdrop.classList.add('hidden');
+
+  confirmCallback = null;
 });
 
-confirmDeleteBtn.addEventListener('click', async () => {
-  if (taskToDelete) {
-    await taskService.deleteTask(taskToDelete);
-    renderBoard(localStorage.getItem('selectedProject'));
-    renderDashBoardTasks();
+confirmBtn.addEventListener('click', async () => {
+  if (confirmCallback) {
+    await confirmCallback();
   }
-  deleteModal.classList.add('hidden');
+
+  confirmationModal.classList.add('hidden');
   drawerBackdrop.classList.add('hidden');
+
+  confirmCallback = null;
 });
