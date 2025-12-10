@@ -142,7 +142,7 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
 export async function renderBoard(projectId, filter = '', searchInput = '') {
   const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const project = (await projectService.getProjectById(projectId)).result;
-  const currentSprint = await sprintService.getSprintById(project.currentSprint);
+  const currentSprint = project.currentSprint ? await sprintService.getSprintById(project.currentSprint) : null;
   let draggedColumn = null;
 
   renderDashboard(project);
@@ -186,7 +186,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
     tasks.forEach((task) => {
       filteredTasks.push(task);
       console.log(task._id);
-      if (!currentSprint.result.tasks.includes(task._id)) {
+      if (!currentSprint || !currentSprint.result.tasks.includes(task._id)) {
         return;
       }
 
@@ -198,9 +198,8 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         'task flex flex-col max-w-sm p-4 bg-gray-100 text-black gap-4 relative cursor-pointer';
       taskEl.innerHTML = `
         <div class="card-header flex justify-between items-center">
-          <p class="text-lg border border-transparent rounded-lg font-medium hover:border-gray-400">${
-            task.title
-          }</p>
+          <p class="text-lg border border-transparent rounded-lg font-medium hover:border-gray-400">${task.title
+        }</p>
           <div class="relative">
             <button class="outline-none menu-button">
               <svg width="18px" height="18px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#00000" class="bi bi-three-dots mr-2">
@@ -221,16 +220,13 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         </div>
         <div class="card-footer flex justify-between items-center text-sm text-gray-400">
           <div class="flex items-center gap-2">
-            <span class="type-tag bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm">${
-              task.key
-            }</span>
+            <span class="type-tag bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm">${task.key
+        }</span>
             <select class="type-selector text-sm border border-gray-300 rounded px-1 py-1 focus:outline-none">
-              <option value="story" ${
-                task.type === 'story' ? 'selected' : ''
-              }>Story</option>
-              <option value="task" ${
-                task.type === 'task' ? 'selected' : ''
-              }>Task</option>
+              <option value="story" ${task.type === 'story' ? 'selected' : ''
+        }>Story</option>
+              <option value="task" ${task.type === 'task' ? 'selected' : ''
+        }>Task</option>
             </select>
           </div>
           <div class="flex items-center">
