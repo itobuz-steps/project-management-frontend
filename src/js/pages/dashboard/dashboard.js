@@ -100,9 +100,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
   const currentProject = localStorage.getItem('selectedProject');
   const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const project = (await projectService.getProjectById(projectId)).result;
-  const currentSprint = await sprintService.getSprintById(
-    project.currentSprint
-  );
+  const currentSprint = project.currentSprint ? await sprintService.getSprintById(project.currentSprint) : null;
   let draggedColumn = null;
 
   renderDashboard(project);
@@ -143,7 +141,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
     tasks.forEach((task) => {
       filteredTasks.push(task);
       console.log(task._id);
-      if (!currentSprint.result.tasks.includes(task._id)) {
+      if (!currentSprint || !currentSprint.result.tasks.includes(task._id)) {
         return;
       }
 
