@@ -100,7 +100,9 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
   const currentProject = localStorage.getItem('selectedProject');
   const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const project = (await projectService.getProjectById(projectId)).result;
-  const currentSprint = project.currentSprint ? await sprintService.getSprintById(project.currentSprint) : null;
+  const currentSprint = project.currentSprint
+    ? await sprintService.getSprintById(project.currentSprint)
+    : null;
   let draggedColumn = null;
 
   renderDashboard(project);
@@ -381,49 +383,26 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
   renderTasksList(filteredTasks);
 }
 
-checkToken();
-loadProjectMembers(localStorage.getItem('selectedProject'));
-
-// add  user to the project
-
-const toggleInviteButton = document.getElementById('toggleInviteForm');
-const inviteForm = document.getElementById('inviteForm');
-const emailInput = inviteForm.querySelector('input[type="email"]');
-
-toggleInviteButton.addEventListener('click', () => {
-  inviteForm.classList.toggle('hidden');
-});
-
-inviteForm.addEventListener('submit', function (event) {
-  event.preventDefault();
-
-  const email = emailInput.value.trim();
-  if (email === '') {
-    console.log('please enter a valid emil'); // add a confirmation
-    return;
+async function checkForInvite() {
+  const inviteToken = localStorage.getItem('inviteToken');
+  const authToken = localStorage.getItem('access_token');
+  if (inviteToken) {
+    try {
+      await axios.get('http://localhost:3001/invite/join', {
+        params: { token: inviteToken },
+        headers: { Authorization: `Bearer ${authToken}` },
+      });
+      showToast('User Joined The Project Successfully', 'success');
+    } catch (error) {
+      console.error(error);
+    } finally {
+      localStorage.removeItem('inviteToken');
+    }
   }
-  axios
-    .post('http://localhost:3001/invite/email', {
-      email: email,
-      projectId: localStorage.getItem('selectedProject'),
-    })
-    .then((response) => {
-      if (response.data.success) {
-        showToast('Email sent successfully', 'success');
-        console.log('Email sent successfully');
-      } else {
-        showToast('failed to send invitation', 'error');
-        console.log('failed to sent invitation');
-      }
-    })
-    .catch((error) => {
-      showToast('Could not sent invitation');
-      console.error('Error:', error);
-    });
-  inviteForm.classList.add('hidden');
-  emailInput.value = '';
-});
+}
 
+checkToken();
+checkForInvite();
 setupSidebar();
 setupNotification();
 setupNavbar();

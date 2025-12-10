@@ -12,6 +12,9 @@ const usersMenu = document.getElementById('usersMenu');
 const userListContainer = document.getElementById('usersDropdown');
 const projectsMenu = document.getElementById('projectsMenu');
 const projectDropdownContainer = document.getElementById('projectsDropdown');
+const toggleInviteButton = document.getElementById('toggleInviteForm');
+const inviteForm = document.getElementById('inviteForm');
+const emailInput = inviteForm.querySelector('input[type="email"]');
 
 function toggleSidebar(action = 'toggle') {
   if (action === 'toggle') {
@@ -164,6 +167,40 @@ function addEventListenersSidebar() {
     renderDashBoardTasks();
     renderBoard(localStorage.getItem('selectedProject'));
     loadProjectMembers(localStorage.getItem('selectedProject'));
+  });
+
+  toggleInviteButton.addEventListener('click', () => {
+    inviteForm.classList.toggle('hidden');
+  });
+
+  inviteForm.addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const email = emailInput.value.trim();
+    if (email === '') {
+      console.log('please enter a valid emil'); // add a confirmation
+      return;
+    }
+    axios
+      .post('http://localhost:3001/invite/email', {
+        email: email,
+        projectId: localStorage.getItem('selectedProject'),
+      })
+      .then((response) => {
+        if (response.data.success) {
+          showToast('Email sent successfully', 'success');
+          console.log('Email sent successfully');
+        } else {
+          showToast('failed to send invitation', 'error');
+          console.log('failed to sent invitation');
+        }
+      })
+      .catch((error) => {
+        showToast('Could not sent invitation');
+        console.error('Error:', error);
+      });
+    inviteForm.classList.add('hidden');
+    emailInput.value = '';
   });
 }
 
