@@ -8,7 +8,7 @@ import taskService from '../../services/TaskService.js';
 import axios from 'axios';
 import { setupNotification } from '../../utils/setupNotification.js';
 import showToast from '../../utils/showToast.js';
-import { showDeleteModal } from '../../utils/modals/confirmationModal.js';
+import sprintService from '../../services/SprintService.js';
 import { showTaskDrawer } from '../taskDrawer/taskDrawer.js';
 import { loadProjectMembers } from '../loadMembers/loadMembers.js';
 import { setupSidebar } from './sidebar/sidebar.js';
@@ -16,6 +16,7 @@ import { setupNavbar } from './navbar/navbar.js';
 import { openUpdateTaskModal } from '../../utils/modals/updateTaskModal.js';
 import { openCreateTaskModal } from '../../utils/modals/createTaskModal.js';
 import { openCreateProjectModal } from '../../utils/modals/createProjectModal.js';
+import { showConfirmModal } from '../../utils/modals/confirmationModal.js';
 
 const filterBox = document.getElementById('filterBox');
 const mainDropdown = document.getElementById('mainDropdown');
@@ -119,7 +120,6 @@ async function renderDashboard(project) {
   const projectName = document.getElementById('projectName');
 
   projectName.innerText = project.name;
-  projectName.innerText = project.name;
 }
 
 async function getTaskGroupedByStatus(projectId, filter, searchInput) {
@@ -142,6 +142,9 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
 export async function renderBoard(projectId, filter = '', searchInput = '') {
   const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const project = (await projectService.getProjectById(projectId)).result;
+  const currentSprint = await sprintService.getSprintById(
+    project.currentSprint
+  );
   let draggedColumn = null;
 
   renderDashboard(project);
@@ -177,13 +180,17 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         <div class="space-y-3 pb-4 h-full" id="task-list"></div>
       </div>
     `;
-    columnEl.querySelector('.issue-count').innerText = (
-      columns[column] || []
-    ).length;
+    // columnEl.querySelector('.issue-count').innerText = (
+    //   columns[column] || []
+    // ).length;
 
     const tasks = columns[column] || [];
     tasks.forEach((task) => {
       filteredTasks.push(task);
+      console.log(task._id);
+      if (!currentSprint.result.tasks.includes(task._id)) {
+        return;
+      }
 
       const assignee = task.assignee ? userMap[task.assignee] : null;
 
@@ -357,7 +364,16 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         openUpdateTaskModal(task._id);
       });
       taskEl.querySelector('.delete-btn').addEventListener('click', (e) => {
-        showDeleteModal(task._id);
+        e.stopPropagation();
+        // showDeleteModal(task._id);
+        showConfirmModal(
+          'Are you sure you want to delete this task?',
+          async () => {
+            await taskService.deleteTask(task._id);
+            renderBoard(localStorage.getItem('selectedProject'));
+            renderDashBoardTasks();
+          }
+        );
       });
 
       typeSelector.addEventListener('change', (e) => {
@@ -402,6 +418,9 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
     });
 
     columnContainer.appendChild(columnEl);
+
+    columnEl.querySelector('.issue-count').innerText =
+      taskList.childElementCount;
   });
 
   handleStatusFilter();
