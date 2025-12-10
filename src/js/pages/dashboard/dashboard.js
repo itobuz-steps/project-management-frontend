@@ -10,7 +10,6 @@ import { setupNotification } from '../../utils/setupNotification.js';
 import showToast from '../../utils/showToast.js';
 import sprintService from '../../services/SprintService.js';
 import { showTaskDrawer } from '../taskDrawer/taskDrawer.js';
-import { loadProjectMembers } from '../loadMembers/loadMembers.js';
 import { setupSidebar } from './sidebar/sidebar.js';
 import { setupNavbar } from './navbar/navbar.js';
 import { openUpdateTaskModal } from '../../utils/modals/updateTaskModal.js';
@@ -23,6 +22,7 @@ import {
 } from './filter/dashboardFilter.js';
 import { checkToken } from '../../utils/checkToken.js';
 import { removeActive, hideAll } from '../../utils/elementUtils.js';
+import { loadProjectMembers } from '../loadMembers/loadMembers.js';
 
 const openProjectBtn = document.getElementById('plus-icon');
 openProjectBtn.addEventListener('click', openCreateProjectModal);
@@ -406,5 +406,6 @@ checkForInvite();
 setupSidebar();
 setupNotification();
 setupNavbar();
+loadProjectMembers(localStorage.getItem('selectedProject'));
 renderBoard(localStorage.getItem('selectedProject'));
 renderDashBoardTasks();
