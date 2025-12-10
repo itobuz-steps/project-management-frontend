@@ -1,6 +1,7 @@
 import projectService from '../services/ProjectService.js';
 import SprintService from '../services/SprintService.js';
 import TaskService from '../services/TaskService.js';
+import { showConfirmModal } from './modals/confirmationModal.js';
 
 const listTableBody = document.getElementById('table-body');
 const emptyListContainer = document.getElementById('empty-list-container');
@@ -153,7 +154,6 @@ function createSprintTable(sprint) {
                   >
                     Complete Sprint
                   </button>
-                  
                   <button
                   type="button"
                   id="${sprint.key}-sprint-start-button"
@@ -437,7 +437,15 @@ export async function renderDashBoardTasks() {
 
         completeSprintButton.addEventListener('click', async (e) => {
           e.preventDefault();
-          await handleCompleteSprint(sprint._id, response.result);
+
+          //await handleCompleteSprint(sprint._id, response.result);
+
+          showConfirmModal(
+            'Are you sure you want to complete this sprint?',
+            async () => {
+              await handleCompleteSprint(sprint._id, response.result);
+            }
+          );
         });
       }
     });
@@ -617,6 +625,7 @@ async function handleStartSprint(sprint) {
 
       completeSprintButton.addEventListener('click', async (e) => {
         e.preventDefault();
+
         await handleCompleteSprint(sprint._id, response.result);
       });
     }
@@ -626,7 +635,9 @@ async function handleStartSprint(sprint) {
 function handleBacklogCheckboxAll(isCheckedValue) {
   const backlogBodyChildren = document.getElementById('backlog-body');
   // [...backlogBodyChildren.children].forEach((child) => { child.querySelector('.checkboxes'); });
-  backlogBodyChildren.querySelectorAll('.checkboxes').forEach((box) => { box.checked = isCheckedValue; });
+  backlogBodyChildren.querySelectorAll('.checkboxes').forEach((box) => {
+    box.checked = isCheckedValue;
+  });
 }
 
 function handleAddTaskToSprint(currentSprints) {
@@ -636,7 +647,8 @@ function handleAddTaskToSprint(currentSprints) {
 
   currentSprints.forEach((sprint) => {
     const dropdownEl = document.createElement('li');
-    dropdownEl.className = 'dropdown-item px-4 py-2 hover:bg-gray-100 cursor-pointer';
+    dropdownEl.className =
+      'dropdown-item px-4 py-2 hover:bg-gray-100 cursor-pointer';
     dropdownEl.dataset.id = sprint._id;
     dropdownEl.id = `dropdown-${sprint.key}`;
     dropdownEl.innerHTML = sprint.key;
@@ -645,7 +657,7 @@ function handleAddTaskToSprint(currentSprints) {
       await handleAddTaskFromBacklogToSprint(dropdownEl);
     });
   });
-};
+}
 
 async function handleAddTaskFromBacklogToSprint(dropdownEl) {
   const backlogBodyChildren = document.getElementById('backlog-body');
