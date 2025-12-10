@@ -401,7 +401,6 @@ document.addEventListener('click', (e) => {
   e.stopPropagation();
 });
 
-
 const projectsMenu = document.getElementById('projectsMenu');
 const usersMenu = document.getElementById('usersMenu');
 const projectsDropdown = document.getElementById('projectsDropdown');
@@ -1105,8 +1104,6 @@ function renderSubDropdown(item) {
   return subDropdown;
 }
 
-checkIfToken();
-loadProjectMembers(localStorage.getItem('selectedProject'));
 const currentProject = localStorage.getItem('selectedProject');
 
 const statusDropDown = document.getElementById('statusDropdown');
@@ -1329,6 +1326,26 @@ if (notificationIcon) {
   });
 }
 
+async function checkForInvite() {
+  const inviteToken = localStorage.getItem('inviteToken');
+  const authToken = localStorage.getItem('access_token');
+  if (inviteToken) {
+    try {
+      await axios.get('http://localhost:3001/invite/join', {
+        params: { token: inviteToken },
+        headers: { Authorization: `Bearer ${authToken}` },
+      });
+      alert('Joined the project');
+      localStorage.removeItem('inviteToken');
+    } catch (error) {
+      console.error(error);
+    }
+  }
+}
+
+checkIfToken();
+checkForInvite();
+loadProjectMembers(localStorage.getItem('selectedProject'));
 setupSocketIo(showNotification);
 renderBoard(localStorage.getItem('selectedProject'));
 showProjectList();
