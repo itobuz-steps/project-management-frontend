@@ -521,47 +521,6 @@ removeFilterBtn.addEventListener('click', () => {
   renderBoard(localStorage.getItem('selectedProject'), '', '');
 });
 
-// add  user to the project
-
-const toggleInviteButton = document.getElementById('toggleInviteForm');
-const inviteForm = document.getElementById('inviteForm');
-const emailInput = inviteForm.querySelector('input[type="email"]');
-
-toggleInviteButton.addEventListener('click', () => {
-  inviteForm.classList.toggle('hidden');
-});
-
-inviteForm.addEventListener('submit', function (event) {
-  event.preventDefault();
-
-  const email = emailInput.value.trim();
-  if (email === '') {
-    showToast('please enter a valid email', 'error');
-    console.log('please enter a valid emil'); // add a confimation
-    return;
-  }
-  axios
-    .post('http://localhost:3001/invite/email', {
-      email: email,
-      projectId: localStorage.getItem('selectedProject'),
-    })
-    .then((response) => {
-      if (response.data.success) {
-        showToast('Email sent successfully', 'success');
-        console.log('Email sent successfully');
-      } else {
-        showToast('failed to send invitation', 'error');
-        console.log('failed to sent invitation');
-      }
-    })
-    .catch((error) => {
-      showToast('Could not sent invitation');
-      console.error('Error:', error);
-    });
-  // inviteForm.classList.add('hidden');
-  emailInput.value = '';
-});
-
 setupSidebar();
 setupNotification();
 setupNavbar();
