@@ -521,8 +521,29 @@ removeFilterBtn.addEventListener('click', () => {
   renderBoard(localStorage.getItem('selectedProject'), '', '');
 });
 
-setupSidebar();
-setupNotification();
-setupNavbar();
+async function checkForInvite() {
+  const inviteToken = localStorage.getItem('inviteToken');
+  const authToken = localStorage.getItem('access_token');
+  if (inviteToken) {
+    try {
+      await axios.get('http://localhost:3001/invite/join', {
+        params: { token: inviteToken },
+        headers: { Authorization: `Bearer ${authToken}` },
+      });
+      showToast('User Joined The Project Successfully', 'success');
+    } catch (error) {
+      console.error(error);
+    } finally {
+      localStorage.removeItem('inviteToken');
+    }
+  }
+}
+
+checkIfToken();
+checkForInvite();
+loadProjectMembers(localStorage.getItem('selectedProject'));
+setupSocketIo(showNotification);
 renderBoard(localStorage.getItem('selectedProject'));
+showProjectList();
+showUserList();
 renderDashBoardTasks();
