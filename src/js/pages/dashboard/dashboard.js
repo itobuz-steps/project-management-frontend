@@ -295,19 +295,9 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         draggedColumn = currentCol;
       });
 
-      // const menuButton = taskEl.querySelector('.menu-button');
-      // const dropdownMenu = taskEl.querySelector('.dropdown-menu');
       const typeTag = taskEl.querySelector('.type-tag');
       const typeSelector = taskEl.querySelector('.type-selector');
       const cardHeader = taskEl.querySelector('.card-header > p');
-
-      // menuButton.addEventListener('click', (e) => {
-      //   e.stopPropagation();
-      //   dropdownMenu.classList.toggle('hidden');
-      // });
-      // document.addEventListener('click', () =>
-      //   dropdownMenu.classList.add('hidden')
-      // );
 
       taskEl.addEventListener('click', (e) => {
         if (e.target === taskEl) showTaskDrawer(task._id);
@@ -315,12 +305,11 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       cardHeader.addEventListener('click', () => showTaskDrawer(task._id));
 
       taskEl.querySelector('.edit-btn').addEventListener('click', () => {
-        // dropdownMenu.classList.add('hidden');
         openUpdateTaskModal(task._id);
       });
+
       taskEl.querySelector('.delete-btn').addEventListener('click', (e) => {
         e.stopPropagation();
-        // showDeleteModal(task._id);
         showConfirmModal(
           'Are you sure you want to delete this task?',
           async () => {

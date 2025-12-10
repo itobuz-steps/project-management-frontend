@@ -17,6 +17,7 @@ const projectDropdownContainer = document.getElementById('projectsDropdown');
 const toggleInviteButton = document.getElementById('toggleInviteForm');
 const inviteForm = document.getElementById('inviteForm');
 const emailInput = inviteForm.querySelector('input[type="email"]');
+const logoutBtn = document.getElementById('logout-btn');
 
 function toggleSidebar(action = 'toggle') {
   if (action === 'toggle') {
@@ -30,7 +31,6 @@ function toggleSidebar(action = 'toggle') {
   }
 }
 
-const logoutBtn = document.getElementById('logout-btn');
 logoutBtn.addEventListener('click', () => {
   localStorage.clear();
   checkToken();
