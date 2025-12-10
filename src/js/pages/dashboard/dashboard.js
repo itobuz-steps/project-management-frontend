@@ -143,6 +143,12 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
     tasks.forEach((task) => {
       filteredTasks.push(task);
       console.log(task._id);
+
+      let isDone = '';
+      if (task.status === 'done') {
+        isDone = 'line-through text-gray-400';
+      }
+
       if (project.projectType !== 'kanban') {
         if (!currentSprint || !currentSprint.result.tasks.includes(task._id)) {
           return;
@@ -157,7 +163,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         'task flex flex-col max-w-sm p-4 bg-white rounded-lg shadow-md text-black gap-4 relative cursor-grab';
       taskEl.innerHTML = `
         <div class="card-header flex justify-between items-center">
-          <p class="text-lg border border-transparent rounded-lg font-medium hover:border-gray-400">${task.title
+          <p id="${task.title}-taskId" class="text-lg border border-transparent rounded-lg font-medium hover:border-gray-400 ${isDone}">${task.title
         }</p>
             <div class="menu-button flex flex-row gap-2 justify-between">
               <button class="edit-btn w-full p-1 hover:bg-gray-200">

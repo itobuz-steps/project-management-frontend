@@ -541,8 +541,18 @@ export async function renderDashBoardTasks() {
       e.stopPropagation();
     });
 
+    const sprintDropdown = document.getElementById('sprints-dropdown');
     addToSprintButton.addEventListener('click', () => {
-      handleAddTaskToSprint(currentSprints);
+      handleAddTaskToSprint(currentSprints, sprintDropdown);
+    });
+
+    document.addEventListener('click', (e) => {
+      if (sprintDropdown.contains(e.target) || addToSprintButton.contains(e.target)) return;
+
+      if (!sprintDropdown.classList.contains('hidden')) {
+        toggleHidden(sprintDropdown);
+      }
+      e.stopPropagation();
     });
 
     const checkboxes = document.querySelectorAll('.checkboxes');
@@ -669,8 +679,7 @@ function handleBacklogCheckboxAll(isCheckedValue) {
   });
 }
 
-function handleAddTaskToSprint(currentSprints) {
-  const sprintDropdown = document.getElementById('sprints-dropdown');
+function handleAddTaskToSprint(currentSprints, sprintDropdown) {
   sprintDropdown.innerHTML = '';
   toggleHidden(sprintDropdown);
 
