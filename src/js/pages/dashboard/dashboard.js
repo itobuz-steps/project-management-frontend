@@ -154,7 +154,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       const taskEl = document.createElement('div');
       taskEl.dataset._id = task._id;
       taskEl.className =
-        'task flex flex-col max-w-sm p-4 bg-white rounded-lg shadow-md text-black gap-4 relative cursor-pointer';
+        'task flex flex-col max-w-sm p-4 bg-white rounded-lg shadow-md text-black gap-4 relative cursor-grab';
       taskEl.innerHTML = `
         <div class="card-header flex justify-between items-center">
           <p class="text-lg border border-transparent rounded-lg font-medium hover:border-gray-400">${task.title
@@ -288,6 +288,13 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         e.dataTransfer.setData('taskId', task._id);
         e.dataTransfer.effectAllowed = 'move';
         draggedColumn = currentCol;
+        taskEl.classList.remove('cursor-grab');
+        taskEl.classList.add('cursor-grabbing');
+      });
+
+      taskEl.addEventListener('dragend', () => {
+        taskEl.classList.remove('cursor-grabbing');
+        taskEl.classList.add('cursor-grab');
       });
 
       // const menuButton = taskEl.querySelector('.menu-button');
