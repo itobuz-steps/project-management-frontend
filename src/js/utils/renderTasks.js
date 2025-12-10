@@ -10,9 +10,18 @@ const sprintBacklogWrapper = document.getElementById('sprint-backlog-wrapper');
 
 async function createTaskList(task, type) {
   let ifSprint = `hidden`;
-  if (type === 'backlog') {
+  if (type === 'backlog' || type === 'list') {
     ifSprint = ``;
   }
+
+  let labels;
+  if (!task.tags.length) {
+    labels = 'no labels';
+  } else {
+    labels = task.tags.join(' ');
+  }
+  console.log(task.tags);
+  console.log(labels);
 
   const tr = document.createElement('tr');
 
@@ -81,7 +90,7 @@ async function createTaskList(task, type) {
                       <td class="px-6 py-4">${task.sprint}</td>
                       <td class="px-6 py-4">${assignee.name}</td>
                       <td class="px-4 py-4">${task.dueDate.split('T')[0]}</td>
-                      <td class="px-6 py-4">${task.tags.join(' ')}</td>
+                      <td class="px-6 py-4">${labels}</td>
                       <td class="px-6 py-4">${task.createdAt.split('T')[0]}</td>
                       <td class="px-6 py-4">${task.updatedAt.split('T')[0]}</td>
                       <td class="px-6 py-4">${reporter.name}</td>
@@ -332,16 +341,13 @@ function createBacklogTable() {
 export async function renderTasksList(tasksArray = []) {
   try {
     listTableBody.innerHTML = '';
-    // let tasksArray = [];
-    // const tasks = await TaskService.getTaskByProjectId(localStorage.getItem('selectedProject'));
-    // tasksArray.push(...tasks.data.result);
 
     if (!tasksArray.length) {
       emptyListContainer.classList.remove('hidden');
     } else {
       emptyListContainer.classList.add('hidden');
       for (const task of tasksArray) {
-        const tr = await createTaskList(task);
+        const tr = await createTaskList(task, 'list');
         listTableBody.append(tr);
       }
     }

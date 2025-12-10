@@ -113,9 +113,10 @@ class TaskService {
     formData.append('key', task.key);
     formData.append('status', task.status);
     formData.append('priority', task.priority);
-    formData.append('tags', JSON.stringify(task.tags));
     formData.append('dueDate', task.dueDate);
     formData.append('reporter', task.reporter);
+
+    task.tags.forEach((tag) => { formData.append("tags[]", tag); });
 
     if (task.assignee) {
       formData.append('assignee', task.assignee);
