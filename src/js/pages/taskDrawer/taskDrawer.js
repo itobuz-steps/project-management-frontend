@@ -32,9 +32,6 @@ export async function showTaskDrawer(taskId) {
     openUpdateTaskModal(taskId);
   });
 
-  // subtasks render
-  renderSubtasks(task);
-
   commentInput.addEventListener('keydown', function (event) {
     if (event.key === 'Enter') {
       event.preventDefault();
@@ -193,13 +190,14 @@ export async function showTaskDrawer(taskId) {
 
       await taskService.updateTask(task._id, { subTask: selectedIds });
 
-      showToast('Subtasks updated!', 'success');
-
       subtaskDropdown.classList.add('hidden');
+
+      showToast('Subtasks updated!', 'success');
 
       showTaskDrawer(task._id);
     });
   }
 
   createSubtask();
+  renderSubtasks(task);
 }
