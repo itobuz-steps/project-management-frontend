@@ -2,6 +2,7 @@ import projectService from '../../../services/ProjectService';
 import { renderDashBoardTasks } from '../../../utils/renderTasks';
 import { renderBoard } from '../dashboard';
 import { loadProjectMembers } from '../../loadMembers/loadMembers';
+import { checkToken } from '../../../utils/checkToken';
 
 const body = document.querySelector('body');
 const sidebar = document.querySelector('#sidebar');
@@ -23,6 +24,12 @@ function toggleSidebar(action = 'toggle') {
     body.classList.remove('overflow-hidden');
   }
 }
+
+const logoutBtn = document.getElementById('logout-btn');
+logoutBtn.addEventListener('click', () => {
+  localStorage.clear();
+  checkToken();
+});
 
 export async function updateProjectList() {
   try {
