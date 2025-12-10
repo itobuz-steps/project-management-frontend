@@ -47,7 +47,7 @@ export async function updateProjectList() {
         item.dataset.id = project._id;
         item.textContent = project.name;
         item.className =
-          'block p-2 text-gray-900 hover:bg-gray-100 rounded-lg [&.selected]:border [&.selected]:border-black-500 [&.selected]:bg-gray-300';
+          'block p-2 text-gray-900 hover:bg-blue-100 [&.selected]:bg-blue-300 [&.selected]:rounded-r-md [&.selected]:text-blue-700';
         if (project._id === localStorage.getItem('selectedProject')) {
           item.classList.toggle('selected');
         }

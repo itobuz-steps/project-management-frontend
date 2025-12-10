@@ -131,7 +131,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
     const columnEl = document.createElement('div');
     columnEl.innerHTML = `
       <div class="w-72 bg-white rounded-lg shadow p-4 shrink-0 h-full overflow-y-auto">
-        <h2 class="text-lg font-semibold mb-3 border-b pb-2 sticky top-0 bg-white z-10 flex gap-2">
+        <h2 class="text-lg font-semibold border-b pb-2 sticky top-0 bg-white z-10 flex gap-2">
           ${column.toUpperCase()}
           <div class="issue-count rounded-full w-7 h-7 text-center text-md text-white bg-cyan-900"></div>
         </h2>
@@ -152,42 +152,41 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       const taskEl = document.createElement('div');
       taskEl.dataset._id = task._id;
       taskEl.className =
-        'task flex flex-col max-w-sm p-4 bg-gray-100 text-black gap-4 relative cursor-pointer';
+        'task flex flex-col max-w-sm p-4 bg-white rounded-lg shadow-md text-black gap-4 relative cursor-pointer';
       taskEl.innerHTML = `
         <div class="card-header flex justify-between items-center">
           <p class="text-lg border border-transparent rounded-lg font-medium hover:border-gray-400">${
             task.title
           }</p>
-          <div class="relative">
-            <button class="outline-none menu-button">
-              <svg width="18px" height="18px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="#00000" class="bi bi-three-dots mr-2">
-                <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
-              </svg>
-            </button>
-            <div class="dropdown-menu hidden absolute right-0 w-32 bg-white border border-gray-200 rounded shadow-lg z-10">
-              <ul class="text-sm text-gray-700">
-                <li>
-                  <button class="edit-btn block w-full text-left px-4 py-2 hover:bg-gray-100">Edit</button>
-                </li>
-                <li>
-                  <button class="delete-btn block w-full text-left px-4 py-2 hover:bg-gray-100">Delete</button>
-                </li>
-              </ul>
+            <div class="menu-button flex flex-row gap-2 justify-between">
+              <button class="edit-btn w-full p-1 hover:bg-gray-200">
+                <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21.2799 6.40005L11.7399 15.94C10.7899 16.89 7.96987 17.33 7.33987 16.7C6.70987 16.07 7.13987 13.25 8.08987 12.3L17.6399 2.75002C17.8754 2.49308 18.1605 2.28654 18.4781 2.14284C18.7956 1.99914 19.139 1.92124 19.4875 1.9139C19.8359 1.90657 20.1823 1.96991 20.5056 2.10012C20.8289 2.23033 21.1225 2.42473 21.3686 2.67153C21.6147 2.91833 21.8083 3.21243 21.9376 3.53609C22.0669 3.85976 22.1294 4.20626 22.1211 4.55471C22.1128 4.90316 22.0339 5.24635 21.8894 5.5635C21.7448 5.88065 21.5375 6.16524 21.2799 6.40005V6.40005Z" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M11 4H6C4.93913 4 3.92178 4.42142 3.17163 5.17157C2.42149 5.92172 2 6.93913 2 8V18C2 19.0609 2.42149 20.0783 3.17163 20.8284C3.92178 21.5786 4.93913 22 6 22H17C19.21 22 20 20.2 20 18V13" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+              <button class="delete-btn w-full p-1 hover:bg-red-200">
+                <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z" fill="red"/>
+                </svg>
+              </button>
             </div>
-          </div>
         </div>
         <div class="card-footer flex justify-between items-center text-sm text-gray-400">
           <div class="flex items-center gap-2">
-            <span class="type-tag bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm">${
+            <span class="type-tag bg-green-600 text-white text-xs font-semibold p-1 rounded-sm">${
               task.key
             }</span>
-            <select class="type-selector text-sm border border-gray-300 rounded px-1 py-1 focus:outline-none">
+            <select class="type-selector text-sm border border-black-300 rounded text-black focus:outline-none">
               <option value="story" ${
                 task.type === 'story' ? 'selected' : ''
               }>Story</option>
               <option value="task" ${
                 task.type === 'task' ? 'selected' : ''
               }>Task</option>
+              <option value="bug" ${
+                task.type === 'bug' ? 'selected' : ''
+              }>Bug</option>
             </select>
           </div>
           <div class="flex items-center">
@@ -296,19 +295,19 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         draggedColumn = currentCol;
       });
 
-      const menuButton = taskEl.querySelector('.menu-button');
-      const dropdownMenu = taskEl.querySelector('.dropdown-menu');
+      // const menuButton = taskEl.querySelector('.menu-button');
+      // const dropdownMenu = taskEl.querySelector('.dropdown-menu');
       const typeTag = taskEl.querySelector('.type-tag');
       const typeSelector = taskEl.querySelector('.type-selector');
       const cardHeader = taskEl.querySelector('.card-header > p');
 
-      menuButton.addEventListener('click', (e) => {
-        e.stopPropagation();
-        dropdownMenu.classList.toggle('hidden');
-      });
-      document.addEventListener('click', () =>
-        dropdownMenu.classList.add('hidden')
-      );
+      // menuButton.addEventListener('click', (e) => {
+      //   e.stopPropagation();
+      //   dropdownMenu.classList.toggle('hidden');
+      // });
+      // document.addEventListener('click', () =>
+      //   dropdownMenu.classList.add('hidden')
+      // );
 
       taskEl.addEventListener('click', (e) => {
         if (e.target === taskEl) showTaskDrawer(task._id);
@@ -316,7 +315,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       cardHeader.addEventListener('click', () => showTaskDrawer(task._id));
 
       taskEl.querySelector('.edit-btn').addEventListener('click', () => {
-        dropdownMenu.classList.add('hidden');
+        // dropdownMenu.classList.add('hidden');
         openUpdateTaskModal(task._id);
       });
       taskEl.querySelector('.delete-btn').addEventListener('click', (e) => {
@@ -337,11 +336,12 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         if (value === 'task') {
           typeTag.className =
             'bg-blue-600 text-white text-xs font-semibold py-1 px-2 rounded-sm';
-          typeTag.textContent = 'TASK';
-        } else {
+        } else if (value === 'story') {
           typeTag.className =
             'bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm';
-          typeTag.textContent = 'STORY';
+        } else {
+          typeTag.className =
+            'bg-red-600 text-white text-xs font-semibold py-1 px-2 rounded-sm';
         }
       });
 
