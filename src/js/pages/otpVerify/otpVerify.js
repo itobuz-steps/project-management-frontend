@@ -1,5 +1,5 @@
 import authService from '../../services/AuthService.js';
-import { showToast } from '../../utils/showToast.js';
+import showToast from '../../utils/showToast.js';
 
 const otpInput = document.getElementById('otp-input');
 const verifyForm = document.querySelector('.verify-form');

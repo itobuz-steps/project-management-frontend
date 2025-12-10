@@ -3,7 +3,7 @@
  * @param {"success" | "error" | "info"} type
  * @param {number} delay
  */
-function showToast(message, type = 'info', delay = 0) {
+function showToast(message, type = 'info', delay = 3000) {
   const container = document.getElementById('toast-container');
   if (!container) return;
 
@@ -42,7 +42,6 @@ function showToast(message, type = 'info', delay = 0) {
 
 function removeToast(toast) {
   toast.classList.add('opacity-0', 'translate-y-4');
-  setTimeout(() => toast.remove(), 300);
 }
 
 export default showToast;
