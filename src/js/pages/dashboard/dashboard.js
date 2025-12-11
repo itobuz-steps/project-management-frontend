@@ -157,8 +157,9 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         'task flex flex-col max-w-sm p-4 bg-white rounded-lg shadow-md text-black gap-4 relative cursor-grab';
       taskEl.innerHTML = `
         <div class="card-header flex justify-between items-center">
-          <p class="text-lg border border-transparent rounded-lg font-medium hover:border-gray-400">${task.title
-        }</p>
+          <p class="text-lg border border-transparent rounded-lg font-medium hover:border-gray-400">${
+            task.title
+          }</p>
             <div class="menu-button flex flex-row gap-2 justify-between">
               <button class="edit-btn w-full p-1 hover:bg-gray-200">
                 <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -175,28 +176,34 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         </div>
         <div class="card-footer flex justify-between items-center text-sm text-gray-400">
           <div class="flex items-center gap-2">
-            <span class="type-tag bg-green-600 text-white text-xs font-semibold p-1 rounded-sm">${task.key
-        }</span>
+            <span class="type-tag bg-green-600 text-white text-xs font-semibold p-1 rounded-sm">${
+              task.key
+            }</span>
             <select class="type-selector text-sm border border-black-300 rounded text-black focus:outline-none">
-              <option value="story" ${task.type === 'story' ? 'selected' : ''
-        }>Story</option>
-              <option value="task" ${task.type === 'task' ? 'selected' : ''
-        }>Task</option>
-              <option value="bug" ${task.type === 'bug' ? 'selected' : ''
-        }>Bug</option>
+              <option value="story" ${
+                task.type === 'story' ? 'selected' : ''
+              }>Story</option>
+              <option value="task" ${
+                task.type === 'task' ? 'selected' : ''
+              }>Task</option>
+              <option value="bug" ${
+                task.type === 'bug' ? 'selected' : ''
+              }>Bug</option>
             </select>
           </div>
           <div class="flex items-center">
             <span class="user-avatar cursor-pointer w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center">
-              <img src="${assignee?.profileImage
-          ? 'http://localhost:3001/uploads/profile/' +
-          assignee.profileImage
-          : '../../../assets/img/profile.png'
-        }" class="w-8 h-8 object-cover" title="${assignee?.name || 'Unassigned'
-        }"/>
+              <img src="${
+                assignee?.profileImage
+                  ? 'http://localhost:3001/uploads/profile/' +
+                    assignee.profileImage
+                  : '../../../assets/img/profile.png'
+              }" class="w-8 h-8 object-cover" title="${
+        assignee?.name || 'Unassigned'
+      }"/>
             </span>
-            <div class="avatar-dropdown hidden absolute top-20 right-0 bg-white border border-gray-200 rounded">
-              <ul class="assignee-list text-sm text-gray-700"></ul>
+            <div class="avatar-dropdown hidden absolute top-20 right-10 rounded-2xl">
+              <ul class="assignee-list text-sm text-gray-700 relative z-1 bg-slate-200 rounded-2xl"></ul>
             </div>
           </div>
         </div>
@@ -223,7 +230,8 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
           activeProjectMembers.forEach((user) => {
             const li = document.createElement('li');
-            li.className = 'px-7 py-2 hover:bg-gray-100 cursor-pointer';
+            li.className =
+              'px-7 py-2 hover:bg-gray-100 cursor-pointer rounded-2xl';
             li.textContent = user.name;
             li.dataset.id = user._id;
             dropdownList.appendChild(li);

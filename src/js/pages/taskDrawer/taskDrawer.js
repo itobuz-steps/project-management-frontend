@@ -1,6 +1,5 @@
 import taskService from '../../services/TaskService';
 import commentService from '../../services/CommentService';
-import { profileNameIcon } from '../../utils/profileIcon';
 import showToast from '../../utils/showToast';
 import { openUpdateTaskModal } from '../../utils/modals/updateTaskModal';
 
@@ -20,7 +19,6 @@ export async function showTaskDrawer(taskId) {
   const closeButton = taskDrawer.querySelector('.close-btn');
   const status = taskDrawer.querySelector('#statusSelect');
   const priority = taskDrawer.querySelector('#prioritySelect');
-  const profileName = taskDrawer.querySelector('.profile-name');
   const commentInput = taskDrawer.querySelector('#commentInput');
   const commentSubmit = taskDrawer.querySelector('#submitButton');
   const editModal = document.getElementById('update-task-modal');
@@ -65,7 +63,7 @@ export async function showTaskDrawer(taskId) {
       profileImageEl.src =
         'http://localhost:3001/uploads/profile/' + assignee.profileImage;
     } else {
-      profileNameIcon(profileName);
+      profileImageEl.src = '../../../assets/img/profile.png';
     }
   } else {
     assigneeEl.textContent = 'No assignee';
