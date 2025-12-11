@@ -52,7 +52,7 @@ export async function updateProjectList() {
         item.dataset.id = project._id;
         item.textContent = project.name;
         item.className =
-          'block p-2 text-gray-900 hover:bg-blue-100 [&.selected]:bg-blue-300 [&.selected]:rounded-r-md [&.selected]:text-blue-700';
+          'block p-2 text-white hover:bg-purple-100 hover:text-black [&.selected]:bg-purple-300 rounded-md [&.selected]:text-purple-700 cursor-pointer';
         if (project._id === localStorage.getItem('selectedProject')) {
           item.classList.toggle('selected');
         }
@@ -81,7 +81,7 @@ async function updateUserList() {
       item.dataset.id = user._id;
       item.id = user.name;
       item.textContent = user.name;
-      item.className = 'block p-2 text-gray-900 hover:bg-gray-100 rounded-lg';
+      item.className = 'block p-2 text-white rounded-md';
       userListContainer.appendChild(item);
     });
   }

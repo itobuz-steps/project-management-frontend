@@ -10,10 +10,12 @@
       defer
     ></script>
   </head>
-  <body>
-    <div class="header">
+  <body
+    class="h-[100vh] flex flex-col bg-[#05060F] inset-0 w-full bg-[radial-gradient(rgb(111,0,255)_0.1px,transparent_1px)] bg-size-[24px_24px]"
+  >
+    <div class="header bg-[#05060F]">
       <nav
-        class="flex flex-row justify-between align-items-center p-5 border-b border-b-gray-200"
+        class="flex flex-row justify-between align-items-center p-3 md:p-5 border-b border-b-gray-200"
       >
         <div class="flex items-center">
           <button class="toggle-sidebar-btn">
@@ -23,27 +25,25 @@
               viewBox="0 0 24 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
+              class="stroke-purple-200"
             >
               <path
                 d="M21.9707 15V9C21.9707 4 19.9707 2 14.9707 2H8.9707C3.9707 2 1.9707 4 1.9707 9V15C1.9707 20 3.9707 22 8.9707 22H14.9707C19.9707 22 21.9707 20 21.9707 15Z"
-                stroke="#292D32"
-                stroke-width="1.5"
+                stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
               <path
-                opacity="0.4"
+                opacity="0.7"
                 d="M14.9707 2V22"
-                stroke="#292D32"
-                stroke-width="1.5"
+                stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
               <path
-                opacity="0.4"
+                opacity="0.7"
                 d="M7.9707 9.43994L10.5307 11.9999L7.9707 14.5599"
-                stroke="#292D32"
-                stroke-width="1.5"
+                stroke-width="2"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
@@ -54,7 +54,7 @@
         <div class="flex gap-5 items-center max-md:gap-4">
           <div class="search-icon flex items-center justify-between">
             <form
-              class="search-input-form rounded-lg w-40 max-[420px]:w-40 max-[640px]:w-60 sm:w-80 md:w-100 lg:w-120 bg-gray-200"
+              class="search-input-form rounded-lg w-40 max-[420px]:w-40 max-[640px]:w-60 sm:w-80 md:w-100 lg:w-120 bg-gray-700 text-white shadow-md shadow-purple-900"
               id="search-input-form"
               autocomplete="off"
             >
@@ -63,39 +63,16 @@
                 class="mb-2 text-sm font-sm text-gray-900 sr-only dark:text-white"
                 >Search</label
               >
-              <div class="relative border-cyan-300">
+              <div class="relative">
                 <input
                   type="search"
                   id="search-input-field"
-                  class="block w-full p-3 ps-6 bg-neutral-secondary-medium focus:border-cyan-200 text-heading text-sm placeholder:text-body max-md:p-2"
+                  class="block w-full p-3 ps-6 bg-neutral-secondary-medium focus-visible:border-purple-200 text-heading text-sm placeholder:text-body max-md:p-2"
                   placeholder="Search"
                   required
                 />
               </div>
             </form>
-            <svg
-              id="search-icon"
-              class="size-5 hover:scale-120 blue-400 hidden"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-              <g
-                id="SVGRepo_tracerCarrier"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              ></g>
-              <g id="SVGRepo_iconCarrier">
-                <path
-                  d="M15.7955 15.8111L21 21M18 10.5C18 14.6421 14.6421 18 10.5 18C6.35786 18 3 14.6421 3 10.5C3 6.35786 6.35786 3 10.5 3C14.6421 3 18 6.35786 18 10.5Z"
-                  stroke="#000000"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></path>
-              </g>
-            </svg>
           </div>
           <div class="notification-icon relative">
             <svg
@@ -104,7 +81,7 @@
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
-              class="h-8 w-8 max-md:size-6"
+              class="h-8 w-8 max-md:size-6 stroke-white"
             >
               <path
                 stroke-linecap="round"
@@ -113,24 +90,25 @@
               />
             </svg>
             <div
-              class="notification-badge absolute -top-1 -right-1 bg-red-600 text-white text-xs font-bold rounded-full px-1.5 py-0.5"
+              class="notification-badge absolute -top-1 -right-1 bg-purple-500 text-white text-xs font-bold rounded-full px-1.5 py-0.5"
             >
               0
             </div>
           </div>
           <!-- <div class="profile-image w-7 h-7 bg-blue-400 rounded-full"></div> -->
           <div class="relative">
-            <button id="profileBtn" class="flex items-center">
+            <button
+              id="profileBtn"
+              class="flex items-center border-3 border-purple-600 rounded-full"
+            >
               <div
-                class="profile-image w-7 h-7 rounded-full cursor-pointer bg-gray-400"
+                class="profile-image w-7 h-7 sm:w-9 sm:h-9 rounded-full cursor-pointer bg-gray-400"
               >
                 <img
                   id="profileImage"
                   src="../assets/img/profile.png"
                   alt="Profile Preview"
-                  class="rounded-full aspect-square"
-                  width="30"
-                  height="30"
+                  class="rounded-full aspect-square size-full"
                 />
               </div>
             </button>
@@ -151,228 +129,222 @@
       </nav>
     </div>
 
-    <div class="wrapper flex transition-all duration-300 overflow-x-auto">
-      <div class="sidebar">
-        <aside
-          id="sidebar"
-          class="fixed top-[56] left-0 w-64 h-[calc(100vh-56px)] bg-[#f8f8ff] transform -translate-x-full transition-transform duration-300 z-40"
-        >
-          <div
-            class="h-full px-3 py-4 overflow-y-auto flex flex-col justify-between"
-          >
-            <ul class="font-medium flex flex-col gap-4">
-              <li
-                class="flex flex-row items-center gap-2 p-2 text-gray-900 rounded-lg border-l-2 border-l-transparent hover:border-l-blue-300 hover:bg-blue-50"
-              >
-                <a href="#" class="flex flex-row gap-4 items-center">
-                  <svg
-                    height="35"
-                    width="35"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 640 640"
-                  >
-                    <path
-                      d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z"
-                    />
-                  </svg>
-                  <p class="text-lg font-normal hover:text-blue-700">For You</p>
-                </a>
-              </li>
-              <li class="relative" id="projectsMenu">
-                <div
-                  class="flex flex-row justify-between items-center border-l-2 border-l-transparent hover:border-l-blue-300 hover:bg-blue-50"
+    <div
+      class="wrapper flex flex-1 transition-all duration-300 overflow-x-auto"
+    >
+      <aside
+        id="sidebar"
+        class="sidebar border-r-2 border-gray-400 fixed top-[56] left-0 w-80 h-[calc(100vh-56px)] bg-gray-950 transform -translate-x-full transition-transform duration-300 z-40 text-purple-700"
+      >
+        <div class="h-full px-3 py-4 overflow-y-auto flex flex-col gap-5">
+          <ul class="font-bold flex flex-col gap-2">
+            <li
+              class="group cursor-pointer flex flex-row items-center gap-2 p-2 rounded-lg border-l-2 border-l-transparent hover:border-l-purple-300 hover:bg-purple-50"
+            >
+              <a href="#" class="flex flex-row gap-4 items-center">
+                <svg
+                  height="25"
+                  width="25"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 640 640"
+                  class="fill-white group-hover:fill-black"
                 >
-                  <div>
-                    <a
-                      href="#"
-                      class="flex items-center gap-4 p-2 text-gray-900 rounded-lg"
-                    >
-                      <svg
-                        class=""
-                        height="35px"
-                        width="35px"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 640 640"
-                      >
-                        <path
-                          d="M264 112L376 112C380.4 112 384 115.6 384 120L384 160L256 160L256 120C256 115.6 259.6 112 264 112zM208 120L208 160L128 160C92.7 160 64 188.7 64 224L64 320L369 320C402.8 290.1 447.3 272 496 272C524.6 272 551.6 278.2 576 289.4L576 224C576 188.7 547.3 160 512 160L432 160L432 120C432 89.1 406.9 64 376 64L264 64C233.1 64 208 89.1 208 120zM288 416C270.3 416 256 401.7 256 384L256 368L64 368L64 480C64 515.3 92.7 544 128 544L321.4 544C310.2 519.6 304 492.6 304 464C304 447.4 306.1 431.3 310 416L288 416zM640 464C640 384.5 575.5 320 496 320C416.5 320 352 384.5 352 464C352 543.5 416.5 608 496 608C575.5 608 640 543.5 640 464zM496 384C504.8 384 512 391.2 512 400L512 448L544 448C552.8 448 560 455.2 560 464C560 472.8 552.8 480 544 480L496 480C487.2 480 480 472.8 480 464L480 400C480 391.2 487.2 384 496 384z"
-                        />
-                      </svg>
-                      <p class="text-lg font-normal hover:text-blue-700">
-                        Projects
-                      </p>
-                    </a>
-                  </div>
-                  <div
-                    id="plus-icon"
-                    class="plus-icon cursor-pointer add-project relative group"
-                  >
+                  <path
+                    d="M320 312C386.3 312 440 258.3 440 192C440 125.7 386.3 72 320 72C253.7 72 200 125.7 200 192C200 258.3 253.7 312 320 312zM290.3 368C191.8 368 112 447.8 112 546.3C112 562.7 125.3 576 141.7 576L498.3 576C514.7 576 528 562.7 528 546.3C528 447.8 448.2 368 349.7 368L290.3 368z"
+                  />
+                </svg>
+                <p class="text-lg">For You</p>
+              </a>
+            </li>
+            <li class="relative" id="projectsMenu">
+              <div
+                class="group flex flex-row justify-between items-center border-l-2 border-l-transparent hover:border-l-purple-300 hover:bg-purple-50 rounded-lg p-2"
+              >
+                <div>
+                  <a href="#" class="flex items-center gap-4 rounded-lg">
                     <svg
+                      class="fill-white group-hover:fill-black"
+                      height="25px"
+                      width="25px"
                       xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="2"
-                      stroke="currentColor"
-                      class="size-6 text-black rounded-md"
+                      viewBox="0 0 640 640"
                     >
                       <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M12 4.5v15m7.5-7.5h-15"
+                        d="M264 112L376 112C380.4 112 384 115.6 384 120L384 160L256 160L256 120C256 115.6 259.6 112 264 112zM208 120L208 160L128 160C92.7 160 64 188.7 64 224L64 320L369 320C402.8 290.1 447.3 272 496 272C524.6 272 551.6 278.2 576 289.4L576 224C576 188.7 547.3 160 512 160L432 160L432 120C432 89.1 406.9 64 376 64L264 64C233.1 64 208 89.1 208 120zM288 416C270.3 416 256 401.7 256 384L256 368L64 368L64 480C64 515.3 92.7 544 128 544L321.4 544C310.2 519.6 304 492.6 304 464C304 447.4 306.1 431.3 310 416L288 416zM640 464C640 384.5 575.5 320 496 320C416.5 320 352 384.5 352 464C352 543.5 416.5 608 496 608C575.5 608 640 543.5 640 464zM496 384C504.8 384 512 391.2 512 400L512 448L544 448C552.8 448 560 455.2 560 464C560 472.8 552.8 480 544 480L496 480C487.2 480 480 472.8 480 464L480 400C480 391.2 487.2 384 496 384z"
                       />
                     </svg>
-                    <span
-                      class="absolute -left-1 -translate-x-1/2 mt-2 w-max invisible opacity-0 group-hover:visible group-hover:opacity-100 bg-gray-800 text-white text-xs rounded p-1 transition-opacity"
-                    >
-                      Add project
-                    </span>
-                  </div>
+                    <p class="text-lg group-hover:text-purple-700">Projects</p>
+                  </a>
                 </div>
-
-                <ul
-                  id="projectsDropdown"
-                  class="hidden max-h-0 overflow-y-auto transition-all duration-300 bg-inherit rounded-md border-l-2 border-blue-300 mt-2 ml-3"
-                ></ul>
-              </li>
-              <li id="usersMenu">
-                <a
-                  href="#"
-                  class="flex items-center gap-4 p-2 text-gray-900 rounded-lg border-l-2 border-l-transparent hover:border-l-blue-300 hover:bg-blue-50"
+                <div
+                  id="plus-icon"
+                  class="plus-icon cursor-pointer add-project relative group hover:bg-purple-400 p-0.5 rounded-full"
                 >
                   <svg
-                    height="35"
-                    width="35"
                     xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 640 640"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    class="size-6 stroke-white group-hover:stroke-black peer"
                   >
                     <path
-                      d="M376 88C376 57.1 350.9 32 320 32C289.1 32 264 57.1 264 88C264 118.9 289.1 144 320 144C350.9 144 376 118.9 376 88zM400 300.7L446.3 363.1C456.8 377.3 476.9 380.3 491.1 369.7C505.3 359.1 508.3 339.1 497.7 324.9L427.2 229.9C402 196 362.3 176 320 176C277.7 176 238 196 212.8 229.9L142.3 324.9C131.8 339.1 134.7 359.1 148.9 369.7C163.1 380.3 183.1 377.3 193.7 363.1L240 300.7L240 576C240 593.7 254.3 608 272 608C289.7 608 304 593.7 304 576L304 416C304 407.2 311.2 400 320 400C328.8 400 336 407.2 336 416L336 576C336 593.7 350.3 608 368 608C385.7 608 400 593.7 400 576L400 300.7z"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M12 4.5v15m7.5-7.5h-15"
                     />
                   </svg>
-                  <p class="text-lg font-normal hover:text-blue-700">Users</p>
-                </a>
-                <ul
-                  id="usersDropdown"
-                  class="hidden max-h-0 overflow-y-auto transition-all duration-300 bg-white rounded-lg border-l-2 border-l-blue-300 mt-2 ml-2"
-                ></ul>
-              </li>
-              <li>
-                <div
-                  id="toggleInviteForm"
-                  class="add-user-to-project-button flex items-center gap-4 p-2 text-black rounded-lg border-l-2 border-l-transparent hover:border-l-blue-300 hover:bg-blue-50 cursor-pointer"
-                >
-                  <svg
-                    fill="#000000"
-                    height="35px"
-                    width="35px"
-                    version="1.1"
-                    id="Capa_1"
-                    xmlns="http://www.w3.org/2000/svg"
-                    xmlns:xlink="http://www.w3.org/1999/xlink"
-                    viewBox="0 0 462 462"
-                    xml:space="preserve"
+                  <span
+                    class="absolute -left-1 -translate-x-1/2 mt-2 w-max invisible opacity-0 peer-hover:visible peer-hover:opacity-100 bg-gray-800 text-white text-xs rounded p-1 transition-opacity"
                   >
-                    <g>
-                      <path
-                        d="M170,251c19.299,0,35-15.701,35-35s-15.701-35-35-35s-35,15.701-35,35S150.701,251,170,251z M170,201
-		                    c8.271,0,15,6.729,15,15s-6.729,15-15,15s-15-6.729-15-15S161.729,201,170,201z"
-                      />
-                      <path
-                        d="M120,331c5.523,0,10-4.477,10-10c0-18.604,12.767-34.282,30-38.734v13.11c0,5.523,4.477,10,10,10s10-4.477,10-10v-13.11
-                        c17.233,4.452,30,20.13,30,38.734c0,5.523,4.477,10,10,10s10-4.477,10-10c0-33.084-26.916-60-60-60s-60,26.916-60,60
-                        C110,326.523,114.477,331,120,331z"
-                      />
-                      <path
-                        d="M30,316.571H20V95.429h372v10c0,5.523,4.477,10,10,10s10-4.477,10-10v-20c0-5.523-4.477-10-10-10H10
-		                    c-5.523,0-10,4.477-10,10v241.143c0,5.523,4.477,10,10,10h20c5.523,0,10-4.477,10-10S35.523,316.571,30,316.571z"
-                      />
-                      <path
-                        d="M452,125.429H60c-5.523,0-10,4.477-10,10v241.143c0,5.523,4.477,10,10,10h392c5.523,0,10-4.477,10-10V135.429
-		                    C462,129.906,457.523,125.429,452,125.429z M442,366.571H70V145.429h372V366.571z"
-                      />
-                      <path
-                        d="M280,217.232h56c5.523,0,10-4.477,10-10s-4.477-10-10-10h-56c-5.523,0-10,4.477-10,10S274.477,217.232,280,217.232z"
-                      />
-                      <path
-                        d="M280,264.768h112c5.523,0,10-4.477,10-10s-4.477-10-10-10H280c-5.523,0-10,4.477-10,10S274.477,264.768,280,264.768z"
-                      />
-                      <path
-                        d="M280,314.768h112c5.523,0,10-4.477,10-10s-4.477-10-10-10H280c-5.523,0-10,4.477-10,10S274.477,314.768,280,314.768z"
-                      />
-                    </g>
-                  </svg>
-                  <p class="text-lg font-normal hover:text-blue-700">Invite</p>
+                    Add project
+                  </span>
                 </div>
-                <form
-                  id="inviteForm"
-                  class="py-4 pr-2 bg-gray-50 hidden w-full"
-                >
-                  <label class="block text-sm font-medium text-gray-700 mb-1"
-                    >User Email</label
-                  >
-                  <input
-                    type="email"
-                    class="w-full p-2 border rounded mb-3 focus:ring-2 focus:ring-blue-400 outline-none"
-                    placeholder="Enter email"
-                    required
-                  />
-                  <button
-                    type="submit"
-                    class="w-full bg-blue-500 text-white py-2 rounded-md font-semibold hover:bg-blue-600"
-                  >
-                    Send Invite
-                  </button>
-                </form>
-              </li>
-            </ul>
-            <div class="py-5">
+              </div>
+
+              <ul
+                id="projectsDropdown"
+                class="flex flex-col hidden max-h-0 overflow-y-auto transition-all duration-300 bg-inherit border-l border-white mt-2 ml-4 pl-2 gap-1"
+              ></ul>
+            </li>
+            <li id="usersMenu">
               <a
                 href="#"
-                class="flex items-center gap-4 p-2 text-red-600 rounded-lg hover:bg-red-100"
-                id="logout-btn"
+                class="group flex flex-row gap-4 justify-start items-center border-l border-l-transparent hover:border-l-purple-300 hover:bg-purple-50 rounded-lg p-2"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  height="25"
+                  width="25"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="stroke-white group-hover:stroke-black"
+                >
+                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                  <g
+                    id="SVGRepo_tracerCarrier"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></g>
+                  <g id="SVGRepo_iconCarrier">
+                    <path
+                      d="M13 20V18C13 15.2386 10.7614 13 8 13C5.23858 13 3 15.2386 3 18V20H13ZM13 20H21V19C21 16.0545 18.7614 14 16 14C14.5867 14 13.3103 14.6255 12.4009 15.6311M11 7C11 8.65685 9.65685 10 8 10C6.34315 10 5 8.65685 5 7C5 5.34315 6.34315 4 8 4C9.65685 4 11 5.34315 11 7ZM18 9C18 10.1046 17.1046 11 16 11C14.8954 11 14 10.1046 14 9C14 7.89543 14.8954 7 16 7C17.1046 7 18 7.89543 18 9Z"
+                      stroke="inherit"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
+                  </g>
+                </svg>
+                <p class="text-lg group-hover:text-purple-700">Users</p>
+              </a>
+              <ul
+                id="usersDropdown"
+                class="flex flex-col hidden max-h-0 overflow-y-auto transition-all duration-300 bg-inherit border-l border-white mt-2 ml-4 pl-2 gap-1"
+              ></ul>
+            </li>
+            <li>
+              <div
+                id="toggleInviteForm"
+                class="add-user-to-project-button group flex flex-row items-center gap-4 p-2 rounded-lg border-l-2 border-l-transparent hover:border-l-purple-300 hover:bg-purple-50 cursor-pointer"
               >
                 <svg
                   fill="#000000"
-                  width="30px"
-                  height="30px"
-                  viewBox="0 0 32 32"
+                  height="25"
+                  width="25"
                   version="1.1"
+                  id="Capa_1"
                   xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  viewBox="0 0 462 462"
+                  xml:space="preserve"
+                  class="fill-white group-hover:fill-black"
                 >
-                  <path
-                    d="M3.651 16.989h17.326c0.553 0 1-0.448 1-1s-0.447-1-1-1h-17.264l3.617-3.617c0.391-0.39 0.391-1.024 0-1.414s-1.024-0.39-1.414 0l-5.907 6.062 5.907 6.063c0.196 0.195 0.451 0.293 0.707 0.293s0.511-0.098 0.707-0.293c0.391-0.39 0.391-1.023 0-1.414zM29.989 0h-17c-1.105 0-2 0.895-2 2v9h2.013v-7.78c0-0.668 0.542-1.21 1.21-1.21h14.523c0.669 0 1.21 0.542 1.21 1.21l0.032 25.572c0 0.668-0.541 1.21-1.21 1.21h-14.553c-0.668 0-1.21-0.542-1.21-1.21v-7.824l-2.013 0.003v9.030c0 1.105 0.895 2 2 2h16.999c1.105 0 2.001-0.895 2.001-2v-28c-0-1.105-0.896-2-2-2z"
-                  ></path>
+                  <g>
+                    <path
+                      d="M170,251c19.299,0,35-15.701,35-35s-15.701-35-35-35s-35,15.701-35,35S150.701,251,170,251z M170,201
+		                    c8.271,0,15,6.729,15,15s-6.729,15-15,15s-15-6.729-15-15S161.729,201,170,201z"
+                    />
+                    <path
+                      d="M120,331c5.523,0,10-4.477,10-10c0-18.604,12.767-34.282,30-38.734v13.11c0,5.523,4.477,10,10,10s10-4.477,10-10v-13.11
+                        c17.233,4.452,30,20.13,30,38.734c0,5.523,4.477,10,10,10s10-4.477,10-10c0-33.084-26.916-60-60-60s-60,26.916-60,60
+                        C110,326.523,114.477,331,120,331z"
+                    />
+                    <path
+                      d="M30,316.571H20V95.429h372v10c0,5.523,4.477,10,10,10s10-4.477,10-10v-20c0-5.523-4.477-10-10-10H10
+		                    c-5.523,0-10,4.477-10,10v241.143c0,5.523,4.477,10,10,10h20c5.523,0,10-4.477,10-10S35.523,316.571,30,316.571z"
+                    />
+                    <path
+                      d="M452,125.429H60c-5.523,0-10,4.477-10,10v241.143c0,5.523,4.477,10,10,10h392c5.523,0,10-4.477,10-10V135.429
+		                    C462,129.906,457.523,125.429,452,125.429z M442,366.571H70V145.429h372V366.571z"
+                    />
+                    <path
+                      d="M280,217.232h56c5.523,0,10-4.477,10-10s-4.477-10-10-10h-56c-5.523,0-10,4.477-10,10S274.477,217.232,280,217.232z"
+                    />
+                    <path
+                      d="M280,264.768h112c5.523,0,10-4.477,10-10s-4.477-10-10-10H280c-5.523,0-10,4.477-10,10S274.477,264.768,280,264.768z"
+                    />
+                    <path
+                      d="M280,314.768h112c5.523,0,10-4.477,10-10s-4.477-10-10-10H280c-5.523,0-10,4.477-10,10S274.477,314.768,280,314.768z"
+                    />
+                  </g>
                 </svg>
-                <p class="text-lg font-normal">Logout</p>
-              </a>
-            </div>
+                <p class="text-lg">Invite</p>
+              </div>
+              <form id="inviteForm" class="py-4 pr-2 bg-gray-50 hidden w-full">
+                <label class="block text-sm font-medium text-gray-700 mb-1"
+                  >User Email</label
+                >
+                <input
+                  type="email"
+                  class="w-full p-2 border rounded mb-3 focus:ring-2 focus:ring-blue-400 outline-none"
+                  placeholder="Enter email"
+                  required
+                />
+                <button
+                  type="submit"
+                  class="w-full bg-blue-500 text-white py-2 rounded-md font-semibold hover:bg-blue-600"
+                >
+                  Send Invite
+                </button>
+              </form>
+            </li>
+          </ul>
+          <div class="py-5 group">
+            <a
+              href="#"
+              class="flex items-center gap-4 p-2 text-red-700 rounded-lg hover:bg-red-200 hover:text-red-800"
+              id="logout-btn"
+            >
+              <svg
+                fill="#000000"
+                width="30px"
+                height="30px"
+                viewBox="0 0 32 32"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                class="stroke-red-300 fill-red-300 group-hover:fill-red-800"
+              >
+                <path
+                  d="M3.651 16.989h17.326c0.553 0 1-0.448 1-1s-0.447-1-1-1h-17.264l3.617-3.617c0.391-0.39 0.391-1.024 0-1.414s-1.024-0.39-1.414 0l-5.907 6.062 5.907 6.063c0.196 0.195 0.451 0.293 0.707 0.293s0.511-0.098 0.707-0.293c0.391-0.39 0.391-1.023 0-1.414zM29.989 0h-17c-1.105 0-2 0.895-2 2v9h2.013v-7.78c0-0.668 0.542-1.21 1.21-1.21h14.523c0.669 0 1.21 0.542 1.21 1.21l0.032 25.572c0 0.668-0.541 1.21-1.21 1.21h-14.553c-0.668 0-1.21-0.542-1.21-1.21v-7.824l-2.013 0.003v9.030c0 1.105 0.895 2 2 2h16.999c1.105 0 2.001-0.895 2.001-2v-28c-0-1.105-0.896-2-2-2z"
+                ></path>
+              </svg>
+              <p class="text-lg font-bold">Logout</p>
+            </a>
           </div>
-        </aside>
-      </div>
+        </div>
+      </aside>
 
       <div
-        class="main p-2 flex flex-col gap-6 transition-all duration-300 flex-1 overflow-auto sm:p-6"
+        class="main p-2 flex flex-col flex-1 gap-6 transition-all duration-300 overflow-auto sm:p-6"
       >
         <div class="project-info items-center flex flex-row justify-between">
           <div class="flex flex-row items-center gap-5">
-            <div class="project-name text-2xl font-semibold" id="projectName">
+            <div
+              class="project-name text-3xl font-bold text-purple-600"
+              id="projectName"
+            >
               No Project Selected
-            </div>
-            <div id="plus-icon" class="plus-icon cursor-pointer add-project">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="2"
-                stroke="currentColor"
-                class="size-6 bg-blue-500 text-white rounded-md"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 4.5v15m7.5-7.5h-15"
-                />
-              </svg>
             </div>
           </div>
           <div class="top-4 right-4">
@@ -380,43 +352,44 @@
           </div>
         </div>
 
-        <ul
-          class="tabs list-none grid grid-cols-3 w-full border-b border-b-gray-200 text-gray-500"
-        >
-          <li
-            id="backlog-li"
-            class="cursor-pointer text-center border-b border-b-transparent transition ease-in-out [&.active]:border-b-black [&.active]:text-black hover:border-b-black pb-2 hover:text-black"
+        <div class="flex flex-col sm:flex-row items-start w-full gap-5">
+          <ul
+            class="tabs list-none grid grid-cols-3 items-center w-full sm:w-80 border border-gray-100 text-gray-200 p-1 bg-gray-950 rounded-lg gap-0.5"
           >
-            Backlog
-          </li>
-          <li
-            id="board-li"
-            tabindex="1"
-            class="cursor-pointer text-center border-b border-b-transparent transition ease-in-out active [&.active]:border-b-black [&.active]:text-black hover:border-b-black pb-2 hover:text-black"
-          >
-            Board
-          </li>
-          <li
-            id="list-li"
-            class="cursor-pointer text-center border-b border-b-transparent transition ease-in-out [&.active]:border-b-black [&.active]:text-black hover:border-b-black pb-2 hover:text-black"
-          >
-            List
-          </li>
-        </ul>
-        <div class="flex flex-row gap-3">
+            <li
+              id="backlog-li"
+              class="cursor-pointer p-2 text-center transition ease-in-out [&.active]:bg-purple-500 [&.active]:text-black hover:bg-purple-500 hover:text-black rounded-lg after:w-1 after:bg-red-700 after:content-['']"
+            >
+              Backlog
+            </li>
+            <li
+              id="board-li"
+              tabindex="1"
+              class="active cursor-pointer p-2 text-center transition ease-in-out [&.active]:bg-purple-500 [&.active]:text-black hover:bg-purple-500 hover:text-black rounded-lg"
+            >
+              Board
+            </li>
+            <li
+              id="list-li"
+              class="cursor-pointer p-2 text-center transition ease-in-out [&.active]:bg-purple-500 [&.active]:text-black hover:bg-purple-500 hover:text-black rounded-lg"
+            >
+              List
+            </li>
+          </ul>
           <div
-            id="create-task"
-            class="items-center form-container border border-gray-300 p-2 rounded w-full md:w-1/6 xl:w-1/12 bg-blue-400 hover:bg-blue-300 cursor-pointer"
+            class="flex flex-row gap-1 xs:gap-3 w-full justify-center items-start sm:justify-start"
           >
-            <div class="flex justify-between items-center task-create">
-              <div class="text-white">Add Task</div>
-
+            <div
+              id="create-task"
+              class="form-container px-3 py-2 xs:px-5 xs:py-3 rounded-lg gap-1 sm:gap-3 w-1/2 sm:w-auto bg-purple-600 text-white hover:bg-purple-500 cursor-pointer flex justify-between items-center task-create"
+            >
+              <div>Add Task</div>
               <div class="plus-icon">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  stroke-width="1.5"
+                  stroke-width="3"
                   stroke="currentColor"
                   class="size-6"
                 >
@@ -428,155 +401,164 @@
                 </svg>
               </div>
             </div>
-            <form action="" class="create-task-form"></form>
-          </div>
-
-          <div
-            class="form-container border border-gray-300 p-2 rounded w-full md:w-1/6 xl:w-1/16 bg-blue-400 cursor-pointer hover:bg-blue-300 relative"
-            id="filterBox"
-          >
-            <div class="flex justify-between">
-              <div class="text-white">Filter</div>
-              <div class="filter-icon">
-                <svg
-                  fill="#000000"
-                  width="30px"
-                  height="30px"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
+            <div
+              class="form-container px-3 py-2 xs:px-5 xs:py-3 rounded-lg w-1/2 sm:w-auto bg-indigo-700 text-white hover:bg-indigo-500 cursor-pointer flex justify-between items-center task-create relative"
+              id="filterBox"
+            >
+              <div
+                class="flex justify-between items-center w-full gap-1 sm:gap-3"
+              >
+                <div class="text-white">Filter</div>
+                <div class="filter-icon">
+                  <svg
+                    width="24px"
+                    height="24px"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="fill-white stroke-white"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M7 11h10v2H7zM4 7h16v2H4zm6 8h4v2h-4z"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <!-- MAIN DROPDOWN -->
+              <div
+                id="mainDropdown"
+                class="hidden absolute top-[110%] left-0 bg-indigo-950 shadow-lg shadow-white rounded-lg w-35 sm:w-40 z-40"
+              >
+                <div
+                  class="dropdown-item px-4 py-2 hover:bg-purple-300 hover:text-black cursor-pointer hidden"
+                  data-target="sprintDropdown"
                 >
+                  Sprint
+                </div>
+                <div
+                  class="dropdown-item px-4 py-2 hover:bg-indigo-300 hover:text-black cursor-pointer"
+                  data-target="assigneeDropdown"
+                >
+                  Assignee
+                </div>
+                <div
+                  class="dropdown-item px-4 py-2 hover:bg-indigo-300 hover:text-black cursor-pointer"
+                  data-target="statusDropdown"
+                >
+                  Status
+                </div>
+                <div
+                  class="dropdown-item px-4 py-2 hover:bg-indigo-300 hover:text-black cursor-pointer"
+                  data-target="priorityDropdown"
+                >
+                  Priority
+                </div>
+                <div
+                  id="sprintDropdown"
+                  class="subDropdown hidden bg-white shadow border rounded w-35 sm:w-40 absolute z-50"
+                ></div>
+                <div
+                  id="assigneeDropdown"
+                  class="subDropdown hidden bg-indigo-900 rounded-l-lg md:rounded-r-lg md:rounded-l-none cursor-pointer w-35 sm:w-40 absolute right-[95%] md:left-[97%] top-0 z-50"
+                ></div>
+                <div
+                  id="statusDropdown"
+                  class="subDropdown hidden bg-indigo-900 rounded-l-lg md:rounded-r-lg md:rounded-l-none cursor-pointer w-35 sm:w-40 absolute right-full md:left-full top-0 z-50"
+                ></div>
+                <div
+                  id="priorityDropdown"
+                  class="subDropdown hidden bg-indigo-900 rounded-l-lg md:rounded-r-lg md:rounded-l-none cursor-pointer w-35 sm:w-40 absolute right-full md:left-full top-0 z-50"
+                >
+                  <div
+                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    id="low-filter"
+                  >
+                    Low
+                  </div>
+                  <div
+                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    id="medium-filter"
+                  >
+                    Medium
+                  </div>
+                  <div
+                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    id="high-filter"
+                  >
+                    High
+                  </div>
+                  <div
+                    class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    id="critical-filter"
+                  >
+                    Critical
+                  </div>
+                </div>
+              </div>
+              <!-- SUBDROPDOWNS -->
+            </div>
+            <div
+              class="w-10 md:w-8 flex items-center self-center"
+              id="remove-filter-btn"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="cursor-pointer group"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
                   <path
+                    d="M21.6309 14.75C21.6309 15.64 21.3809 16.48 20.9409 17.2C20.1209 18.58 18.6109 19.5 16.8809 19.5C15.1509 19.5 13.6409 18.57 12.8209 17.2C12.3809 16.49 12.1309 15.64 12.1309 14.75C12.1309 12.13 14.2609 10 16.8809 10C19.5009 10 21.6309 12.13 21.6309 14.75Z"
+                    stroke="purple"
+                    stroke-width="1.5"
+                    stroke-miterlimit="10"
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    d="M7 11h10v2H7zM4 7h16v2H4zm6 8h4v2h-4z"
-                  />
-                </svg>
-              </div>
+                  ></path>
+                  <path
+                    d="M18.1487 15.99L15.6387 13.48"
+                    stroke="purple"
+                    stroke-width="1.5"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    d="M18.1291 13.5098L15.6191 16.0198"
+                    stroke="purple"
+                    stroke-width="1.5"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                  <path
+                    opacity="0.6"
+                    d="M20.6905 4.02002V6.23999C20.6905 7.04999 20.1805 8.06001 19.6805 8.57001L17.9205 10.12C17.5905 10.04 17.2405 10 16.8805 10C14.2605 10 12.1305 12.13 12.1305 14.75C12.1305 15.64 12.3805 16.48 12.8205 17.2C13.1905 17.82 13.7005 18.35 14.3205 18.73V19.07C14.3205 19.68 13.9205 20.49 13.4105 20.79L12.0005 21.7C10.6905 22.51 8.87055 21.6 8.87055 19.98V14.63C8.87055 13.92 8.46055 13.01 8.06055 12.51L4.22055 8.46997C3.72055 7.95997 3.31055 7.05001 3.31055 6.45001V4.12C3.31055 2.91 4.22055 2 5.33055 2H18.6705C19.7805 2 20.6905 2.91002 20.6905 4.02002Z"
+                    stroke="white"
+                    stroke-width="2"
+                    stroke-miterlimit="10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    class="stroke-white group-hover:stroke-red-600"
+                  ></path>
+                </g>
+              </svg>
             </div>
-
-            <!-- MAIN DROPDOWN -->
-            <div
-              id="mainDropdown"
-              class="hidden absolute md:left-full md:top-0 left-0 top-full bg-white shadow-lg border rounded w-35 sm:w-40 z-40"
-            >
-              <div
-                class="dropdown-item px-4 py-2 hover:bg-gray-100 cursor-pointer hidden"
-                data-target="sprintDropdown"
-              >
-                Sprint
-              </div>
-              <div
-                class="dropdown-item px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                data-target="assigneeDropdown"
-              >
-                Assignee
-              </div>
-              <div
-                class="dropdown-item px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                data-target="statusDropdown"
-              >
-                Status
-              </div>
-              <div
-                class="dropdown-item px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                data-target="priorityDropdown"
-              >
-                Priority
-              </div>
-            </div>
-
-            <!-- SUBDROPDOWNS -->
-
-            <div
-              id="sprintDropdown"
-              class="subDropdown hidden bg-white shadow border rounded w-35 sm:w-40 absolute md:left-[200px] md:top-0 -left-32 sm:-left-40 top-full z-50"
-            ></div>
-
-            <div
-              id="assigneeDropdown"
-              class="subDropdown hidden bg-white shadow border rounded w-35 sm:w-40 absolute md:left-[200px] md:top-0 -left-32 sm:-left-40 top-full z-50"
-            ></div>
-
-            <div
-              id="statusDropdown"
-              class="subDropdown hidden bg-white shadow border rounded w-35 sm:w-40 absolute md:left-[200px] md:top-0 -left-32 sm:-left-40 top-full z-50"
-            ></div>
-
-            <div
-              id="priorityDropdown"
-              class="subDropdown hidden bg-white shadow border rounded w-35 sm:w-40 absolute md:left-[200px] md:top-0 -left-32 sm:-left-40 top-full z-50"
-            >
-              <div
-                class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                id="low-filter"
-              >
-                Low
-              </div>
-              <div
-                class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                id="medium-filter"
-              >
-                Medium
-              </div>
-              <div
-                class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                id="high-filter"
-              >
-                High
-              </div>
-              <div
-                class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                id="critical-filter"
-              >
-                Critical
-              </div>
-            </div>
-          </div>
-
-          <div class="w-25 md:w-8 flex items-center" id="remove-filter-btn">
-            <svg
-              fill="#000000"
-              viewBox="0 0 32 32"
-              id="icon"
-              xmlns="http://www.w3.org/2000/svg"
-              class="border border-transparent rounded-md hover:border-red-600"
-            >
-              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-              <g
-                id="SVGRepo_tracerCarrier"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              ></g>
-              <g id="SVGRepo_iconCarrier">
-                <defs>
-                  <style>
-                    .cls-1 {
-                      fill: none;
-                    }
-                  </style>
-                </defs>
-                <polygon
-                  points="30 11.414 28.586 10 24 14.586 19.414 10 18 11.414 22.586 16 18 20.585 19.415 22 24 17.414 28.587 22 30 20.587 25.414 16 30 11.414"
-                ></polygon>
-                <path
-                  d="M4,4A2,2,0,0,0,2,6V9.1709a2,2,0,0,0,.5859,1.4145L10,18v8a2,2,0,0,0,2,2h4a2,2,0,0,0,2-2V24H16v2H12V17.1709l-.5859-.5855L4,9.1709V6H24V8h2V6a2,2,0,0,0-2-2Z"
-                ></path>
-                <rect
-                  id="_Transparent_Rectangle_"
-                  data-name="&lt;Transparent Rectangle&gt;"
-                  class="cls-1"
-                  width="32"
-                  height="32"
-                ></rect>
-              </g>
-            </svg>
           </div>
         </div>
 
-        <div class="content">
+        <div class="content flex flex-1">
           <!-- list-view -->
           <div
-            class="task-list flex gap-3 flex-col text-slate-700 hidden"
+            class="task-list flex gap-3 flex-col text-slate-700 hidden w-full overflow-x-auto overflow-y-hidden"
             id="list-view"
           >
             <div class="overflow-x-auto p-4 bg-gray-100 gap-y-6">
@@ -625,16 +607,19 @@
 
           <!-- board-view -->
           <div
-            class="kanban-board w-full bg-[#d6e2f2] p-4 overflow-x-auto overflow-y-hidden"
+            class="kanban-board flex-1 w-full bg-slate-900 shadow-[6px_6px_2px_0px_#95959559] rounded-xl p-4 overflow-x-auto overflow-y-hidden"
             id="board-view"
           >
             <div class="flex space-x-4 min-w-max h-full" id="columns"></div>
           </div>
 
           <!-- backlog-view -->
-          <div class="backlog hidden" id="backlog-view">
+          <div
+            class="backlog hidden w-full overflow-y-hidden overflow-x-auto"
+            id="backlog-view"
+          >
             <div
-              class="overflow-x-auto p-4 bg-gray-100 flex flex-col gap-7"
+              class="p-4 bg-gray-100 flex flex-col gap-7"
               id="sprint-backlog-wrapper"
             ></div>
           </div>

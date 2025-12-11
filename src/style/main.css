@@ -1,5 +1,9 @@
 @import 'tailwindcss';
 
+@theme {
+  --breakpoint-xs: 25rem;
+}
+
 .libre-baskerville-regular {
   font-family: 'Libre Baskerville', serif;
   font-weight: 400;
