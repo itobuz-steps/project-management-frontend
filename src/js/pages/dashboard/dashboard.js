@@ -100,6 +100,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
   const currentProject = localStorage.getItem('selectedProject');
   const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const project = (await projectService.getProjectById(projectId)).result;
+  const lastColumn = project.columns[project.columns.length - 1];
   const currentSprint = project.currentSprint
     ? await sprintService.getSprintById(project.currentSprint)
     : null;
@@ -143,6 +144,12 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
     tasks.forEach((task) => {
       filteredTasks.push(task);
       console.log(task._id);
+
+      let isDone = '';
+      if (task.status === 'done') {
+        isDone = 'line-through text-gray-400';
+      }
+
       if (project.projectType !== 'kanban') {
         if (!currentSprint || !currentSprint.result.tasks.includes(task._id)) {
           return;
@@ -157,9 +164,8 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         'task flex flex-col max-w-sm p-4 bg-white rounded-lg shadow-md text-black gap-4 relative cursor-grab';
       taskEl.innerHTML = `
         <div class="card-header flex justify-between items-center">
-          <p class="text-lg border border-transparent rounded-lg font-medium hover:border-gray-400">${
-            task.title
-          }</p>
+          <p id="${task.title}-taskId" class="task-title text-lg border border-transparent rounded-lg font-medium hover:border-gray-400 cursor-pointer ${isDone}">${task.title
+        }</p>
             <div class="menu-button flex flex-row gap-2 justify-between">
               <button class="edit-btn w-full p-1 hover:bg-gray-200">
                 <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -368,7 +374,14 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       const taskId = e.dataTransfer.getData('taskId');
       console.log(`Dropped ${taskId} into column`);
       const taskEl = document.querySelector(`[data-_id="${taskId}"]`);
+      const taskTitle = taskEl.querySelector('.task-title');
 
+      if (column === lastColumn) {
+        taskTitle.classList.add('line-through', 'text-gray-400');
+      }
+      else {
+        taskTitle.classList.remove('line-through', 'text-gray-400');
+      }
       taskList.appendChild(taskEl);
 
       taskService.updateTask(taskId, { status: column }).catch((err) => {
@@ -390,7 +403,11 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
   handleStatusFilter();
   handleAssigneeFilter();
-  renderTasksList(filteredTasks);
+  if (project.projectType === 'kanban') {
+    await renderTasksList(filteredTasks, 'kanban', '');
+  } else {
+    await renderTasksList(filteredTasks, '', currentSprint?.result ? currentSprint.result : '');
+  }
 }
 
 async function checkForInvite() {
