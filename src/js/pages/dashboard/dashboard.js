@@ -100,6 +100,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
   const currentProject = localStorage.getItem('selectedProject');
   const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const project = (await projectService.getProjectById(projectId)).result;
+  const lastColumn = project.columns[project.columns.length - 1];
   const currentSprint = project.currentSprint
     ? await sprintService.getSprintById(project.currentSprint)
     : null;
@@ -163,7 +164,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         'task flex flex-col max-w-sm p-4 bg-white rounded-lg shadow-md text-black gap-4 relative cursor-grab';
       taskEl.innerHTML = `
         <div class="card-header flex justify-between items-center">
-          <p id="${task.title}-taskId" class="text-lg border border-transparent rounded-lg font-medium hover:border-gray-400 ${isDone}">${task.title
+          <p id="${task.title}-taskId" class="task-title text-lg border border-transparent rounded-lg font-medium hover:border-gray-400 ${isDone}">${task.title
         }</p>
             <div class="menu-button flex flex-row gap-2 justify-between">
               <button class="edit-btn w-full p-1 hover:bg-gray-200">
@@ -366,7 +367,14 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       const taskId = e.dataTransfer.getData('taskId');
       console.log(`Dropped ${taskId} into column`);
       const taskEl = document.querySelector(`[data-_id="${taskId}"]`);
+      const taskTitle = taskEl.querySelector('.task-title');
 
+      if (column === lastColumn) {
+        taskTitle.classList.add('line-through', 'text-gray-400');
+      }
+      else {
+        taskTitle.classList.remove('line-through', 'text-gray-400');
+      }
       taskList.appendChild(taskEl);
 
       taskService.updateTask(taskId, { status: column }).catch((err) => {
