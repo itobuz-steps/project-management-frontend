@@ -2,6 +2,7 @@ import taskService from '../../services/TaskService';
 import commentService from '../../services/CommentService';
 import showToast from '../../utils/showToast';
 import { openUpdateTaskModal } from '../../utils/modals/updateTaskModal';
+import { showConfirmModal } from '../../utils/modals/confirmationModal';
 
 export async function showTaskDrawer(taskId) {
   const task = (await taskService.getTaskById(taskId)).data.result;
@@ -103,23 +104,23 @@ export async function showTaskDrawer(taskId) {
   function appendCommentToContainer(comment, container) {
     const commentEl = document.createElement('div');
     commentEl.className =
-      'flex gap-3 items-start bg-white rounded-lg shadow-md pl-3 py-3 ' +
+      'flex gap-3 items-start bg-white rounded-lg shadow-md px-3 py-3 ' +
       'border border-[#90e0ef] shadow-lg rounded-lg';
 
     commentEl.innerHTML = `
-    <img
-      src="${
-        comment.author.profileImage
-          ? 'http://localhost:3001/uploads/profile/' +
-            comment.author.profileImage
-          : '../../../assets/img/profile.png'
-      }"
-      alt="Avatar"
-      class="w-7 h-7 rounded-full border-2 border-[#00b4d8]"
-    />
+  <img
+    src="${
+      comment.author.profileImage
+        ? 'http://localhost:3001/uploads/profile/' + comment.author.profileImage
+        : '../../../assets/img/profile.png'
+    }"
+    alt="Avatar"
+    class="w-7 h-7 rounded-full border-2 border-[#00b4d8]"
+  />
 
-    <div id="CommentInformation" class="flex flex-col gap-1">
-      <div class="flex items-center gap-2 text-md text-gray-500 text-[#03045e]">
+  <div id="CommentInformation" class="flex flex-col gap-1 flex-1">
+    <div class="flex justify-between items-center text-md text-[#03045e]">
+      <div>
         <span class="username font-medium text-gray-700 text-[#03045e]">
           ${comment.author.name}
         </span>
@@ -129,14 +130,47 @@ export async function showTaskDrawer(taskId) {
         </span>
       </div>
 
-      <p class="message text-gray-700 text-sm text-[#03045e]/70">
-        ${comment.message}
-      </p>
+      <svg 
+        class="delete-btn cursor-pointer hover:stroke-red-200 hover:opacity-70 transition"
+        width="25px" height="25px"
+        viewBox="0 0 24 24" fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path 
+          d="M6 7V18C6 19.1046 6.89543 20 8 20H16C17.1046 20 18 19.1046 18 18V7M6 7H5M6 7H8M18 7H19M18 7H16M10 11V16M14 11V16M8 7V5C8 3.89543 8.89543 3 10 3H14C15.1046 3 16 3.89543 16 5V7M8 7H16" 
+          stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+        />
+      </svg>
     </div>
+
+    <p class="message text-gray-700 text-sm text-[#03045e]/70">
+      ${comment.message}
+    </p>
+  </div>
   `;
+    console.log('comment ', comment._id);
+    const deleteBtn = commentEl.querySelector('.delete-btn');
+
+    deleteBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+
+      showConfirmModal('Are You want to delete this Comment ?', () => {
+        deleteComment(commentEl, comment._id, container);
+      });
+    });
 
     container.appendChild(commentEl);
+
     container.scrollTop = container.scrollHeight;
+  }
+
+  async function deleteComment(commentEl, commentId, container) {
+    try {
+      await commentService.deleteComment(commentId);
+      container.removeChild(commentEl);
+    } catch (error) {
+      console.error('Error deleting comment:', error);
+    }
   }
 
   updateCommentList();
@@ -202,7 +236,6 @@ export async function showTaskDrawer(taskId) {
   async function renderSubtasks(task) {
     const list = document.getElementById('subtasksList');
     list.innerHTML = '';
-    console.log(assignee);
     if (!task.subTask || task.subTask.length === 0) {
       list.innerHTML = "<p class='text-gray-500 text-sm'>No subtasks</p>";
       return;
