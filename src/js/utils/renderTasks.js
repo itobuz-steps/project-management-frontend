@@ -8,9 +8,9 @@ const emptyListContainer = document.getElementById('empty-list-container');
 
 const sprintBacklogWrapper = document.getElementById('sprint-backlog-wrapper');
 
-async function createTaskList(task, type, projectType) {
+async function createTaskList(task, type, projectType, sprint) {
   let ifSprint = `hidden`;
-  if (type === 'backlog' || type === 'list') {
+  if (type === 'backlog') {
     ifSprint = ``;
   }
 
@@ -26,14 +26,16 @@ async function createTaskList(task, type, projectType) {
     ifKanban = 'hidden';
   }
 
+  let sprintKey = sprint?.key ? sprint.key : 'no sprint found';
+
   const tr = document.createElement('tr');
 
   const reporter = task.reporter
     ? (await TaskService.getUserDetailsById(task.reporter)).data.result
     : '';
   const assignee = task.assignee
-    ? (await TaskService.getUserDetailsById(task.assignee)).data.result
-    : '';
+    ? (await TaskService.getUserDetailsById(task.assignee)).data.result.name
+    : 'unassigned';
 
   tr.classList =
     'bg-white border-b border-gray-500 hover:bg-gray-100 whitespace-nowrap';
@@ -90,8 +92,8 @@ async function createTaskList(task, type, projectType) {
                       <td class="px-6 py-4">${task.key}</td>
                       <td class="px-6 py-4">${task.title}</td>
                       <td class="px-6 py-4">${task.status}</td>
-                      <td class="px-6 py-4">${task.sprint}</td>
-                      <td class="px-6 py-4">${assignee.name}</td>
+                      <td class="px-6 py-4 ${ifKanban}">${sprintKey}</td>
+                      <td class="px-6 py-4">${assignee}</td>
                       <td class="px-4 py-4">${task.dueDate.split('T')[0]}</td>
                       <td class="px-6 py-4">${labels}</td>
                       <td class="px-6 py-4">${task.createdAt.split('T')[0]}</td>
@@ -131,7 +133,7 @@ function createSprintTable(sprint) {
                   <div class="flex align-middle ">
                     <button
                       type="button"
-                      class="flex items-center w-30 gap-2 rounded-md px-2 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 focus:outline-none dropdownButton"
+                      class="flex items-center w-30 md:w-fit gap-2 rounded-md px-2 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 focus:outline-none dropdownButton"
                       id="dropdownButton-${sprint.key}"
                       aria-expanded="false"
                       aria-haspopup="true"
@@ -152,7 +154,9 @@ function createSprintTable(sprint) {
                           d="M5 7l7 7 7-7"
                         ></path>
                       </svg>
+                      <p class="w-fit">
                       ${sprint.key}
+                      </p>
                     </button>
                   </div>
 
@@ -323,7 +327,7 @@ function createBacklogTable(projectType) {
                         <th scope="col" class="px-6 py-3">Key</th>
                         <th scope="col" class="px-6 py-3">Summary</th>
                         <th scope="col" class="px-6 py-3">Status</th>
-                        <th scope="col" class="px-6 py-3">Sprint</th>
+                        <th scope="col" class="px-6 py-3 ${ifKanban}">Sprint</th>
                         <th scope="col" class="px-6 py-3">Assignee</th>
                         <th scope="col" class="px-4 py-3">Due Date</th>
                         <th scope="col" class="px-6 py-3">Labels</th>
@@ -346,16 +350,22 @@ function createBacklogTable(projectType) {
   return backlogContainer;
 }
 
-export async function renderTasksList(tasksArray = []) {
+export async function renderTasksList(tasksArray = [], projectType, sprint) {
   try {
     listTableBody.innerHTML = '';
+    const sprintTh = document.getElementById('list-table-sprint');
 
     if (!tasksArray.length) {
       emptyListContainer.classList.remove('hidden');
     } else {
       emptyListContainer.classList.add('hidden');
       for (const task of tasksArray) {
-        const tr = await createTaskList(task, 'list');
+        if (projectType === 'kanban') {
+          sprintTh.classList.add('hidden');
+        } else {
+          sprintTh.classList.remove('hidden');
+        }
+        const tr = await createTaskList(task, 'list', projectType, sprint);
         listTableBody.append(tr);
       }
     }
@@ -367,14 +377,14 @@ export async function renderTasksList(tasksArray = []) {
 async function renderSprintTasks(sprint, sprintTasks, projectType) {
   for (const taskId of sprintTasks) {
     const task = await TaskService.getTaskById(taskId);
-    const tr = await createTaskList(task.data.result, '', projectType);
+    const tr = await createTaskList(task.data.result, '', projectType, sprint);
     document.getElementById(`${sprint.key}-body`).append(tr);
   }
 }
 async function renderBacklogTasks(backlogBody, backlogTasks, addToSprintButton, projectType) {
   for (const taskId of backlogTasks) {
     const task = await TaskService.getTaskById(taskId);
-    const tr = await createTaskList(task.data.result, 'backlog', projectType);
+    const tr = await createTaskList(task.data.result, 'backlog', projectType, '');
     backlogBody.append(tr);
 
     const checkbox = tr.querySelector('.checkboxes');

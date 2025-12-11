@@ -164,7 +164,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         'task flex flex-col max-w-sm p-4 bg-white rounded-lg shadow-md text-black gap-4 relative cursor-grab';
       taskEl.innerHTML = `
         <div class="card-header flex justify-between items-center">
-          <p id="${task.title}-taskId" class="task-title text-lg border border-transparent rounded-lg font-medium hover:border-gray-400 ${isDone}">${task.title
+          <p id="${task.title}-taskId" class="task-title text-lg border border-transparent rounded-lg font-medium hover:border-gray-400 cursor-pointer ${isDone}">${task.title
         }</p>
             <div class="menu-button flex flex-row gap-2 justify-between">
               <button class="edit-btn w-full p-1 hover:bg-gray-200">
@@ -396,7 +396,11 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
   handleStatusFilter();
   handleAssigneeFilter();
-  renderTasksList(filteredTasks);
+  if (project.projectType === 'kanban') {
+    await renderTasksList(filteredTasks, 'kanban', '');
+  } else {
+    await renderTasksList(filteredTasks, '', currentSprint?.result ? currentSprint.result : '');
+  }
 }
 
 async function checkForInvite() {
