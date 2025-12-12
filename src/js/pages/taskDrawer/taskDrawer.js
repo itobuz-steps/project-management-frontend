@@ -153,10 +153,8 @@ export async function showTaskDrawer(taskId) {
       ${comment.message}
     </p>
     
-     <img class="attachment text-gray-700 text-sm text-[#03045e]/70 hidden" 
-    </img>
-    <svg class= 'hidden attachment-logo' fill="#000000" width="15px" height="15px" viewBox="0 0 24 24" id="attachment-left" data-name="Flat Line" xmlns="http://www.w3.org/2000/svg" class="icon flat-line"><path id="primary" d="M14,18H9a6,6,0,0,1-6-6H3A6,6,0,0,1,9,6h8a4,4,0,0,1,4,4h0a4,4,0,0,1-4,4H9a2,2,0,0,1-2-2H7a2,2,0,0,1,2-2h8" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></path></svg>
-    
+    <a id="attachmentLogo" class="hidden" style="cursor:pointer;">📎</a>
+
     <div class="edit-controls hidden">
       <textarea class="edit-input w-full border border-[#90e0ef] rounded-md p-2" rows="1">${
         comment.message
@@ -172,23 +170,32 @@ export async function showTaskDrawer(taskId) {
     const messageEl = commentEl.querySelector('.message');
     const editInput = commentEl.querySelector('.edit-input');
     const saveBtn = commentEl.querySelector('.save-btn');
-    const attachmentComment = commentEl.querySelector('.attachment');
-    const attachmentLogo = commentEl.querySelector('.attachment-logo');
+    // const attachmentComment = commentEl.querySelector('.attachment');
+    const attachmentLogo = commentEl.querySelector('#attachmentLogo');
+
+    // if (comment.attachment) {
+    //   attachmentLogo.classList.remove('hidden');
+    // }
+
+    // attachmentLogo.addEventListener('click', () => {
+    //   attachmentComment.classList.remove('hidden');
+    //   attachmentLogo.classList.add('hidden');
+    //   attachmentComment.src = `
+    //   ${
+    //     comment.attachment
+    //       ? 'http://localhost:3001/uploads/commentsAttachment/' +
+    //         comment.attachment
+    //       : attachmentComment.classList.add('hidden')
+    //   }`;
+    // });
 
     if (comment.attachment) {
       attachmentLogo.classList.remove('hidden');
     }
 
     attachmentLogo.addEventListener('click', () => {
-      attachmentComment.classList.remove('hidden');
-      attachmentLogo.classList.add('hidden');
-      attachmentComment.src = `
-      ${
-        comment.attachment
-          ? 'http://localhost:3001/uploads/commentsAttachment/' +
-            comment.attachment
-          : attachmentComment.classList.add('hidden')
-      }`;
+      const fileUrl = `http://localhost:3001/uploads/commentsAttachment/${comment.attachment}`;
+      window.open(fileUrl, '_blank'); // opens any file type
     });
 
     editBtn.addEventListener('click', (e) => {
