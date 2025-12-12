@@ -106,8 +106,7 @@ export async function showTaskDrawer(taskId) {
     commentEl.className =
       'flex gap-2 md:gap-3 items-start bg-white rounded-lg shadow-md px-2 py-3 md:px-3 ' +
       'border border-[#90e0ef] shadow-lg rounded-lg';
-    console.log('comment ', comment);
-    // 'http://localhost:3001/uploads/commentsAttachment/' + comment.attachment
+
     commentEl.innerHTML = `
   <img
     src="${
@@ -170,24 +169,7 @@ export async function showTaskDrawer(taskId) {
     const messageEl = commentEl.querySelector('.message');
     const editInput = commentEl.querySelector('.edit-input');
     const saveBtn = commentEl.querySelector('.save-btn');
-    // const attachmentComment = commentEl.querySelector('.attachment');
     const attachmentLogo = commentEl.querySelector('#attachmentLogo');
-
-    // if (comment.attachment) {
-    //   attachmentLogo.classList.remove('hidden');
-    // }
-
-    // attachmentLogo.addEventListener('click', () => {
-    //   attachmentComment.classList.remove('hidden');
-    //   attachmentLogo.classList.add('hidden');
-    //   attachmentComment.src = `
-    //   ${
-    //     comment.attachment
-    //       ? 'http://localhost:3001/uploads/commentsAttachment/' +
-    //         comment.attachment
-    //       : attachmentComment.classList.add('hidden')
-    //   }`;
-    // });
 
     if (comment.attachment) {
       attachmentLogo.classList.remove('hidden');
@@ -195,7 +177,7 @@ export async function showTaskDrawer(taskId) {
 
     attachmentLogo.addEventListener('click', () => {
       const fileUrl = `http://localhost:3001/uploads/commentsAttachment/${comment.attachment}`;
-      window.open(fileUrl, '_blank'); // opens any file type
+      window.open(fileUrl, '_blank');
     });
 
     editBtn.addEventListener('click', (e) => {
@@ -313,6 +295,7 @@ export async function showTaskDrawer(taskId) {
   async function renderSubtasks(task) {
     const list = document.getElementById('subtasksList');
     list.innerHTML = '';
+
     if (!task.subTask || task.subTask.length === 0) {
       list.innerHTML = "<p class='text-gray-500 text-sm'>No subtasks</p>";
       return;
@@ -323,18 +306,17 @@ export async function showTaskDrawer(taskId) {
         localStorage.getItem('selectedProject')
       )
     ).data.result;
-
     const subtasks = all.filter((t) => task.subTask.includes(t._id));
 
     subtasks.forEach(async (st) => {
-      console.log('sub tasks: ', st._id);
-
       const subtaskAssignee = st.assignee
         ? (await taskService.getUserDetailsById(st.assignee)).data.result
         : null;
       const div = document.createElement('div');
+
       div.className =
         'flex items-start bg-white rounded-lg shadow-md pl-3 py-4 border border-[#90e0ef]';
+
       div.innerHTML = `
       <img
         src="${
