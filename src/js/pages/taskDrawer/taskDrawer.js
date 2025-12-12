@@ -190,25 +190,7 @@ export async function showTaskDrawer(taskId) {
     saveBtn.addEventListener('click', async (e) => {
       e.preventDefault();
 
-      const updatedComment = editInput.value;
-      const payload = { message: updatedComment };
-
-      if (!updatedComment.trim()) {
-        showToast('Comment cannot be empty!');
-        return;
-      }
-
-      try {
-        await commentService.updateComment(comment._id, payload);
-
-        comment.message = updatedComment;
-        messageEl.textContent = updatedComment;
-
-        editControls.classList.add('hidden');
-        messageEl.classList.remove('hidden');
-      } catch (err) {
-        console.error('Edit error: ', err);
-      }
+      editComment(editInput, comment._id, comment, messageEl, editControls);
     });
 
     deleteBtn.addEventListener('click', async (e) => {
@@ -229,6 +211,34 @@ export async function showTaskDrawer(taskId) {
       container.removeChild(commentEl);
     } catch (error) {
       console.error('Error deleting comment:', error);
+    }
+  }
+
+  async function editComment(
+    input,
+    commentId,
+    comment,
+    messageEl,
+    editControls
+  ) {
+    const updatedComment = input.value;
+    const payload = { message: updatedComment };
+
+    if (!updatedComment.trim()) {
+      showToast('Comment cannot be empty');
+      return;
+    }
+
+    try {
+      await commentService.updateComment(commentId, payload);
+      comment.message = updatedComment;
+      messageEl.textContent = updatedComment;
+
+      editControls.classList.add('hidden');
+      messageEl.classList.remove('hidden');
+    } catch (err) {
+      showToast(`${err}`);
+      console.error('Edit error: ', err);
     }
   }
 
