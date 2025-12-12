@@ -8,7 +8,7 @@ const currentProject = localStorage.getItem('selectedProject');
 
 function renderSubDropdown(item) {
   const subDropdown = document.createElement('div');
-  subDropdown.className = `px-4 py-2 hover:bg-gray-100 cursor-pointer ${item}-filter`;
+  subDropdown.className = `px-4 py-2 hover:bg-indigo-500 cursor-pointer ${item}-filter`;
   subDropdown.id = `${item}-filter`;
   subDropdown.innerHTML = `
     ${item.charAt(0).toUpperCase() + item.slice(1)}

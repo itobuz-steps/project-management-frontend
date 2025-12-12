@@ -130,13 +130,13 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
   project.columns.forEach((column) => {
     const columnEl = document.createElement('div');
-    columnEl.innerHTML = `
-      <div class="w-72 bg-white rounded-lg shadow p-4 shrink-0 h-full overflow-y-auto">
-        <h2 class="text-lg font-semibold border-b pb-2 sticky top-0 bg-white z-10 flex gap-2">
+    columnEl.innerHTML = /*html*/ `
+      <div class="w-72 bg-white/20 backdrop-blur-sm rounded-lg shadow shrink-0 h-full overflow-y-auto">
+        <h2 class="text-lg font-semibold sticky top-0 z-10 flex gap-2 p-4 bg-purple-950 text-white shadow-xs shadow-indigo/40">
           ${column.toUpperCase()}
-          <div class="issue-count rounded-full w-7 h-7 text-center text-md text-white bg-cyan-900"></div>
+          <div class="issue-count rounded-full w-7 h-7 text-center text-md text-white bg-purple-600"></div>
         </h2>
-        <div class="space-y-3 pb-4 h-full" id="task-list"></div>
+        <div class="flex flex-col gap-3 pb-4 h-full p-2 " id="task-list"></div>
       </div>
     `;
 
@@ -161,11 +161,14 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       const taskEl = document.createElement('div');
       taskEl.dataset._id = task._id;
       taskEl.className =
-        'task flex flex-col max-w-sm p-4 bg-white rounded-lg shadow-md text-black gap-4 relative cursor-grab';
-      taskEl.innerHTML = `
-        <div class="card-header flex justify-between items-center">
-          <p id="${task.title}-taskId" class="task-title text-lg border border-transparent rounded-lg font-medium hover:border-gray-400 cursor-pointer ${isDone}">${task.title
-        }</p>
+        'task flex flex-col max-w-sm p-4 bg-gray-300 rounded-md shadow-md text-black gap-4 relative cursor-grab ';
+      taskEl.innerHTML = /*html*/ `
+       <div class="card-header flex justify-between items-center">
+          <p id="${
+            task.title
+          }-taskId" class="flex-1 task-title text-lg border border-transparent rounded-sm font-medium cursor-pointer px-1 ${isDone}">${
+        task.title
+      }</p>
             <div class="menu-button flex flex-row gap-2 justify-between">
               <button class="edit-btn w-full p-1 hover:bg-gray-200">
                 <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -182,25 +185,31 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         </div>
         <div class="card-footer flex justify-between items-center text-sm text-gray-400">
           <div class="flex items-center gap-2">
-            <span class="type-tag bg-green-600 text-white text-xs font-semibold p-1 rounded-sm">${task.key
-        }</span>
+            <span class="type-tag bg-green-600 text-white text-xs font-semibold p-1 rounded-sm">${
+              task.key
+            }</span>
             <select class="type-selector text-sm border border-black-300 rounded text-black focus:outline-none">
-              <option value="story" ${task.type === 'story' ? 'selected' : ''
-        }>Story</option>
-              <option value="task" ${task.type === 'task' ? 'selected' : ''
-        }>Task</option>
-              <option value="bug" ${task.type === 'bug' ? 'selected' : ''
-        }>Bug</option>
+              <option value="story" ${
+                task.type === 'story' ? 'selected' : ''
+              }>Story</option>
+              <option value="task" ${
+                task.type === 'task' ? 'selected' : ''
+              }>Task</option>
+              <option value="bug" ${
+                task.type === 'bug' ? 'selected' : ''
+              }>Bug</option>
             </select>
           </div>
           <div class="flex items-center">
             <span class="user-avatar cursor-pointer w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center">
-              <img src="${assignee?.profileImage
-          ? 'http://localhost:3001/uploads/profile/' +
-          assignee.profileImage
-          : '../../../assets/img/profile.png'
-        }" class="w-8 h-8 object-cover" title="${assignee?.name || 'Unassigned'
-        }"/>
+              <img src="${
+                assignee?.profileImage
+                  ? 'http://localhost:3001/uploads/profile/' +
+                    assignee.profileImage
+                  : '../../../assets/img/profile.png'
+              }" class="w-8 h-8 object-cover" title="${
+        assignee?.name || 'Unassigned'
+      }"/>
             </span>
             <div class="avatar-dropdown hidden absolute top-20 right-10 rounded-2xl">
               <ul class="assignee-list text-sm text-gray-700 relative z-1 bg-slate-200 rounded-2xl"></ul>
@@ -372,8 +381,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
       if (column === lastColumn) {
         taskTitle.classList.add('line-through', 'text-gray-400');
-      }
-      else {
+      } else {
         taskTitle.classList.remove('line-through', 'text-gray-400');
       }
       taskList.appendChild(taskEl);
@@ -400,7 +408,11 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
   if (project.projectType === 'kanban') {
     await renderTasksList(filteredTasks, 'kanban', '');
   } else {
-    await renderTasksList(filteredTasks, '', currentSprint?.result ? currentSprint.result : '');
+    await renderTasksList(
+      filteredTasks,
+      '',
+      currentSprint?.result ? currentSprint.result : ''
+    );
   }
 }
 
