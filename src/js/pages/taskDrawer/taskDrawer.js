@@ -106,8 +106,7 @@ export async function showTaskDrawer(taskId) {
     commentEl.className =
       'flex gap-2 md:gap-3 items-start bg-white rounded-lg shadow-md px-2 py-3 md:px-3 ' +
       'border border-[#90e0ef] shadow-lg rounded-lg';
-    console.log('comment ', comment);
-    // 'http://localhost:3001/uploads/commentsAttachment/' + comment.attachment
+
     commentEl.innerHTML = `
   <img
     src="${
@@ -153,10 +152,8 @@ export async function showTaskDrawer(taskId) {
       ${comment.message}
     </p>
     
-     <img class="attachment text-gray-700 text-sm text-[#03045e]/70 hidden" 
-    </img>
-    <svg class= 'hidden attachment-logo' fill="#000000" width="15px" height="15px" viewBox="0 0 24 24" id="attachment-left" data-name="Flat Line" xmlns="http://www.w3.org/2000/svg" class="icon flat-line"><path id="primary" d="M14,18H9a6,6,0,0,1-6-6H3A6,6,0,0,1,9,6h8a4,4,0,0,1,4,4h0a4,4,0,0,1-4,4H9a2,2,0,0,1-2-2H7a2,2,0,0,1,2-2h8" style="fill: none; stroke: rgb(0, 0, 0); stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"></path></svg>
-    
+    <a id="attachmentLogo" class="hidden" style="cursor:pointer;">📎</a>
+
     <div class="edit-controls hidden">
       <textarea class="edit-input w-full border border-[#90e0ef] rounded-md p-2" rows="1">${
         comment.message
@@ -172,23 +169,15 @@ export async function showTaskDrawer(taskId) {
     const messageEl = commentEl.querySelector('.message');
     const editInput = commentEl.querySelector('.edit-input');
     const saveBtn = commentEl.querySelector('.save-btn');
-    const attachmentComment = commentEl.querySelector('.attachment');
-    const attachmentLogo = commentEl.querySelector('.attachment-logo');
+    const attachmentLogo = commentEl.querySelector('#attachmentLogo');
 
     if (comment.attachment) {
       attachmentLogo.classList.remove('hidden');
     }
 
     attachmentLogo.addEventListener('click', () => {
-      attachmentComment.classList.remove('hidden');
-      attachmentLogo.classList.add('hidden');
-      attachmentComment.src = `
-      ${
-        comment.attachment
-          ? 'http://localhost:3001/uploads/commentsAttachment/' +
-            comment.attachment
-          : attachmentComment.classList.add('hidden')
-      }`;
+      const fileUrl = `http://localhost:3001/uploads/commentsAttachment/${comment.attachment}`;
+      window.open(fileUrl, '_blank');
     });
 
     editBtn.addEventListener('click', (e) => {
@@ -201,25 +190,7 @@ export async function showTaskDrawer(taskId) {
     saveBtn.addEventListener('click', async (e) => {
       e.preventDefault();
 
-      const updatedComment = editInput.value;
-      const payload = { message: updatedComment };
-
-      if (!updatedComment.trim()) {
-        showToast('Comment cannot be empty!');
-        return;
-      }
-
-      try {
-        await commentService.updateComment(comment._id, payload);
-
-        comment.message = updatedComment;
-        messageEl.textContent = updatedComment;
-
-        editControls.classList.add('hidden');
-        messageEl.classList.remove('hidden');
-      } catch (err) {
-        console.error('Edit error: ', err);
-      }
+      editComment(editInput, comment._id, comment, messageEl, editControls);
     });
 
     deleteBtn.addEventListener('click', async (e) => {
@@ -240,6 +211,34 @@ export async function showTaskDrawer(taskId) {
       container.removeChild(commentEl);
     } catch (error) {
       console.error('Error deleting comment:', error);
+    }
+  }
+
+  async function editComment(
+    input,
+    commentId,
+    comment,
+    messageEl,
+    editControls
+  ) {
+    const updatedComment = input.value;
+    const payload = { message: updatedComment };
+
+    if (!updatedComment.trim()) {
+      showToast('Comment cannot be empty');
+      return;
+    }
+
+    try {
+      await commentService.updateComment(commentId, payload);
+      comment.message = updatedComment;
+      messageEl.textContent = updatedComment;
+
+      editControls.classList.add('hidden');
+      messageEl.classList.remove('hidden');
+    } catch (err) {
+      showToast(`${err}`);
+      console.error('Edit error: ', err);
     }
   }
 
@@ -306,6 +305,7 @@ export async function showTaskDrawer(taskId) {
   async function renderSubtasks(task) {
     const list = document.getElementById('subtasksList');
     list.innerHTML = '';
+
     if (!task.subTask || task.subTask.length === 0) {
       list.innerHTML = "<p class='text-gray-500 text-sm'>No subtasks</p>";
       return;
@@ -316,18 +316,17 @@ export async function showTaskDrawer(taskId) {
         localStorage.getItem('selectedProject')
       )
     ).data.result;
-
     const subtasks = all.filter((t) => task.subTask.includes(t._id));
 
     subtasks.forEach(async (st) => {
-      console.log('sub tasks: ', st._id);
-
       const subtaskAssignee = st.assignee
         ? (await taskService.getUserDetailsById(st.assignee)).data.result
         : null;
       const div = document.createElement('div');
+
       div.className =
         'flex items-start bg-white rounded-lg shadow-md pl-3 py-4 border border-[#90e0ef]';
+
       div.innerHTML = `
       <img
         src="${
