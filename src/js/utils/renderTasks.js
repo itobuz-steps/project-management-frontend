@@ -411,6 +411,7 @@ async function renderBacklogTasks(backlogBody, backlogTasks, addToSprintButton, 
     tr.addEventListener('dragend', () => {
       tr.classList.remove('cursor-grabbing');
       tr.classList.add('cursor-grab');
+      checkIfEmpty(document.getElementById('backlog-body'), document.getElementById('backlog-empty-message'));
     });
 
     backlogBody.append(tr);
@@ -476,7 +477,6 @@ export async function renderDashBoardTasks() {
         const taskId = e.dataTransfer.getData('taskId');
         const taskEl = document.querySelector(`.backlog table [data-id="${taskId}"]`);
         taskEl.remove();
-        checkIfEmpty(document.getElementById('backlog-body'), document.getElementById('backlog-empty-message'));
 
         const task = await TaskService.getTaskById(taskId);
         let droppedTask;
@@ -770,7 +770,7 @@ async function handleAddTaskFromBacklogToSprint(dropdownEl) {
 }
 
 function checkIfEmpty(element1, element2) {
-  if (!element1.childElementCount && !element2.classList.contains('hidden')) {
-    element2.classList.add('hidden');
+  if (!element1.childElementCount && element2.classList.contains('hidden')) {
+    element2.classList.remove('hidden');
   }
 }
