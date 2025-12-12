@@ -24,6 +24,14 @@ export async function showTaskDrawer(taskId) {
   const commentSubmit = taskDrawer.querySelector('#submitButton');
   const editModal = document.getElementById('update-task-modal');
   const editTaskButton = document.querySelector('#edit-task-button');
+  const attachmentInput = taskDrawer.querySelector('#commentAttachment');
+  const attachButton = taskDrawer.querySelector('#attachButton');
+
+  attachButton.addEventListener('click', () => {
+    attachmentInput.click();
+    // attachmentInput.classList.remove('hidden');
+  });
+
   editTaskButton.addEventListener('click', () => {
     editModal.classList.remove('hidden');
     openUpdateTaskModal(taskId);
@@ -40,14 +48,34 @@ export async function showTaskDrawer(taskId) {
   });
 
   commentSubmit.addEventListener('click', async () => {
-    const commentBody = {
-      taskId: task._id,
-      message: commentInput.value.trim(),
-    };
+    const message = commentInput.value.trim();
+    const attachmentInput = taskDrawer.querySelector('#commentAttachment');
 
-    await commentService.createComment(commentBody);
-    commentInput.value = '';
-    updateCommentList();
+    if (!message && attachmentInput.files.length > 0) {
+      showToast('You must enter a comment before adding an attachment');
+      return;
+    }
+
+    const formData = new FormData();
+
+    formData.append('taskId', task._id);
+    formData.append('message', message);
+
+    if (attachmentInput.files.length === 1) {
+      formData.append('attachment', attachmentInput.files[0]);
+    }
+
+    try {
+      await commentService.createComment(formData);
+
+      commentInput.value = '';
+      attachmentInput.value = '';
+
+      updateCommentList();
+    } catch (err) {
+      showToast('Failed to submit comment');
+      console.error(err);
+    }
   });
 
   status.value = task.status;
@@ -121,7 +149,7 @@ export async function showTaskDrawer(taskId) {
   <div id="CommentInformation" class="flex flex-col gap-1 md:gap-2 flex-1">
     <div class="flex justify-between items-center text-md text-[#03045e]">
       <div>
-        <span class="username font-medium text-gray-700 text-[#03045e]">
+        <span class="username font-medium text-gray-700 ">
           ${comment.author.name}
         </span>
         <span>•</span>
@@ -148,7 +176,7 @@ export async function showTaskDrawer(taskId) {
       </div>
     </div>
 
-    <p class="message text-gray-700 text-sm text-[#03045e]/70">
+    <p class="message text-gray-700 text-sm">
       ${comment.message}
     </p>
     

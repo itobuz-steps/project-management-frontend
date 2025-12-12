@@ -79,9 +79,9 @@ class CommentService {
     }
   }
 
-  async createComment(comment) {
+  async createComment(formData) {
     try {
-      const response = await this.api.post(`/`, comment);
+      const response = await this.api.post(`/`, formData);
 
       return response.data;
     } catch (error) {
