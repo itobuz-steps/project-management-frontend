@@ -143,7 +143,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
     const tasks = columns[column] || [];
     tasks.forEach((task) => {
       filteredTasks.push(task);
-
+      console.log('each task', task.attachments);
       let isDone = '';
       if (task.status === 'done') {
         isDone = 'line-through text-gray-400';
@@ -168,6 +168,9 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
           }-taskId" class="task-title text-lg border border-transparent rounded-lg font-medium hover:border-gray-400 cursor-pointer ${isDone}">${
         task.title
       }</p>
+
+      <a id="attachmentLogo" class="hidden" style="cursor:pointer;">📎</a>
+
             <div class="menu-button flex flex-row gap-2 justify-between">
               <button class="edit-btn w-full p-1 hover:bg-gray-200">
                 <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -216,6 +219,19 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
           </div>
         </div>
       `;
+
+      //tasks attachment show
+
+      const attachmentLogo = taskEl.querySelector('#attachmentLogo');
+
+      if (task.attachments.length > 0) {
+        attachmentLogo.classList.remove('hidden');
+      }
+
+      attachmentLogo.addEventListener('click', () => {
+        const fileUrl = `http://localhost:3001/uploads/attachments/${task.attachments}`;
+        window.open(fileUrl, '_blank');
+      });
 
       // add drop down upon clicking the image
 
