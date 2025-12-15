@@ -125,9 +125,9 @@ class SprintService {
     }
   }
 
-  async removeTaskFromSprint(id, updatedSprint) {
+  async removeTaskFromSprint(sprintId, taskId) {
     try {
-      const response = await this.api.patch(`/${id}/removeTasks`, updatedSprint);
+      const response = await this.api.patch(`/${sprintId}/removeTasks`, taskId);
       return response.data;
     } catch (error) {
       throw new Error(
