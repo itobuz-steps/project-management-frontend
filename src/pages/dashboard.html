@@ -352,7 +352,7 @@
 
         <div class="flex flex-col sm:flex-row items-start w-full gap-5">
           <ul
-            class="tabs list-none grid grid-cols-3 items-center w-full sm:w-80 border border-gray-100 text-gray-200 p-1 bg-gray-950 rounded-lg gap-0.5"
+            class="tabs list-none grid grid-cols-3 items-center w-full sm:w-96 border border-gray-100 text-gray-200 p-1 bg-gray-950 rounded-lg gap-0.5"
           >
             <li
               id="backlog-li"
@@ -724,7 +724,7 @@
         </div>
       </div>
 
-      <!-- update project modal -->
+      <!-- create project modal -->
       <div
         id="create-project-modal"
         tabindex="-1"
@@ -837,17 +837,16 @@
       <!-- create task -->
       <div
         id="create-task-modal"
-        tabindex="-1"
         class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/50"
       >
-        <div class="relative p-4 w-full max-w-md md:max-w-3xl max-h-[80vh]">
+        <div class="relative p-4 w-full max-w-md md:max-w-xl">
           <div
-            class="relative bg-white rounded-lg shadow-sm max-h-[80vh] flex flex-col"
+            class="relative bg-white rounded-2xl shadow-sm flex flex-col max-md:max-h-[60vh]"
           >
             <div
-              class="flex items-center justify-between p-2 md:p-5 border-b rounded-t border-black relative top-0 bg-white z-10"
+              class="flex items-center justify-between p-2 md:py-4 px-4 rounded-t-2xl relative top-0 bg-indigo-950 z-10"
             >
-              <h3 class="text-xl font-semibold text-black">Create Issue</h3>
+              <h3 class="text-2xl font-semibold text-white">Create Issue</h3>
               <button
                 id="close-task-modal"
                 type="button"
@@ -873,22 +872,24 @@
             </div>
 
             <!--  input forms  -->
-            <div class="py-3 px-4 md:p-3 overflow-scroll">
-              <form id="task-form" class="space-y-3 px-3" action="submit">
+            <div
+              class="px-2 pb-4 md:p-2 overflow-scroll bg-indigo-950 rounded-b-xl"
+            >
+              <form id="task-form" class="space-y-3 px-3 py-4" action="submit">
                 <div
                   class="flex flex-col gap-2 md:flex-row md:justify-start md:gap-5"
                 >
                   <div class="md:w-70">
                     <label
                       for="create-task-modal-title"
-                      class="block mb-2 text-sm font-medium text-black"
+                      class="block mb-2 text-md font-medium text-white"
                       >Title</label
                     >
                     <input
                       type="text"
                       name="title"
                       id="create-task-modal-title"
-                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      class="bg-purple-100 border-purple-600 text-sm font-semibold text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2"
                       placeholder="Enter title"
                       required
                       maxlength="100"
@@ -898,14 +899,14 @@
                   <div class="md:w-110">
                     <label
                       for="description"
-                      class="block mb-2 text-sm font-medium text-black"
+                      class="block mb-2 text-md font-semibold text-white"
                       >Description</label
                     >
                     <input
                       type="text"
                       name="description"
                       id="description"
-                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      class="bg-purple-100 border-purple-600 text-sm font-semibold text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2"
                       placeholder="Enter details"
                       maxlength="1000"
                     />
@@ -918,13 +919,13 @@
                   <div class="md:w-60">
                     <label
                       for="type"
-                      class="block mb-2 text-sm font-medium text-black"
+                      class="block mb-2 text-md font-semibold text-white"
                       >Type</label
                     >
                     <select
                       name="type"
                       id="type"
-                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      class="bg-purple-100 border-purple-600 text-sm font-semibold text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2"
                       required
                     >
                       <option value="bug">Bug</option>
@@ -937,13 +938,13 @@
                   <div class="md:w-60">
                     <label
                       for="priority"
-                      class="block mb-2 text-sm font-medium text-black"
+                      class="block mb-2 text-md font-semibold text-white"
                       >Priority</label
                     >
                     <select
                       name="priority"
                       id="priority"
-                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      class="bg-purple-100 border-purple-600 text-sm font-semibold text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2"
                       required
                     >
                       <option value="low">low</option>
@@ -956,13 +957,13 @@
                   <div class="md:w-60">
                     <label
                       for="status"
-                      class="block mb-2 text-sm font-medium text-black"
+                      class="block mb-2 text-md font-semibold text-white"
                       >Status</label
                     >
                     <select
                       name="status"
                       id="status-create-task-modal"
-                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      class="bg-purple-100 border-purple-600 text-sm font-semibold text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2"
                       required
                     ></select>
                   </div>
@@ -974,14 +975,14 @@
                   <div class="md:w-60">
                     <label
                       for="tags"
-                      class="block mb-2 text-sm font-medium text-black"
+                      class="block mb-2 text-md font-semibold text-white"
                       >Tags</label
                     >
                     <input
                       type="text"
                       name="tags"
                       id="tags"
-                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      class="bg-purple-100 border-purple-600 text-sm font-semibold text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2"
                       placeholder="Enter tags"
                     />
                   </div>
@@ -989,14 +990,14 @@
                   <div class="md:w-60">
                     <label
                       for="due date"
-                      class="block mb-2 text-sm font-medium text-black"
+                      class="block mb-2 text-md font-semibold text-white"
                       >Due Date</label
                     >
                     <input
                       type="date"
                       name="dueDate"
                       id="dueDate"
-                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      class="bg-purple-100 border-purple-600 text-sm font-semibold text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2"
                       placeholder="Enter the due date"
                       value="2025-12-01"
                     />
@@ -1005,13 +1006,13 @@
                   <div class="md:w-60">
                     <label
                       for="assignee"
-                      class="block mb-2 text-sm font-medium text-black"
+                      class="block mb-2 text-md font-semibold text-white"
                       >Assignee</label
                     >
                     <select
                       name="assignee"
                       id="create-modal-assignee"
-                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      class="bg-purple-100 border-purple-600 text-sm font-semibold text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2"
                       required
                     ></select>
                   </div>
@@ -1023,14 +1024,14 @@
                   <div class="md:w-60">
                     <label
                       for="block"
-                      class="block mb-2 text-sm font-medium text-black"
+                      class="block mb-2 text-md font-semibold text-white"
                       >Blocks</label
                     >
                     <input
                       type="text"
                       name="block"
                       id="block"
-                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      class="bg-purple-100 border-purple-600 text-sm font-semibold text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2"
                       placeholder=""
                     />
                   </div>
@@ -1038,14 +1039,14 @@
                   <div class="md:w-60">
                     <label
                       for="BlockedBy"
-                      class="block mb-2 text-sm font-medium text-black"
+                      class="block mb-2 text-md font-semibold text-white"
                       >Blocked by Issue</label
                     >
                     <input
                       type="text"
                       name="BlockedBy"
                       id="BlockedBy"
-                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      class="bg-purple-100 border-purple-600 text-sm font-semibold text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2"
                       placeholder=""
                     />
                   </div>
@@ -1053,14 +1054,14 @@
                   <div class="md:w-60">
                     <label
                       for="relatesTo"
-                      class="block mb-2 text-sm font-medium text-black"
+                      class="block mb-2 text-md font-semibold text-white"
                       >Related To</label
                     >
                     <input
                       type="text"
                       name="relatesTo"
                       id="relatesTo"
-                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      class="bg-purple-100 border-purple-600 text-sm font-semibold text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2"
                       placeholder=""
                     />
                   </div>
@@ -1070,19 +1071,19 @@
                 <div>
                   <label
                     for="attachments"
-                    class="block mb-2 text-sm font-medium text-black"
+                    class="block mb-2 text-md font-medium text-white"
                   >
                     Enter files
                   </label>
 
                   <label
                     for="attachments"
-                    class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded-lg inline-block"
+                    class="cursor-pointer bg-purple-800 text-white text-md font-semibold py-2 px-4 rounded-lg inline-block"
                   >
                     Choose Files
                   </label>
 
-                  <span id="file-name" class="ml-3 text-sm text-gray-700"
+                  <span id="file-name" class="ml-3 text-md text-white"
                     >No file chosen</span
                   >
 
@@ -1099,7 +1100,7 @@
                 <div class="flex justify-between"></div>
                 <button
                   type="submit"
-                  class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  class="w-full text-white bg-purple-800 hover:bg-purple-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-lg px-5 py-2.5 text-center"
                 >
                   Create
                 </button>
@@ -1112,17 +1113,16 @@
       <!-- update task -->
       <div
         id="update-task-modal"
-        tabindex="-1"
-        class="hidden fixed inset-0 z-50 flex justify-center items-center bg-black/50"
+        class="fixed inset-0 z-50 flex justify-center items-center bg-black/50"
       >
-        <div class="relative p-4 w-full max-w-md md:max-w-3xl max-h-[80vh]">
+        <div class="relative p-4 w-full max-w-md md:max-w-xl">
           <div
-            class="relative bg-white rounded-lg shadow-sm max-h-[80vh] flex flex-col"
+            class="relative bg-white rounded-lg shadow-sm max-md:max-h-[60vh] flex flex-col"
           >
             <div
-              class="flex items-center justify-between p-2 md:p-5 border-b rounded-t border-black relative top-0 bg-white z-10"
+              class="flex items-center justify-between max-md:p-4.5 md:px-5 pt-5 pb-2 rounded-t-lg relative top-0 bg-indigo-950 z-10"
             >
-              <h3 class="text-xl font-semibold text-black">Update Task</h3>
+              <h3 class="text-2xl font-semibold text-white">Update Task</h3>
               <button
                 id="close-update-task-modal"
                 type="button"
@@ -1148,22 +1148,28 @@
             </div>
 
             <!--  input forms  -->
-            <div class="py-3 px-4 md:p-3 overflow-scroll">
-              <form id="edit-task-form" class="space-y-3 px-3" action="submit">
+            <div
+              class="max-md:p-3 md:p-2 overflow-scroll bg-indigo-950 rounded-b-lg"
+            >
+              <form
+                id="edit-task-form"
+                class="space-y-3 px-3 pb-4"
+                action="submit"
+              >
                 <div
                   class="flex flex-col gap-2 md:flex-row md:justify-start md:gap-5"
                 >
                   <div class="md:w-70">
                     <label
                       for="title"
-                      class="block mb-2 text-sm font-medium text-black"
+                      class="block mb-2 text-md font-medium text-white"
                       >Title</label
                     >
                     <input
                       type="text"
                       name="title"
                       id="title"
-                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      class="bg-purple-100 border-purple-600 text-sm font-semibold text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2"
                       placeholder="Enter title"
                       required
                       maxlength="100"
@@ -1173,14 +1179,14 @@
                   <div class="md:w-110">
                     <label
                       for="description"
-                      class="block mb-2 text-sm font-medium text-black"
+                      class="block mb-2 text-md font-medium text-white"
                       >Description</label
                     >
                     <input
                       type="text"
                       name="description"
                       id="description"
-                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      class="bg-purple-100 border-purple-600 text-sm font-semibold text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2"
                       placeholder="Enter details"
                       maxlength="1000"
                     />
@@ -1193,13 +1199,13 @@
                   <div class="md:w-60">
                     <label
                       for="type"
-                      class="block mb-2 text-sm font-medium text-black"
+                      class="block mb-2 text-md font-medium text-white"
                       >Type</label
                     >
                     <select
                       name="type"
                       id="type"
-                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      class="bg-purple-100 border-purple-600 text-sm font-semibold text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2"
                     >
                       <option value="">Select a type</option>
                       <option value="bug">Bug</option>
@@ -1212,38 +1218,38 @@
                   <div class="md:w-60">
                     <label
                       for="priority"
-                      class="block mb-2 text-sm font-medium text-black"
+                      class="block mb-2 text-md font-medium text-white"
                       >Priority</label
                     >
                     <select
                       name="priority"
                       id="priority"
-                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      class="bg-purple-100 border-purple-600 text-sm font-semibold text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2"
                     >
                       <option value="">Select a type</option>
-                      <option value="low">low</option>
-                      <option value="medium">medium</option>
-                      <option value="high">high</option>
-                      <option value="critical">critical</option>
+                      <option value="low">Low</option>
+                      <option value="medium">Medium</option>
+                      <option value="high">High</option>
+                      <option value="critical">Critical</option>
                     </select>
                   </div>
 
                   <div class="md:w-60">
                     <label
                       for="status"
-                      class="block mb-2 text-sm font-medium text-black"
+                      class="block mb-2 text-md font-medium text-white"
                       >Status</label
                     >
                     <select
                       name="status"
                       id="status"
-                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      class="bg-purple-100 border-purple-600 text-sm font-semibold text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2"
                     >
                       <option value="">Select a type</option>
-                      <option value="todo">todo</option>
-                      <option value="in-progress">in-progress</option>
-                      <option value="done">done</option>
-                      <option value="review">review</option>
+                      <option value="todo">To-do</option>
+                      <option value="in-progress">In-progress</option>
+                      <option value="done">Done</option>
+                      <option value="review">Review</option>
                     </select>
                   </div>
                 </div>
@@ -1254,14 +1260,14 @@
                   <div class="md:w-60">
                     <label
                       for="tags"
-                      class="block mb-2 text-sm font-medium text-black"
+                      class="block mb-2 text-md font-medium text-white"
                       >Tags</label
                     >
                     <input
                       type="text"
                       name="tags"
                       id="tags"
-                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      class="bg-purple-100 border-purple-600 text-sm font-semibold text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2"
                       placeholder="Enter tags"
                     />
                   </div>
@@ -1269,14 +1275,14 @@
                   <div class="md:w-60">
                     <label
                       for="due date"
-                      class="block mb-2 text-sm font-medium text-black"
+                      class="block mb-2 text-md font-medium text-white"
                       >Due Date</label
                     >
                     <input
                       type="date"
                       name="dueDate"
                       id="dueDate"
-                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      class="bg-purple-100 border-purple-600 text-sm font-semibold text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2"
                       placeholder="Enter the due date"
                     />
                   </div>
@@ -1284,13 +1290,13 @@
                   <div class="md:w-60">
                     <label
                       for="assignee"
-                      class="block mb-2 text-sm font-medium text-black"
+                      class="block mb-2 text-md font-medium text-white"
                       >Assignee</label
                     >
                     <select
                       name="assignee"
                       id="assignee"
-                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      class="bg-purple-100 border-purple-600 text-sm font-semibold text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2"
                       required
                     ></select>
                   </div>
@@ -1302,14 +1308,14 @@
                   <div class="md:w-60">
                     <label
                       for="block"
-                      class="block mb-2 text-sm font-medium text-black"
+                      class="block mb-2 text-md font-medium text-white"
                       >Blocks</label
                     >
                     <input
                       type="text"
                       name="block"
                       id="block"
-                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      class="bg-purple-100 border-purple-600 text-sm font-semibold text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2"
                       placeholder=""
                     />
                   </div>
@@ -1317,14 +1323,14 @@
                   <div class="md:w-60">
                     <label
                       for="BlockedBy"
-                      class="block mb-2 text-sm font-medium text-black"
+                      class="block mb-2 text-md font-medium text-white"
                       >Blocked by Issue</label
                     >
                     <input
                       type="text"
                       name="BlockedBy"
                       id="BlockedBy"
-                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      class="bg-purple-100 border-purple-600 text-sm font-semibold text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2"
                       placeholder=""
                     />
                   </div>
@@ -1332,14 +1338,14 @@
                   <div class="md:w-60">
                     <label
                       for="relatesTo"
-                      class="block mb-2 text-sm font-medium text-black"
+                      class="block mb-2 text-md font-medium text-white"
                       >Related To</label
                     >
                     <input
                       type="text"
                       name="relatesTo"
                       id="relatesTo"
-                      class="bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"
+                      class="bg-purple-100 border-purple-600 text-sm font-semibold text-black rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2"
                       placeholder=""
                     />
                   </div>
@@ -1348,7 +1354,7 @@
                 <div class="flex justify-between"></div>
                 <button
                   type="submit"
-                  class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  class="w-full text-white bg-purple-800 hover:bg-purple-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-lg px-5 py-2.5 text-center"
                 >
                   Update
                 </button>
