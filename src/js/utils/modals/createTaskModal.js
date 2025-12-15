@@ -42,7 +42,6 @@ taskForm.addEventListener('submit', async (e) => {
   } else {
     dateValue = document.getElementById('dueDate').value;
   }
-  console.log(dateValue);
 
   const task = {
     projectId: localStorage.getItem('selectedProject'),
@@ -82,7 +81,7 @@ taskForm.addEventListener('submit', async (e) => {
         : document.getElementById('create-modal-assignee').value,
     attachments: input.files,
   };
-
+  console.log('input file array', Array.from(input.files));
   try {
     await taskService.createTask(task);
 
