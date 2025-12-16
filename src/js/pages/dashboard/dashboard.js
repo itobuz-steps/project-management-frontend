@@ -143,8 +143,8 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
     const tasks = columns[column] || [];
     tasks.forEach((task) => {
       filteredTasks.push(task);
-      console.log('each task', task.attachments);
       let isDone = '';
+
       if (task.status === 'done') {
         isDone = 'line-through text-gray-400';
       }
