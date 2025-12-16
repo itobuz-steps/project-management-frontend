@@ -131,12 +131,12 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
   project.columns.forEach((column) => {
     const columnEl = document.createElement('div');
     columnEl.innerHTML = /*html*/ `
-      <div class="w-72 bg-white/20 backdrop-blur-sm rounded-lg shadow shrink-0 h-full overflow-y-auto">
-        <h2 class="text-lg font-semibold sticky top-0 z-10 flex gap-2 p-4 bg-purple-950 text-white shadow-xs shadow-indigo/40">
+      <div class="w-72 bg-white rounded-lg shadow-lg shrink-0 h-full overflow-y-auto">
+        <h2 class="text-lg font-semibold sticky top-0 z-10 flex gap-2 px-4 py-2 text-black items-center">
           ${column.toUpperCase()}
-          <div class="issue-count rounded-full w-7 h-7 text-center text-md text-white bg-purple-600"></div>
+          <div class="issue-count rounded-full w-5 h-5 text-center text-sm text-black bg-gray-400"></div>
         </h2>
-        <div class="flex flex-col gap-3 pb-4 h-full p-2 " id="task-list"></div>
+        <div class="flex flex-col gap-3 pb-4 h-96 p-2 " id="task-list"></div>
       </div>
     `;
 
@@ -161,14 +161,14 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       const taskEl = document.createElement('div');
       taskEl.dataset._id = task._id;
       taskEl.className =
-        'task flex flex-col max-w-sm p-4 bg-gray-300 rounded-md shadow-md text-black gap-4 relative cursor-grab ';
+        'task flex flex-col max-w-sm p-4 bg-white rounded-md shadow-sm text-black gap-4 relative cursor-grab border border-gray-100 hover:shadow-md';
       taskEl.innerHTML = /*html*/ `
        <div class="card-header flex justify-between items-center">
           <p id="${
             task.title
           }-taskId" class="flex-1 task-title text-lg border border-transparent rounded-sm font-medium cursor-pointer px-1 ${isDone}">${
-        task.title
-      }</p>
+            task.title
+          }</p>
             <div class="menu-button flex flex-row gap-2 justify-between">
               <button class="edit-btn w-full p-1 hover:bg-gray-200">
                 <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -208,8 +208,8 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
                     assignee.profileImage
                   : '../../../assets/img/profile.png'
               }" class="w-8 h-8 object-cover" title="${
-        assignee?.name || 'Unassigned'
-      }"/>
+                assignee?.name || 'Unassigned'
+              }"/>
             </span>
             <div class="avatar-dropdown hidden absolute top-20 right-10 rounded-2xl">
               <ul class="assignee-list text-sm text-gray-700 relative z-1 bg-slate-200 rounded-2xl"></ul>
@@ -230,9 +230,8 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
       async function populateAvatarDropdown(dropdownList) {
         try {
-          const response = await projectService.getProjectMembers(
-            currentProject
-          );
+          const response =
+            await projectService.getProjectMembers(currentProject);
           activeProjectMembers = response.result;
 
           dropdownList.innerHTML = '';

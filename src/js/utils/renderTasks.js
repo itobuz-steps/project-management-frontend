@@ -383,18 +383,27 @@ async function renderSprintTasks(sprint, sprintTasks, projectType) {
   const sprintTaskBody = document.getElementById(`${sprint.key}-body`);
   for (const taskId of sprintTasks) {
     const task = await TaskService.getTaskById(taskId);
-    promiseArray.push(createTaskList(task.data.result, '', projectType, sprint));
+    promiseArray.push(
+      createTaskList(task.data.result, '', projectType, sprint)
+    );
   }
   const allTrs = await Promise.all(promiseArray);
   allTrs.forEach((tr) => {
     sprintTaskBody.append(tr);
   });
 }
-async function renderBacklogTasks(backlogBody, backlogTasks, addToSprintButton, projectType) {
+async function renderBacklogTasks(
+  backlogBody,
+  backlogTasks,
+  addToSprintButton,
+  projectType
+) {
   let promiseArray = [];
   for (const taskId of backlogTasks) {
     const task = await TaskService.getTaskById(taskId);
-    promiseArray.push(createTaskList(task.data.result, 'backlog', projectType, ''));
+    promiseArray.push(
+      createTaskList(task.data.result, 'backlog', projectType, '')
+    );
   }
   const allTrs = await Promise.all(promiseArray);
   allTrs.forEach((tr) => {
@@ -411,7 +420,10 @@ async function renderBacklogTasks(backlogBody, backlogTasks, addToSprintButton, 
     tr.addEventListener('dragend', () => {
       tr.classList.remove('cursor-grabbing');
       tr.classList.add('cursor-grab');
-      checkIfEmpty(document.getElementById('backlog-body'), document.getElementById('backlog-empty-message'));
+      checkIfEmpty(
+        document.getElementById('backlog-body'),
+        document.getElementById('backlog-empty-message')
+      );
     });
 
     backlogBody.append(tr);
@@ -422,7 +434,6 @@ async function renderBacklogTasks(backlogBody, backlogTasks, addToSprintButton, 
       }
     });
   });
-
 }
 
 export async function renderDashBoardTasks() {
@@ -475,21 +486,30 @@ export async function renderDashBoardTasks() {
       newSprint.addEventListener('drop', async (e) => {
         e.preventDefault();
         const taskId = e.dataTransfer.getData('taskId');
-        const taskEl = document.querySelector(`.backlog table [data-id="${taskId}"]`);
+        const taskEl = document.querySelector(
+          `.backlog table [data-id="${taskId}"]`
+        );
         taskEl.remove();
 
         const task = await TaskService.getTaskById(taskId);
         let droppedTask;
         if (project.result.projectType === 'kanban') {
-          droppedTask = await createTaskList(task.data.result, '', 'kanban', sprint);
+          droppedTask = await createTaskList(
+            task.data.result,
+            '',
+            'kanban',
+            sprint
+          );
         } else {
           droppedTask = await createTaskList(task.data.result, '', '', sprint);
         }
         newSprint.querySelector(`#${sprint.key}-body`).appendChild(droppedTask);
 
-        SprintService.addTasksToSprint(sprint._id, { tasks: [taskId] }).catch((err) => {
-          console.error('Failed to update sprint tasks', err);
-        });
+        SprintService.addTasksToSprint(sprint._id, { tasks: [taskId] }).catch(
+          (err) => {
+            console.error('Failed to update sprint tasks', err);
+          }
+        );
       });
 
       await handleStartSprint(sprint);
@@ -539,13 +559,20 @@ export async function renderDashBoardTasks() {
 
     const addToSprintButton = document.getElementById('add-to-sprint-button');
     const backlogBody = document.getElementById('backlog-body');
-    const backlogEmptyMessage = document.getElementById('backlog-empty-message');
+    const backlogEmptyMessage = document.getElementById(
+      'backlog-empty-message'
+    );
     if (!backlogTasks.length) {
       backlogEmptyMessage.classList.remove('hidden');
     } else {
       backlogEmptyMessage.classList.add('hidden');
       if (project.result.projectType === 'kanban') {
-        renderBacklogTasks(backlogBody, backlogTasks, addToSprintButton, 'kanban');
+        renderBacklogTasks(
+          backlogBody,
+          backlogTasks,
+          addToSprintButton,
+          'kanban'
+        );
       } else {
         renderBacklogTasks(backlogBody, backlogTasks, addToSprintButton, '');
       }
@@ -566,7 +593,8 @@ export async function renderDashBoardTasks() {
     const createSprintButton = document.getElementById('create-sprint-button');
     const sprintForm = document.getElementById('sprint-creation-form');
     const sprintCreateCloseSvg = document.getElementById('sprint-close-svg');
-    const sprintCreateSubmitButton = document.getElementById('sprint-form-button');
+    const sprintCreateSubmitButton =
+      document.getElementById('sprint-form-button');
     const storyPointInput = document.getElementById('sprint-sp-input');
 
     function callCreateSprint() {
@@ -604,7 +632,11 @@ export async function renderDashBoardTasks() {
     });
 
     document.addEventListener('click', (e) => {
-      if (sprintDropdown.contains(e.target) || addToSprintButton.contains(e.target)) return;
+      if (
+        sprintDropdown.contains(e.target) ||
+        addToSprintButton.contains(e.target)
+      )
+        return;
 
       if (!sprintDropdown.classList.contains('hidden')) {
         toggleHidden(sprintDropdown);
@@ -618,7 +650,6 @@ export async function renderDashBoardTasks() {
         toggleHidden(addToSprintButton);
       }
     });
-
   } catch (error) {
     console.error(error.message);
   }
@@ -765,7 +796,9 @@ async function handleAddTaskFromBacklogToSprint(dropdownEl) {
   });
 
   console.log(dropdownEl.dataset.id, selectedRows);
-  await SprintService.addTasksToSprint(dropdownEl.dataset.id, { tasks: selectedRows });
+  await SprintService.addTasksToSprint(dropdownEl.dataset.id, {
+    tasks: selectedRows,
+  });
   await renderDashBoardTasks();
 }
 

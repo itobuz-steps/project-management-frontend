@@ -1,7 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
 @import 'tailwindcss';
 
 @theme {
   --breakpoint-xs: 25rem;
+
+  --color-primary-50: var(--color-indigo-50);
+  --color-primary-100: var(--color-indigo-100);
+  --color-primary-200: var(--color-indigo-200);
+  --color-primary-300: var(--color-indigo-300);
+  --color-primary-400: var(--color-indigo-400);
+  --color-primary-500: var(--color-indigo-500);
+  --color-primary-600: var(--color-indigo-600);
+  --color-primary-700: var(--color-indigo-700);
+  --color-primary-800: var(--color-indigo-800);
+  --color-primary-900: var(--color-indigo-900);
 }
 
 .libre-baskerville-regular {
@@ -20,4 +33,28 @@
   font-family: 'Libre Baskerville', serif;
   font-weight: 400;
   font-style: italic;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  font-optical-sizing: auto;
+}
+
+p,
+h4,
+div,
+table {
+  font-size: 14px;
+}
+
+h2 {
+  font-size: 14px;
+}
+
+h1 {
+  font-size: 20px;
+}
+
+.inner-shadow-lg {
+  box-shadow: inset 0 0 3px #bbbbbb;
 }
