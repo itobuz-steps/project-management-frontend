@@ -1074,7 +1074,7 @@
                     for="attachments"
                     class="block mb-2 text-sm font-medium text-black"
                   >
-                    Enter files
+                    Enter files (max 5)
                   </label>
 
                   <label
@@ -1093,7 +1093,7 @@
                     name="attachments"
                     id="attachments"
                     class="hidden"
-                    accept=".jpeg,.png"
+                    accept="*/*"
                     multiple
                   />
                 </div>
@@ -1646,7 +1646,7 @@
 
     <div
       id="confirmationModal"
-      class="modal fixed z-41 flex justify-center items-center hidden right-0 left-0 top-[40%] mx-auto w-fit"
+      class="modal fixed z-100 flex justify-center items-center hidden right-0 left-0 top-[40%] mx-auto w-fit"
     >
       <div class="bg-gray-200 p-6 rounded-lg shadow-xl w-70 md:w-96">
         <h2 id="confirmModalMessage" class="text-lg font-semibold mb-4"></h2>

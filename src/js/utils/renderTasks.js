@@ -39,7 +39,6 @@ async function createTaskList(task, type, projectType, sprint) {
 
   tr.classList =
     'bg-white border-b border-gray-500 hover:bg-gray-100 whitespace-nowrap';
-  console.log(task._id);
   tr.dataset.id = task._id;
   tr.innerHTML = `
     <td class="w-4 p-4 ${ifSprint} ${ifKanban}">
@@ -385,7 +384,9 @@ async function renderSprintTasks(sprint, sprintTasks, projectType) {
   const sprintTaskBody = document.getElementById(`${sprint.key}-body`);
   for (const taskId of sprintTasks) {
     const task = await TaskService.getTaskById(taskId);
-    promiseArray.push(createTaskList(task.data.result, '', projectType, sprint));
+    promiseArray.push(
+      createTaskList(task.data.result, '', projectType, sprint)
+    );
   }
   const allTrs = await Promise.all(promiseArray);
   console.log(sprint);
@@ -393,11 +394,18 @@ async function renderSprintTasks(sprint, sprintTasks, projectType) {
   addDragEvent(sprintTaskBody, allTrs, sprint);
 }
 
-async function renderBacklogTasks(backlogBody, backlogTasks, addToSprintButton, projectType) {
+async function renderBacklogTasks(
+  backlogBody,
+  backlogTasks,
+  addToSprintButton,
+  projectType
+) {
   let promiseArray = [];
   for (const taskId of backlogTasks) {
     const task = await TaskService.getTaskById(taskId);
-    promiseArray.push(createTaskList(task.data.result, 'backlog', projectType, ''));
+    promiseArray.push(
+      createTaskList(task.data.result, 'backlog', projectType, '')
+    );
   }
   const allTrs = await Promise.all(promiseArray);
 
@@ -410,7 +418,6 @@ async function renderBacklogTasks(backlogBody, backlogTasks, addToSprintButton, 
     });
   });
   addDragEvent(document.getElementById('backlog-body'), allTrs, '');
-
 }
 
 export async function renderDashBoardTasks() {
@@ -427,10 +434,14 @@ export async function renderDashBoardTasks() {
     const allSprintTasks = [];
     sprints.result.forEach((sprint) => allSprintTasks.push(...sprint.tasks));
 
-    const backlogTasks = allTasks.filter((task) => !allSprintTasks.includes(task));
+    const backlogTasks = allTasks.filter(
+      (task) => !allSprintTasks.includes(task)
+    );
     console.log({ allTasks, allSprintTasks, backlogTasks });
 
-    const currentSprints = sprints.result.filter((sprint) => !sprint.isCompleted);
+    const currentSprints = sprints.result.filter(
+      (sprint) => !sprint.isCompleted
+    );
     console.log(currentSprints, sprints);
 
     currentSprints.forEach(async (sprint) => {
@@ -441,9 +452,13 @@ export async function renderDashBoardTasks() {
       dropdownEvent(sprint);
 
       if (!sprintTasks.length) {
-        document.getElementById(`${sprint.key}-empty-message`).classList.remove('hidden');
+        document
+          .getElementById(`${sprint.key}-empty-message`)
+          .classList.remove('hidden');
       } else {
-        document.getElementById(`${sprint.key}-empty-message`).classList.add('hidden');
+        document
+          .getElementById(`${sprint.key}-empty-message`)
+          .classList.add('hidden');
         if (project.result.projectType === 'kanban') {
           await renderSprintTasks(sprint, sprintTasks, 'kanban');
         } else {
@@ -453,17 +468,30 @@ export async function renderDashBoardTasks() {
 
       newSprint.addEventListener('dragover', (e) => e.preventDefault());
       newSprint.addEventListener('drop', async (e) => {
-        await addDropEvent(e, newSprint, project.result.projectType, false, sprint);
+        await addDropEvent(
+          e,
+          newSprint,
+          project.result.projectType,
+          false,
+          sprint
+        );
       });
-
 
       await handleStartSprint(sprint);
       if (sprint.dueDate) {
-        toggleHidden(document.getElementById(`${sprint.key}-sprint-start-button`));
-        toggleHidden(document.getElementById(`${sprint.key}-sprint-complete-button`));
+        toggleHidden(
+          document.getElementById(`${sprint.key}-sprint-start-button`)
+        );
+        toggleHidden(
+          document.getElementById(`${sprint.key}-sprint-complete-button`)
+        );
 
-        const completeSprintButton = document.getElementById(`${sprint.key}-sprint-complete-button`);
-        const dueDatePreview = document.getElementById(`${sprint.key}-due-date-preview`);
+        const completeSprintButton = document.getElementById(
+          `${sprint.key}-sprint-complete-button`
+        );
+        const dueDatePreview = document.getElementById(
+          `${sprint.key}-due-date-preview`
+        );
 
         dueDatePreview.innerText = new Date(
           sprint.dueDate
@@ -497,20 +525,38 @@ export async function renderDashBoardTasks() {
     backlogTable.addEventListener('dragover', (e) => e.preventDefault());
     backlogTable.addEventListener('drop', async (e) => {
       dropdownEvent();
-      await addDropEvent(e, backlogTable, 'project.result.projectType', true, '');
+      await addDropEvent(
+        e,
+        backlogTable,
+        'project.result.projectType',
+        true,
+        ''
+      );
     });
 
     const addToSprintButton = document.getElementById('add-to-sprint-button');
     const backlogBody = document.getElementById('backlog-body');
-    const backlogEmptyMessage = document.getElementById('backlog-empty-message');
+    const backlogEmptyMessage = document.getElementById(
+      'backlog-empty-message'
+    );
     if (!backlogTasks.length) {
       backlogEmptyMessage.classList.remove('hidden');
     } else {
       backlogEmptyMessage.classList.add('hidden');
       if (project.result.projectType === 'kanban') {
-        await renderBacklogTasks(backlogBody, backlogTasks, addToSprintButton, 'kanban');
+        await renderBacklogTasks(
+          backlogBody,
+          backlogTasks,
+          addToSprintButton,
+          'kanban'
+        );
       } else {
-        await renderBacklogTasks(backlogBody, backlogTasks, addToSprintButton, '');
+        await renderBacklogTasks(
+          backlogBody,
+          backlogTasks,
+          addToSprintButton,
+          ''
+        );
       }
     }
 
@@ -529,7 +575,8 @@ export async function renderDashBoardTasks() {
     const createSprintButton = document.getElementById('create-sprint-button');
     const sprintForm = document.getElementById('sprint-creation-form');
     const sprintCreateCloseSvg = document.getElementById('sprint-close-svg');
-    const sprintCreateSubmitButton = document.getElementById('sprint-form-button');
+    const sprintCreateSubmitButton =
+      document.getElementById('sprint-form-button');
     const storyPointInput = document.getElementById('sprint-sp-input');
 
     function callCreateSprint() {
@@ -567,7 +614,11 @@ export async function renderDashBoardTasks() {
     });
 
     document.addEventListener('click', (e) => {
-      if (sprintDropdown.contains(e.target) || addToSprintButton.contains(e.target)) return;
+      if (
+        sprintDropdown.contains(e.target) ||
+        addToSprintButton.contains(e.target)
+      )
+        return;
 
       if (!sprintDropdown.classList.contains('hidden')) {
         toggleHidden(sprintDropdown);
@@ -581,7 +632,6 @@ export async function renderDashBoardTasks() {
         toggleHidden(addToSprintButton);
       }
     });
-
   } catch (error) {
     console.error(error.message);
   }
@@ -727,36 +777,46 @@ async function handleAddTaskFromBacklogToSprint(dropdownEl) {
   });
 
   console.log(dropdownEl.dataset.id, selectedRows);
-  await SprintService.addTasksToSprint(dropdownEl.dataset.id, { tasks: selectedRows });
+  await SprintService.addTasksToSprint(dropdownEl.dataset.id, {
+    tasks: selectedRows,
+  });
   await renderDashBoardTasks();
 }
 
 function checkIfEmpty() {
-  const tableBodyEl = document.querySelectorAll(".backlog table tbody");
+  const tableBodyEl = document.querySelectorAll('.backlog table tbody');
   tableBodyEl.forEach((tb) => {
     const sprintId = tb.dataset.id;
-    const emptyMessageEl = document.querySelector(`.empty-message[data-id="${sprintId}"]`);
+    const emptyMessageEl = document.querySelector(
+      `.empty-message[data-id="${sprintId}"]`
+    );
 
     if (tb.childElementCount > 0) {
-      emptyMessageEl.classList.add("hidden");
+      emptyMessageEl.classList.add('hidden');
       return;
     }
 
     console.log(tableBodyEl, emptyMessageEl);
 
-    emptyMessageEl.classList.remove("hidden");
+    emptyMessageEl.classList.remove('hidden');
   });
-
 }
 
-async function addDropEvent(e, parentContainer, projectType, ifBacklog, sprint) {
+async function addDropEvent(
+  e,
+  parentContainer,
+  projectType,
+  ifBacklog,
+  sprint
+) {
   e.preventDefault();
   console.log(e.target);
   const taskId = e.dataTransfer.getData('taskId');
   const droppedSprintFrom = JSON.parse(e.dataTransfer.getData('sprint'));
-  const elementKey = (ifBacklog) ? 'backlog' : droppedSprintFrom.key;
+  const elementKey = ifBacklog ? 'backlog' : droppedSprintFrom.key;
 
-  if (parentContainer.querySelector(`[data-id="${taskId}"]`)) { // for preventing drop in same location
+  if (parentContainer.querySelector(`[data-id="${taskId}"]`)) {
+    // for preventing drop in same location
     return;
   }
 
@@ -769,37 +829,50 @@ async function addDropEvent(e, parentContainer, projectType, ifBacklog, sprint) 
 
   let droppedTask;
   if (projectType === 'kanban') {
-    droppedTask = (ifBacklog) ? await createTaskList(task.data.result, 'backlog', projectType, '')
+    droppedTask = ifBacklog
+      ? await createTaskList(task.data.result, 'backlog', projectType, '')
       : await createTaskList(task.data.result, '', 'kanban', sprint);
     addDragEvent(parentContainer, [droppedTask], '');
   } else {
-    droppedTask = (ifBacklog) ? await createTaskList(task.data.result, 'backlog', projectType, '')
+    droppedTask = ifBacklog
+      ? await createTaskList(task.data.result, 'backlog', projectType, '')
       : await createTaskList(task.data.result, '', '', sprint);
     addDragEvent(parentContainer, [droppedTask], sprint);
   }
 
-  parentContainer.querySelector(`#${elementKey}-body`) ? parentContainer.querySelector(`#${elementKey}-body`).appendChild(droppedTask)
-    : parentContainer.querySelector(`#${sprint.key}-body`).appendChild(droppedTask);
+  parentContainer.querySelector(`#${elementKey}-body`)
+    ? parentContainer
+        .querySelector(`#${elementKey}-body`)
+        .appendChild(droppedTask)
+    : parentContainer
+        .querySelector(`#${sprint.key}-body`)
+        .appendChild(droppedTask);
 
   if (ifBacklog) {
-
-    SprintService.removeTaskFromSprint(droppedSprintFrom._id, { task: taskId }).catch((err) => {
+    SprintService.removeTaskFromSprint(droppedSprintFrom._id, {
+      task: taskId,
+    }).catch((err) => {
       console.error('Failed to update sprint tasks', err);
     });
   } else {
-
     if (droppedSprintFrom) {
-      SprintService.removeTaskFromSprint(droppedSprintFrom._id, { task: taskId }).catch((err) => {
+      SprintService.removeTaskFromSprint(droppedSprintFrom._id, {
+        task: taskId,
+      }).catch((err) => {
         console.error('Failed to update sprint tasks', err);
       });
 
-      SprintService.addTasksToSprint(sprint._id, { tasks: [taskId] }).catch((err) => {
-        console.error('Failed to update sprint tasks', err);
-      });
+      SprintService.addTasksToSprint(sprint._id, { tasks: [taskId] }).catch(
+        (err) => {
+          console.error('Failed to update sprint tasks', err);
+        }
+      );
     } else {
-      SprintService.addTasksToSprint(sprint._id, { tasks: [taskId] }).catch((err) => {
-        console.error('Failed to update sprint tasks', err);
-      });
+      SprintService.addTasksToSprint(sprint._id, { tasks: [taskId] }).catch(
+        (err) => {
+          console.error('Failed to update sprint tasks', err);
+        }
+      );
     }
   }
   checkIfEmpty();
@@ -813,7 +886,8 @@ function addDragEvent(parentElement, allTrs, sprint) {
     tr.addEventListener('dragstart', (e) => {
       e.dataTransfer.setData('taskId', tr.dataset.id);
 
-      (sprint) ? e.dataTransfer.setData('sprint', JSON.stringify(sprint))
+      sprint
+        ? e.dataTransfer.setData('sprint', JSON.stringify(sprint))
         : e.dataTransfer.setData('sprint', JSON.stringify(''));
 
       e.dataTransfer.effectAllowed = 'move';

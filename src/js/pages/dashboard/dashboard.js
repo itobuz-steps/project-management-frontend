@@ -143,8 +143,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
     const tasks = columns[column] || [];
     tasks.forEach((task) => {
       filteredTasks.push(task);
-      console.log(task._id);
-
+      console.log('each task', task.attachments);
       let isDone = '';
       if (task.status === 'done') {
         isDone = 'line-through text-gray-400';
@@ -164,8 +163,14 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         'task flex flex-col max-w-sm p-4 bg-white rounded-lg shadow-md text-black gap-4 relative cursor-grab';
       taskEl.innerHTML = `
         <div class="card-header flex justify-between items-center">
-          <p id="${task.title}-taskId" class="task-title text-lg border border-transparent rounded-lg font-medium hover:border-gray-400 cursor-pointer ${isDone}">${task.title
-        }</p>
+          <p id="${
+            task.title
+          }-taskId" class="task-title text-lg border border-transparent rounded-lg font-medium hover:border-gray-400 cursor-pointer ${isDone}">${
+        task.title
+      }</p>
+
+      <a id="attachmentLogo" class="hidden" style="cursor:pointer;">📎</a>
+
             <div class="menu-button flex flex-row gap-2 justify-between">
               <button class="edit-btn w-full p-1 hover:bg-gray-200">
                 <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -182,25 +187,31 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         </div>
         <div class="card-footer flex justify-between items-center text-sm text-gray-400">
           <div class="flex items-center gap-2">
-            <span class="type-tag bg-green-600 text-white text-xs font-semibold p-1 rounded-sm">${task.key
-        }</span>
+            <span class="type-tag bg-green-600 text-white text-xs font-semibold p-1 rounded-sm">${
+              task.key
+            }</span>
             <select class="type-selector text-sm border border-black-300 rounded text-black focus:outline-none">
-              <option value="story" ${task.type === 'story' ? 'selected' : ''
-        }>Story</option>
-              <option value="task" ${task.type === 'task' ? 'selected' : ''
-        }>Task</option>
-              <option value="bug" ${task.type === 'bug' ? 'selected' : ''
-        }>Bug</option>
+              <option value="story" ${
+                task.type === 'story' ? 'selected' : ''
+              }>Story</option>
+              <option value="task" ${
+                task.type === 'task' ? 'selected' : ''
+              }>Task</option>
+              <option value="bug" ${
+                task.type === 'bug' ? 'selected' : ''
+              }>Bug</option>
             </select>
           </div>
           <div class="flex items-center">
             <span class="user-avatar cursor-pointer w-8 h-8 text-white font-semibold rounded-full bg-blue-50 flex items-center justify-center">
-              <img src="${assignee?.profileImage
-          ? 'http://localhost:3001/uploads/profile/' +
-          assignee.profileImage
-          : '../../../assets/img/profile.png'
-        }" class="w-8 h-8 object-cover" title="${assignee?.name || 'Unassigned'
-        }"/>
+              <img src="${
+                assignee?.profileImage
+                  ? 'http://localhost:3001/uploads/profile/' +
+                    assignee.profileImage
+                  : '../../../assets/img/profile.png'
+              }" class="w-8 h-8 object-cover" title="${
+        assignee?.name || 'Unassigned'
+      }"/>
             </span>
             <div class="avatar-dropdown hidden absolute top-20 right-10 rounded-2xl">
               <ul class="assignee-list text-sm text-gray-700 relative z-1 bg-slate-200 rounded-2xl"></ul>
@@ -208,6 +219,19 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
           </div>
         </div>
       `;
+
+      //tasks attachment show
+
+      const attachmentLogo = taskEl.querySelector('#attachmentLogo');
+
+      if (task.attachments.length > 0) {
+        attachmentLogo.classList.remove('hidden');
+      }
+
+      attachmentLogo.addEventListener('click', () => {
+        const fileUrl = `http://localhost:3001/uploads/attachments/${task.attachments}`;
+        window.open(fileUrl, '_blank');
+      });
 
       // add drop down upon clicking the image
 
@@ -362,7 +386,6 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
     const taskList = columnEl.querySelector('#task-list');
 
     taskList.addEventListener('dragover', (e) => e.preventDefault());
-    console.log(taskList);
     taskList.addEventListener('drop', async (e) => {
       e.preventDefault();
       const taskId = e.dataTransfer.getData('taskId');
@@ -372,8 +395,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
       if (column === lastColumn) {
         taskTitle.classList.add('line-through', 'text-gray-400');
-      }
-      else {
+      } else {
         taskTitle.classList.remove('line-through', 'text-gray-400');
       }
       taskList.appendChild(taskEl);
@@ -400,7 +422,11 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
   if (project.projectType === 'kanban') {
     await renderTasksList(filteredTasks, 'kanban', '');
   } else {
-    await renderTasksList(filteredTasks, '', currentSprint?.result ? currentSprint.result : '');
+    await renderTasksList(
+      filteredTasks,
+      '',
+      currentSprint?.result ? currentSprint.result : ''
+    );
   }
 }
 
