@@ -166,8 +166,10 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
           <p id="${
             task.title
           }-taskId" class="task-title text-lg border border-transparent rounded-lg font-medium hover:border-gray-400 cursor-pointer ${isDone}">${
-        task.title
-      }</p>
+            task.title
+          }</p>
+           <p id="attachmentLogo" class="hidden">📎</p>
+
             <div class="menu-button flex flex-row gap-2 justify-between">
               <button class="edit-btn w-full p-1 hover:bg-gray-200">
                 <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -212,8 +214,8 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
                     assignee.profileImage
                   : '../../../assets/img/profile.png'
               }" class="w-8 h-8 object-cover" title="${
-        assignee?.name || 'Unassigned'
-      }"/>
+                assignee?.name || 'Unassigned'
+              }"/>
             </span>
             <div class="avatar-dropdown hidden absolute top-20 right-10 rounded-2xl">
               <ul class="assignee-list text-sm text-gray-700 relative z-1 bg-slate-200 rounded-2xl"></ul>
@@ -221,6 +223,13 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
           </div>
         </div>
       `;
+
+      const attachmentLogo = taskEl.querySelector('#attachmentLogo');
+
+      if (task.attachments.length) {
+        attachmentLogo.classList.remove('hidden');
+      }
+
       // add drop down upon clicking the image
 
       const userAvatar = taskEl.querySelector('.user-avatar');
@@ -233,9 +242,8 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
       async function populateAvatarDropdown(dropdownList) {
         try {
-          const response = await projectService.getProjectMembers(
-            currentProject
-          );
+          const response =
+            await projectService.getProjectMembers(currentProject);
           activeProjectMembers = response.result;
 
           dropdownList.innerHTML = '';
