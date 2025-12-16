@@ -177,7 +177,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
               </button>
               <button class="delete-btn w-full p-1 hover:bg-red-200">
                 <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="hover:fill-red-200 transition duration-300">
-<rect width="24" height="24" fill="red-400"/>
+<rect width="20" height="20" fill="red-400"/>
 <path d="M5 7.5H19L18 21H6L5 7.5Z" stroke="#000000" stroke-linejoin="round"/>
 <path d="M15.5 9.5L15 19" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
 <path d="M12 9.5V19" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
