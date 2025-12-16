@@ -14,18 +14,25 @@ const createModalAssigneeDropdown = document.getElementById(
 const input = document.getElementById('attachments');
 const fileName = document.getElementById('file-name');
 const taskForm = document.getElementById('task-form');
+const inputFiles = new DataTransfer();
 
 closeTaskModal.addEventListener('click', () => {
   createTaskModal.classList.add('hidden');
 });
 
 input.addEventListener('change', () => {
+  for (const file of input.files) {
+    inputFiles.items.add(file);
+  }
+
+  input.files = inputFiles.files;
+
   if (input.files.length > 0) {
     fileName.textContent = Array.from(input.files)
       .map((file) => file.name)
       .join(', ');
   } else {
-    fileName.textContent = 'No Files Chosen';
+    fileName.textContent = 'No file chosen';
   }
 });
 
@@ -33,6 +40,7 @@ taskForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   let dateValue;
+
   if (document.getElementById('dueDate').value === '1999-10-10') {
     dateValue = new Date().toLocaleDateString();
 
@@ -81,7 +89,7 @@ taskForm.addEventListener('submit', async (e) => {
         : document.getElementById('create-modal-assignee').value,
     attachments: input.files,
   };
-  console.log('input file array', Array.from(input.files));
+
   try {
     await taskService.createTask(task);
 
