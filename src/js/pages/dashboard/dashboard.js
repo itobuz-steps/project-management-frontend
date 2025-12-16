@@ -52,25 +52,28 @@ export function dropdownEvent(sprint = {}) {
 const backlogBtn = document.getElementById('backlog-li');
 const backlogView = document.getElementById('backlog-view');
 
-backlogBtn.addEventListener('click', () => {
+backlogBtn.addEventListener('click', async () => {
   removeActive(backlogBtn);
   hideAll(backlogView);
+  await renderDashBoardTasks();
 });
 
 const boardBtn = document.getElementById('board-li');
 const boardView = document.getElementById('board-view');
 
-boardBtn.addEventListener('click', () => {
+boardBtn.addEventListener('click', async () => {
   removeActive(boardBtn);
   hideAll(boardView);
+  await renderBoard(localStorage.getItem('selectedProject'));
 });
 
 const listBtn = document.getElementById('list-li');
 const listView = document.getElementById('list-view');
 
-listBtn.addEventListener('click', () => {
+listBtn.addEventListener('click', async () => {
   removeActive(listBtn);
   hideAll(listView);
+  await renderBoard(localStorage.getItem('selectedProject'));
 });
 
 async function renderDashboard(project) {
@@ -429,4 +432,4 @@ setupNotification();
 setupNavbar();
 loadProjectMembers(localStorage.getItem('selectedProject'));
 renderBoard(localStorage.getItem('selectedProject'));
-renderDashBoardTasks();
+// renderDashBoardTasks();

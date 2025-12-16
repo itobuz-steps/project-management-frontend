@@ -391,14 +391,18 @@ async function renderSprintTasks(sprint, sprintTasks, projectType) {
   console.log(sprint);
 
   addDragEvent(sprintTaskBody, allTrs, sprint);
+  checkIfEmpty();
 }
 
-async function renderBacklogTasks(backlogBody, backlogTasks, addToSprintButton, projectType) {
+async function renderBacklogTasks(backlogBody, backlogTasks, addToSprintButton, project) {
   let promiseArray = [];
   for (const taskId of backlogTasks) {
     const task = await TaskService.getTaskById(taskId);
-    promiseArray.push(createTaskList(task.data.result, 'backlog', projectType, ''));
+    if (task.data.result.status !== project.columns[project.columns.length - 1]) {
+      promiseArray.push(createTaskList(task.data.result, 'backlog', project.projectType, ''));
+    }
   }
+
   const allTrs = await Promise.all(promiseArray);
 
   allTrs.forEach((tr) => {
@@ -410,7 +414,7 @@ async function renderBacklogTasks(backlogBody, backlogTasks, addToSprintButton, 
     });
   });
   addDragEvent(document.getElementById('backlog-body'), allTrs, '');
-
+  checkIfEmpty();
 }
 
 export async function renderDashBoardTasks() {
@@ -428,7 +432,9 @@ export async function renderDashBoardTasks() {
     sprints.result.forEach((sprint) => allSprintTasks.push(...sprint.tasks));
 
     const backlogTasks = allTasks.filter((task) => !allSprintTasks.includes(task));
-    console.log({ allTasks, allSprintTasks, backlogTasks });
+    const incompleteBacklogTasks = backlogTasks.filter((task) => task.status !== project.result.columns[project.result.columns.length - 1]);
+
+    console.log({ allTasks, allSprintTasks, backlogTasks, incompleteBacklogTasks });
 
     const currentSprints = sprints.result.filter((sprint) => !sprint.isCompleted);
     console.log(currentSprints, sprints);
@@ -456,7 +462,6 @@ export async function renderDashBoardTasks() {
         await addDropEvent(e, newSprint, project.result.projectType, false, sprint);
       });
 
-
       await handleStartSprint(sprint);
       if (sprint.dueDate) {
         toggleHidden(document.getElementById(`${sprint.key}-sprint-start-button`));
@@ -468,6 +473,7 @@ export async function renderDashBoardTasks() {
         dueDatePreview.innerText = new Date(
           sprint.dueDate
         ).toLocaleDateString();
+
         const response = await projectService.updateProject(projectId, {
           currentSprint: sprint._id,
         });
@@ -503,15 +509,13 @@ export async function renderDashBoardTasks() {
     const addToSprintButton = document.getElementById('add-to-sprint-button');
     const backlogBody = document.getElementById('backlog-body');
     const backlogEmptyMessage = document.getElementById('backlog-empty-message');
-    if (!backlogTasks.length) {
+
+    if (!incompleteBacklogTasks.length) {
       backlogEmptyMessage.classList.remove('hidden');
     } else {
       backlogEmptyMessage.classList.add('hidden');
-      if (project.result.projectType === 'kanban') {
-        await renderBacklogTasks(backlogBody, backlogTasks, addToSprintButton, 'kanban');
-      } else {
-        await renderBacklogTasks(backlogBody, backlogTasks, addToSprintButton, '');
-      }
+
+      await renderBacklogTasks(backlogBody, incompleteBacklogTasks, addToSprintButton, project.result);
     }
 
     backlogBody.addEventListener('change', () => {
@@ -624,30 +628,28 @@ function dropdownEvent(sprint = {}) {
 async function handleCompleteSprint(sprintId, project) {
   const sprint = await SprintService.getSprintById(sprintId);
   console.log(sprint);
-  await SprintService.updateSprint(sprintId, { isCompleted: true });
+
+  let completedTasks = [];
+  sprint.result.tasks.forEach((task) => {
+    if (task.status === project.columns[project.columns.length - 1]) {
+      completedTasks.push(task);
+    }
+  });
+
+  await SprintService.updateSprint(sprintId, { isCompleted: true, tasks: [] });
   await projectService.updateProject(project._id, { currentSprint: null });
   await renderDashBoardTasks();
 }
 
 async function handleStartSprint(sprint) {
-  const startSprintButton = document.getElementById(
-    `${sprint.key}-sprint-start-button`
-  );
-  const sprintStartCloseSvg = document.getElementById(
-    `${sprint.key}-start-close-svg`
-  );
+  const startSprintButton = document.getElementById(`${sprint.key}-sprint-start-button`);
+  const sprintStartCloseSvg = document.getElementById(`${sprint.key}-start-close-svg`);
   const startSprintForm = document.getElementById(`${sprint.key}-start-form`);
   const dueDateInput = document.getElementById(`${sprint.key}-due-date`);
-  const startSprintSubmitButton = document.getElementById(
-    `${sprint.key}-start-form-button`
-  );
-  const completeSprintButton = document.getElementById(
-    `${sprint.key}-sprint-complete-button`
-  );
+  const startSprintSubmitButton = document.getElementById(`${sprint.key}-start-form-button`);
+  const completeSprintButton = document.getElementById(`${sprint.key}-sprint-complete-button`);
 
-  const project = await projectService.getProjectById(
-    localStorage.getItem('selectedProject')
-  );
+  const project = await projectService.getProjectById(localStorage.getItem('selectedProject'));
 
   startSprintButton.addEventListener('click', toggleStartSprintForm);
   sprintStartCloseSvg.addEventListener('click', toggleStartSprintForm);
@@ -664,12 +666,15 @@ async function handleStartSprint(sprint) {
 
   async function startSprintFunction() {
     if (project.result.currentSprint) {
-      console.log('A sprint is already is running');
+      console.log('A sprint is already running');
       toggleStartSprintForm();
     } else {
       sprint.dueDate = dueDateInput.value;
       const response = await SprintService.updateSprint(sprint._id, sprint);
       await checkIfSprintStarted(response.result);
+      setTimeout(() => {
+        renderDashBoardTasks();
+      }, 300);
     }
   }
 
@@ -678,9 +683,7 @@ async function handleStartSprint(sprint) {
       toggleHidden(startSprintForm);
       toggleHidden(completeSprintButton);
 
-      const response = await projectService.updateProject(project.result._id, {
-        currentSprint: sprint._id,
-      });
+      const response = await projectService.updateProject(project.result._id, { currentSprint: sprint._id, });
 
       completeSprintButton.addEventListener('click', async (e) => {
         e.preventDefault();
@@ -737,21 +740,18 @@ function checkIfEmpty() {
     const sprintId = tb.dataset.id;
     const emptyMessageEl = document.querySelector(`.empty-message[data-id="${sprintId}"]`);
 
-    if (tb.childElementCount > 0) {
+    if (tb.children.length > 0) {
       emptyMessageEl.classList.add("hidden");
       return;
     }
 
     console.log(tableBodyEl, emptyMessageEl);
-
     emptyMessageEl.classList.remove("hidden");
   });
-
 }
 
 async function addDropEvent(e, parentContainer, projectType, ifBacklog, sprint) {
   e.preventDefault();
-  console.log(e.target);
   const taskId = e.dataTransfer.getData('taskId');
   const droppedSprintFrom = JSON.parse(e.dataTransfer.getData('sprint'));
   const elementKey = (ifBacklog) ? 'backlog' : droppedSprintFrom.key;
