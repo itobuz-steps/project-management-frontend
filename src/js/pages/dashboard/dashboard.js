@@ -166,8 +166,10 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
           <p id="${
             task.title
           }-taskId" class="task-title text-lg border border-transparent rounded-lg font-medium hover:border-gray-400 cursor-pointer ${isDone}">${
-        task.title
-      }</p>
+            task.title
+          }</p>
+           <p id="attachmentLogo" class="hidden">📎</p>
+
             <div class="menu-button flex flex-row gap-2 justify-between">
               <button class="edit-btn w-full p-1 hover:bg-gray-200">
                 <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -176,9 +178,14 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
                 </svg>
               </button>
               <button class="delete-btn w-full p-1 hover:bg-red-200">
-                <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z" fill="red"/>
-                </svg>
+                <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="hover:fill-red-200 transition duration-300">
+<rect width="20" height="20" fill="red-400"/>
+<path d="M5 7.5H19L18 21H6L5 7.5Z" stroke="#000000" stroke-linejoin="round"/>
+<path d="M15.5 9.5L15 19" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M12 9.5V19" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M8.5 9.5L9 19" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M16 5H19C20.1046 5 21 5.89543 21 7V7.5H3V7C3 5.89543 3.89543 5 5 5H8M16 5L15 3H9L8 5M16 5H8" stroke="#000000" stroke-linejoin="round"/>
+</svg>
               </button>
             </div>
         </div>
@@ -207,8 +214,8 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
                     assignee.profileImage
                   : '../../../assets/img/profile.png'
               }" class="w-8 h-8 object-cover" title="${
-        assignee?.name || 'Unassigned'
-      }"/>
+                assignee?.name || 'Unassigned'
+              }"/>
             </span>
             <div class="avatar-dropdown hidden absolute top-20 right-10 rounded-2xl">
               <ul class="assignee-list text-sm text-gray-700 relative z-1 bg-slate-200 rounded-2xl"></ul>
@@ -216,6 +223,13 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
           </div>
         </div>
       `;
+
+      const attachmentLogo = taskEl.querySelector('#attachmentLogo');
+
+      if (task.attachments.length) {
+        attachmentLogo.classList.remove('hidden');
+      }
+
       // add drop down upon clicking the image
 
       const userAvatar = taskEl.querySelector('.user-avatar');
@@ -228,9 +242,8 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
       async function populateAvatarDropdown(dropdownList) {
         try {
-          const response = await projectService.getProjectMembers(
-            currentProject
-          );
+          const response =
+            await projectService.getProjectMembers(currentProject);
           activeProjectMembers = response.result;
 
           dropdownList.innerHTML = '';

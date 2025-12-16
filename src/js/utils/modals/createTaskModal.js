@@ -2,6 +2,7 @@ import { handleModalAssignee, handleModalStatus } from './modal';
 import { renderBoard } from '../../pages/dashboard/dashboard';
 import { renderDashBoardTasks } from '../renderTasks';
 import taskService from '../../services/TaskService';
+import showToast from '../showToast';
 
 const closeTaskModal = document.getElementById('close-task-modal');
 const createTaskModal = document.getElementById('create-task-modal');
@@ -27,10 +28,12 @@ input.addEventListener('change', () => {
 
   input.files = inputFiles.files;
 
-  if (input.files.length > 0) {
+  if (input.files.length > 0 && input.files.length < 6) {
     fileName.textContent = Array.from(input.files)
       .map((file) => file.name)
       .join(', ');
+  } else if (input.files.length >= 6) {
+    showToast('Maximum 5 files you can insert', 'info');
   } else {
     fileName.textContent = 'No file chosen';
   }
