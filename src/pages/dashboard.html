@@ -1588,14 +1588,28 @@
           </div>
         </div>
 
-        <div class="comment-create flex flex-row items-center justify-between">
+        <!-- comment input  -->
+
+        <div
+          class="comment-create flex flex-row items-center justify-between gap-3"
+        >
           <input
             type="text"
             id="commentInput"
             minlength="3"
             placeholder="Enter your Comment"
-            class="rounded-xl border border-[#90e0ef] bg-gray-50 p-3 placeholder-[#03045e]"
+            class="flex-1 rounded-xl border border-[#90e0ef] bg-gray-50 p-3 placeholder-[#03045e] focus:outline-none"
           />
+          <input type="file" id="commentAttachment" class="hidden" />
+
+          <button
+            type="button"
+            id="attachButton"
+            class="flex h-12 w-12 transform items-center justify-center rounded-xl bg-[#90e0ef] text-[#03045e] shadow-md transition-all duration-300 hover:scale-105 hover:bg-[#48cae4] hover:shadow-lg"
+            title="Attach a file"
+          >
+            +
+          </button>
 
           <button
             type="button"
