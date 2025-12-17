@@ -49,7 +49,7 @@ async function createTaskList(task, type, projectType, sprint) {
 
     if (idx == 3) {
       labelEl = /*html*/ `
-      <div class ="bg-gray-100 px-2 py-1 rounded-sm">
+      <div class ="bg-gray-200 px-2 py-1 rounded-sm">
         +${task.tags.length - 3}
       </div>
       `;
