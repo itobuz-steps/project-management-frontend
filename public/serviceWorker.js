@@ -7,3 +7,4 @@ self.addEventListener('push', (e) => {
     body: data.body,
   });
 });
+
