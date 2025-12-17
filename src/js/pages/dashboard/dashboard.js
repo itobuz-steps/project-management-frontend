@@ -132,9 +132,9 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
     const columnEl = document.createElement('div');
     columnEl.innerHTML = /*html*/ `
       <div class="w-72 bg-white rounded-lg shadow-lg shrink-0 h-full overflow-y-auto">
-        <h2 class="text-lg font-semibold sticky top-0 z-10 flex gap-2 px-4 py-2 text-black items-center">
+        <h2 class="text-lg font-semibold sticky top-0 z-10 flex gap-2 px-4 py-2 text-black bg-white shadow-sm items-center">
           ${column.toUpperCase()}
-          <div class="issue-count rounded-full w-5 h-5 text-center text-sm text-black bg-gray-400"></div>
+          <div class="issue-count rounded-full w-5 h-5 text-center text-sm text-black bg-gray-200"></div>
         </h2>
         <div class="flex flex-col gap-3 pb-4 h-96 p-2 " id="task-list"></div>
       </div>

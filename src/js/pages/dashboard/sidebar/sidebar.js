@@ -81,10 +81,12 @@ async function updateUserList() {
       item.dataset.id = user._id;
       item.id = user.name;
       item.innerHTML = /*html*/ `
-    <div class="flex">
+    <div class="flex items-center">
     <img class="aspect-square w-6 h-6 rounded-full mr-3" 
           src="${
-            'http://localhost:3001/uploads/profile/' + user.profileImage
+            user.profileImage
+              ? 'http://localhost:3001/uploads/profile/' + user.profileImage
+              : '../../../assets/img/profile.png'
           }">${user.name}
     </div>
       `;

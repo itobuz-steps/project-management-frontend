@@ -58,3 +58,7 @@ h1 {
 .inner-shadow-lg {
   box-shadow: inset 0 0 3px #bbbbbb;
 }
+
+p.wrapper {
+  font-size: 12px;
+}
