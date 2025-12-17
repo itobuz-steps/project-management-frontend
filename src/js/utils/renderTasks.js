@@ -1,3 +1,4 @@
+import { getFilteredTasks } from '../pages/dashboard/navbar/navbar.js';
 import projectService from '../services/ProjectService.js';
 import SprintService from '../services/SprintService.js';
 import TaskService from '../services/TaskService.js';
@@ -15,13 +16,23 @@ async function createTaskList(task, type, projectType, sprint) {
     ifSprint = ``;
   }
 
+  console.log(sprint);
+
   let ifKanban = '';
   if (projectType === 'kanban') {
     ifKanban = 'hidden';
   }
 
-  const tr = document.createElement('tr');
+  let typeSvg;
+  if (task.type === 'task') {
+    typeSvg = `<svg class="h-4 stroke-blue-800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-labelledby="checkboxIconTitle" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none" color="#000000" > <g id="SVGRepo_bgCarrier" stroke-width="0"></g> <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" ></g> <g id="SVGRepo_iconCarrier"> <title id="checkboxIconTitle"> Checkbox (selected) </title> <rect x="21" y="3" width="18" height="18" rx="1" transform="rotate(90 21 3)" ></rect> <path d="M6.66666 12.6667L9.99999 16L17.3333 8.66669"></path> </g> </svg>`;
+  } else if (task.type === 'story') {
+    typeSvg = `<svg class="h-4" viewBox="-4 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>bookmark</title> <desc>Created with Sketch Beta.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage"> <g id="Icon-Set-Filled" sketch:type="MSLayerGroup" transform="translate(-419.000000, -153.000000)" fill="#00b31e"> <path d="M437,153 L423,153 C420.791,153 419,154.791 419,157 L419,179 C419,181.209 420.791,183 423,183 L430,176 L437,183 C439.209,183 441,181.209 441,179 L441,157 C441,154.791 439.209,153 437,153" id="bookmark" sketch:type="MSShapeGroup"> </path> </g> </g> </g></svg>`;
+  } else {
+    typeSvg = `<svg class="h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M7 14.3333C7 13.0872 7 12.4641 7.26795 12C7.44349 11.696 7.69596 11.4435 8 11.2679C8.4641 11 9.08718 11 10.3333 11H13.6667C14.9128 11 15.5359 11 16 11.2679C16.304 11.4435 16.5565 11.696 16.7321 12C17 12.4641 17 13.0872 17 14.3333V16C17 16.9293 17 17.394 16.9231 17.7804C16.6075 19.3671 15.3671 20.6075 13.7804 20.9231C13.394 21 12.9293 21 12 21C11.0707 21 10.606 21 10.2196 20.9231C8.63288 20.6075 7.39249 19.3671 7.07686 17.7804C7 17.394 7 16.9293 7 16V14.3333Z" fill="#db0000" stroke="#db0000" stroke-width="2"></path> <path d="M9 9C9 8.06812 9 7.60218 9.15224 7.23463C9.35523 6.74458 9.74458 6.35523 10.2346 6.15224C10.6022 6 11.0681 6 12 6C12.9319 6 13.3978 6 13.7654 6.15224C14.2554 6.35523 14.6448 6.74458 14.8478 7.23463C15 7.60218 15 8.06812 15 9V11H9V9Z" fill="#db0000" stroke="#db0000" stroke-width="2"></path> <path d="M12 11V15" stroke="#db0000" stroke-width="2"></path> <path d="M15 3L13 6" stroke="#db0000" stroke-width="2"></path> <path d="M9 3L11 6" stroke="#db0000" stroke-width="2"></path> <path d="M7 16H2" stroke="#db0000" stroke-width="2"></path> <path d="M22 16H17" stroke="#db0000" stroke-width="2"></path> <path d="M20 9V10C20 11.6569 18.6569 13 17 13V13" stroke="#db0000" stroke-width="2"></path> <path d="M20 22V22C20 20.3431 18.6569 19 17 19V19" stroke="#db0000" stroke-width="2"></path> <path d="M4 9V10C4 11.6569 5.34315 13 7 13V13" stroke="#db0000" stroke-width="2"></path> <path d="M4 22V22C4 20.3431 5.34315 19 7 19V19" stroke="#db0000" stroke-width="2"></path> </g></svg>`;
+  }
 
+  const tr = document.createElement('tr');
   const reporter = task.reporter
     ? (await TaskService.getUserDetailsById(task.reporter)).data.result
     : '';
@@ -66,54 +77,21 @@ async function createTaskList(task, type, projectType, sprint) {
 
   tr.classList = ' border-b border-gray-200 whitespace-nowrap  ';
   tr.dataset.id = task._id;
+
   tr.innerHTML = /*html*/ `
-    <td class="w-4 p-4 ${ifSprint} ${ifKanban}">
+    <td class="px-4 py-2 ${ifSprint} ${ifKanban}">
       <div class="flex items-center">
         <input
             id="checkbox-all-search"
             type="checkbox"
-            class="checkboxes w-3.5 h-3.5 text-primary-600 bg-primary-100 border-primary-300 rounded-sm accent-primary-500 focus:ring-primary-600"
+            class="checkboxes w-3.5 h-3.5 text-primary-600 bg-primary-100 border-primary-300 rounded-sm accent-primary-500 focus:ring-primary-600 "
             data-id=${task._id}
         />
       </div>
     </td>
     <td>
     <div class="w-full flex justify-center">
-      <svg
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-labelledby="checkboxIconTitle"
-        stroke="#000000"
-        stroke-width="2.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        fill="none"
-        color="#000000"
-        class="h-4 stroke-gray-800 px-7"
-      >
-        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-        <g
-          id="SVGRepo_tracerCarrier"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        ></g>
-        <g id="SVGRepo_iconCarrier">
-          <title id="checkboxIconTitle">
-            Checkbox (selected)
-          </title>
-          <rect
-            x="21"
-            y="3"
-            width="18"
-            height="18"
-            rx="1"
-            transform="rotate(90 21 3)"
-          ></rect>
-          <path
-            d="M6.66666 12.6667L9.99999 16L17.3333 8.66669"
-          ></path>
-        </g>
-      </svg>
+${typeSvg}
       </div>
     </td>
     <td class="p-2"><p class="wrapper bg-primary-400 text-white px-2 py-1 rounded-sm w-max uppercase font-semibold text-xs">${task.key}</p></td>
@@ -125,9 +103,9 @@ async function createTaskList(task, type, projectType, sprint) {
         <img class="aspect-square w-6 h-6 rounded-full mr-3" 
               src="${assignee.profileImage}">${assignee.name}
       </div>
-      </td>
-    <td class="p-2">${DateTime.fromISO(task.dueDate).toLocaleString(DateTime.DATE_MED)}</td>
-    <td class="p-2"><div class="flex gap-1 text-xs flex-wrap min-w-18">${labelsEl.join('')}</div></td>
+    </td>
+    <td class="p-2 ${new Date(task.dueDate) < Date.now() ? 'text-red-600' : ''}">${DateTime.fromISO(task.dueDate).toLocaleString(DateTime.DATE_MED)}</td>
+    <td class="p-2"><div class="flex gap-1 text-xs min-w-18">${labelsEl.join('')}</div></td>
     <td class="p-2">${DateTime.fromISO(task.createdAt).toLocaleString(DateTime.DATE_MED)}</td>
     <td class="p-2">${DateTime.fromISO(task.updatedAt).toLocaleString(DateTime.DATE_MED)}</td>
     <td class="p-2">
@@ -171,11 +149,11 @@ function createSprintTable(sprint) {
                   </form>
 
 
-                <div class="relative flex justify-between text-left">
-                  <div class="flex flex-col pb-4">
+                <div class="relative flex justify-between items-center text-left bg-gray-50 shadow-sm p-2 rounded-md border border-gray-200">
+                  <div class="flex flex-col md:flex-row">
                     <button
                       type="button"
-                      class="flex items-center w-30 md:w-fit gap-3 rounded-md text-lg font-semibold text-gray-100 hover:text-white cursor-pointer focus:outline-none dropdownButton"
+                      class="flex items-center w-30 md:w-fit gap-3 rounded-md text-lg font-semibold cursor-pointer focus:outline-none dropdownButton"
                       id="dropdownButton-${sprint.key}"
                       aria-expanded="false"
                       aria-haspopup="true"
@@ -196,12 +174,12 @@ function createSprintTable(sprint) {
                           d="M5 7l7 7 7-7"
                         ></path>
                       </svg>
-                      <p class="w-fit">
+                      <p class="text-nowrap">
                       ${sprint.key}
                       </p>
                     </button> 
-                    <div class="flex ml-6 items-center gap-1" >      
-                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 stroke-indigo-300">
+                    <div class="flex ml-5 md:ml-3 items-center gap-1" >      
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 stroke-primary-400">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
                         <g id="SVGRepo_iconCarrier"> 
@@ -209,7 +187,7 @@ function createSprintTable(sprint) {
                           </path> 
                         </g>
                       </svg>
-                    <p id="${sprint.key}-due-date-preview" class="text-sm text-center text-indigo-300 text-[10px] md:text-md font-semibold">
+                    <p id="${sprint.key}-due-date-preview" class="due-date text-xs text-center text-primary-400 font-semibold">
    
                     </p>
                     </div>
@@ -236,29 +214,28 @@ function createSprintTable(sprint) {
                 </div>
 
                 <div
-                  class="dropdown-menu-${sprint.key} relative overflow-x-auto shadow rounded-lg sm:rounded-lg no-scrollbar"
+                  class="dropdown-menu-${sprint.key} relative overflow-x-auto rounded-md border border-gray-200 no-scrollbar my-2"
                 >
-                  <table class="w-full text-sm text-left rtl:text-right">
-                    <thead
-                      class=" uppercase sticky"
-                    >
-                      <tr>
-                        
-                        <th scope="col" class="px-6 py-3">Type</th>
-                        <th scope="col" class="px-6 py-3">Key</th>
-                        <th scope="col" class="px-6 py-3">Summary</th>
-                        <th scope="col" class="px-6 py-3">Status</th>
-                        <th scope="col" class="px-6 py-3">Sprint</th>
-                        <th scope="col" class="px-6 py-3">Assignee</th>
-                        <th scope="col" class="px-4 py-3">Due Date</th>
-                        <th scope="col" class="px-6 py-3">Labels</th>
-                        <th scope="col" class="px-6 py-3">Created</th>
-                        <th scope="col" class="px-6 py-3">Updated</th>
-                        <th scope="col" class="px-6 py-3">Reporter</th>
-                      </tr>
-                    </thead>
-                    <tbody id="${sprint.key}-body" data-id="${sprint._id}"></tbody>
-                  </table>
+                <table class="w-full text-left rtl:text-right">
+                  <thead
+                    class="border-b border-gray-200 bg-gray-100 text-xs text-nowrap uppercase hover:bg-gray-200"
+                  >
+                    <tr>
+                      <th scope="col" class="p-2 text-center">Type</th>
+                      <th scope="col" class="p-2">Key</th>
+                      <th scope="col" class="min-w-48 p-2">Summary</th>
+                      <th scope="col" class="min-w-14 p-2">Status</th>
+                      <th scope="col" class="px-6 py-3">Sprint</th>
+                      <th scope="col" class="min-w-48 p-2">Assignee</th>
+                      <th scope="col" class="p-2">Due Date</th>
+                      <th scope="col" class="min-w-36 p-2">Labels</th>
+                      <th scope="col" class="p-2">Created</th>
+                      <th scope="col" class="p-2">Updated</th>
+                      <th scope="col" class="min-w-36 p-2">Reporter</th>
+                    </tr>
+                  </thead>
+                  <tbody id="${sprint.key}-body" data-id="${sprint._id}"></tbody>
+                </table>
                 </div>
                 <div
                   class="empty-message text-center w-full flex justify-center items-center hidden h-15 border border-dotted rounded-lg hover:border-purple-600 "
@@ -266,6 +243,12 @@ function createSprintTable(sprint) {
                   data-id="${sprint._id}"
                 >
                   Drop tasks here...
+                </div>
+
+                <div class="flex justify-center w-full" id="${sprint.key}-loader">
+                  <svg viewBox="25 25 50 50" class="loader">
+                    <circle r="20" cy="50" cx="50"></circle>
+                  </svg>
                 </div>
  `;
   return sprintContainer;
@@ -297,11 +280,11 @@ function createBacklogTable(projectType) {
                   </form>
 
 
-                <div class="relative flex justify-between text-left items-center">
+               <div class="relative flex justify-between items-center text-left bg-gray-50 shadow-sm p-2 rounded-md border border-gray-200">
                   <div class="flex items-center justify-center">
                     <button
                       type="button"
-                      class="flex items-center justify-center w-30 gap-5 round ed-md px-2 py-2  cursor-pointer focus:outline-none"
+                      class="flex items-center w-30 md:w-fit gap-3 rounded-md font-semibold cursor-pointer focus:outline-none"
                       id="dropdownButton-backlog"
                       aria-expanded="false"
                       aria-haspopup="true"
@@ -365,69 +348,87 @@ function createBacklogTable(projectType) {
                 </div>
 
                 <div
-                  class="dropdown-menu-backlog relative overflow-x-auto shadow rounded-lg sm:rounded-lg"
+                  class="dropdown-menu-backlog relative overflow-x-auto rounded-md border border-gray-200 no-scrollbar my-2"
                 >
-                  <table class="w-full text-sm text-left rtl:text-right">
-                    <thead
-                      class="uppercase border-b sticky"
-                    >
-                      <tr>
-                        <th scope="col" class="p-4 ${ifKanban}">
+                <table class="w-full text-left rtl:text-right">
+                  <thead
+                    class="border-b border-gray-200 bg-gray-100 text-xs text-nowrap uppercase hover:bg-gray-200"
+                  >
+                    <tr>
+                        <th scope="col" class="p-2 ${ifKanban}">
                           <div class="flex items-center">
                             <input
                               id="backlog-checkbox-all"
                               type="checkbox"
-                              class="w-3.5 h-3.5 text-gray-200 bg-gray-100 border-gray-600 rounded-sm accent-gray-200 focus:ring-gray-600"
+                              class="w-3.5 h-3.5 text-primary-600 bg-primary-100 border-primary-300 rounded-sm accent-primary-500 focus:ring-primary-600 m-auto"
                             />
                           </div>
                         </th>
-                        <th scope="col" class="px-6 py-3">Type</th>
-                        <th scope="col" class="px-6 py-3">Key</th>
-                        <th scope="col" class="px-6 py-3">Summary</th>
-                        <th scope="col" class="px-6 py-3">Status</th>
-                        <th scope="col" class="px-6 py-3 ${ifKanban}">Sprint</th>
-                        <th scope="col" class="px-6 py-3">Assignee</th>
-                        <th scope="col" class="px-4 py-3">Due Date</th>
-                        <th scope="col" class="px-6 py-3">Labels</th>
-                        <th scope="col" class="px-6 py-3">Created</th>
-                        <th scope="col" class="px-6 py-3">Updated</th>
-                        <th scope="col" class="px-6 py-3">Reporter</th>
+                       <th scope="col" class="p-2 text-center">Type</th>
+                      <th scope="col" class="p-2">Key</th>
+                      <th scope="col" class="min-w-48 p-2">Summary</th>
+                      <th scope="col" class="min-w-14 p-2">Status</th>
+                      <th scope="col" class="min-w-48 p-2">Assignee</th>
+                      <th scope="col" class="p-2">Due Date</th>
+                      <th scope="col" class="min-w-36 p-2">Labels</th>
+                      <th scope="col" class="p-2">Created</th>
+                      <th scope="col" class="p-2">Updated</th>
+                      <th scope="col" class="min-w-36 p-2">Reporter</th>
                       </tr>
                     </thead>
                     <tbody id="backlog-body" data-id="backlog"></tbody>
                   </table>
                 </div>
                 <div
-                  class="hidden text-center w-full flex justify-center text-gray-400 font-bold p-4 text-lg bg-white/80 backdrop:blur-lg"
+                  class="empty-message hidden text-center w-full flex justify-center text-gray-400 font-bold p-4 text-lg bg-white/80 backdrop:blur-lg"
                   id="backlog-empty-message"
                   data-id="backlog"
                 >
                   Create tasks...
                 </div>
 
+                <div class="flex justify-center w-full" id="backlog-loader">
+                  <svg viewBox="25 25 50 50" class="loader">
+                    <circle r="20" cy="50" cx="50"></circle>
+                  </svg>
+                </div>
   `;
   return backlogContainer;
 }
 
-export async function renderTasksList(tasksArray = [], projectType, sprint) {
-  try {
-    listTableBody.innerHTML = '';
+export async function renderTasksList(projectId, filter, searchInput) {
+  listTableBody.innerHTML = '';
 
-    if (!tasksArray.length) {
-      emptyListContainer.classList.remove('hidden');
-    } else {
-      emptyListContainer.classList.add('hidden');
-      let promiseArray = [];
-      for (const task of tasksArray) {
-        promiseArray.push(createTaskList(task, 'list', projectType, sprint));
-      }
-      const allTrs = await Promise.all(promiseArray);
-      allTrs.forEach((tr) => {
-        listTableBody.append(tr);
-      });
+  const project = (await projectService.getProjectById(projectId)).result;
+
+  const tasksArray = await getFilteredTasks(projectId, filter, searchInput);
+
+  if (!tasksArray.length) {
+    emptyListContainer.classList.remove('hidden');
+  } else {
+    emptyListContainer.classList.add('hidden');
+    let promiseArray = [];
+    for (const task of tasksArray) {
+      promiseArray.push(
+        createTaskList(task, 'list', project.projectType, null)
+      );
     }
-  } catch (error) {
-    console.error(error.message);
+
+    const loader = document.getElementById(`list-loader`);
+    if (loader.classList.contains('hidden')) {
+      loader.classList.remove('hidden');
+    }
+
+    listTableBody.classList.add('hidden');
+
+    const allTrs = await Promise.all(promiseArray);
+
+    loader.classList.add('hidden');
+    listTableBody.classList.remove('hidden');
+
+    allTrs.forEach((tr) => {
+      listTableBody.append(tr);
+    });
   }
 }
 
@@ -440,26 +441,44 @@ async function renderSprintTasks(sprint, sprintTasks, projectType) {
       createTaskList(task.data.result, '', projectType, sprint)
     );
   }
+
+  const loader = document.getElementById(`${sprint.key}-loader`);
+  sprintTaskBody.classList.add('hidden');
+
   const allTrs = await Promise.all(promiseArray);
-  console.log(sprint);
+
+  loader.classList.add('hidden');
+  sprintTaskBody.classList.remove('hidden');
 
   addDragEvent(sprintTaskBody, allTrs, sprint);
+  checkIfEmpty();
 }
 
 async function renderBacklogTasks(
   backlogBody,
   backlogTasks,
   addToSprintButton,
-  projectType
+  project
 ) {
   let promiseArray = [];
   for (const taskId of backlogTasks) {
     const task = await TaskService.getTaskById(taskId);
-    promiseArray.push(
-      createTaskList(task.data.result, 'backlog', projectType, '')
-    );
+    if (
+      task.data.result.status !== project.columns[project.columns.length - 1]
+    ) {
+      promiseArray.push(
+        createTaskList(task.data.result, 'backlog', project.projectType, null)
+      );
+    }
   }
+
+  const loader = document.getElementById('backlog-loader');
+  backlogBody.classList.add('hidden');
+
   const allTrs = await Promise.all(promiseArray);
+
+  loader.classList.add('hidden');
+  backlogBody.classList.remove('hidden');
 
   allTrs.forEach((tr) => {
     const checkbox = tr.querySelector('.checkboxes');
@@ -469,224 +488,216 @@ async function renderBacklogTasks(
       }
     });
   });
-  addDragEvent(document.getElementById('backlog-body'), allTrs, '');
+
+  addDragEvent(backlogBody, allTrs, '');
+  checkIfEmpty();
 }
 
 export async function renderDashBoardTasks() {
-  try {
-    listTableBody.innerHTML = '';
-    sprintBacklogWrapper.innerHTML = '';
-    const projectId = localStorage.getItem('selectedProject');
-    const tasks = await TaskService.getTaskByProjectId(projectId);
-    const project = await projectService.getProjectById(projectId);
-    const allTasks = tasks.data.result.map((task) => task._id);
+  listTableBody.innerHTML = '';
+  sprintBacklogWrapper.innerHTML = '';
+  const projectId = localStorage.getItem('selectedProject');
+  const tasks = await TaskService.getTaskByProjectId(projectId);
+  const project = await projectService.getProjectById(projectId);
+  const allTasks = tasks.data.result.map((task) => task._id);
 
-    const sprints = await SprintService.getAllSprints(projectId);
+  const sprints = await SprintService.getAllSprints(projectId);
 
-    const allSprintTasks = [];
-    sprints.result.forEach((sprint) => allSprintTasks.push(...sprint.tasks));
+  const allSprintTasks = [];
+  sprints.result.forEach((sprint) => allSprintTasks.push(...sprint.tasks));
 
-    const backlogTasks = allTasks.filter(
-      (task) => !allSprintTasks.includes(task)
-    );
-    console.log({ allTasks, allSprintTasks, backlogTasks });
+  const backlogTasks = allTasks.filter(
+    (task) => !allSprintTasks.includes(task)
+  );
+  const incompleteBacklogTasks = backlogTasks.filter(
+    (task) =>
+      task.status !== project.result.columns[project.result.columns.length - 1]
+  );
 
-    const currentSprints = sprints.result.filter(
-      (sprint) => !sprint.isCompleted
-    );
-    console.log(currentSprints, sprints);
+  console.log({
+    allTasks,
+    allSprintTasks,
+    backlogTasks,
+    incompleteBacklogTasks,
+  });
 
-    currentSprints.forEach(async (sprint) => {
-      const newSprint = createSprintTable(sprint);
-      sprintBacklogWrapper.append(newSprint);
-      const sprintTasks = [];
-      sprint.tasks.forEach((task) => sprintTasks.push(task));
-      dropdownEvent(sprint);
+  const currentSprints = sprints.result.filter((sprint) => !sprint.isCompleted);
+  console.log(currentSprints, sprints);
 
-      if (!sprintTasks.length) {
-        document
-          .getElementById(`${sprint.key}-empty-message`)
-          .classList.remove('hidden');
-      } else {
-        document
-          .getElementById(`${sprint.key}-empty-message`)
-          .classList.add('hidden');
-        if (project.result.projectType === 'kanban') {
-          await renderSprintTasks(sprint, sprintTasks, 'kanban');
-        } else {
-          await renderSprintTasks(sprint, sprintTasks, '');
-        }
-      }
+  currentSprints.forEach(async (sprint) => {
+    const newSprint = createSprintTable(sprint);
+    sprintBacklogWrapper.append(newSprint);
+    const sprintTasks = [];
+    sprint.tasks.forEach((task) => sprintTasks.push(task));
+    dropdownEvent(sprint);
 
-      newSprint.addEventListener('dragover', (e) => e.preventDefault());
-      newSprint.addEventListener('drop', async (e) => {
-        await addDropEvent(
-          e,
-          newSprint,
-          project.result.projectType,
-          false,
-          sprint
-        );
-      });
-
-      await handleStartSprint(sprint);
-      if (sprint.dueDate) {
-        toggleHidden(
-          document.getElementById(`${sprint.key}-sprint-start-button`)
-        );
-        toggleHidden(
-          document.getElementById(`${sprint.key}-sprint-complete-button`)
-        );
-
-        const completeSprintButton = document.getElementById(
-          `${sprint.key}-sprint-complete-button`
-        );
-        const dueDatePreview = document.getElementById(
-          `${sprint.key}-due-date-preview`
-        );
-
-        dueDatePreview.innerText = new Date(
-          sprint.dueDate
-        ).toLocaleDateString();
-        const response = await projectService.updateProject(projectId, {
-          currentSprint: sprint._id,
-        });
-
-        completeSprintButton.addEventListener('click', async (e) => {
-          e.preventDefault();
-
-          showConfirmModal(
-            'Are you sure you want to complete this sprint?',
-            async () => {
-              await handleCompleteSprint(sprint._id, response.result);
-            }
-          );
-        });
-      }
-    });
-
-    let backlogTable;
-    if (project.result.projectType === 'kanban') {
-      backlogTable = createBacklogTable('kanban');
-      sprintBacklogWrapper.append(backlogTable);
+    if (!sprintTasks.length) {
+      document
+        .getElementById(`${sprint.key}-empty-message`)
+        .classList.remove('hidden');
     } else {
-      backlogTable = createBacklogTable('');
-      sprintBacklogWrapper.append(backlogTable);
+      document
+        .getElementById(`${sprint.key}-empty-message`)
+        .classList.add('hidden');
+      if (project.result.projectType === 'kanban') {
+        await renderSprintTasks(sprint, sprintTasks, 'kanban');
+      } else {
+        await renderSprintTasks(sprint, sprintTasks, '');
+      }
     }
 
-    backlogTable.addEventListener('dragover', (e) => e.preventDefault());
-    backlogTable.addEventListener('drop', async (e) => {
-      dropdownEvent();
+    newSprint.addEventListener('dragover', (e) => e.preventDefault());
+    newSprint.addEventListener('drop', async (e) => {
       await addDropEvent(
         e,
-        backlogTable,
-        'project.result.projectType',
-        true,
-        ''
+        newSprint,
+        project.result.projectType,
+        false,
+        sprint
       );
     });
 
-    const addToSprintButton = document.getElementById('add-to-sprint-button');
-    const backlogBody = document.getElementById('backlog-body');
-    const backlogEmptyMessage = document.getElementById(
-      'backlog-empty-message'
-    );
-    if (!backlogTasks.length) {
-      backlogEmptyMessage.classList.remove('hidden');
-    } else {
-      backlogEmptyMessage.classList.add('hidden');
-      if (project.result.projectType === 'kanban') {
-        await renderBacklogTasks(
-          backlogBody,
-          backlogTasks,
-          addToSprintButton,
-          'kanban'
-        );
-      } else {
-        await renderBacklogTasks(
-          backlogBody,
-          backlogTasks,
-          addToSprintButton,
-          ''
-        );
-      }
-    }
+    await handleStartSprint(sprint);
+    if (sprint.dueDate) {
+      toggleHidden(
+        document.getElementById(`${sprint.key}-sprint-start-button`)
+      );
+      toggleHidden(
+        document.getElementById(`${sprint.key}-sprint-complete-button`)
+      );
 
-    backlogBody.addEventListener('change', () => {
-      let isChecked = false;
-      backlogBody.querySelectorAll('.checkboxes').forEach((checkbox) => {
-        if (checkbox.checked) {
-          isChecked = true;
-        }
+      const completeSprintButton = document.getElementById(
+        `${sprint.key}-sprint-complete-button`
+      );
+      const dueDatePreview = document.getElementById(
+        `${sprint.key}-due-date-preview`
+      );
+
+      dueDatePreview.innerText = new Date(sprint.dueDate).toLocaleDateString();
+
+      const response = await projectService.updateProject(projectId, {
+        currentSprint: sprint._id,
       });
-      if (!isChecked) {
-        toggleHidden(addToSprintButton);
-      }
-    });
 
-    const createSprintButton = document.getElementById('create-sprint-button');
-    const sprintForm = document.getElementById('sprint-creation-form');
-    const sprintCreateCloseSvg = document.getElementById('sprint-close-svg');
-    const sprintCreateSubmitButton =
-      document.getElementById('sprint-form-button');
-    const storyPointInput = document.getElementById('sprint-sp-input');
+      completeSprintButton.addEventListener('click', async (e) => {
+        e.preventDefault();
 
-    function callCreateSprint() {
-      toggleHidden(createSprintButton);
-      toggleHidden(sprintForm);
+        showConfirmModal(
+          'Are you sure you want to complete this sprint?',
+          async () => {
+            await handleCompleteSprint(sprint._id, response.result);
+          }
+        );
+      });
     }
+  });
 
-    createSprintButton.addEventListener('click', callCreateSprint);
-    sprintCreateCloseSvg.addEventListener('click', callCreateSprint);
+  let backlogTable;
+  if (project.result.projectType === 'kanban') {
+    backlogTable = createBacklogTable('kanban');
+    sprintBacklogWrapper.append(backlogTable);
+  } else {
+    backlogTable = createBacklogTable('');
+    sprintBacklogWrapper.append(backlogTable);
+  }
+  dropdownEvent();
 
-    sprintCreateSubmitButton.addEventListener('click', async (e) => {
-      e.preventDefault();
-      await handleSprintCreate(storyPointInput);
-    });
+  backlogTable.addEventListener('dragover', (e) => e.preventDefault());
+  backlogTable.addEventListener('drop', async (e) => {
+    await addDropEvent(e, backlogTable, 'project.result.projectType', true, '');
+  });
 
-    const backlogCheckboxAll = document.getElementById('backlog-checkbox-all');
-    backlogCheckboxAll.addEventListener('change', (e) => {
-      if (backlogCheckboxAll.checked) {
-        handleBacklogCheckboxAll(true);
-        if (addToSprintButton.classList.contains('hidden')) {
-          toggleHidden(addToSprintButton);
-        }
-      } else {
-        handleBacklogCheckboxAll(false);
-        if (!addToSprintButton.classList.contains('hidden')) {
-          toggleHidden(addToSprintButton);
-        }
-      }
-      e.stopPropagation();
-    });
+  const addToSprintButton = document.getElementById('add-to-sprint-button');
+  const backlogBody = document.getElementById('backlog-body');
+  // const backlogEmptyMessage = document.getElementById(
+  //   'backlog-empty-message'
+  // );
 
-    const sprintDropdown = document.getElementById('sprints-dropdown');
-    addToSprintButton.addEventListener('click', () => {
-      handleAddTaskToSprint(currentSprints, sprintDropdown);
-    });
+  // if (!incompleteBacklogTasks.length) {
+  //   backlogEmptyMessage.classList.remove('hidden');
+  // } else {
+  //   backlogEmptyMessage.classList.add('hidden');
 
-    document.addEventListener('click', (e) => {
-      if (
-        sprintDropdown.contains(e.target) ||
-        addToSprintButton.contains(e.target)
-      )
-        return;
+  await renderBacklogTasks(
+    backlogBody,
+    incompleteBacklogTasks,
+    addToSprintButton,
+    project.result
+  );
+  // }
 
-      if (!sprintDropdown.classList.contains('hidden')) {
-        toggleHidden(sprintDropdown);
-      }
-      e.stopPropagation();
-    });
-
-    const checkboxes = document.querySelectorAll('.checkboxes');
-    checkboxes.forEach((checkbox) => {
+  backlogBody.addEventListener('change', () => {
+    let isChecked = false;
+    backlogBody.querySelectorAll('.checkboxes').forEach((checkbox) => {
       if (checkbox.checked) {
+        isChecked = true;
+      }
+    });
+    if (!isChecked) {
+      toggleHidden(addToSprintButton);
+    }
+  });
+
+  const createSprintButton = document.getElementById('create-sprint-button');
+  const sprintForm = document.getElementById('sprint-creation-form');
+  const sprintCreateCloseSvg = document.getElementById('sprint-close-svg');
+  const sprintCreateSubmitButton =
+    document.getElementById('sprint-form-button');
+  const storyPointInput = document.getElementById('sprint-sp-input');
+
+  function callCreateSprint() {
+    toggleHidden(createSprintButton);
+    toggleHidden(sprintForm);
+  }
+
+  createSprintButton.addEventListener('click', callCreateSprint);
+  sprintCreateCloseSvg.addEventListener('click', callCreateSprint);
+
+  sprintCreateSubmitButton.addEventListener('click', async (e) => {
+    e.preventDefault();
+    await handleSprintCreate(storyPointInput);
+  });
+
+  const backlogCheckboxAll = document.getElementById('backlog-checkbox-all');
+  backlogCheckboxAll.addEventListener('change', (e) => {
+    if (backlogCheckboxAll.checked) {
+      handleBacklogCheckboxAll(true);
+      if (addToSprintButton.classList.contains('hidden')) {
         toggleHidden(addToSprintButton);
       }
-    });
-  } catch (error) {
-    console.error(error.message);
-  }
+    } else {
+      handleBacklogCheckboxAll(false);
+      if (!addToSprintButton.classList.contains('hidden')) {
+        toggleHidden(addToSprintButton);
+      }
+    }
+    e.stopPropagation();
+  });
+
+  const sprintDropdown = document.getElementById('sprints-dropdown');
+  addToSprintButton.addEventListener('click', () => {
+    handleAddTaskToSprint(currentSprints, sprintDropdown);
+  });
+
+  document.addEventListener('click', (e) => {
+    if (
+      sprintDropdown.contains(e.target) ||
+      addToSprintButton.contains(e.target)
+    )
+      return;
+
+    if (!sprintDropdown.classList.contains('hidden')) {
+      toggleHidden(sprintDropdown);
+    }
+    e.stopPropagation();
+  });
+
+  const checkboxes = document.querySelectorAll('.checkboxes');
+  checkboxes.forEach((checkbox) => {
+    if (checkbox.checked) {
+      toggleHidden(addToSprintButton);
+    }
+  });
 }
 
 function toggleHidden(element) {
@@ -708,6 +719,7 @@ function dropdownEvent(sprint = {}) {
   const nameKey = sprint.key ? sprint.key : `backlog`;
   const dropdownButton = document.getElementById(`dropdownButton-${nameKey}`);
   const dropdownMenu = document.querySelector(`.dropdown-menu-${nameKey}`);
+  const emptyMessage = document.querySelector(`#${nameKey}-empty-message`);
 
   dropdownButton.addEventListener('click', function () {
     dropdownMenu.classList.toggle('hidden');
@@ -717,8 +729,12 @@ function dropdownEvent(sprint = {}) {
   dropdownButton.addEventListener('click', function () {
     if (dropdownIcon.classList.contains('rotate-270')) {
       dropdownIcon.classList.remove('rotate-270');
+      checkIfEmpty();
     } else {
       dropdownIcon.classList.add('rotate-270');
+      if (!emptyMessage.classList.contains('hidden')) {
+        toggleHidden(emptyMessage);
+      }
     }
   });
 }
@@ -726,7 +742,15 @@ function dropdownEvent(sprint = {}) {
 async function handleCompleteSprint(sprintId, project) {
   const sprint = await SprintService.getSprintById(sprintId);
   console.log(sprint);
-  await SprintService.updateSprint(sprintId, { isCompleted: true });
+
+  let completedTasks = [];
+  sprint.result.tasks.forEach((task) => {
+    if (task.status === project.columns[project.columns.length - 1]) {
+      completedTasks.push(task);
+    }
+  });
+
+  await SprintService.updateSprint(sprintId, { isCompleted: true, tasks: [] });
   await projectService.updateProject(project._id, { currentSprint: null });
   await renderDashBoardTasks();
 }
@@ -766,12 +790,15 @@ async function handleStartSprint(sprint) {
 
   async function startSprintFunction() {
     if (project.result.currentSprint) {
-      console.log('A sprint is already is running');
+      console.log('A sprint is already running');
       toggleStartSprintForm();
     } else {
       sprint.dueDate = dueDateInput.value;
       const response = await SprintService.updateSprint(sprint._id, sprint);
       await checkIfSprintStarted(response.result);
+      setTimeout(() => {
+        renderDashBoardTasks();
+      }, 300);
     }
   }
 
@@ -839,17 +866,17 @@ function checkIfEmpty() {
   const tableBodyEl = document.querySelectorAll('.backlog table tbody');
   tableBodyEl.forEach((tb) => {
     const sprintId = tb.dataset.id;
+    console.log(sprintId, tableBodyEl);
     const emptyMessageEl = document.querySelector(
       `.empty-message[data-id="${sprintId}"]`
     );
 
-    if (tb.childElementCount > 0) {
+    if (tb.children.length > 0) {
       emptyMessageEl.classList.add('hidden');
       return;
     }
 
     console.log(tableBodyEl, emptyMessageEl);
-
     emptyMessageEl.classList.remove('hidden');
   });
 }
@@ -862,13 +889,12 @@ async function addDropEvent(
   sprint
 ) {
   e.preventDefault();
-  console.log(e.target);
   const taskId = e.dataTransfer.getData('taskId');
   const droppedSprintFrom = JSON.parse(e.dataTransfer.getData('sprint'));
   const elementKey = ifBacklog ? 'backlog' : droppedSprintFrom.key;
 
+  // for preventing drop in same location
   if (parentContainer.querySelector(`[data-id="${taskId}"]`)) {
-    // for preventing drop in same location
     return;
   }
 

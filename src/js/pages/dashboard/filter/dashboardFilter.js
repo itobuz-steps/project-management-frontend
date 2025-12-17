@@ -1,6 +1,7 @@
 import { removeElementChildren } from '../../../utils/elementUtils';
 import projectService from '../../../services/ProjectService';
 import { renderBoard } from '../dashboard';
+import { renderTasksList } from '../../../utils/renderTasks';
 
 const statusDropDown = document.getElementById('statusDropdown');
 const assigneeDropdown = document.getElementById('assigneeDropdown');
@@ -13,23 +14,24 @@ function renderSubDropdown(item) {
   subDropdown.innerHTML = `
     ${item.charAt(0).toUpperCase() + item.slice(1)}
   `;
+
   return subDropdown;
 }
 
 export async function handleStatusFilter() {
   removeElementChildren(statusDropDown);
   removeElementChildren(assigneeDropdown);
-  const project = (
-    await projectService.getProjectById(localStorage.getItem('selectedProject'))
-  ).result;
+  const project = (await projectService.getProjectById(currentProject)).result;
 
   project.columns.forEach((column) => {
     const dropdownEl = renderSubDropdown(column);
     statusDropDown.appendChild(dropdownEl);
-    dropdownEl.addEventListener('click', () => {
+    dropdownEl.addEventListener('click', async () => {
       removeElementChildren(statusDropDown);
       removeElementChildren(assigneeDropdown);
-      renderBoard(currentProject, 'status', `${column}`);
+
+      await renderBoard(currentProject, 'status', `${column}`);
+      await renderTasksList(currentProject, 'status', `${column}`);
     });
   });
 }
@@ -37,21 +39,17 @@ export async function handleStatusFilter() {
 export async function handleAssigneeFilter() {
   removeElementChildren(statusDropDown);
   removeElementChildren(assigneeDropdown);
-  const assignees = await projectService.getProjectMembers(
-    localStorage.getItem('selectedProject')
-  );
+  const assignees = await projectService.getProjectMembers(currentProject);
 
   assignees.result.forEach((assignee) => {
     const dropdownEl = renderSubDropdown(assignee.name);
     assigneeDropdown.appendChild(dropdownEl);
-    dropdownEl.addEventListener('click', () => {
+    dropdownEl.addEventListener('click', async () => {
       removeElementChildren(statusDropDown);
       removeElementChildren(assigneeDropdown);
-      renderBoard(
-        localStorage.getItem('selectedProject'),
-        'assignee',
-        `${assignee._id}`
-      );
+
+      await renderBoard(currentProject, 'assignee', `${assignee._id}`);
+      await renderTasksList(currentProject, 'assignee', `${assignee._id}`);
     });
   });
 }
@@ -93,24 +91,29 @@ priorityDropdown.addEventListener('click', () => {
   removeElementChildren(assigneeDropdown);
 });
 
-lowFilterBtn.addEventListener('click', () => {
-  renderBoard(localStorage.getItem('selectedProject'), 'priority', 'low');
+lowFilterBtn.addEventListener('click', async () => {
+  await renderBoard(currentProject, 'priority', 'low');
+  await renderTasksList(currentProject, 'priority', 'low');
 });
 
-midFilterBtn.addEventListener('click', () => {
-  renderBoard(localStorage.getItem('selectedProject'), 'priority', 'medium');
+midFilterBtn.addEventListener('click', async () => {
+  await renderBoard(currentProject, 'priority', 'medium');
+  await renderTasksList(currentProject, 'priority', 'medium');
 });
 
-highFilterBtn.addEventListener('click', () => {
-  renderBoard(localStorage.getItem('selectedProject'), 'priority', 'high');
+highFilterBtn.addEventListener('click', async () => {
+  await renderBoard(currentProject, 'priority', 'high');
+  await renderTasksList(currentProject, 'priority', 'high');
 });
 
-criticalFilterBtn.addEventListener('click', () => {
-  renderBoard(localStorage.getItem('selectedProject'), 'priority', 'critical');
+criticalFilterBtn.addEventListener('click', async () => {
+  await renderBoard(currentProject, 'priority', 'critical');
+  await renderTasksList(currentProject, 'priority', 'critical');
 });
 
-removeFilterBtn.addEventListener('click', () => {
+removeFilterBtn.addEventListener('click', async () => {
   removeElementChildren(statusDropDown);
   removeElementChildren(assigneeDropdown);
-  renderBoard(localStorage.getItem('selectedProject'), '', '');
+  await renderBoard(currentProject, '', '');
+  await renderTasksList(currentProject, '', '');
 });

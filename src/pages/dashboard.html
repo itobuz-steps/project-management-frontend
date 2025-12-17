@@ -92,7 +92,7 @@
           <div class="relative">
             <button
               id="profileBtn"
-              class="flex items-center rounded-full border-3 border-blue-400"
+              class="border-primary-600 flex items-center rounded-full border-3"
             >
               <div
                 class="profile-image h-7 w-7 cursor-pointer rounded-full bg-gray-400 sm:h-9 sm:w-9"
@@ -566,17 +566,24 @@
                       <th scope="col" class="min-w-36 p-2">Labels</th>
                       <th scope="col" class="p-2">Created</th>
                       <th scope="col" class="p-2">Updated</th>
-                      <th scope="col" class="min-w- p-2">Reporter</th>
+                      <th scope="col" class="min-w-36 p-2">Reporter</th>
                     </tr>
                   </thead>
                   <tbody id="table-body"></tbody>
                 </table>
               </div>
+
               <div
                 class="flex w-full justify-center bg-gray-50 p-5 text-center font-semibold text-gray-400"
                 id="empty-list-container"
               >
                 No tasks found!
+              </div>
+
+              <div class="flex w-full justify-center" id="list-loader">
+                <svg viewBox="25 25 50 50" class="loader">
+                  <circle r="20" cy="50" cx="50"></circle>
+                </svg>
               </div>
             </div>
           </div>
@@ -594,7 +601,7 @@
             class="backlog hidden w-full overflow-x-auto overflow-y-hidden rounded-xl bg-gray-50 p-4 inset-shadow-sm"
             id="backlog-view"
           >
-            <div class="flex flex-col gap-7" id="sprint-backlog-wrapper"></div>
+            <div class="flex flex-col gap-1" id="sprint-backlog-wrapper"></div>
           </div>
         </div>
       </div>
@@ -909,10 +916,9 @@
                       class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-black focus:border-blue-500 focus:ring-blue-500"
                       required
                     >
-                      <option value="bug">Bug</option>
-                      <option value="feature">Feature</option>
                       <option value="task" selected>Task</option>
                       <option value="story">Story</option>
+                      <option value="bug">Bug</option>
                     </select>
                   </div>
 

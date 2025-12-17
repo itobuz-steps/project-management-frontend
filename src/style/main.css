@@ -17,6 +17,10 @@
   --color-primary-900: var(--color-indigo-900);
 }
 
+@utility no-scrollbar {
+  @apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
+}
+
 .libre-baskerville-regular {
   font-family: 'Libre Baskerville', serif;
   font-weight: 400;
@@ -33,6 +37,44 @@
   font-family: 'Libre Baskerville', serif;
   font-weight: 400;
   font-style: italic;
+}
+
+.loader {
+  width: 3em;
+  transform-origin: center;
+  animation: rotate 1.5s linear infinite;
+}
+
+circle {
+  fill: none;
+  stroke: hsl(214, 97%, 59%);
+  stroke-width: 2;
+  stroke-dasharray: 1, 200;
+  stroke-dashoffset: 0;
+  stroke-linecap: round;
+  animation: dash 1.5s ease-in-out infinite;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dash {
+  0% {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+  }
+
+  50% {
+    stroke-dasharray: 90, 200;
+    stroke-dashoffset: -35px;
+  }
+
+  100% {
+    stroke-dashoffset: -125px;
+  }
 }
 
 body {
@@ -60,5 +102,9 @@ h1 {
 }
 
 p.wrapper {
+  font-size: 12px;
+}
+
+p.due-date {
   font-size: 12px;
 }
