@@ -111,8 +111,6 @@ export async function showTaskDrawer(taskId) {
     profileImageEl.classList.remove('hidden');
   });
 
-  // comments
-
   async function updateCommentList() {
     const comments = (await commentService.getAllComments(task._id)).result;
 
@@ -130,76 +128,6 @@ export async function showTaskDrawer(taskId) {
   }
 
   updateCommentList();
-
-  // function createSubtask() {
-  //   const subtaskDropdown = taskDrawer.querySelector('#subtaskDropdown');
-  //   const saveSubtasksBtn = taskDrawer.querySelector('#saveSubtasksBtn');
-  //   const subtaskBtn = taskDrawer.querySelector('#subtaskButton');
-  //   const subtaskList = taskDrawer.querySelector('#subtaskList');
-
-  //   let isDropdownVisible = false;
-
-  //   const saveSubtasksHandler = async () => {
-  //     const selectedIds = [...taskDrawer.querySelectorAll('.subtask-check')]
-  //       .filter((c) => c.checked)
-  //       .map((c) => c.value);
-
-  //     await taskService.updateTask(task._id, { subTask: selectedIds });
-
-  //     showToast('Subtasks updated!', 'success');
-
-  //     subtaskDropdown.classList.add('hidden');
-  //     saveSubtasksBtn.classList.add('hidden');
-  //     isDropdownVisible = false;
-
-  //     showTaskDrawer(task._id);
-
-  //     saveSubtasksBtn.removeEventListener('click', saveSubtasksHandler);
-  //   };
-
-  //   subtaskBtn.addEventListener('click', async () => {
-  //     if (isDropdownVisible) {
-  //       subtaskDropdown.classList.add('hidden');
-  //       isDropdownVisible = false;
-  //     } else {
-  //       subtaskDropdown.classList.remove('hidden');
-  //       isDropdownVisible = true;
-
-  //       const allTasks = (
-  //         await taskService.getTaskByProjectId(
-  //           localStorage.getItem('selectedProject')
-  //         )
-  //       ).data.result;
-
-  //       subtaskList.innerHTML = '';
-
-  //       allTasks.forEach((t) => {
-  //         if (t._id === task._id) return;
-
-  //         const isChecked = task.subTask?.includes(t._id);
-
-  //         const subTask = document.createElement('div');
-  //         subTask.className = 'flex items-center gap-2 mb-1';
-
-  //         subTask.innerHTML = `
-  //         <input
-  //           type="checkbox"
-  //           class="subtask-check"
-  //           value="${t._id}"
-  //           ${isChecked ? 'checked' : ''}
-  //         />
-  //         <span>${t.title}</span>
-  //       `;
-
-  //         subtaskList.appendChild(subTask);
-  //       });
-
-  //       saveSubtasksBtn.classList.remove('hidden');
-  //       saveSubtasksBtn.addEventListener('click', saveSubtasksHandler);
-  //     }
-  //   });
-  // }
-
   createSubtask(taskDrawer, task);
   renderAttachments(task);
 }
