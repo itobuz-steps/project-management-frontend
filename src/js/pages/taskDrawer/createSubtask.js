@@ -44,13 +44,9 @@ export function createSubtask(taskDrawer, task) {
 
     console.log('task is ', task._id);
 
-    // const allTasks = (
-    //   await taskService.getTaskByProjectId(
-    //     localStorage.getItem('selectedProject')
-    //   )
-    // ).data.result;
-
-    const allTasks = await taskService.getTaskById();
+    const allTasks = (
+      await taskService.taskOfProjectId(localStorage.getItem('selectedProject'))
+    ).data.result;
 
     subtaskList.innerHTML = '';
 
