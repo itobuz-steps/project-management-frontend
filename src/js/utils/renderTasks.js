@@ -1,4 +1,6 @@
+import { getFilteredTasks } from '../pages/dashboard/navbar/navbar.js';
 import projectService from '../services/ProjectService.js';
+import sprintService from '../services/SprintService.js';
 import SprintService from '../services/SprintService.js';
 import TaskService from '../services/TaskService.js';
 import { showConfirmModal } from './modals/confirmationModal.js';
@@ -28,7 +30,7 @@ async function createTaskList(task, type, projectType, sprint) {
 
   let typeSvg;
   if (task.type === 'task') {
-    typeSvg = `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-labelledby="checkboxIconTitle" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none" color="#000000" class="h-4 stroke-blue-800"> <g id="SVGRepo_bgCarrier" stroke-width="0"></g> <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" ></g> <g id="SVGRepo_iconCarrier"> <title id="checkboxIconTitle"> Checkbox (selected) </title> <rect x="21" y="3" width="18" height="18" rx="1" transform="rotate(90 21 3)" ></rect> <path d="M6.66666 12.6667L9.99999 16L17.3333 8.66669"></path> </g> </svg>`;
+    typeSvg = `<svg class="h-4 stroke-blue-800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-labelledby="checkboxIconTitle" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none" color="#000000" > <g id="SVGRepo_bgCarrier" stroke-width="0"></g> <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" ></g> <g id="SVGRepo_iconCarrier"> <title id="checkboxIconTitle"> Checkbox (selected) </title> <rect x="21" y="3" width="18" height="18" rx="1" transform="rotate(90 21 3)" ></rect> <path d="M6.66666 12.6667L9.99999 16L17.3333 8.66669"></path> </g> </svg>`;
   } else if (task.type === 'story') {
     typeSvg = `<svg class="h-4" viewBox="-4 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>bookmark</title> <desc>Created with Sketch Beta.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage"> <g id="Icon-Set-Filled" sketch:type="MSLayerGroup" transform="translate(-419.000000, -153.000000)" fill="#00b31e"> <path d="M437,153 L423,153 C420.791,153 419,154.791 419,157 L419,179 C419,181.209 420.791,183 423,183 L430,176 L437,183 C439.209,183 441,181.209 441,179 L441,157 C441,154.791 439.209,153 437,153" id="bookmark" sketch:type="MSShapeGroup"> </path> </g> </g> </g></svg>`;
   } else {
@@ -188,8 +190,8 @@ function createSprintTable(sprint) {
                   Drop tasks here...
                 </div>
 
-                <div class="flex justify-center w-full">
-                  <svg viewBox="25 25 50 50" id="${sprint.key}-loader" class="loader">
+                <div class="flex justify-center w-full" id="${sprint.key}-loader">
+                  <svg viewBox="25 25 50 50" class="loader">
                     <circle r="20" cy="50" cx="50"></circle>
                   </svg>
                 </div>
@@ -329,8 +331,8 @@ function createBacklogTable(projectType) {
                   Create tasks...
                 </div>
 
-                <div class="flex justify-center w-full">
-                  <svg viewBox="25 25 50 50" id="backlog-loader" class="loader">
+                <div class="flex justify-center w-full" id="backlog-loader">
+                  <svg viewBox="25 25 50 50" class="loader">
                     <circle r="20" cy="50" cx="50"></circle>
                   </svg>
                 </div>
@@ -338,10 +340,17 @@ function createBacklogTable(projectType) {
   return backlogContainer;
 }
 
-export async function renderTasksList(tasksArray = [], projectType, sprint) {
+export async function renderTasksList(projectId, filter, searchInput) {
   try {
     listTableBody.innerHTML = '';
     const sprintTh = document.getElementById('list-table-sprint');
+
+    const project = (await projectService.getProjectById(projectId)).result;
+    const sprint = project.currentSprint
+      ? await sprintService.getSprintById(project.currentSprint)
+      : null;
+
+    const tasksArray = await getFilteredTasks(projectId, filter, searchInput);
 
     if (!tasksArray.length) {
       emptyListContainer.classList.remove('hidden');
@@ -349,14 +358,28 @@ export async function renderTasksList(tasksArray = [], projectType, sprint) {
       emptyListContainer.classList.add('hidden');
       let promiseArray = [];
       for (const task of tasksArray) {
-        if (projectType === 'kanban') {
+        if (project.projectType === 'kanban') {
           sprintTh.classList.add('hidden');
         } else {
           sprintTh.classList.remove('hidden');
         }
-        promiseArray.push(createTaskList(task, 'list', projectType, sprint));
+        promiseArray.push(
+          createTaskList(task, 'list', project.projectType, sprint)
+        );
       }
+
+      const loader = document.getElementById(`list-loader`);
+      if (loader.classList.contains('hidden')) {
+        loader.classList.remove('hidden');
+      }
+
+      listTableBody.classList.add('hidden');
+
       const allTrs = await Promise.all(promiseArray);
+
+      loader.classList.add('hidden');
+      listTableBody.classList.remove('hidden');
+
       allTrs.forEach((tr) => {
         listTableBody.append(tr);
       });
@@ -377,7 +400,6 @@ async function renderSprintTasks(sprint, sprintTasks, projectType) {
   }
 
   const loader = document.getElementById(`${sprint.key}-loader`);
-
   sprintTaskBody.classList.add('hidden');
 
   const allTrs = await Promise.all(promiseArray);
@@ -408,7 +430,6 @@ async function renderBacklogTasks(
   }
 
   const loader = document.getElementById('backlog-loader');
-
   backlogBody.classList.add('hidden');
 
   const allTrs = await Promise.all(promiseArray);

@@ -565,6 +565,7 @@
               <h2 class="mb-2 pb-2 text-lg font-semibold">List View</h2>
               <div
                 class="relative overflow-x-auto rounded-lg shadow sm:rounded-lg"
+                id="list-container"
               >
                 <table class="w-full text-left text-sm rtl:text-right">
                   <thead
@@ -589,11 +590,18 @@
                   <tbody id="table-body"></tbody>
                 </table>
               </div>
+
               <div
-                class="flex w-full justify-center text-center"
+                class="flex h-15 w-full items-center justify-center rounded-lg border border-dotted text-center hover:border-purple-600"
                 id="empty-list-container"
               >
                 No tasks found!
+              </div>
+
+              <div class="flex w-full justify-center" id="list-loader">
+                <svg viewBox="25 25 50 50" class="loader">
+                  <circle r="20" cy="50" cx="50"></circle>
+                </svg>
               </div>
             </div>
           </div>

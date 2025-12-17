@@ -11,7 +11,7 @@ import showToast from '../../utils/showToast.js';
 import sprintService from '../../services/SprintService.js';
 import { showTaskDrawer } from '../taskDrawer/taskDrawer.js';
 import { setupSidebar } from './sidebar/sidebar.js';
-import { setupNavbar } from './navbar/navbar.js';
+import { getFilteredTasks, setupNavbar } from './navbar/navbar.js';
 import { openUpdateTaskModal } from '../../utils/modals/updateTaskModal.js';
 import { openCreateTaskModal } from '../../utils/modals/createTaskModal.js';
 import { openCreateProjectModal } from '../../utils/modals/createProjectModal.js';
@@ -54,6 +54,8 @@ const listView = document.getElementById('list-view');
 listBtn.addEventListener('click', async () => {
   removeActive(listBtn);
   hideAll(listView);
+
+  await renderTasksList(localStorage.getItem('selectedProject'), '', '');
   await renderBoard(localStorage.getItem('selectedProject'));
 });
 
@@ -69,13 +71,10 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
 
   project.columns.forEach((column) => (result[column] = []));
   console.log(project.columns);
-  const tasks = await taskService.getTaskByProjectId(
-    projectId,
-    filter,
-    searchInput
-  );
 
-  tasks.data.result.forEach((task) => result[task.status].push(task));
+  const tasks = await getFilteredTasks(projectId, filter, searchInput);
+
+  tasks.forEach((task) => result[task.status].push(task));
 
   return result;
 }
@@ -100,6 +99,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
   project.columns.forEach((col) => {
     allTasks.push(...(columns[col] || []));
   });
+
   const assigneeIds = [
     ...new Set(allTasks.map((t) => t.assignee).filter(Boolean)),
   ];
@@ -386,15 +386,6 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
   handleStatusFilter();
   handleAssigneeFilter();
-  if (project.projectType === 'kanban') {
-    await renderTasksList(filteredTasks, 'kanban', '');
-  } else {
-    await renderTasksList(
-      filteredTasks,
-      '',
-      currentSprint?.result ? currentSprint.result : ''
-    );
-  }
 }
 
 async function checkForInvite() {
