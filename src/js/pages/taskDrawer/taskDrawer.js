@@ -50,13 +50,12 @@ export async function showTaskDrawer(taskId) {
   commentSubmit.addEventListener('click', async () => {
     const message = commentInput.value.trim();
     const attachmentInput = taskDrawer.querySelector('#commentAttachment');
+    const formData = new FormData();
 
     if (!message && attachmentInput.files.length > 0) {
       showToast('You must enter a comment before adding an attachment');
       return;
     }
-
-    const formData = new FormData();
 
     formData.append('taskId', task._id);
     formData.append('message', message);

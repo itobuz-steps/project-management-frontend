@@ -17,7 +17,6 @@ export async function renderSubtasks(task) {
     const subtaskAssignee = st.assignee
       ? (await taskService.getUserDetailsById(st.assignee)).data.result
       : null;
-
     const div = document.createElement('div');
 
     div.className =
