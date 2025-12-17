@@ -5,6 +5,7 @@ import { openUpdateTaskModal } from '../../utils/modals/updateTaskModal';
 import { renderAttachments } from './renderAttachments';
 import { appendCommentToContainer } from './appendComment';
 import { renderSubtasks } from './renderSubtasks';
+import { createSubtask } from './createSubtask';
 
 export async function showTaskDrawer(taskId) {
   const task = (await taskService.getTaskById(taskId)).data.result;
@@ -130,62 +131,75 @@ export async function showTaskDrawer(taskId) {
 
   updateCommentList();
 
-  function createSubtask() {
-    const subtaskBtn = taskDrawer.querySelector('#subtaskButton');
-    const subtaskDropdown = taskDrawer.querySelector('#subtaskDropdown');
-    const subtaskList = taskDrawer.querySelector('#subtaskList');
-    const saveSubtasksBtn = taskDrawer.querySelector('#saveSubtasksBtn');
+  // function createSubtask() {
+  //   const subtaskDropdown = taskDrawer.querySelector('#subtaskDropdown');
+  //   const saveSubtasksBtn = taskDrawer.querySelector('#saveSubtasksBtn');
+  //   const subtaskBtn = taskDrawer.querySelector('#subtaskButton');
+  //   const subtaskList = taskDrawer.querySelector('#subtaskList');
 
-    subtaskBtn.addEventListener('click', async () => {
-      subtaskDropdown.classList.toggle('hidden');
+  //   let isDropdownVisible = false;
 
-      const allTasks = (
-        await taskService.getTaskByProjectId(
-          localStorage.getItem('selectedProject')
-        )
-      ).data.result;
+  //   const saveSubtasksHandler = async () => {
+  //     const selectedIds = [...taskDrawer.querySelectorAll('.subtask-check')]
+  //       .filter((c) => c.checked)
+  //       .map((c) => c.value);
 
-      subtaskList.innerHTML = '';
+  //     await taskService.updateTask(task._id, { subTask: selectedIds });
 
-      allTasks.forEach((t) => {
-        if (t._id === task._id) return;
+  //     showToast('Subtasks updated!', 'success');
 
-        const isChecked = task.subTask?.includes(t._id);
+  //     subtaskDropdown.classList.add('hidden');
+  //     saveSubtasksBtn.classList.add('hidden');
+  //     isDropdownVisible = false;
 
-        const subTask = document.createElement('div');
-        subTask.className = 'flex items-center gap-2 mb-1';
+  //     showTaskDrawer(task._id);
 
-        subTask.innerHTML = `
-        <input
-          type="checkbox"
-          class="subtask-check"
-          value="${t._id}"
-          ${isChecked ? 'checked' : ''}
-        />
-        <span>${t.title}</span>
-      `;
+  //     saveSubtasksBtn.removeEventListener('click', saveSubtasksHandler);
+  //   };
 
-        subtaskList.appendChild(subTask);
-      });
+  //   subtaskBtn.addEventListener('click', async () => {
+  //     if (isDropdownVisible) {
+  //       subtaskDropdown.classList.add('hidden');
+  //       isDropdownVisible = false;
+  //     } else {
+  //       subtaskDropdown.classList.remove('hidden');
+  //       isDropdownVisible = true;
 
-      saveSubtasksBtn.classList.remove('hidden');
-    });
+  //       const allTasks = (
+  //         await taskService.getTaskByProjectId(
+  //           localStorage.getItem('selectedProject')
+  //         )
+  //       ).data.result;
 
-    saveSubtasksBtn.addEventListener('click', async () => {
-      const selectedIds = [...taskDrawer.querySelectorAll('.subtask-check')]
-        .filter((c) => c.checked)
-        .map((c) => c.value);
+  //       subtaskList.innerHTML = '';
 
-      await taskService.updateTask(task._id, { subTask: selectedIds });
+  //       allTasks.forEach((t) => {
+  //         if (t._id === task._id) return;
 
-      showToast('Subtasks updated!', 'success');
+  //         const isChecked = task.subTask?.includes(t._id);
 
-      subtaskDropdown.classList.add('hidden');
+  //         const subTask = document.createElement('div');
+  //         subTask.className = 'flex items-center gap-2 mb-1';
 
-      showTaskDrawer(task._id);
-    });
-  }
+  //         subTask.innerHTML = `
+  //         <input
+  //           type="checkbox"
+  //           class="subtask-check"
+  //           value="${t._id}"
+  //           ${isChecked ? 'checked' : ''}
+  //         />
+  //         <span>${t.title}</span>
+  //       `;
 
-  createSubtask();
+  //         subtaskList.appendChild(subTask);
+  //       });
+
+  //       saveSubtasksBtn.classList.remove('hidden');
+  //       saveSubtasksBtn.addEventListener('click', saveSubtasksHandler);
+  //     }
+  //   });
+  // }
+
+  createSubtask(taskDrawer, task);
   renderAttachments(task);
 }
