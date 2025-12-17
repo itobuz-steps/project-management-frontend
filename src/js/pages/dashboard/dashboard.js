@@ -116,7 +116,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
     const columnEl = document.createElement('div');
     columnEl.innerHTML = /*html*/ `
       <div class="w-72 bg-white rounded-lg shadow-lg shrink-0 h-full overflow-y-auto">
-        <h2 class="text-lg font-semibold sticky top-0 z-10 flex gap-2 px-4 py-2 text-black bg-white shadow-sm items-center">
+        <h2 class="text-lg font-semibold sticky top-0 z-10 flex gap-2 px-4 py-2 text-black bg-white shadow-sm shadow-gray-200 items-center">
           ${column.toUpperCase()}
           <div class="issue-count rounded-full w-5 h-5 text-center text-sm text-black bg-gray-200"></div>
         </h2>
@@ -144,7 +144,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       const taskEl = document.createElement('div');
       taskEl.dataset._id = task._id;
       taskEl.className =
-        'task flex flex-col max-w-sm p-4 bg-white rounded-md shadow-sm text-black gap-4 relative cursor-grab border border-gray-100 hover:shadow-md';
+        'task flex flex-col max-w-sm p-3 bg-white rounded-md shadow-sm text-black gap-4 relative cursor-grab border border-gray-100 hover:shadow-md';
       taskEl.innerHTML = /*html*/ `
        <div class="card-header flex justify-between items-center">
           <p id="${
@@ -195,7 +195,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
                   ? 'http://localhost:3001/uploads/profile/' +
                     assignee.profileImage
                   : '../../../assets/img/profile.png'
-              }" class="w-8 h-8 object-cover" title="${
+              }" class="w-8 h-8 aspect-square rounded-full" title="${
                 assignee?.name || 'Unassigned'
               }"/>
             </span>
@@ -205,14 +205,6 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
           </div>
         </div>
       `;
-
-      const attachmentLogo = taskEl.querySelector('#attachmentLogo');
-
-      if (task.attachments.length) {
-        attachmentLogo.classList.remove('hidden');
-      }
-
-      // add drop down upon clicking the image
 
       const userAvatar = taskEl.querySelector('.user-avatar');
       const avatarDropdown = taskEl.querySelector('.avatar-dropdown');
@@ -397,16 +389,6 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
   handleStatusFilter();
   handleAssigneeFilter();
-
-  if (project.projectType === 'kanban') {
-    await renderTasksList(filteredTasks, 'kanban', '');
-  } else {
-    await renderTasksList(
-      filteredTasks,
-      '',
-      currentSprint?.result ? currentSprint.result : ''
-    );
-  }
 }
 
 async function checkForInvite() {

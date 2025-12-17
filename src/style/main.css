@@ -17,6 +17,10 @@
   --color-primary-900: var(--color-indigo-900);
 }
 
+@utility no-scrollbar {
+  @apply [scrollbar-width:none] [&::-webkit-scrollbar]:hidden;
+}
+
 .libre-baskerville-regular {
   font-family: 'Libre Baskerville', serif;
   font-weight: 400;
@@ -98,5 +102,9 @@ h1 {
 }
 
 p.wrapper {
+  font-size: 12px;
+}
+
+p.due-date {
   font-size: 12px;
 }
