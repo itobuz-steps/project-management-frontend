@@ -187,6 +187,12 @@ function createSprintTable(sprint) {
                 >
                   Drop tasks here...
                 </div>
+
+                <div class="flex justify-center w-full">
+                  <svg viewBox="25 25 50 50" id="${sprint.key}-loader" class="loader">
+                    <circle r="20" cy="50" cx="50"></circle>
+                  </svg>
+                </div>
  `;
   return sprintContainer;
 }
@@ -323,6 +329,11 @@ function createBacklogTable(projectType) {
                   Create tasks...
                 </div>
 
+                <div class="flex justify-center w-full">
+                  <svg viewBox="25 25 50 50" id="backlog-loader" class="loader">
+                    <circle r="20" cy="50" cx="50"></circle>
+                  </svg>
+                </div>
   `;
   return backlogContainer;
 }
@@ -364,8 +375,15 @@ async function renderSprintTasks(sprint, sprintTasks, projectType) {
       createTaskList(task.data.result, '', projectType, sprint)
     );
   }
+
+  const loader = document.getElementById(`${sprint.key}-loader`);
+
+  sprintTaskBody.classList.add('hidden');
+
   const allTrs = await Promise.all(promiseArray);
-  console.log(sprint);
+
+  loader.classList.add('hidden');
+  sprintTaskBody.classList.remove('hidden');
 
   addDragEvent(sprintTaskBody, allTrs, sprint);
   checkIfEmpty();
@@ -389,7 +407,14 @@ async function renderBacklogTasks(
     }
   }
 
+  const loader = document.getElementById('backlog-loader');
+
+  backlogBody.classList.add('hidden');
+
   const allTrs = await Promise.all(promiseArray);
+
+  loader.classList.add('hidden');
+  backlogBody.classList.remove('hidden');
 
   allTrs.forEach((tr) => {
     const checkbox = tr.querySelector('.checkboxes');
@@ -399,7 +424,8 @@ async function renderBacklogTasks(
       }
     });
   });
-  addDragEvent(document.getElementById('backlog-body'), allTrs, '');
+
+  addDragEvent(backlogBody, allTrs, '');
   checkIfEmpty();
 }
 
@@ -531,22 +557,22 @@ export async function renderDashBoardTasks() {
 
     const addToSprintButton = document.getElementById('add-to-sprint-button');
     const backlogBody = document.getElementById('backlog-body');
-    const backlogEmptyMessage = document.getElementById(
-      'backlog-empty-message'
+    // const backlogEmptyMessage = document.getElementById(
+    //   'backlog-empty-message'
+    // );
+
+    // if (!incompleteBacklogTasks.length) {
+    //   backlogEmptyMessage.classList.remove('hidden');
+    // } else {
+    //   backlogEmptyMessage.classList.add('hidden');
+
+    await renderBacklogTasks(
+      backlogBody,
+      incompleteBacklogTasks,
+      addToSprintButton,
+      project.result
     );
-
-    if (!incompleteBacklogTasks.length) {
-      backlogEmptyMessage.classList.remove('hidden');
-    } else {
-      backlogEmptyMessage.classList.add('hidden');
-
-      await renderBacklogTasks(
-        backlogBody,
-        incompleteBacklogTasks,
-        addToSprintButton,
-        project.result
-      );
-    }
+    // }
 
     backlogBody.addEventListener('change', () => {
       let isChecked = false;
