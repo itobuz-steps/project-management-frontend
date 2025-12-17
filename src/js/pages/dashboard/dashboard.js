@@ -114,22 +114,21 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
   project.columns.forEach((column) => {
     const columnEl = document.createElement('div');
-    columnEl.innerHTML = `
-      <div class="w-72 bg-white rounded-lg shadow p-4 shrink-0 h-full overflow-y-auto">
-        <h2 class="text-lg font-semibold border-b pb-2 sticky top-0 bg-white z-10 flex gap-2">
+    columnEl.innerHTML = /*html*/ `
+      <div class="w-72 bg-white rounded-lg shadow-lg shrink-0 h-full overflow-y-auto">
+        <h2 class="text-lg font-semibold sticky top-0 z-10 flex gap-2 px-4 py-2 text-black bg-white shadow-sm items-center">
           ${column.toUpperCase()}
-          <div class="issue-count rounded-full w-7 h-7 text-center text-md text-white bg-cyan-900"></div>
+          <div class="issue-count rounded-full w-5 h-5 text-center text-sm text-black bg-gray-200"></div>
         </h2>
-        <div class="space-y-3 pb-4 h-full" id="task-list"></div>
+        <div class="flex flex-col gap-3 pb-4 h-96 p-2 " id="task-list"></div>
       </div>
     `;
 
     const tasks = columns[column] || [];
     tasks.forEach((task) => {
       filteredTasks.push(task);
-      console.log(task._id);
-
       let isDone = '';
+
       if (task.status === 'done') {
         isDone = 'line-through text-gray-400';
       }
@@ -145,10 +144,12 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       const taskEl = document.createElement('div');
       taskEl.dataset._id = task._id;
       taskEl.className =
-        'task flex flex-col max-w-sm p-4 bg-white rounded-lg shadow-md text-black gap-4 relative cursor-grab';
-      taskEl.innerHTML = `
-        <div class="card-header flex justify-between items-center">
-          <p id="${task.title}-taskId" class="task-title text-lg border border-transparent rounded-lg font-medium hover:border-gray-400 cursor-pointer ${isDone}">${
+        'task flex flex-col max-w-sm p-4 bg-white rounded-md shadow-sm text-black gap-4 relative cursor-grab border border-gray-100 hover:shadow-md';
+      taskEl.innerHTML = /*html*/ `
+       <div class="card-header flex justify-between items-center">
+          <p id="${
+            task.title
+          }-taskId" class="flex-1 task-title text-lg border border-transparent rounded-sm font-medium cursor-pointer px-1 ${isDone}">${
             task.title
           }</p>
             <div class="menu-button flex flex-row gap-2 justify-between">
@@ -159,9 +160,14 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
                 </svg>
               </button>
               <button class="delete-btn w-full p-1 hover:bg-red-200">
-                <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z" fill="red"/>
-                </svg>
+                <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="hover:fill-red-200 transition duration-300">
+                  <rect width="20" height="20" fill="red-400"/>
+                  <path d="M5 7.5H19L18 21H6L5 7.5Z" stroke="#000000" stroke-linejoin="round"/>
+                  <path d="M15.5 9.5L15 19" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 9.5V19" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M8.5 9.5L9 19" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M16 5H19C20.1046 5 21 5.89543 21 7V7.5H3V7C3 5.89543 3.89543 5 5 5H8M16 5L15 3H9L8 5M16 5H8" stroke="#000000" stroke-linejoin="round"/>
+                  </svg>
               </button>
             </div>
         </div>
@@ -199,6 +205,12 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
           </div>
         </div>
       `;
+
+      const attachmentLogo = taskEl.querySelector('#attachmentLogo');
+
+      if (task.attachments.length) {
+        attachmentLogo.classList.remove('hidden');
+      }
 
       // add drop down upon clicking the image
 
@@ -352,7 +364,6 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
     const taskList = columnEl.querySelector('#task-list');
 
     taskList.addEventListener('dragover', (e) => e.preventDefault());
-    console.log(taskList);
     taskList.addEventListener('drop', async (e) => {
       e.preventDefault();
       const taskId = e.dataTransfer.getData('taskId');
@@ -386,6 +397,16 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
   handleStatusFilter();
   handleAssigneeFilter();
+
+  if (project.projectType === 'kanban') {
+    await renderTasksList(filteredTasks, 'kanban', '');
+  } else {
+    await renderTasksList(
+      filteredTasks,
+      '',
+      currentSprint?.result ? currentSprint.result : ''
+    );
+  }
 }
 
 async function checkForInvite() {

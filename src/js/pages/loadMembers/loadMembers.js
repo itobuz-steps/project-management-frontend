@@ -4,6 +4,7 @@ export async function loadProjectMembers(projectId) {
   try {
     const data = await projectService.getProjectMembers(projectId);
     const members = data.result;
+
     const container = document.getElementById('memberAvatars');
     container.innerHTML = '';
 
@@ -18,7 +19,7 @@ export async function loadProjectMembers(projectId) {
       img.title = userInfo.name;
 
       img.className =
-        'w-10 h-10 rounded-full object-cover border-2 border-white shadow-md hover:z-1';
+        'w-7 h-7 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-white shadow-md hover:z-1 aspect-square';
 
       img.style.marginLeft = index === 0 ? '0px' : '-10px';
 

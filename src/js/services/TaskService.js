@@ -116,12 +116,19 @@ class TaskService {
     formData.append('dueDate', task.dueDate);
     formData.append('reporter', task.reporter);
 
-    task.tags.forEach((tag) => { formData.append("tags[]", tag); });
+    task.tags.forEach((tag) => {
+      formData.append('tags[]', tag);
+    });
 
     if (task.assignee) {
       formData.append('assignee', task.assignee);
     }
-
+    if (task.attachments) {
+      console.log(task.attachments);
+      Array.from(task.attachments).forEach((file) => {
+        formData.append('attachments', file);
+      });
+    }
     try {
       const response = await this.api.post(`/`, formData);
 

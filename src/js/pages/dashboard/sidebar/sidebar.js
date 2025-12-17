@@ -45,14 +45,14 @@ export async function updateProjectList() {
 
     if (!projects.length) {
       projectsDropdown.innerHTML = 'No project Found';
-      projectsDropdown.className = 'block p-2 text-gray-900 hover:bg-gray-100';
+      projectsDropdown.className = 'block p-2 text-black';
     } else {
       projects.forEach((project) => {
         const item = document.createElement('li');
         item.dataset.id = project._id;
         item.textContent = project.name;
         item.className =
-          'block p-2 text-white hover:bg-purple-100 hover:text-black [&.selected]:bg-purple-300 rounded-md [&.selected]:text-purple-700 cursor-pointer';
+          'block p-2 text-black hover:bg-primary-100 hover:text-black [&.selected]:bg-primary-200 rounded-md [&.selected]:shadow/25 cursor-pointer';
         if (project._id === localStorage.getItem('selectedProject')) {
           item.classList.toggle('selected');
         }
@@ -80,8 +80,17 @@ async function updateUserList() {
       const item = document.createElement('li');
       item.dataset.id = user._id;
       item.id = user.name;
-      item.textContent = user.name;
-      item.className = 'block p-2 text-white rounded-md';
+      item.innerHTML = /*html*/ `
+    <div class="flex items-center">
+    <img class="aspect-square w-6 h-6 rounded-full mr-3" 
+          src="${
+            user.profileImage
+              ? 'http://localhost:3001/uploads/profile/' + user.profileImage
+              : '../../../assets/img/profile.png'
+          }">${user.name}
+    </div>
+      `;
+      item.className = 'block p-2 text-black rounded-md';
       userListContainer.appendChild(item);
     });
   }

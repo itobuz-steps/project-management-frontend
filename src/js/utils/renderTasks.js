@@ -4,6 +4,7 @@ import sprintService from '../services/SprintService.js';
 import SprintService from '../services/SprintService.js';
 import TaskService from '../services/TaskService.js';
 import { showConfirmModal } from './modals/confirmationModal.js';
+import { DateTime } from 'luxon';
 
 const listTableBody = document.getElementById('table-body');
 const emptyListContainer = document.getElementById('empty-list-container');
@@ -14,13 +15,6 @@ async function createTaskList(task, type, projectType, sprint) {
   let ifSprint = `hidden`;
   if (type === 'backlog') {
     ifSprint = ``;
-  }
-
-  let labels;
-  if (!task.tags.length) {
-    labels = 'no labels';
-  } else {
-    labels = task.tags.join(' ');
   }
 
   let ifKanban = '';
@@ -37,46 +31,93 @@ async function createTaskList(task, type, projectType, sprint) {
     typeSvg = `<svg class="h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M7 14.3333C7 13.0872 7 12.4641 7.26795 12C7.44349 11.696 7.69596 11.4435 8 11.2679C8.4641 11 9.08718 11 10.3333 11H13.6667C14.9128 11 15.5359 11 16 11.2679C16.304 11.4435 16.5565 11.696 16.7321 12C17 12.4641 17 13.0872 17 14.3333V16C17 16.9293 17 17.394 16.9231 17.7804C16.6075 19.3671 15.3671 20.6075 13.7804 20.9231C13.394 21 12.9293 21 12 21C11.0707 21 10.606 21 10.2196 20.9231C8.63288 20.6075 7.39249 19.3671 7.07686 17.7804C7 17.394 7 16.9293 7 16V14.3333Z" fill="#db0000" stroke="#db0000" stroke-width="2"></path> <path d="M9 9C9 8.06812 9 7.60218 9.15224 7.23463C9.35523 6.74458 9.74458 6.35523 10.2346 6.15224C10.6022 6 11.0681 6 12 6C12.9319 6 13.3978 6 13.7654 6.15224C14.2554 6.35523 14.6448 6.74458 14.8478 7.23463C15 7.60218 15 8.06812 15 9V11H9V9Z" fill="#db0000" stroke="#db0000" stroke-width="2"></path> <path d="M12 11V15" stroke="#db0000" stroke-width="2"></path> <path d="M15 3L13 6" stroke="#db0000" stroke-width="2"></path> <path d="M9 3L11 6" stroke="#db0000" stroke-width="2"></path> <path d="M7 16H2" stroke="#db0000" stroke-width="2"></path> <path d="M22 16H17" stroke="#db0000" stroke-width="2"></path> <path d="M20 9V10C20 11.6569 18.6569 13 17 13V13" stroke="#db0000" stroke-width="2"></path> <path d="M20 22V22C20 20.3431 18.6569 19 17 19V19" stroke="#db0000" stroke-width="2"></path> <path d="M4 9V10C4 11.6569 5.34315 13 7 13V13" stroke="#db0000" stroke-width="2"></path> <path d="M4 22V22C4 20.3431 5.34315 19 7 19V19" stroke="#db0000" stroke-width="2"></path> </g></svg>`;
   }
 
-  let sprintKey = sprint?.key ? sprint.key : 'no sprint found';
-
   const tr = document.createElement('tr');
-
   const reporter = task.reporter
     ? (await TaskService.getUserDetailsById(task.reporter)).data.result
     : '';
-  const assignee = task.assignee
-    ? (await TaskService.getUserDetailsById(task.assignee)).data.result.name
-    : 'unassigned';
 
-  tr.classList =
-    'bg-white border-b border-gray-500 hover:bg-gray-100 whitespace-nowrap';
-  console.log(task._id);
+  let assignee = {};
+  if (task.assignee) {
+    const data = (await TaskService.getUserDetailsById(task.assignee)).data
+      .result;
+    assignee.name = data.name;
+    assignee.profileImage =
+      'http://localhost:3001/uploads/profile/' + data.profileImage;
+  } else {
+    assignee = {
+      name: 'Unassigned',
+      profileImage: '../../../../assets/img/profile.png',
+    };
+  }
+
+  const labelsEl = task.tags.map((label, idx) => {
+    if (idx > 3) {
+      return '';
+    }
+
+    let labelEl;
+
+    if (idx == 3) {
+      labelEl = /*html*/ `
+      <div class ="bg-gray-200 px-2 py-1 rounded-sm">
+        +${task.tags.length - 3}
+      </div>
+      `;
+    } else {
+      labelEl = /*html*/ `
+    <div class="labels bg-primary-100 px-2 py-1 rounded-sm">
+    ${label}
+    </div>`;
+    }
+
+    return labelEl;
+  });
+  console.log({ ceatedAt: task.createdAt });
+
+  tr.classList = ' border-b border-gray-200 whitespace-nowrap  ';
   tr.dataset.id = task._id;
-  tr.innerHTML = `
-                      <td class="w-4 p-4 ${ifSprint} ${ifKanban}">
-                        <div class="flex items-center">
-                          <input
-                            id="checkbox-all-search"
-                            type="checkbox"
-                            class="checkboxes w-3.5 h-3.5 text-blue-600 bg-gray-100 border-gray-300 rounded-sm accent-cyan-500 focus:ring-cyan-600"
-                            data-id=${task._id}
-                          />
-                        </div>
-                      </td>
-                      <td class="px-6 py-4">
-                      ${typeSvg}
-                      </td>
-                      <td class="px-6 py-4">${task.key}</td>
-                      <td class="px-6 py-4">${task.title}</td>
-                      <td class="px-6 py-4">${task.status}</td>
-                      <td class="px-6 py-4 ${ifKanban}">${sprintKey}</td>
-                      <td class="px-6 py-4">${assignee}</td>
-                      <td class="px-4 py-4">${task.dueDate.split('T')[0]}</td>
-                      <td class="px-6 py-4">${labels}</td>
-                      <td class="px-6 py-4">${task.createdAt.split('T')[0]}</td>
-                      <td class="px-6 py-4">${task.updatedAt.split('T')[0]}</td>
-                      <td class="px-6 py-4">${reporter.name}</td>
 
+  tr.innerHTML = /*html*/ `
+    <td class="w-4 p-4 ${ifSprint} ${ifKanban}">
+      <div class="flex items-center">
+        <input
+            id="checkbox-all-search"
+            type="checkbox"
+            class="checkboxes w-3.5 h-3.5 text-primary-600 bg-primary-100 border-primary-300 rounded-sm accent-primary-500 focus:ring-primary-600"
+            data-id=${task._id}
+        />
+      </div>
+    </td>
+    <td>
+    <div class="w-full flex justify-center">
+${typeSvg}
+      </div>
+    </td>
+    <td class="p-2"><p class="wrapper bg-primary-400 text-white px-2 py-1 rounded-sm w-max uppercase font-semibold text-xs">${task.key}</p></td>
+    <td class="p-2">${task.title}</td>
+    <td class="p-2"><p class="wrapper bg-primary-200 px-2 py-1 rounded-sm w-max uppercase font-semibold text-xs">${task.status}<span class="ml-3 text-[10px]">▼</span></p></td>
+    <td class="p-2 ${ifKanban} ${!sprint ? 'hidden' : ''}">${sprint ? '<p class="wrapper bg-primary-400 text-white px-2 py-1 rounded-sm w-max uppercase font-semibold text-xs">' + sprint.key + '</p>' : ''}</td>
+    <td class="p-2">
+      <div class="flex items-center">
+        <img class="aspect-square w-6 h-6 rounded-full mr-3" 
+              src="${assignee.profileImage}">${assignee.name}
+      </div>
+      </td>
+    <td class="p-2">${DateTime.fromISO(task.dueDate).toLocaleString(DateTime.DATE_MED)}</td>
+    <td class="p-2"><div class="flex gap-1 text-xs flex-wrap min-w-18">${labelsEl.join('')}</div></td>
+    <td class="p-2">${DateTime.fromISO(task.createdAt).toLocaleString(DateTime.DATE_MED)}</td>
+    <td class="p-2">${DateTime.fromISO(task.updatedAt).toLocaleString(DateTime.DATE_MED)}</td>
+    <td class="p-2">
+      <div class="flex items-center">
+        <img class="aspect-square w-6 h-6 rounded-full mr-3" 
+              src="${
+                reporter.profileImage
+                  ? 'http://localhost:3001/uploads/profile/' +
+                    reporter.profileImage
+                  : '../../../assets/img/profile.png'
+              }">${reporter.name}
+      </div>
+    </td>
   `;
   return tr;
 }
@@ -85,13 +126,14 @@ function createSprintTable(sprint) {
   const sprintContainer = document.createElement('div');
 
   sprintContainer.dataset.id = sprint._id;
-  sprintContainer.innerHTML = `
+  sprintContainer.className = ' p-1 rounded-t';
+  sprintContainer.innerHTML = /*html*/ `
                   <form class="hidden flex md:justify-end gap-1 h-7.5" id="${sprint.key}-start-form">
                     <input
                         type="date"
                         name="dueDate"
                         id="${sprint.key}-due-date"
-                        class="w-28 md:w-30 bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-1 required"
+                        class="w-28 md:w-30 bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block px-1 required"
                         placeholder="Enter the due date"
                     />
 
@@ -107,10 +149,10 @@ function createSprintTable(sprint) {
 
 
                 <div class="relative flex justify-between text-left">
-                  <div class="flex align-middle ">
+                  <div class="flex flex-col pb-4">
                     <button
                       type="button"
-                      class="flex items-center w-30 md:w-fit gap-2 rounded-md px-2 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 focus:outline-none dropdownButton"
+                      class="flex items-center w-30 md:w-fit gap-3 rounded-md text-lg font-semibold text-gray-100 hover:text-white cursor-pointer focus:outline-none dropdownButton"
                       id="dropdownButton-${sprint.key}"
                       aria-expanded="false"
                       aria-haspopup="true"
@@ -134,11 +176,24 @@ function createSprintTable(sprint) {
                       <p class="w-fit">
                       ${sprint.key}
                       </p>
-                    </button>
+                    </button> 
+                    <div class="flex ml-6 items-center gap-1" >      
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 stroke-indigo-300">
+                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                        <g id="SVGRepo_iconCarrier"> 
+                          <path d="M12 7V12L14.5 10.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="inherit" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          </path> 
+                        </g>
+                      </svg>
+                    <p id="${sprint.key}-due-date-preview" class="text-sm text-center text-indigo-300 text-[10px] md:text-md font-semibold">
+   
+                    </p>
+                    </div>
                   </div>
 
                   <div class="flex flex-col md:flex-row md:items-center md:gap-3">
-                  <p id="${sprint.key}-due-date-preview" class="text-sm text-center"></p>
+          
                   
                   <button
                     type="button"
@@ -162,7 +217,7 @@ function createSprintTable(sprint) {
                 >
                   <table class="w-full text-sm text-left rtl:text-right">
                     <thead
-                      class="text-xm text-gray-700 uppercase bg-gray-200 border-b border-gray-500 hover:bg-gray-100 sticky"
+                      class=" uppercase sticky"
                     >
                       <tr>
                         
@@ -207,7 +262,9 @@ function createBacklogTable(projectType) {
 
   const backlogContainer = document.createElement('div');
 
-  backlogContainer.innerHTML = `
+  backlogContainer.className = ' p-1 rounded-t';
+
+  backlogContainer.innerHTML = /*html*/ `
                   <form class="hidden flex md:justify-end gap-1 h-7.5" id="sprint-creation-form">
 
                     <input type="number" id="sprint-sp-input" aria-describedby="helper-text-explanation" class=" w-23 md:w-30 block rounded-lg text-center bg-neutral-secondary-medium border border-gray-400 text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body " placeholder="story point" required />
@@ -223,11 +280,11 @@ function createBacklogTable(projectType) {
                   </form>
 
 
-                <div class="relative flex justify-between text-left">
-                  <div class="flex align-middle">
+                <div class="relative flex justify-between text-left items-center">
+                  <div class="flex items-center justify-center">
                     <button
                       type="button"
-                      class="flex items-center w-30 gap-2 rounded-md px-2 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 focus:outline-none"
+                      class="flex items-center justify-center w-30 gap-5 round ed-md px-2 py-2  cursor-pointer focus:outline-none"
                       id="dropdownButton-backlog"
                       aria-expanded="false"
                       aria-haspopup="true"
@@ -295,7 +352,7 @@ function createBacklogTable(projectType) {
                 >
                   <table class="w-full text-sm text-left rtl:text-right">
                     <thead
-                      class="text-xm text-gray-700 uppercase bg-gray-200 border-b border-gray-500 hover:bg-gray-100 sticky"
+                      class="uppercase border-b sticky"
                     >
                       <tr>
                         <th scope="col" class="p-4 ${ifKanban}">
@@ -303,7 +360,7 @@ function createBacklogTable(projectType) {
                             <input
                               id="backlog-checkbox-all"
                               type="checkbox"
-                              class="w-3.5 h-3.5 text-blue-600 bg-gray-100 border-gray-300 rounded-sm accent-cyan-500 focus:ring-cyan-600"
+                              class="w-3.5 h-3.5 text-gray-200 bg-gray-100 border-gray-600 rounded-sm accent-gray-200 focus:ring-gray-600"
                             />
                           </div>
                         </th>
@@ -324,7 +381,7 @@ function createBacklogTable(projectType) {
                   </table>
                 </div>
                 <div
-                  class="empty-message text-center w-full flex h-15 items-center justify-center hidden border border-dotted rounded-lg hover:border-purple-600 "
+                  class="hidden text-center w-full flex justify-center text-gray-400 font-bold p-4 text-lg bg-white/80 backdrop:blur-lg"
                   id="backlog-empty-message"
                   data-id="backlog"
                 >
@@ -343,7 +400,6 @@ function createBacklogTable(projectType) {
 export async function renderTasksList(projectId, filter, searchInput) {
   try {
     listTableBody.innerHTML = '';
-    const sprintTh = document.getElementById('list-table-sprint');
 
     const project = (await projectService.getProjectById(projectId)).result;
     const sprint = project.currentSprint
@@ -358,14 +414,7 @@ export async function renderTasksList(projectId, filter, searchInput) {
       emptyListContainer.classList.add('hidden');
       let promiseArray = [];
       for (const task of tasksArray) {
-        if (project.projectType === 'kanban') {
-          sprintTh.classList.add('hidden');
-        } else {
-          sprintTh.classList.remove('hidden');
-        }
-        promiseArray.push(
-          createTaskList(task, 'list', project.projectType, sprint)
-        );
+        promiseArray.push(createTaskList(task, 'list', projectType, sprint));
       }
 
       const loader = document.getElementById(`list-loader`);
