@@ -42,10 +42,10 @@ export function createSubtask(taskDrawer, task) {
     saveSubtasksBtn.classList.remove('hidden');
     isDropdownVisible = true;
 
+    console.log('task is ', task._id);
+
     const allTasks = (
-      await taskService.getTaskByProjectId(
-        localStorage.getItem('selectedProject')
-      )
+      await taskService.taskOfProjectId(localStorage.getItem('selectedProject'))
     ).data.result;
 
     subtaskList.innerHTML = '';
