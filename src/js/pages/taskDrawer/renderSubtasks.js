@@ -9,17 +9,15 @@ export async function renderSubtasks(task) {
     return;
   }
 
-  const all = (
-    await taskService.getTaskByProjectId(
-      localStorage.getItem('selectedProject')
-    )
-  ).data.result;
-  const subtasks = all.filter((t) => task.subTask.includes(t._id));
+  const subtasks = (await taskService.getTaskById(task._id)).data.result
+    .subTask;
 
-  subtasks.forEach(async (st) => {
+  subtasks.forEach(async (sub) => {
+    const st = (await taskService.getTaskById(sub)).data.result;
     const subtaskAssignee = st.assignee
       ? (await taskService.getUserDetailsById(st.assignee)).data.result
       : null;
+
     const div = document.createElement('div');
 
     div.className =
