@@ -130,13 +130,13 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
   project.columns.forEach((column) => {
     const columnEl = document.createElement('div');
-    columnEl.innerHTML = `
-      <div class="w-72 bg-white rounded-lg shadow p-4 shrink-0 h-full overflow-y-auto">
-        <h2 class="text-lg font-semibold border-b pb-2 sticky top-0 bg-white z-10 flex gap-2">
+    columnEl.innerHTML = /*html*/ `
+      <div class="w-72 bg-white rounded-lg shadow-lg shrink-0 h-full overflow-y-auto">
+        <h2 class="text-lg font-semibold sticky top-0 z-10 flex gap-2 px-4 py-2 text-black bg-white shadow-sm items-center">
           ${column.toUpperCase()}
-          <div class="issue-count rounded-full w-7 h-7 text-center text-md text-white bg-cyan-900"></div>
+          <div class="issue-count rounded-full w-5 h-5 text-center text-sm text-black bg-gray-200"></div>
         </h2>
-        <div class="space-y-3 pb-4 h-full" id="task-list"></div>
+        <div class="flex flex-col gap-3 pb-4 h-96 p-2 " id="task-list"></div>
       </div>
     `;
 
@@ -160,16 +160,14 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       const taskEl = document.createElement('div');
       taskEl.dataset._id = task._id;
       taskEl.className =
-        'task flex flex-col max-w-sm p-4 bg-white rounded-lg shadow-md text-black gap-4 relative cursor-grab';
-      taskEl.innerHTML = `
-        <div class="card-header flex justify-between items-center">
+        'task flex flex-col max-w-sm p-4 bg-white rounded-md shadow-sm text-black gap-4 relative cursor-grab border border-gray-100 hover:shadow-md';
+      taskEl.innerHTML = /*html*/ `
+       <div class="card-header flex justify-between items-center">
           <p id="${
             task.title
-          }-taskId" class="task-title text-lg border border-transparent rounded-lg font-medium hover:border-gray-400 cursor-pointer ${isDone}">${
+          }-taskId" class="flex-1 task-title text-lg border border-transparent rounded-sm font-medium cursor-pointer px-1 ${isDone}">${
             task.title
           }</p>
-           <p id="attachmentLogo" class="hidden">📎</p>
-
             <div class="menu-button flex flex-row gap-2 justify-between">
               <button class="edit-btn w-full p-1 hover:bg-gray-200">
                 <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
