@@ -60,7 +60,7 @@ export async function showTaskDrawer(taskId) {
     formData.append('taskId', task._id);
     formData.append('message', message);
 
-    if (attachmentInput.files.length === 1) {
+    if (attachmentInput.files.length) {
       formData.append('attachment', attachmentInput.files[0]);
     }
 
