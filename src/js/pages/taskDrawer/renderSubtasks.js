@@ -1,10 +1,11 @@
 import taskService from '../../services/TaskService';
+import { showTaskDrawer } from './taskDrawer';
 
 export async function renderSubtasks(task) {
   const list = document.getElementById('subtasksList');
   list.innerHTML = '';
 
-  if (!task.subTask || task.subTask.length === 0) {
+  if (!task.subTask.length) {
     list.innerHTML = "<p class='text-gray-500 text-sm'>No subtasks</p>";
     return;
   }
@@ -20,7 +21,7 @@ export async function renderSubtasks(task) {
     const div = document.createElement('div');
 
     div.className =
-      'flex items-start bg-white rounded-lg shadow-md pl-3 py-4 border border-[#90e0ef]';
+      'flex items-start bg-white rounded-lg shadow-md pl-3 py-4 border border-[#90e0ef] subtaskEl cursor-pointer';
 
     div.innerHTML = `
       <img
@@ -41,6 +42,9 @@ export async function renderSubtasks(task) {
         <p class="text-sm text-[#03045e]/70">${st.description || ''}</p>
       </div>
     `;
+
+    div.addEventListener('click', () => showTaskDrawer(sub));
+
     list.appendChild(div);
   });
 }
