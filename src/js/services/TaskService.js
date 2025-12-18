@@ -49,9 +49,8 @@ class TaskService {
               localStorage.setItem('access_token', response.data.accessToken);
               localStorage.setItem('refresh_token', response.data.refreshToken);
 
-              originalRequest.headers[
-                'Authorization'
-              ] = `Bearer ${response.data.accessToken}`;
+              originalRequest.headers['Authorization'] =
+                `Bearer ${response.data.accessToken}`;
 
               return this.api(originalRequest);
             }
@@ -156,6 +155,11 @@ class TaskService {
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Failed to delete task');
     }
+  }
+
+  async taskOfProjectId(projectId) {
+    const response = await this.api.get(`/projectId/${projectId}`);
+    return response;
   }
 }
 

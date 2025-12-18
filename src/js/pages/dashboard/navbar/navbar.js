@@ -1,5 +1,7 @@
-import { renderBoard } from '../dashboard';
-import authService from '../../../services/AuthService';
+import { renderBoard } from '../dashboard.js';
+import authService from '../../../services/AuthService.js';
+import { renderTasksList } from '../../../utils/renderTasks.js';
+import taskService from '../../../services/TaskService.js';
 
 const searchInput = document.getElementById('search-input-field');
 const notificationIcon = document.querySelector('.notification-icon');
@@ -8,13 +10,27 @@ const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
 const preview = document.getElementById('profileImage');
 
-function handleSearch(e) {
+async function handleSearch(e) {
   e.preventDefault();
-  renderBoard(
-    localStorage.getItem('selectedProject'),
-    '',
-    searchInput.value.trim()
+  const projectId = localStorage.getItem('selectedProject');
+
+  await renderBoard(projectId, '', searchInput.value.trim());
+
+  await renderTasksList(projectId, '', searchInput.value.trim());
+}
+
+export async function getFilteredTasks(
+  projectId,
+  filter = '',
+  searchInput = ''
+) {
+  const tasks = await taskService.getTaskByProjectId(
+    projectId,
+    filter,
+    searchInput
   );
+
+  return tasks.data.result;
 }
 
 export function increaseNotificationCount() {
@@ -33,7 +49,9 @@ export async function setupNavbar() {
 
   const notificationCount = localStorage.getItem("notificationCount'");
 
-  searchInput.addEventListener('input', handleSearch);
+  searchInput.addEventListener('input', async (e) => {
+    await handleSearch(e);
+  });
 
   notificationIcon.addEventListener('click', () => {
     localStorage.setItem('notificationCount', 0);

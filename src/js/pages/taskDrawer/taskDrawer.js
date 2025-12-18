@@ -5,6 +5,7 @@ import { openUpdateTaskModal } from '../../utils/modals/updateTaskModal';
 import { renderAttachments } from './renderAttachments';
 import { appendCommentToContainer } from './appendComment';
 import { renderSubtasks } from './renderSubtasks';
+import { createSubtask } from './createSubtask';
 
 export async function showTaskDrawer(taskId) {
   const task = (await taskService.getTaskById(taskId)).data.result;
@@ -49,13 +50,12 @@ export async function showTaskDrawer(taskId) {
   commentSubmit.addEventListener('click', async () => {
     const message = commentInput.value.trim();
     const attachmentInput = taskDrawer.querySelector('#commentAttachment');
+    const formData = new FormData();
 
     if (!message && attachmentInput.files.length > 0) {
       showToast('You must enter a comment before adding an attachment');
       return;
     }
-
-    const formData = new FormData();
 
     formData.append('taskId', task._id);
     formData.append('message', message);
@@ -110,8 +110,6 @@ export async function showTaskDrawer(taskId) {
     profileImageEl.classList.remove('hidden');
   });
 
-  // comments
-
   async function updateCommentList() {
     const comments = (await commentService.getAllComments(task._id)).result;
 
@@ -129,63 +127,6 @@ export async function showTaskDrawer(taskId) {
   }
 
   updateCommentList();
-
-  function createSubtask() {
-    const subtaskBtn = taskDrawer.querySelector('#subtaskButton');
-    const subtaskDropdown = taskDrawer.querySelector('#subtaskDropdown');
-    const subtaskList = taskDrawer.querySelector('#subtaskList');
-    const saveSubtasksBtn = taskDrawer.querySelector('#saveSubtasksBtn');
-
-    subtaskBtn.addEventListener('click', async () => {
-      subtaskDropdown.classList.toggle('hidden');
-
-      const allTasks = (
-        await taskService.getTaskByProjectId(
-          localStorage.getItem('selectedProject')
-        )
-      ).data.result;
-
-      subtaskList.innerHTML = '';
-
-      allTasks.forEach((t) => {
-        if (t._id === task._id) return;
-
-        const isChecked = task.subTask?.includes(t._id);
-
-        const subTask = document.createElement('div');
-        subTask.className = 'flex items-center gap-2 mb-1';
-
-        subTask.innerHTML = `
-        <input
-          type="checkbox"
-          class="subtask-check"
-          value="${t._id}"
-          ${isChecked ? 'checked' : ''}
-        />
-        <span>${t.title}</span>
-      `;
-
-        subtaskList.appendChild(subTask);
-      });
-
-      saveSubtasksBtn.classList.remove('hidden');
-    });
-
-    saveSubtasksBtn.addEventListener('click', async () => {
-      const selectedIds = [...taskDrawer.querySelectorAll('.subtask-check')]
-        .filter((c) => c.checked)
-        .map((c) => c.value);
-
-      await taskService.updateTask(task._id, { subTask: selectedIds });
-
-      showToast('Subtasks updated!', 'success');
-
-      subtaskDropdown.classList.add('hidden');
-
-      showTaskDrawer(task._id);
-    });
-  }
-
-  createSubtask();
+  createSubtask(taskDrawer, task);
   renderAttachments(task);
 }

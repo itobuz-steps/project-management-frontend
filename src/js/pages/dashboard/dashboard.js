@@ -11,7 +11,7 @@ import showToast from '../../utils/showToast.js';
 import sprintService from '../../services/SprintService.js';
 import { showTaskDrawer } from '../taskDrawer/taskDrawer.js';
 import { setupSidebar } from './sidebar/sidebar.js';
-import { setupNavbar } from './navbar/navbar.js';
+import { getFilteredTasks, setupNavbar } from './navbar/navbar.js';
 import { openUpdateTaskModal } from '../../utils/modals/updateTaskModal.js';
 import { openCreateTaskModal } from '../../utils/modals/createTaskModal.js';
 import { openCreateProjectModal } from '../../utils/modals/createProjectModal.js';
@@ -31,47 +31,33 @@ openProjectBtn.addEventListener('click', openCreateProjectModal);
 const addTaskButton = document.getElementById('create-task');
 addTaskButton.addEventListener('click', openCreateTaskModal);
 
-export function dropdownEvent(sprint = {}) {
-  const nameKey = sprint.name ? sprint.name : `backlog`;
-  const dropdownButton = document.getElementById(`dropdownButton-${nameKey}`);
-  const dropdownMenu = document.querySelector(`.dropdown-menu-${nameKey}`);
-
-  dropdownButton.addEventListener('click', () => {
-    dropdownMenu.classList.toggle('hidden');
-  });
-
-  const dropdownIcon = document.querySelector(`.dropdown-icon-${nameKey}`);
-  dropdownButton.addEventListener('click', function () {
-    if (dropdownIcon.classList.contains('rotate-270')) {
-      dropdownIcon.classList.remove('rotate-270');
-    } else {
-      dropdownIcon.classList.add('rotate-270');
-    }
-  });
-}
-
 const backlogBtn = document.getElementById('backlog-li');
 const backlogView = document.getElementById('backlog-view');
 
-backlogBtn.addEventListener('click', () => {
+backlogBtn.addEventListener('click', async () => {
   removeActive(backlogBtn);
   hideAll(backlogView);
+  await renderDashBoardTasks();
 });
 
 const boardBtn = document.getElementById('board-li');
 const boardView = document.getElementById('board-view');
 
-boardBtn.addEventListener('click', () => {
+boardBtn.addEventListener('click', async () => {
   removeActive(boardBtn);
   hideAll(boardView);
+  await renderBoard(localStorage.getItem('selectedProject'));
 });
 
 const listBtn = document.getElementById('list-li');
 const listView = document.getElementById('list-view');
 
-listBtn.addEventListener('click', () => {
+listBtn.addEventListener('click', async () => {
   removeActive(listBtn);
   hideAll(listView);
+
+  await renderTasksList(localStorage.getItem('selectedProject'), '', '');
+  await renderBoard(localStorage.getItem('selectedProject'));
 });
 
 async function renderDashboard(project) {
@@ -86,13 +72,10 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
 
   project.columns.forEach((column) => (result[column] = []));
   console.log(project.columns);
-  const tasks = await taskService.getTaskByProjectId(
-    projectId,
-    filter,
-    searchInput
-  );
 
-  tasks.data.result.forEach((task) => result[task.status].push(task));
+  const tasks = await getFilteredTasks(projectId, filter, searchInput);
+
+  tasks.forEach((task) => result[task.status].push(task));
 
   return result;
 }
@@ -117,6 +100,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
   project.columns.forEach((col) => {
     allTasks.push(...(columns[col] || []));
   });
+
   const assigneeIds = [
     ...new Set(allTasks.map((t) => t.assignee).filter(Boolean)),
   ];
@@ -131,13 +115,13 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
   project.columns.forEach((column) => {
     const columnEl = document.createElement('div');
-    columnEl.innerHTML = `
-      <div class="w-72 bg-white rounded-lg shadow p-4 shrink-0 h-full overflow-y-auto">
-        <h2 class="text-lg font-semibold border-b pb-2 sticky top-0 bg-white z-10 flex gap-2">
+    columnEl.innerHTML = /*html*/ `
+      <div class="w-72 bg-white rounded-lg shadow-lg shrink-0 h-full overflow-y-auto">
+        <h2 class="text-lg font-semibold sticky top-0 z-10 flex gap-2 px-4 py-2 text-black bg-white shadow-sm shadow-gray-200 items-center">
           ${column.toUpperCase()}
-          <div class="issue-count rounded-full w-7 h-7 text-center text-md text-white bg-cyan-900"></div>
+          <div class="issue-count rounded-full w-5 h-5 text-center text-sm text-black bg-gray-200"></div>
         </h2>
-        <div class="space-y-3 pb-4 h-full" id="task-list"></div>
+        <div class="flex flex-col gap-3 pb-4 h-96 p-2 " id="task-list"></div>
       </div>
     `;
 
@@ -161,16 +145,14 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       const taskEl = document.createElement('div');
       taskEl.dataset._id = task._id;
       taskEl.className =
-        'task flex flex-col max-w-sm p-4 bg-white rounded-lg shadow-md text-black gap-4 relative cursor-grab';
-      taskEl.innerHTML = `
-        <div class="card-header flex justify-between items-center">
+        'task flex flex-col max-w-sm p-3 bg-white rounded-md shadow-sm text-black gap-4 relative cursor-grab border border-gray-100 hover:shadow-md';
+      taskEl.innerHTML = /*html*/ `
+       <div class="card-header flex justify-between items-center">
           <p id="${
             task.title
-          }-taskId" class="task-title text-lg border border-transparent rounded-lg font-medium hover:border-gray-400 cursor-pointer ${isDone}">${
-        task.title
-      }</p>
-           <p id="attachmentLogo" class="hidden">📎</p>
-
+          }-taskId" class="flex-1 task-title text-lg border border-transparent rounded-sm font-medium cursor-pointer px-1 ${isDone}">${
+            task.title
+          }</p>
             <div class="menu-button flex flex-row gap-2 justify-between">
               <button class="edit-btn w-full p-1 hover:bg-gray-200">
                 <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -180,13 +162,13 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
               </button>
               <button class="delete-btn w-full p-1 hover:bg-red-200">
                 <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="hover:fill-red-200 transition duration-300">
-<rect width="20" height="20" fill="red-400"/>
-<path d="M5 7.5H19L18 21H6L5 7.5Z" stroke="#000000" stroke-linejoin="round"/>
-<path d="M15.5 9.5L15 19" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M12 9.5V19" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M8.5 9.5L9 19" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M16 5H19C20.1046 5 21 5.89543 21 7V7.5H3V7C3 5.89543 3.89543 5 5 5H8M16 5L15 3H9L8 5M16 5H8" stroke="#000000" stroke-linejoin="round"/>
-</svg>
+                  <rect width="20" height="20" fill="red-400"/>
+                  <path d="M5 7.5H19L18 21H6L5 7.5Z" stroke="#000000" stroke-linejoin="round"/>
+                  <path d="M15.5 9.5L15 19" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 9.5V19" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M8.5 9.5L9 19" stroke="#000000" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M16 5H19C20.1046 5 21 5.89543 21 7V7.5H3V7C3 5.89543 3.89543 5 5 5H8M16 5L15 3H9L8 5M16 5H8" stroke="#000000" stroke-linejoin="round"/>
+                  </svg>
               </button>
             </div>
         </div>
@@ -214,9 +196,9 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
                   ? 'http://localhost:3001/uploads/profile/' +
                     assignee.profileImage
                   : '../../../assets/img/profile.png'
-              }" class="w-8 h-8 object-cover" title="${
-        assignee?.name || 'Unassigned'
-      }"/>
+              }" class="w-8 h-8 aspect-square rounded-full" title="${
+                assignee?.name || 'Unassigned'
+              }"/>
             </span>
             <div class="avatar-dropdown hidden absolute top-20 right-10 rounded-2xl">
               <ul class="assignee-list text-sm text-gray-700 relative z-1 bg-slate-200 rounded-2xl"></ul>
@@ -224,14 +206,6 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
           </div>
         </div>
       `;
-
-      const attachmentLogo = taskEl.querySelector('#attachmentLogo');
-
-      if (task.attachments.length) {
-        attachmentLogo.classList.remove('hidden');
-      }
-
-      // add drop down upon clicking the image
 
       const userAvatar = taskEl.querySelector('.user-avatar');
       const avatarDropdown = taskEl.querySelector('.avatar-dropdown');
@@ -357,8 +331,8 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
           'Are you sure you want to delete this task?',
           async () => {
             await taskService.deleteTask(task._id);
-            renderBoard(localStorage.getItem('selectedProject'));
-            renderDashBoardTasks();
+            await renderBoard(localStorage.getItem('selectedProject'));
+            await renderDashBoardTasks();
           }
         );
       });
@@ -417,15 +391,6 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
   handleStatusFilter();
   handleAssigneeFilter();
-  if (project.projectType === 'kanban') {
-    await renderTasksList(filteredTasks, 'kanban', '');
-  } else {
-    await renderTasksList(
-      filteredTasks,
-      '',
-      currentSprint?.result ? currentSprint.result : ''
-    );
-  }
 }
 
 async function checkForInvite() {
@@ -453,5 +418,5 @@ setupNotification();
 setupNavbar();
 loadProjectMembers(localStorage.getItem('selectedProject'));
 renderBoard(localStorage.getItem('selectedProject'));
-renderDashBoardTasks();
+// renderDashBoardTasks();
 setupPushNotifications();

@@ -19,12 +19,12 @@
   </head>
 
   <body
-    class="flex justify-center items-center min-h-screen bg-[#caf0f8] font-['Libre_Baskerville']"
+    class="flex justify-center items-center min-h-screen font-['Libre_Baskerville'] bg-black inset-0 w-full bg-[radial-gradient(rgb(111,0,255)_0.2px,transparent_1px)] bg-size-[24px_24px]"
   >
     <div
-      class="card p-4 w-90 flex flex-col justify-center align-center rounded-xl shadow-[0_8px_20px_rgba(0,180,216,0.15),_inset_0_0_10px_rgba(0,180,216,0.05)] bg-white max-w-[400px] w-full"
+      class="card p-4 xs:p-8 w-full flex flex-col justify-center align-center xs:rounded-xl shadow-[0_8px_20px_rgba(0,180,216,0.15),inset_0_0_10px_rgba(0,180,216,0.05)] bg-indigo-950 max-w-[400px] h-screen xs:h-auto"
     >
-      <h3 class="text-center mb-4 text-[28px] text-[#03045e] font-bold">
+      <h3 class="text-center mb-4 text-[28px] text-white font-bold">
         Edit Profile
       </h3>
 
@@ -33,13 +33,13 @@
           id="preview"
           src="../assets/img/profile.png"
           alt="Profile Preview"
-          class="rounded-full shadow-md border-4 border-[#90e0ef]"
+          class="rounded-full shadow-md border-4 border-[#7d3487] aspect-1/1"
           width="110"
           height="110"
         />
       </div>
 
-      <p id="user-email" class="text-[#0077b6] text-center text-sm mb-4"></p>
+      <p id="user-email" class="text-[#ffffff] text-center text-sm mb-4"></p>
 
       <form
         id="edit-profile-form"
@@ -49,11 +49,11 @@
         <div class="flex flex-col justify-center align-center w-full">
           <label
             for="user_name"
-            class="from-label text-[#03045e] font-semibold mb-1"
+            class="from-label text-[#ffffff] font-semibold mb-1"
             >Username</label
           >
           <input
-            class="from-control text-sm border border-[#90e0ef] p-2 rounded-lg w-full outline-none focus:border-[#0077b6] focus:shadow-[0_0_8px_#0077b6] transition-all duration-300 placeholder:text-sm"
+            class="from-control text-sm border border-[#bb90ef] p-2 rounded-lg w-full outline-none focus:border-[#a400b6] focus:shadow-[0_0_8px_#5d3966] transition-all duration-300 placeholder:text-sm placeholder:text-white/50 text-white"
             type="text"
             id="name"
             name="user_name"
@@ -64,13 +64,13 @@
         <div class="flex flex-col justify-center align-center w-full">
           <label
             for="profileImage"
-            class="form-label text-[#03045e] font-semibold mb-1"
+            class="form-label text-[#f4f4f4] font-semibold mb-1"
           >
             Upload Profile Image
           </label>
 
           <input
-            class="form-control border border-[#90e0ef] p-2 rounded-lg w-full cursor-pointer outline-none focus:border-[#0077b6] focus:shadow-[0_0_8px_#0077b6] transition-all duration-300 text-sm text-[#03045e] file:bg-[#caf0f8] file:border-none file:mr-4 file:px-4 file:py-1 file:rounded-md file:text-[#03045e] file:font-medium file:cursor-pointer hover:border-[#0077b6] hover:shadow-[0_0_8px_#90e0ef]"
+            class="form-control border border-[#bb90ef] p-2 rounded-lg w-full cursor-pointer outline-none focus:border-[#a400b6] focus:shadow-[0_0_4px_#5d3966] transition-all duration-300 text-sm text-[#cecece] file:bg-[#edcaf8] file:border-none file:mr-4 file:px-4 file:py-1 file:rounded-md file:text-[#515151] file:font-medium file:cursor-pointer hover:border-[#8200b6] hover:shadow-[0_0_8px_#5d3966]"
             type="file"
             id="profileImageAdd"
             name="profileImage"
@@ -80,14 +80,14 @@
 
         <label
           for="profile_image"
-          class="form-label text-gray-500 mb-3 text-xs"
+          class="form-label text-gray-500 mb-3 text-xs self-start -mt-2"
         >
           * max 500KB
         </label>
 
         <button
           type="submit"
-          class="btn btn-primary w-full text-white py-2 rounded-lg bg-[#0077b6] hover:bg-[#00b4d8] transition-all duration-300 font-medium"
+          class="btn btn-primary w-full text-white py-2 rounded-lg bg-purple-700 hover:bg-purple-950 transition-all duration-300 font-medium"
         >
           Save
         </button>
@@ -95,7 +95,7 @@
       <a
         href="#"
         id="profile-go-back-btn"
-        class="text-[#0077b6] font-semibold transition-colors duration-300 text-center hover:text-[#00b4d8]"
+        class="text-white font-semibold transition-colors duration-300 text-center hover:text-[#b400d8]"
       >
         &#8592; Go back
       </a>
