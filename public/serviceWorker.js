@@ -2,15 +2,27 @@ self.addEventListener('push', async (event) => {
   let title = 'New Notification';
   let options = { body: '' };
 
-  console.log('Notification received', await event.data.json());
+  const channel = new BroadcastChannel('sw-messages');
+
   if (event.data) {
     try {
-      const data = await event.data.json();
+      const data = event.data.json();
       title = data.title || title;
       options.body = data.body || '';
-    } catch {
-      const text = await event.data.text();
+
+      // send full payload to client
+      channel.postMessage({
+        type: 'PUSH_NOTIFICATION',
+        payload: data,
+      });
+    } catch (err) {
+      const text = event.data.text();
       options.body = text;
+
+      channel.postMessage({
+        type: 'PUSH_NOTIFICATION',
+        payload: { body: text },
+      });
     }
   }
 

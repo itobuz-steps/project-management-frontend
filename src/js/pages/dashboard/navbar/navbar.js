@@ -4,8 +4,8 @@ import { renderTasksList } from '../../../utils/renderTasks.js';
 import taskService from '../../../services/TaskService.js';
 
 const searchInput = document.getElementById('search-input-field');
-const notificationIcon = document.querySelector('.notification-icon');
-const badge = document.querySelector('.notification-badge');
+// const notificationIcon = document.querySelector('.notification-icon');
+// const badge = document.querySelector('.notification-badge');
 const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
 const preview = document.getElementById('profileImage');
@@ -45,27 +45,27 @@ export function increaseNotificationCount() {
 }
 
 export async function setupNavbar() {
-  badge.classList.add('hidden');
+  // badge.classList.add('hidden');
 
-  const notificationCount = localStorage.getItem("notificationCount'");
+  // const notificationCount = localStorage.getItem("notificationCount'");
 
   searchInput.addEventListener('input', async (e) => {
     await handleSearch(e);
   });
 
-  notificationIcon.addEventListener('click', () => {
-    localStorage.setItem('notificationCount', 0);
+  // dropdownToggle.addEventListener('click', () => {
+  //   localStorage.setItem('notificationCount', 0);
 
-    const badge = document.querySelector('.notification-badge');
+  //   const badge = document.querySelector('.notification-badge');
 
-    badge.textContent = 0;
-    badge.classList.add('hidden');
-  });
+  //   badge.textContent = 0;
+  //   badge.classList.add('hidden');
+  // });
 
-  if (notificationCount > 0) {
-    badge.textContent = notificationCount;
-    badge.classList.remove('hidden');
-  }
+  // if (notificationCount > 0) {
+  //   badge.textContent = notificationCount;
+  //   badge.classList.remove('hidden');
+  // }
 
   profileBtn.addEventListener('click', () => {
     dropdownMenu.classList.toggle('hidden');
@@ -88,3 +88,37 @@ export async function setupNavbar() {
     preview.src = '../../../../assets/img/profile.png';
   }
 }
+let dropdownToggle = document.getElementById('dropdownToggle');
+let notificationDropdownMenu = document.getElementById(
+  'notificationDropdownMenu'
+);
+
+function toggleDropdown() {
+  notificationDropdownMenu.classList.toggle('hidden');
+  notificationDropdownMenu.classList.toggle('block');
+}
+
+function hideDropdown() {
+  notificationDropdownMenu.classList.add('hidden');
+  notificationDropdownMenu.classList.remove('block');
+}
+
+dropdownToggle.addEventListener('click', (event) => {
+  event.stopPropagation();
+  toggleDropdown();
+});
+
+notificationDropdownMenu.querySelectorAll('.dropdown-item').forEach((li) => {
+  li.addEventListener('click', () => {
+    hideDropdown();
+  });
+});
+
+document.addEventListener('click', (event) => {
+  if (
+    !notificationDropdownMenu.contains(event.target) &&
+    event.target !== dropdownToggle
+  ) {
+    hideDropdown();
+  }
+});

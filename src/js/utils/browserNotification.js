@@ -28,9 +28,8 @@ export async function setupPushNotifications() {
   }
 
   try {
-    const registration = await navigator.serviceWorker.register(
-      '/serviceWorker.js'
-    );
+    const registration =
+      await navigator.serviceWorker.register('/serviceWorker.js');
     console.log('Service Worker registered');
 
     const permission = await Notification.requestPermission();
@@ -60,10 +59,48 @@ export async function setupPushNotifications() {
 
     console.log('Subscription sent to backend');
 
+    const channel = new BroadcastChannel('sw-messages');
+    channel.addEventListener('message', (event) => {
+      console.log('Received', event.data);
+    });
+
     return subscription;
   } catch (err) {
     console.error('Push setup failed:', err);
   }
 }
+
+// export function initNotificationListener() {
+//   if (!('BroadcastChannel' in window)) {
+//     console.warn('BroadcastChannel not supported');
+//     return;
+//   }
+
+//   const channel = new BroadcastChannel('sw-messages');
+
+//   channel.onmessage = (event) => {
+//     const { type, payload } = event.data;
+
+//     if (type === 'PUSH_NOTIFICATION') {
+//       renderNotification(payload);
+//     }
+//   };
+// }
+
+// function renderNotification(data) {
+//   const container = document.getElementById('notificationDropdownMenu');
+
+//   if (!container) return;
+
+//   const div = document.createElement('div');
+//   div.className = 'notificationItems';
+
+//   div.innerHTML = `
+//     <strong>${data.title || 'Notification'}</strong>
+//     <p>${data.body || ''}</p>
+//   `;
+
+//   container.prepend(div);
+// }
 
 export default setupPushNotifications;
