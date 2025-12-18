@@ -42,23 +42,32 @@ export function createSubtask(taskDrawer, task) {
     saveSubtasksBtn.classList.remove('hidden');
     isDropdownVisible = true;
 
-    console.log('task is ', task._id);
-
-    const allTasks = (
-      await taskService.taskOfProjectId(localStorage.getItem('selectedProject'))
+    let allTasks = [];
+    allTasks = (
+      await taskService.getTaskByProjectId(
+        localStorage.getItem('selectedProject')
+      )
     ).data.result;
+    const subtasks = (await taskService.getTaskById(task._id)).data.result
+      .subTask;
 
-    subtaskList.innerHTML = '';
+    subtasks.forEach(async (stId) => {
+      const tasks = (await taskService.getTaskById(stId)).data.result;
 
-    allTasks.forEach((t) => {
-      if (t._id === task._id) return;
+      allTasks.push(tasks);
+      console.log('pushed all tasks', allTasks);
 
-      const isChecked = task.subTask?.includes(t._id);
+      subtaskList.innerHTML = '';
+      console.log('pushed  tasks', allTasks);
+      allTasks.forEach((t) => {
+        if (t._id === task._id) return;
 
-      const subTask = document.createElement('div');
-      subTask.className = 'flex items-center gap-2 mb-1';
+        const isChecked = task.subTask?.includes(t._id);
 
-      subTask.innerHTML = `
+        const subTask = document.createElement('div');
+        subTask.className = 'flex items-center gap-2 mb-1';
+
+        subTask.innerHTML = `
               <input
                 type="checkbox"
                 class="subtask-check"
@@ -68,7 +77,8 @@ export function createSubtask(taskDrawer, task) {
               <span>${t.title}</span>
             `;
 
-      subtaskList.appendChild(subTask);
+        subtaskList.appendChild(subTask);
+      });
     });
   };
 }
