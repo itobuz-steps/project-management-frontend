@@ -56,8 +56,13 @@ export function createSubtask(taskDrawer, task) {
         subtaskList.innerHTML = '';
 
         allTasks.forEach((t) => {
-          if (t._id === task._id) return;
+          if (t._id === task._id) {
+            return;
+          }
 
+          if (t.subTask.length) {
+            return;
+          }
           const isChecked = task.subTask?.includes(t._id);
           const subTask = document.createElement('div');
 
@@ -88,8 +93,13 @@ export function createSubtask(taskDrawer, task) {
         subtaskList.innerHTML = '';
 
         allTasks.forEach((t) => {
-          if (t._id === task._id) return;
+          if (t._id === task._id) {
+            return;
+          }
 
+          if (t.subTask.length) {
+            return;
+          }
           const isChecked = task.subTask?.includes(t._id);
 
           const subTask = document.createElement('div');
