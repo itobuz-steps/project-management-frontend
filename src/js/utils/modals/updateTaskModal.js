@@ -75,12 +75,12 @@ closeEditTask.addEventListener('click', () => {
 
 export async function openUpdateTaskModal(taskId) {
   selectedTaskId = taskId;
-
+  console.log(taskId);
   try {
     const response = await taskService.getTaskById(taskId);
     const task = response.data.result;
     const status = editModal.querySelector('#status');
-
+    console.log(task.title);
     editModal.querySelector('#title').value = task.title;
     editModal.querySelector('#description').value = task.description;
     editModal.querySelector('#type').value = task.type;
@@ -111,6 +111,5 @@ export async function openUpdateTaskModal(taskId) {
     editModal.classList.remove('hidden');
   } catch (error) {
     console.error('Failed to load task:', error);
-    alert('Error loading task data');
   }
 }
