@@ -1,10 +1,18 @@
-//add a push event listener to the browser itself
-//self here represents the browser or the service worker
+self.addEventListener('push', async (event) => {
+  let title = 'New Notification';
+  let options = { body: '' };
 
-self.addEventListener('push', (e) => {
-  const data = e.data.json();
-  self.registration.showNotification(data.title, {
-    body: data.body,
-  });
+  console.log('Notification received', await event.data.json());
+  if (event.data) {
+    try {
+      const data = await event.data.json();
+      title = data.title || title;
+      options.body = data.body || '';
+    } catch {
+      const text = await event.data.text();
+      options.body = text;
+    }
+  }
+
+  event.waitUntil(self.registration.showNotification(title, options));
 });
-
