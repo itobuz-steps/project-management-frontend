@@ -38,7 +38,7 @@ const taskDrawerInnerHtml = /*html*/ `
         <h2 class="title font-semibold"></h2>
         <!-- subtask -->
         <div class="relative">
-          <button id="subtaskButton" class="subtask">
+          <button id="subtaskButton" class="subtask cursor-pointer">
             <svg
               width="25px"
               height="25px"
@@ -234,7 +234,7 @@ const taskDrawerInnerHtml = /*html*/ `
     >
       <div
         id="commentImage"
-        class="flex items-start gap-3 rounded-lg border border-[#90e0ef] bg-white py-3 pl-3 shadow-lg shadow-md"
+        class="flex items-start gap-3 rounded-lg border border-[#90e0ef] bg-white py-3 pl-3 shadow-lg"
       >
         <img
           src="../assets/img/profile.png"
@@ -243,17 +243,17 @@ const taskDrawerInnerHtml = /*html*/ `
         />
         <div id="CommentInformation" class="flex flex-col gap-1">
           <div
-            class="text-md flex items-center gap-2 text-[#03045e] text-gray-500"
+            class="text-md flex items-center gap-2 text-gray-500"
           >
             <span
-              class="username font-medium text-[#03045e] text-gray-700"
+              class="username font-medium text-gray-700"
             >
               John Smith
             </span>
             <span>•</span>
             <span class="text-sm text-[#0077b6]">17th Feb 2024</span>
           </div>
-          <p class="message text-sm text-[#03045e]/70 text-gray-700">
+          <p class="message text-sm text-gray-700">
             Hi, I’ll do that task now, you can start working on another
             task!
           </p>
