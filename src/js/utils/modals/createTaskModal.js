@@ -2,6 +2,7 @@ import { handleModalAssignee, handleModalStatus } from './modal';
 import taskService from '../../services/TaskService';
 import showToast from '../showToast';
 import renderSelectedTab from '../renderSelectedTab';
+import { addDays, format } from 'date-fns';
 
 const closeTaskModal = document.getElementById('close-task-modal');
 const createTaskModal = document.getElementById('create-task-modal');
@@ -45,18 +46,11 @@ taskForm.addEventListener('submit', async (e) => {
 
   if (!document.getElementById('dueDate').value) {
     dateValue = new Date();
-    dateValue.setDate(dateValue.getDate() + 7);
-    console.log(dateValue);
-    dateValue = dateValue.toLocaleDateString();
-    console.log(dateValue);
-
-    const splitVal = dateValue.split('/');
-    console.log(splitVal);
-
-    dateValue = splitVal[2] + '-' + splitVal[1] + '-' + splitVal[0];
+    dateValue = addDays(dateValue, 7);
+    dateValue = format(dateValue, 'yyyy-MM-dd');
   } else {
     dateValue = document.getElementById('dueDate').value;
-    console.log(dateValue);
+    dateValue = format(dateValue, 'yyyy-MM-dd');
   }
 
   const task = {
