@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { getAllNotification } from '../services/notificationService';
+import { DateTime } from 'luxon';
 
 function urlBase64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
@@ -60,47 +62,82 @@ export async function setupPushNotifications() {
     console.log('Subscription sent to backend');
 
     const channel = new BroadcastChannel('sw-messages');
-    channel.addEventListener('message', (event) => {
-      console.log('Received', event.data);
-    });
 
+    channel.onmessage = (event) => {
+      const { type, payload } = event.data;
+
+      if (type === 'PUSH_NOTIFICATION') {
+        handleNotification(payload);
+      }
+    };
     return subscription;
   } catch (err) {
     console.error('Push setup failed:', err);
   }
 }
 
-// export function initNotificationListener() {
-//   if (!('BroadcastChannel' in window)) {
-//     console.warn('BroadcastChannel not supported');
-//     return;
-//   }
+function handleNotification(data) {
+  const container = document.querySelector('#notificationDropdownMenu ul');
 
-//   const channel = new BroadcastChannel('sw-messages');
+  if (!container) return;
 
-//   channel.onmessage = (event) => {
-//     const { type, payload } = event.data;
+  const li = document.createElement('li');
 
-//     if (type === 'PUSH_NOTIFICATION') {
-//       renderNotification(payload);
-//     }
-//   };
-// }
+  const isUnread = data.unread ?? true;
 
-// function renderNotification(data) {
-//   const container = document.getElementById('notificationDropdownMenu');
+  li.className = `
+    dropdown-item flex cursor-pointer items-start gap-4 p-4
+    transition-colors duration-200
+    hover:bg-gray-50
+    ${isUnread ? 'bg-blue-50/40' : ''}
+  `;
 
-//   if (!container) return;
+  li.innerHTML = /*html*/ `
+    <div class="relative">
+      ${
+        data.avatar
+          ? `<img src="${data.avatar}" class="h-10 w-10 rounded-full object-cover" />`
+          : `
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" />
+              </svg>
+            </div>
+          `
+      }
 
-//   const div = document.createElement('div');
-//   div.className = 'notificationItems';
+      ${
+        isUnread
+          ? `<span class="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-blue-600"></span>`
+          : ''
+      }
+    </div>
+    <div class="flex flex-1 flex-col gap-1">
+      <h4 class="text-sm font-semibold text-slate-900 leading-snug">
+        ${data.title || 'Notification'}
+      </h4>}
+      <span class="mt-1 text-xs font-medium text-blue-600">
+        ${DateTime.fromISO(data.createdAt).toRelative() || 'Just now'}
+      </span>
+    </div>
+  `;
 
-//   div.innerHTML = `
-//     <strong>${data.title || 'Notification'}</strong>
-//     <p>${data.body || ''}</p>
-//   `;
+  container.prepend(li);
+}
 
-//   container.prepend(div);
-// }
+export async function renderNotification() {
+  const currentProject = localStorage.getItem('selectedProject');
+
+  const notifications = (await getAllNotification(currentProject)).data.result;
+
+  console.log(notifications);
+
+  for (const notification of notifications) {
+    handleNotification(notification);
+  }
+}
+
 
 export default setupPushNotifications;
