@@ -86,6 +86,7 @@ class TaskService {
     const response = await this.api.get(
       `/?projectId=${projectId}&filter=${filter}&searchInput=${searchInput}`
     );
+
     return response;
   }
 
@@ -94,6 +95,7 @@ class TaskService {
       const response = await this.api.get(
         `/users/batch?ids=${userIds.join(',')}`
       );
+
       return response.data;
     } catch (error) {
       throw new Error(
@@ -122,12 +124,14 @@ class TaskService {
     if (task.assignee) {
       formData.append('assignee', task.assignee);
     }
+
     if (task.attachments) {
       console.log(task.attachments);
       Array.from(task.attachments).forEach((file) => {
         formData.append('attachments', file);
       });
     }
+
     try {
       const response = await this.api.post(`/`, formData);
 
@@ -140,7 +144,7 @@ class TaskService {
   async updateTask(id, updatedTask) {
     try {
       const response = await this.api.put(`/${id}`, updatedTask);
-      // showNotification('Task Updated by ');
+
       return response;
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Failed to update task');

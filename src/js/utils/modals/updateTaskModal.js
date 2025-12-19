@@ -1,7 +1,6 @@
 import taskService from '../../services/TaskService';
-import { renderBoard } from '../../pages/dashboard/dashboard';
-import { renderDashBoardTasks } from '../renderTasks';
 import { handleModalAssignee, handleModalStatus } from './modal';
+import renderSelectedTab from '../renderSelectedTab';
 
 const closeEditTask = document.getElementById('close-update-task-modal');
 const editModal = document.getElementById('update-task-modal');
@@ -52,10 +51,8 @@ editForm.addEventListener('submit', async (e) => {
     console.log('Task updated successfully:', response.data);
 
     editModal.classList.add('hidden');
-    renderBoard(localStorage.getItem('selectedProject'));
-    // renderTasksList();
-    renderDashBoardTasks();
-    //hide side bar
+    await renderSelectedTab(localStorage.getItem('selectedProject'));
+
     setTimeout(() => {
       const taskDrawer = document.getElementById('task-side-drawer');
       const profileImageEl = taskDrawer.querySelector('.profile-image');
