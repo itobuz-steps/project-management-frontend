@@ -1,5 +1,5 @@
 import authService from '../../services/AuthService.js';
-import { showMessage } from '../../utils/showMessage.js';
+import showToast from '../../utils/showToast.js';
 
 const forgotForm = document.querySelector('.forgot-form');
 const emailInput = document.getElementById('email-input');
@@ -20,7 +20,7 @@ sendOtpButton.addEventListener('click', async (e) => {
   const email = emailInput.value.trim();
 
   if (!email) {
-    showMessage('Enter email.', 'warning');
+    showToast('Enter email.', 'warning');
     return;
   }
 
@@ -37,12 +37,12 @@ sendOtpButton.addEventListener('click', async (e) => {
     otpInput.disabled = false;
     passwordInput.disabled = false;
 
-    showMessage('OTP sent! Check email.', 'success');
+    showToast('OTP sent! Check email.', 'success');
   } catch (error) {
     sendOtpButton.textContent = 'Send OTP';
     emailInput.disabled = false;
 
-    showMessage(error.message || 'Failed to send OTP.', 'danger');
+    showToast(error.message || 'Failed to send OTP.', 'danger');
   }
 });
 
@@ -51,7 +51,7 @@ otpInput.addEventListener('input', async () => {
   const email = emailInput.value.trim();
   if (isOtpVerified || otp.length !== 6) return;
 
-  showMessage('Verifying...', 'info');
+  showToast('Verifying...', 'info');
 
   try {
     otpInput.disabled = true;
@@ -61,14 +61,14 @@ otpInput.addEventListener('input', async () => {
     isOtpVerified = true;
     otpInput.disabled = false;
 
-    showMessage('OTP verified! Enter new password.', 'success');
+    showToast('OTP verified! Enter new password.', 'success');
   } catch (error) {
     isOtpVerified = false;
     otpInput.value = '';
 
     otpInput.disabled = false;
 
-    showMessage(error.message || 'Invalid OTP.', 'danger');
+    showToast(error.message || 'Invalid OTP.', 'danger');
   }
 });
 
@@ -80,22 +80,22 @@ forgotForm.addEventListener('submit', async (e) => {
   const newPassword = passwordInput.value;
 
   if (!isOtpSent) {
-    showMessage('Send OTP first.', 'warning');
+    showToast('Send OTP first.', 'warning');
     return;
   }
 
   if (!isOtpVerified) {
-    showMessage('Verify OTP before resetting.', 'warning');
+    showToast('Verify OTP before resetting.', 'warning');
     return;
   }
 
   if (!email || !otp || !newPassword) {
-    showMessage('All fields required.', 'warning');
+    showToast('All fields required.', 'warning');
     return;
   }
 
   if (newPassword.length < 6) {
-    showMessage('Password must be 6+ characters.', 'info');
+    showToast('Password must be 6+ characters.', 'info');
     return;
   }
 
@@ -105,7 +105,7 @@ forgotForm.addEventListener('submit', async (e) => {
   try {
     await authService.forgetPasswordReset(email, otp, newPassword);
 
-    showMessage('Password reset successful! Redirecting...', 'success');
+    showToast('Password reset successful! Redirecting...', 'success');
 
     setTimeout(() => {
       window.location.href = 'signup';
@@ -114,6 +114,6 @@ forgotForm.addEventListener('submit', async (e) => {
     resetButton.textContent = 'Reset Password';
     resetButton.disabled = false;
 
-    showMessage(error.message || 'Failed to reset password.', 'danger');
+    showToast(error.message || 'Failed to reset password.', 'danger');
   }
 });

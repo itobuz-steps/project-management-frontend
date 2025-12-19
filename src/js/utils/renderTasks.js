@@ -327,10 +327,10 @@ function createBacklogTable(projectType) {
 
 
                <div class="relative flex justify-between items-center text-left bg-gray-50 shadow-sm p-2 rounded-md border border-gray-200">
-                  <div class="flex items-center justify-center">
+                  <div class="flex items-center justify-start w-full">
                     <button
                       type="button"
-                      class="flex items-center w-30 md:w-fit gap-3 rounded-md font-semibold cursor-pointer focus:outline-none"
+                      class="flex items-center w-30 md:w-full gap-3 rounded-md font-semibold cursor-pointer focus:outline-none"
                       id="dropdownButton-backlog"
                       aria-expanded="false"
                       aria-haspopup="true"
