@@ -108,3 +108,7 @@ p.wrapper {
 p.due-date {
   font-size: 12px;
 }
+
+.text-small {
+  font-size: 11px;
+}
