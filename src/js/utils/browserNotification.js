@@ -117,7 +117,7 @@ function handleNotification(data) {
     <div class="flex flex-1 flex-col gap-1">
       <h4 class="text-sm font-semibold text-slate-900 leading-snug">
         ${data.title || 'Notification'}
-      </h4>}
+      </h4>
       <span class="mt-1 text-xs font-medium text-blue-600">
         ${DateTime.fromISO(data.createdAt).toRelative() || 'Just now'}
       </span>
@@ -139,5 +139,21 @@ export async function renderNotification() {
   }
 }
 
+function lazyLoad() {
+  let notificationEl;
+  if ('IntersectionObserver' in Window) {
+    const options = {
+      root: document.getElementById('notificationDropdownMenu'),
+      threshold: 0.3,
+    };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          notificationEl = entry.target;
+        }
+      });
+    }, options);
+  }
+}
 
 export default setupPushNotifications;
