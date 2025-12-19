@@ -52,7 +52,7 @@ export function appendCommentToContainer(comment, container) {
       ${comment.message}
     </p>
     
-    <a id="attachmentLogo" class="hidden" style="cursor:pointer;">📎</a>
+    <a id="attachmentLogo" class="hidden cursor-pointer">📎</a>
 
     <div class="edit-controls hidden">
       <textarea class="edit-input w-full border border-[#90e0ef] rounded-md p-2" rows="1">${

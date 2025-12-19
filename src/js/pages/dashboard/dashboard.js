@@ -23,6 +23,7 @@ import {
 import { checkToken } from '../../utils/checkToken.js';
 import { removeActive, hideAll } from '../../utils/elementUtils.js';
 import { loadProjectMembers } from '../loadMembers/loadMembers.js';
+import setupPushNotifications from '../../utils/browserNotification.js';
 
 const openProjectBtn = document.getElementById('plus-icon');
 openProjectBtn.addEventListener('click', openCreateProjectModal);
@@ -152,7 +153,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       taskEl.className =
         'task flex flex-col max-w-sm p-3 bg-white rounded-md shadow-sm text-black gap-4 relative cursor-grab border border-gray-100 hover:shadow-md';
       taskEl.innerHTML = /*html*/ `
-       <div class="card-header flex justify-between items-center">
+        <div class="card-header flex justify-between items-center">
           <p id="${
             task.title
           }-taskId" class="flex-1 task-title text-lg border border-transparent rounded-sm font-medium cursor-pointer px-1 ${isDone}">${
@@ -392,6 +393,86 @@ async function checkForInvite() {
   }
 }
 
+function initNotificationListener() {
+  if (!('BroadcastChannel' in window)) {
+    console.warn('BroadcastChannel not supported');
+    return;
+  }
+
+  const channel = new BroadcastChannel('sw-messages');
+
+  channel.onmessage = (event) => {
+    const { type, payload } = event.data;
+
+    if (type === 'PUSH_NOTIFICATION') {
+      renderNotification(payload);
+    }
+  };
+}
+
+function renderNotification(data) {
+  const container = document.querySelector('#notificationDropdownMenu ul');
+
+  if (!container) return;
+
+  const li = document.createElement('li');
+
+  const isUnread = data.unread ?? true;
+
+  li.className = `
+    dropdown-item flex cursor-pointer items-start gap-4 p-4
+    transition-colors duration-200
+    hover:bg-gray-50
+    ${isUnread ? 'bg-blue-50/40' : ''}
+  `;
+
+  li.innerHTML = `
+    <!-- Avatar / Icon -->
+    <div class="relative">
+      ${
+        data.avatar
+          ? `<img src="${data.avatar}" class="h-10 w-10 rounded-full object-cover" />`
+          : `
+            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" />
+              </svg>
+            </div>
+          `
+      }
+
+      ${
+        isUnread
+          ? `<span class="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-blue-600"></span>`
+          : ''
+      }
+    </div>
+
+    <!-- Content -->
+    <div class="flex flex-1 flex-col gap-1">
+      <h4 class="text-sm font-semibold text-slate-900 leading-snug">
+        ${data.title || 'Notification'}
+      </h4>
+
+      ${
+        data.body
+          ? `<p class="line-clamp-2 text-xs text-slate-500">
+              ${data.body}
+            </p>`
+          : ''
+      }
+
+      <span class="mt-1 text-xs font-medium text-blue-600">
+        ${data.time || 'Just now'}
+      </span>
+    </div>
+  `;
+
+  container.prepend(li);
+}
+
 checkToken();
 checkForInvite();
 setupSidebar();
@@ -401,3 +482,6 @@ loadProjectMembers(localStorage.getItem('selectedProject'));
 handleStatusFilter();
 handleAssigneeFilter();
 renderBoard(localStorage.getItem('selectedProject'));
+// renderDashBoardTasks();
+setupPushNotifications();
+initNotificationListener();

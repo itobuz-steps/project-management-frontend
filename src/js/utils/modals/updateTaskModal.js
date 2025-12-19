@@ -6,7 +6,6 @@ const closeEditTask = document.getElementById('close-update-task-modal');
 const editModal = document.getElementById('update-task-modal');
 const editForm = document.getElementById('edit-task-form');
 const drawerBackdrop = document.querySelector('.drawer-backdrop');
-
 let selectedTaskId = null;
 
 editForm.addEventListener('submit', async (e) => {
@@ -43,12 +42,8 @@ editForm.addEventListener('submit', async (e) => {
         ? null
         : editModal.querySelector('#assignee').value,
   };
-
-  console.log(updatedTask);
-
   try {
-    const response = await taskService.updateTask(selectedTaskId, updatedTask);
-    console.log('Task updated successfully:', response.data);
+    await taskService.updateTask(selectedTaskId, updatedTask);
 
     editModal.classList.add('hidden');
     await renderSelectedTab(localStorage.getItem('selectedProject'));
@@ -72,12 +67,10 @@ closeEditTask.addEventListener('click', () => {
 
 export async function openUpdateTaskModal(taskId) {
   selectedTaskId = taskId;
-
   try {
     const response = await taskService.getTaskById(taskId);
     const task = response.data.result;
     const status = editModal.querySelector('#status');
-
     editModal.querySelector('#title').value = task.title;
     editModal.querySelector('#description').value = task.description;
     editModal.querySelector('#type').value = task.type;
@@ -91,11 +84,9 @@ export async function openUpdateTaskModal(taskId) {
     editModal.querySelector('#relatesTo').value = task.relatesTo || '';
 
     if (task.dueDate) {
-      console.log(task.dueDate);
       const dueDate = new Date(task.dueDate);
-
       const formattedDate = dueDate.toISOString().slice(0, 10);
-      console.log(formattedDate);
+
       editModal.querySelector('#dueDate').value = formattedDate;
     } else {
       editModal.querySelector('#dueDate').value = '';
@@ -108,6 +99,5 @@ export async function openUpdateTaskModal(taskId) {
     editModal.classList.remove('hidden');
   } catch (error) {
     console.error('Failed to load task:', error);
-    alert('Error loading task data');
   }
 }
