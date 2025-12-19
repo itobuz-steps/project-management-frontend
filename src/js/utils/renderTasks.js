@@ -6,6 +6,7 @@ import TaskService from '../services/TaskService.js';
 import { showConfirmModal } from './modals/confirmationModal.js';
 import { DateTime } from 'luxon';
 import showToast from './showToast.js';
+import { formatISO } from 'date-fns';
 import { showTaskDrawer } from '../pages/taskDrawer/taskDrawer.js';
 
 const listTableBody = document.getElementById('table-body');
@@ -94,12 +95,13 @@ async function createTaskList(task, type, projectType, sprint) {
   tr.classList = ` border-b border-b-gray-200 whitespace-nowrap border-l-3 ${priority} hover:bg-gray-100`;
   tr.dataset.id = task._id;
 
-  let dateValue = task.dueDate.split('T')[0];
-  dateValue = new Date(dateValue);
-  dateValue.setDate(dateValue.getDate() + 1);
-  dateValue = dateValue.toLocaleDateString();
-  const splitVal = dateValue.split('/');
-  dateValue = splitVal[2] + '-' + splitVal[1] + '-' + splitVal[0];
+  console.log(task.dueDate);
+  let dateValue;
+  dateValue = task.dueDate.split('T');
+  const newDate = new Date(dateValue);
+
+  dateValue = formatISO(newDate, { representation: 'date' });
+  console.log(dateValue);
 
   tr.innerHTML = /*html*/ `
     <td class="px-4 py-2 ${ifSprint} ${ifKanban} ">
