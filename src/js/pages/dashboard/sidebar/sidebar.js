@@ -116,16 +116,12 @@ function addEventListenersSidebar() {
     e.stopPropagation();
     e.preventDefault();
 
-    const isOpen = projectsDropdown.classList.contains('max-h-60');
+    const isOpen = !projectsDropdown.classList.contains('hidden');
 
     if (isOpen) {
-      projectsDropdown.classList.remove('max-h-60');
-      projectsDropdown.classList.add('max-h-0');
-      setTimeout(() => projectsDropdown.classList.add('hidden'), 200);
+      projectsDropdown.classList.add('hidden');
     } else {
       projectsDropdown.classList.remove('hidden');
-      projectsDropdown.classList.remove('max-h-0');
-      projectsDropdown.classList.add('max-h-60');
     }
   });
 
@@ -133,16 +129,12 @@ function addEventListenersSidebar() {
     e.stopPropagation();
     e.preventDefault();
 
-    const isOpen = userListContainer.classList.contains('max-h-60');
+    const isOpen = !userListContainer.classList.contains('hidden');
 
     if (isOpen) {
-      userListContainer.classList.remove('max-h-60');
-      userListContainer.classList.add('max-h-0');
-      setTimeout(() => userListContainer.classList.add('hidden'), 200);
+      userListContainer.classList.add('hidden');
     } else {
       userListContainer.classList.remove('hidden');
-      userListContainer.classList.remove('max-h-0');
-      userListContainer.classList.add('max-h-60');
     }
   });
 
@@ -156,13 +148,9 @@ function addEventListenersSidebar() {
       return;
     }
 
-    projectsDropdown.classList.remove('max-h-60');
-    projectsDropdown.classList.add('max-h-0');
-    setTimeout(() => projectsDropdown.classList.add('hidden'), 200);
+    projectsDropdown.classList.add('hidden');
 
-    userListContainer.classList.remove('max-h-60');
-    userListContainer.classList.add('max-h-0');
-    setTimeout(() => userListContainer.classList.add('hidden'), 200);
+    userListContainer.classList.add('hidden');
   });
 
   projectDropdownContainer.addEventListener('click', async (event) => {
