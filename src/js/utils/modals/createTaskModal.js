@@ -1,8 +1,7 @@
 import { handleModalAssignee, handleModalStatus } from './modal';
-import { renderBoard } from '../../pages/dashboard/dashboard';
-import { renderDashBoardTasks } from '../renderTasks';
 import taskService from '../../services/TaskService';
 import showToast from '../showToast';
+import renderSelectedTab from '../renderSelectedTab';
 
 const closeTaskModal = document.getElementById('close-task-modal');
 const createTaskModal = document.getElementById('create-task-modal');
@@ -44,14 +43,20 @@ taskForm.addEventListener('submit', async (e) => {
 
   let dateValue;
 
-  if (document.getElementById('dueDate').value === '1999-10-10') {
-    dateValue = new Date().toLocaleDateString();
+  if (!document.getElementById('dueDate').value) {
+    dateValue = new Date();
+    dateValue.setDate(dateValue.getDate() + 7);
+    console.log(dateValue);
+    dateValue = dateValue.toLocaleDateString();
+    console.log(dateValue);
 
     const splitVal = dateValue.split('/');
+    console.log(splitVal);
 
     dateValue = splitVal[2] + '-' + splitVal[1] + '-' + splitVal[0];
   } else {
     dateValue = document.getElementById('dueDate').value;
+    console.log(dateValue);
   }
 
   const task = {
@@ -95,12 +100,9 @@ taskForm.addEventListener('submit', async (e) => {
 
   try {
     await taskService.createTask(task);
-
     createTaskModal.classList.add('hidden');
 
-    renderBoard(localStorage.getItem('selectedProject'));
-    renderDashBoardTasks();
-
+    await renderSelectedTab(localStorage.getItem('selectedProject'));
     fileName.textContent = 'No file chosen';
   } catch (error) {
     console.error(error);
