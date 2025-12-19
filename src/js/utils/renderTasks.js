@@ -1,9 +1,11 @@
 import { getFilteredTasks } from '../pages/dashboard/navbar/navbar.js';
 import projectService from '../services/ProjectService.js';
 import SprintService from '../services/SprintService.js';
+import taskService from '../services/TaskService.js';
 import TaskService from '../services/TaskService.js';
 import { showConfirmModal } from './modals/confirmationModal.js';
 import { DateTime } from 'luxon';
+import showToast from './showToast.js';
 
 const listTableBody = document.getElementById('table-body');
 const emptyListContainer = document.getElementById('empty-list-container');
@@ -16,8 +18,6 @@ async function createTaskList(task, type, projectType, sprint) {
     ifSprint = ``;
   }
 
-  console.log(sprint);
-
   let ifKanban = '';
   if (projectType === 'kanban') {
     ifKanban = 'hidden';
@@ -25,11 +25,27 @@ async function createTaskList(task, type, projectType, sprint) {
 
   let typeSvg;
   if (task.type === 'task') {
-    typeSvg = `<svg class="h-4 stroke-blue-800" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-labelledby="checkboxIconTitle" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none" color="#000000" > <g id="SVGRepo_bgCarrier" stroke-width="0"></g> <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" ></g> <g id="SVGRepo_iconCarrier"> <title id="checkboxIconTitle"> Checkbox (selected) </title> <rect x="21" y="3" width="18" height="18" rx="1" transform="rotate(90 21 3)" ></rect> <path d="M6.66666 12.6667L9.99999 16L17.3333 8.66669"></path> </g> </svg>`;
+    typeSvg = `<svg class="h-4 fill-blue-600" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M0 7.5C0 3.35786 3.35786 0 7.5 0C11.6421 0 15 3.35786 15 7.5C15 11.6421 11.6421 15 7.5 15C3.35786 15 0 11.6421 0 7.5ZM7.0718 10.7106L11.3905 5.31232L10.6096 4.68762L6.92825 9.2893L4.32012 7.11586L3.67993 7.88408L7.0718 10.7106Z""></path> </g></svg>`;
   } else if (task.type === 'story') {
     typeSvg = `<svg class="h-4" viewBox="-4 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>bookmark</title> <desc>Created with Sketch Beta.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage"> <g id="Icon-Set-Filled" sketch:type="MSLayerGroup" transform="translate(-419.000000, -153.000000)" fill="#00b31e"> <path d="M437,153 L423,153 C420.791,153 419,154.791 419,157 L419,179 C419,181.209 420.791,183 423,183 L430,176 L437,183 C439.209,183 441,181.209 441,179 L441,157 C441,154.791 439.209,153 437,153" id="bookmark" sketch:type="MSShapeGroup"> </path> </g> </g> </g></svg>`;
   } else {
     typeSvg = `<svg class="h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M7 14.3333C7 13.0872 7 12.4641 7.26795 12C7.44349 11.696 7.69596 11.4435 8 11.2679C8.4641 11 9.08718 11 10.3333 11H13.6667C14.9128 11 15.5359 11 16 11.2679C16.304 11.4435 16.5565 11.696 16.7321 12C17 12.4641 17 13.0872 17 14.3333V16C17 16.9293 17 17.394 16.9231 17.7804C16.6075 19.3671 15.3671 20.6075 13.7804 20.9231C13.394 21 12.9293 21 12 21C11.0707 21 10.606 21 10.2196 20.9231C8.63288 20.6075 7.39249 19.3671 7.07686 17.7804C7 17.394 7 16.9293 7 16V14.3333Z" fill="#db0000" stroke="#db0000" stroke-width="2"></path> <path d="M9 9C9 8.06812 9 7.60218 9.15224 7.23463C9.35523 6.74458 9.74458 6.35523 10.2346 6.15224C10.6022 6 11.0681 6 12 6C12.9319 6 13.3978 6 13.7654 6.15224C14.2554 6.35523 14.6448 6.74458 14.8478 7.23463C15 7.60218 15 8.06812 15 9V11H9V9Z" fill="#db0000" stroke="#db0000" stroke-width="2"></path> <path d="M12 11V15" stroke="#db0000" stroke-width="2"></path> <path d="M15 3L13 6" stroke="#db0000" stroke-width="2"></path> <path d="M9 3L11 6" stroke="#db0000" stroke-width="2"></path> <path d="M7 16H2" stroke="#db0000" stroke-width="2"></path> <path d="M22 16H17" stroke="#db0000" stroke-width="2"></path> <path d="M20 9V10C20 11.6569 18.6569 13 17 13V13" stroke="#db0000" stroke-width="2"></path> <path d="M20 22V22C20 20.3431 18.6569 19 17 19V19" stroke="#db0000" stroke-width="2"></path> <path d="M4 9V10C4 11.6569 5.34315 13 7 13V13" stroke="#db0000" stroke-width="2"></path> <path d="M4 22V22C4 20.3431 5.34315 19 7 19V19" stroke="#db0000" stroke-width="2"></path> </g></svg>`;
+  }
+
+  let priority;
+  switch (task.priority) {
+    case 'low':
+      priority = 'border-l-green-500';
+      break;
+    case 'medium':
+      priority = 'border-l-primary-500';
+      break;
+    case 'high':
+      priority = 'border-l-yellow-400';
+      break;
+    case 'critical':
+      priority = 'border-l-red-600';
+      break;
   }
 
   const tr = document.createElement('tr');
@@ -73,13 +89,19 @@ async function createTaskList(task, type, projectType, sprint) {
 
     return labelEl;
   });
-  console.log({ ceatedAt: task.createdAt });
 
-  tr.classList = ' border-b border-gray-200 whitespace-nowrap  ';
+  tr.classList = ` border-b border-b-gray-200 whitespace-nowrap border-l-3 ${priority} hover:bg-gray-100`;
   tr.dataset.id = task._id;
 
+  let dateValue = task.dueDate.split('T')[0];
+  dateValue = new Date(dateValue);
+  dateValue.setDate(dateValue.getDate() + 1);
+  dateValue = dateValue.toLocaleDateString();
+  const splitVal = dateValue.split('/');
+  dateValue = splitVal[2] + '-' + splitVal[1] + '-' + splitVal[0];
+
   tr.innerHTML = /*html*/ `
-    <td class="px-4 py-2 ${ifSprint} ${ifKanban}">
+    <td class="px-4 py-2 ${ifSprint} ${ifKanban} ">
       <div class="flex items-center">
         <input
             id="checkbox-all-search"
@@ -89,14 +111,14 @@ async function createTaskList(task, type, projectType, sprint) {
         />
       </div>
     </td>
-    <td>
-    <div class="w-full flex justify-center">
-${typeSvg}
+    <td class="">
+      <div class="w-full flex justify-center">
+        ${typeSvg}
       </div>
     </td>
-    <td class="p-2"><p class="wrapper bg-primary-400 text-white px-2 py-1 rounded-sm w-max uppercase font-semibold text-xs">${task.key}</p></td>
+    <td class="p-2"><p class="wrapper bg-primary-500 text-white px-2 py-1 rounded-sm w-max uppercase font-semibold text-xs">${task.key}</p></td>
     <td class="p-2">${task.title}</td>
-    <td class="p-2"><p class="wrapper bg-primary-200 px-2 py-1 rounded-sm w-max uppercase font-semibold text-xs">${task.status}<span class="ml-3 text-[10px]">▼</span></p></td>
+    <td class="p-2"><p class="wrapper bg-primary-200 px-2 py-1 rounded-sm w-max uppercase font-semibold text-xs">${task.status}<span class="ml-3 text-xs ">▼</span></p></td>
     <td class="p-2 ${ifKanban} ${!sprint ? 'hidden' : ''}">${sprint ? '<p class="wrapper bg-primary-400 text-white px-2 py-1 rounded-sm w-max uppercase font-semibold text-xs">' + sprint.key + '</p>' : ''}</td>
     <td class="p-2">
       <div class="flex items-center">
@@ -104,7 +126,16 @@ ${typeSvg}
               src="${assignee.profileImage}">${assignee.name}
       </div>
     </td>
-    <td class="p-2 ${new Date(task.dueDate) < Date.now() ? 'text-red-600' : ''}">${DateTime.fromISO(task.dueDate).toLocaleString(DateTime.DATE_MED)}</td>
+    <td class="p-2 ">
+                    <input
+                      type="date"
+                      name="dueDate"
+                      id=""
+                      class="${task.key}-due-date ${new Date(task.dueDate) < Date.now() ? 'text-red-600' : ''} block w-28 rounded-md border border-gray-300 bg-gray-50 p-1 text-sm text-black"
+                      placeholder="Enter the due date"
+                      value="${dateValue}"
+                    />
+    </td>
     <td class="p-2"><div class="flex gap-1 text-xs min-w-18">${labelsEl.join('')}</div></td>
     <td class="p-2">${DateTime.fromISO(task.createdAt).toLocaleString(DateTime.DATE_MED)}</td>
     <td class="p-2">${DateTime.fromISO(task.updatedAt).toLocaleString(DateTime.DATE_MED)}</td>
@@ -120,6 +151,21 @@ ${typeSvg}
       </div>
     </td>
   `;
+
+  const dueDateInput = tr.querySelector(`.${task.key}-due-date`);
+
+  dueDateInput.addEventListener('change', async () => {
+    if (new Date(dueDateInput.value) < new Date(task.dueDate)) {
+      showToast('Invalid due date', 'error');
+      dueDateInput.value = dateValue;
+      return;
+    }
+
+    await taskService.updateTask(task._id, { dueDate: dueDateInput.value });
+    if (new Date(dueDateInput.value) >= Date.now()) {
+      dueDateInput.classList.remove('text-red-600');
+    }
+  });
   return tr;
 }
 
@@ -178,7 +224,7 @@ function createSprintTable(sprint) {
                       ${sprint.key}
                       </p>
                     </button> 
-                    <div class="flex ml-5 md:ml-3 items-center gap-1" >      
+                    <div class="flex ml-5 md:ml-3 items-center gap-1 ${sprint.dueDate ? '' : 'hidden'}" >      
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 stroke-primary-400">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -396,12 +442,17 @@ function createBacklogTable(projectType) {
   return backlogContainer;
 }
 
-export async function renderTasksList(projectId, filter, searchInput) {
+export async function renderTasksList(
+  projectId,
+  filter = '',
+  searchInput = ''
+) {
   listTableBody.innerHTML = '';
 
   const project = (await projectService.getProjectById(projectId)).result;
 
   const tasksArray = await getFilteredTasks(projectId, filter, searchInput);
+  console.log(tasksArray);
 
   if (!tasksArray.length) {
     emptyListContainer.classList.remove('hidden');
@@ -443,14 +494,15 @@ async function renderSprintTasks(sprint, sprintTasks, projectType) {
   }
 
   const loader = document.getElementById(`${sprint.key}-loader`);
-  sprintTaskBody.classList.add('hidden');
 
+  sprintTaskBody.classList.add('hidden');
   const allTrs = await Promise.all(promiseArray);
 
   loader.classList.add('hidden');
   sprintTaskBody.classList.remove('hidden');
 
   addDragEvent(sprintTaskBody, allTrs, sprint);
+
   checkIfEmpty();
 }
 
@@ -493,15 +545,23 @@ async function renderBacklogTasks(
   checkIfEmpty();
 }
 
-export async function renderDashBoardTasks() {
+export async function renderDashBoardTasks(
+  projectId,
+  filter = '',
+  searchInput = ''
+) {
   listTableBody.innerHTML = '';
   sprintBacklogWrapper.innerHTML = '';
-  const projectId = localStorage.getItem('selectedProject');
-  const tasks = await TaskService.getTaskByProjectId(projectId);
-  const project = await projectService.getProjectById(projectId);
-  const allTasks = tasks.data.result.map((task) => task._id);
 
+  const tasks = await TaskService.getTaskByProjectId(
+    projectId,
+    filter,
+    searchInput
+  );
+  const project = await projectService.getProjectById(projectId);
   const sprints = await SprintService.getAllSprints(projectId);
+  console.log(tasks);
+  const allTasks = tasks.data.result.map((task) => task._id);
 
   const allSprintTasks = [];
   sprints.result.forEach((sprint) => allSprintTasks.push(...sprint.tasks));
@@ -535,6 +595,7 @@ export async function renderDashBoardTasks() {
       document
         .getElementById(`${sprint.key}-empty-message`)
         .classList.remove('hidden');
+      document.getElementById(`${sprint.key}-loader`).classList.add('hidden');
     } else {
       document
         .getElementById(`${sprint.key}-empty-message`)
@@ -609,14 +670,6 @@ export async function renderDashBoardTasks() {
 
   const addToSprintButton = document.getElementById('add-to-sprint-button');
   const backlogBody = document.getElementById('backlog-body');
-  // const backlogEmptyMessage = document.getElementById(
-  //   'backlog-empty-message'
-  // );
-
-  // if (!incompleteBacklogTasks.length) {
-  //   backlogEmptyMessage.classList.remove('hidden');
-  // } else {
-  //   backlogEmptyMessage.classList.add('hidden');
 
   await renderBacklogTasks(
     backlogBody,
@@ -712,7 +765,7 @@ async function handleSprintCreate(storyPointInput) {
 
   const response = await SprintService.createSprint(newSprint);
   console.log('Sprint created', response);
-  await renderDashBoardTasks();
+  await renderDashBoardTasks(localStorage.getItem('selectedProject'));
 }
 
 function dropdownEvent(sprint = {}) {
@@ -752,7 +805,7 @@ async function handleCompleteSprint(sprintId, project) {
 
   await SprintService.updateSprint(sprintId, { isCompleted: true, tasks: [] });
   await projectService.updateProject(project._id, { currentSprint: null });
-  await renderDashBoardTasks();
+  await renderDashBoardTasks(localStorage.getItem('selectedProject'));
 }
 
 async function handleStartSprint(sprint) {
@@ -796,8 +849,9 @@ async function handleStartSprint(sprint) {
       sprint.dueDate = dueDateInput.value;
       const response = await SprintService.updateSprint(sprint._id, sprint);
       await checkIfSprintStarted(response.result);
+
       setTimeout(() => {
-        renderDashBoardTasks();
+        renderDashBoardTasks(localStorage.getItem('selectedProject'));
       }, 300);
     }
   }
@@ -859,7 +913,8 @@ async function handleAddTaskFromBacklogToSprint(dropdownEl) {
   await SprintService.addTasksToSprint(dropdownEl.dataset.id, {
     tasks: selectedRows,
   });
-  await renderDashBoardTasks();
+
+  await renderDashBoardTasks(localStorage.getItem('selectedProject'));
 }
 
 function checkIfEmpty() {
@@ -876,7 +931,6 @@ function checkIfEmpty() {
       return;
     }
 
-    console.log(tableBodyEl, emptyMessageEl);
     emptyMessageEl.classList.remove('hidden');
   });
 }

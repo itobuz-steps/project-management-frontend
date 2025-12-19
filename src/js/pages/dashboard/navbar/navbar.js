@@ -1,7 +1,6 @@
-import { renderBoard } from '../dashboard.js';
 import authService from '../../../services/AuthService.js';
-import { renderTasksList } from '../../../utils/renderTasks.js';
 import taskService from '../../../services/TaskService.js';
+import renderSelectedTab from '../../../utils/renderSelectedTab.js';
 
 const searchInput = document.getElementById('search-input-field');
 // const notificationIcon = document.querySelector('.notification-icon');
@@ -10,13 +9,24 @@ const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
 const preview = document.getElementById('profileImage');
 
-async function handleSearch(e) {
-  e.preventDefault();
+function debounce(fn, delay) {
+  let timer;
+  return function (...args) {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      fn.apply(this, args);
+    }, delay);
+  };
+}
+
+const debounced = debounce(async () => {
+  await handleSearch();
+}, 500);
+
+async function handleSearch() {
   const projectId = localStorage.getItem('selectedProject');
 
-  await renderBoard(projectId, '', searchInput.value.trim());
-
-  await renderTasksList(projectId, '', searchInput.value.trim());
+  await renderSelectedTab(projectId, '', searchInput.value.trim());
 }
 
 export async function getFilteredTasks(
@@ -49,8 +59,9 @@ export async function setupNavbar() {
 
   // const notificationCount = localStorage.getItem("notificationCount'");
 
-  searchInput.addEventListener('input', async (e) => {
-    await handleSearch(e);
+  searchInput.addEventListener('input', (e) => {
+    e.preventDefault();
+    debounced();
   });
 
   // dropdownToggle.addEventListener('click', () => {

@@ -165,7 +165,7 @@ function addEventListenersSidebar() {
     setTimeout(() => userListContainer.classList.add('hidden'), 200);
   });
 
-  projectDropdownContainer.addEventListener('click', (event) => {
+  projectDropdownContainer.addEventListener('click', async (event) => {
     const targetLi = event.target;
 
     localStorage.setItem('selectedProject', targetLi.dataset.id);
@@ -175,9 +175,9 @@ function addEventListenersSidebar() {
     });
 
     targetLi.classList.toggle('selected');
-    renderDashBoardTasks();
-    renderBoard(localStorage.getItem('selectedProject'));
-    loadProjectMembers(localStorage.getItem('selectedProject'));
+    await renderDashBoardTasks(localStorage.getItem('selectedProject'));
+    await renderBoard(localStorage.getItem('selectedProject'));
+    await loadProjectMembers(localStorage.getItem('selectedProject'));
   });
 
   toggleInviteButton.addEventListener('click', () => {

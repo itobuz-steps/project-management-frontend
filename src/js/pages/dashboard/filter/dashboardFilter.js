@@ -1,7 +1,6 @@
 import { removeElementChildren } from '../../../utils/elementUtils';
 import projectService from '../../../services/ProjectService';
-import { renderBoard } from '../dashboard';
-import { renderTasksList } from '../../../utils/renderTasks';
+import renderSelectedTab from '../../../utils/renderSelectedTab';
 
 const statusDropDown = document.getElementById('statusDropdown');
 const assigneeDropdown = document.getElementById('assigneeDropdown');
@@ -27,11 +26,10 @@ export async function handleStatusFilter() {
     const dropdownEl = renderSubDropdown(column);
     statusDropDown.appendChild(dropdownEl);
     dropdownEl.addEventListener('click', async () => {
-      removeElementChildren(statusDropDown);
-      removeElementChildren(assigneeDropdown);
+      // removeElementChildren(statusDropDown);
+      // removeElementChildren(assigneeDropdown);
 
-      await renderBoard(currentProject, 'status', `${column}`);
-      await renderTasksList(currentProject, 'status', `${column}`);
+      await renderSelectedTab(currentProject, 'status', `${column}`);
     });
   });
 }
@@ -45,11 +43,10 @@ export async function handleAssigneeFilter() {
     const dropdownEl = renderSubDropdown(assignee.name);
     assigneeDropdown.appendChild(dropdownEl);
     dropdownEl.addEventListener('click', async () => {
-      removeElementChildren(statusDropDown);
-      removeElementChildren(assigneeDropdown);
+      // removeElementChildren(statusDropDown);
+      // removeElementChildren(assigneeDropdown);
 
-      await renderBoard(currentProject, 'assignee', `${assignee._id}`);
-      await renderTasksList(currentProject, 'assignee', `${assignee._id}`);
+      await renderSelectedTab(currentProject, 'assignee', `${assignee._id}`);
     });
   });
 }
@@ -87,33 +84,29 @@ document.addEventListener('click', (e) => {
 });
 
 priorityDropdown.addEventListener('click', () => {
-  removeElementChildren(statusDropDown);
-  removeElementChildren(assigneeDropdown);
+  // removeElementChildren(statusDropDown);
+  // removeElementChildren(assigneeDropdown);
 });
 
 lowFilterBtn.addEventListener('click', async () => {
-  await renderBoard(currentProject, 'priority', 'low');
-  await renderTasksList(currentProject, 'priority', 'low');
+  await renderSelectedTab(currentProject, 'priority', 'low');
 });
 
 midFilterBtn.addEventListener('click', async () => {
-  await renderBoard(currentProject, 'priority', 'medium');
-  await renderTasksList(currentProject, 'priority', 'medium');
+  await renderSelectedTab(currentProject, 'priority', 'medium');
 });
 
 highFilterBtn.addEventListener('click', async () => {
-  await renderBoard(currentProject, 'priority', 'high');
-  await renderTasksList(currentProject, 'priority', 'high');
+  await renderSelectedTab(currentProject, 'priority', 'high');
 });
 
 criticalFilterBtn.addEventListener('click', async () => {
-  await renderBoard(currentProject, 'priority', 'critical');
-  await renderTasksList(currentProject, 'priority', 'critical');
+  await renderSelectedTab(currentProject, 'priority', 'critical');
 });
 
 removeFilterBtn.addEventListener('click', async () => {
-  removeElementChildren(statusDropDown);
-  removeElementChildren(assigneeDropdown);
-  await renderBoard(currentProject, '', '');
-  await renderTasksList(currentProject, '', '');
+  // removeElementChildren(statusDropDown);
+  // removeElementChildren(assigneeDropdown);
+
+  await renderSelectedTab(currentProject);
 });
