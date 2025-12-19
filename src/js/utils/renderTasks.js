@@ -6,6 +6,7 @@ import TaskService from '../services/TaskService.js';
 import { showConfirmModal } from './modals/confirmationModal.js';
 import { DateTime } from 'luxon';
 import showToast from './showToast.js';
+import { showTaskDrawer } from '../pages/taskDrawer/taskDrawer.js';
 
 const listTableBody = document.getElementById('table-body');
 const emptyListContainer = document.getElementById('empty-list-container');
@@ -117,7 +118,7 @@ async function createTaskList(task, type, projectType, sprint) {
       </div>
     </td>
     <td class="p-2"><p class="wrapper bg-primary-500 text-white px-2 py-1 rounded-sm w-max uppercase font-semibold text-xs">${task.key}</p></td>
-    <td class="p-2">${task.title}</td>
+    <td class="p-2 open-taskDrawer cursor-pointer hover:underline">${task.title}</td>
     <td class="p-2"><p class="wrapper bg-primary-200 px-2 py-1 rounded-sm w-max uppercase font-semibold text-xs">${task.status}<span class="ml-3 text-xs ">▼</span></p></td>
     <td class="p-2 ${ifKanban} ${!sprint ? 'hidden' : ''}">${sprint ? '<p class="wrapper bg-primary-400 text-white px-2 py-1 rounded-sm w-max uppercase font-semibold text-xs">' + sprint.key + '</p>' : ''}</td>
     <td class="p-2">
@@ -153,6 +154,9 @@ async function createTaskList(task, type, projectType, sprint) {
   `;
 
   const dueDateInput = tr.querySelector(`.${task.key}-due-date`);
+  const openTaskDrawer = tr.querySelector('.open-taskDrawer');
+
+  openTaskDrawer.addEventListener('click', () => showTaskDrawer(task._id));
 
   dueDateInput.addEventListener('change', async () => {
     if (new Date(dueDateInput.value) < new Date(task.dueDate)) {
