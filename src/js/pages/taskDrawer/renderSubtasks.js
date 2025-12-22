@@ -62,19 +62,12 @@ export async function renderSubtasks(task) {
     const attachmentsLogo = div.querySelector('.attachmentIcon');
     const subtaskLogo = div.querySelector('.subtaskIcon');
 
-    div.addEventListener('mouseenter', () => {
-      if (st.attachments.length) {
-        attachmentsLogo.classList.remove('hidden');
-      }
-      if (st.subTask.length) {
-        subtaskLogo.classList.remove('hidden');
-      }
-    });
-
-    div.addEventListener('mouseleave', () => {
-      attachmentsLogo.classList.add('hidden');
-      subtaskLogo.classList.add('hidden');
-    });
+    if (st.attachments.length) {
+      attachmentsLogo.classList.remove('hidden');
+    }
+    if (st.subTask.length) {
+      subtaskLogo.classList.remove('hidden');
+    }
 
     div.addEventListener('click', () => showTaskDrawer(sub));
 

@@ -148,11 +148,27 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       }
 
       const assignee = task.assignee ? userMap[task.assignee] : null;
-
+      console.log('Task priority is: ', task.priority);
       const taskEl = document.createElement('div');
+
+      let priority;
+      switch (task.priority) {
+        case 'low':
+          priority = 'border-l-green-500';
+          break;
+        case 'medium':
+          priority = 'border-l-primary-500';
+          break;
+        case 'high':
+          priority = 'border-l-yellow-400';
+          break;
+        case 'critical':
+          priority = 'border-l-red-600';
+          break;
+      }
+
       taskEl.dataset._id = task._id;
-      taskEl.className =
-        'task flex flex-col max-w-sm p-3 bg-white rounded-md shadow-sm text-black gap-4 relative cursor-grab border border-gray-100 hover:shadow-md';
+      taskEl.className = `task flex flex-col max-w-sm p-3 bg-white rounded-md shadow-sm text-black gap-4 relative cursor-grab border-2 border-gray-100 hover:shadow-md ${priority}`;
       taskEl.innerHTML = /*html*/ `
         <div class="card-header flex justify-between items-center">
           <p id="${
@@ -222,19 +238,12 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       const attachmentsLogo = taskEl.querySelector('.attachmentIcon');
       const subtaskLogo = taskEl.querySelector('.subtaskIcon');
 
-      taskEl.addEventListener('mouseenter', () => {
-        if (task.attachments.length) {
-          attachmentsLogo.classList.remove('hidden');
-        }
-        if (task.subTask.length) {
-          subtaskLogo.classList.remove('hidden');
-        }
-      });
-
-      taskEl.addEventListener('mouseleave', () => {
-        attachmentsLogo.classList.add('hidden');
-        subtaskLogo.classList.add('hidden');
-      });
+      if (task.attachments.length) {
+        attachmentsLogo.classList.remove('hidden');
+      }
+      if (task.subTask.length) {
+        subtaskLogo.classList.remove('hidden');
+      }
 
       const userAvatar = taskEl.querySelector('.user-avatar');
       const avatarDropdown = taskEl.querySelector('.avatar-dropdown');
