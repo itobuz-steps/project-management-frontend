@@ -2,6 +2,12 @@ import axios from 'axios';
 import { getAllNotification } from '../services/notificationService';
 import { DateTime } from 'luxon';
 
+let page = 1;
+let LIMIT = 3;
+let hasMore = true;
+let isLoading = false;
+let notificationObserver = null;
+
 function urlBase64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
@@ -124,36 +130,70 @@ function handleNotification(data) {
     </div>
   `;
 
-  container.prepend(li);
+  container.append(li);
 }
 
 export async function renderNotification() {
+  if (isLoading || !hasMore) {
+    return;
+  }
+
+  isLoading = true;
+
   const currentProject = localStorage.getItem('selectedProject');
+  console.log(currentProject);
 
-  const notifications = (await getAllNotification(currentProject)).data.result;
+  try {
+    const res = await getAllNotification(currentProject, {
+      page,
+      limit: LIMIT,
+    });
 
-  console.log(notifications);
+    console.log(res);
 
-  for (const notification of notifications) {
-    handleNotification(notification);
+    const notifications = res.data.result;
+    console.log(notifications);
+
+    if (notifications.length > 0) {
+      notifications.forEach(handleNotification);
+
+      hasMore = res.data.pagination?.hasMore ?? false;
+      if (hasMore) {
+        page++;
+      }
+    } else {
+      hasMore = false;
+    }
+  } catch (error) {
+    console.error('Error fetching notifications:', error);
   }
 }
 
-function lazyLoad() {
-  let notificationEl;
-  if ('IntersectionObserver' in Window) {
-    const options = {
-      root: document.getElementById('notificationDropdownMenu'),
-      threshold: 0.3,
-    };
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          notificationEl = entry.target;
-        }
-      });
-    }, options);
-  }
+export function lazyLoad() {
+  const targetElement = document.getElementById('targetElement');
+  const rootEl = document.getElementById('notificationDropdownMenu');
+
+  if (!targetElement || !rootEl) return;
+
+  if (notificationObserver) return;
+
+  notificationObserver = new IntersectionObserver(
+    (entries) => {
+      const entry = entries[0];
+
+      if (entry.isIntersecting && !isLoading) {
+        console.log('target element hit');
+        renderNotification();
+      }
+    },
+    {
+      root: rootEl,
+      threshold: 1.0,
+      rootMargin: '0px',
+    }
+  );
+
+  notificationObserver.observe(targetElement);
 }
 
 export default setupPushNotifications;

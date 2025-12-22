@@ -24,7 +24,10 @@ import { checkToken } from '../../utils/checkToken.js';
 import { removeActive, hideAll } from '../../utils/elementUtils.js';
 import { loadProjectMembers } from '../loadMembers/loadMembers.js';
 import setupPushNotifications from '../../utils/browserNotification.js';
-import { renderNotification } from '../../utils/browserNotification.js';
+import {
+  renderNotification,
+  lazyLoad,
+} from '../../utils/browserNotification.js';
 import { svgObject } from '../../utils/svgObjects.js';
 import { getColorByType } from '../../utils/globalUtils.js';
 
@@ -438,4 +441,5 @@ handleAssigneeFilter();
 renderBoard(localStorage.getItem('selectedProject'));
 // renderDashBoardTasks();
 setupPushNotifications();
+lazyLoad();
 renderNotification();
