@@ -28,8 +28,12 @@ import {
   renderNotification,
   lazyLoad,
 } from '../../utils/browserNotification.js';
-import { svgObject } from '../../utils/svgObjects.js';
-import { getColorByType } from '../../utils/globalUtils.js';
+import {
+  getColorByType,
+  getSvgByPriority,
+  getSvgByType,
+} from '../../utils/globalUtils.js';
+import renderSelectedTab from '../../utils/renderSelectedTab.js';
 
 const openProjectBtn = document.getElementById('plus-icon');
 openProjectBtn.addEventListener('click', openCreateProjectModal);
@@ -152,14 +156,8 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         }
       }
 
-      let typeSvg;
-      if (task.type === 'task') {
-        typeSvg = `${svgObject.task}`;
-      } else if (task.type === 'story') {
-        typeSvg = `${svgObject.story}`;
-      } else {
-        typeSvg = `${svgObject.bug}`;
-      }
+      const typeSvg = getSvgByType(task);
+      const prioritySvg = getSvgByPriority(task);
 
       const statusColor = getColorByType(task);
       const assignee = task.assignee ? userMap[task.assignee] : null;
@@ -190,6 +188,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
             <span class="type-tag text-white ${statusColor} text-xs font-semibold p-1 rounded-sm" >${
               task.key
             }</span>
+            <span class="">${prioritySvg}</span>
           </div>
           <div class="flex items-center gap-2">
           <div class='flex flex-row'>
@@ -353,25 +352,10 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
           'Are you sure you want to delete this task?',
           async () => {
             await taskService.deleteTask(task._id);
-            await renderBoard(localStorage.getItem('selectedProject'));
-            // await renderDashBoardTasks(localStorage.getItem('selectedProject'));
+            await renderSelectedTab(localStorage.getItem('selectedProject'));
           }
         );
       });
-
-      // typeSelector.addEventListener('change', (e) => {
-      //   const value = e.target.value;
-      //   if (value === 'task') {
-      //     typeTag.className =
-      //       'bg-blue-600 text-white text-xs font-semibold py-1 px-2 rounded-sm';
-      //   } else if (value === 'story') {
-      //     typeTag.className =
-      //       'bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm';
-      //   } else {
-      //     typeTag.className =
-      //       'bg-red-600 text-white text-xs font-semibold py-1 px-2 rounded-sm';
-      //   }
-      // });
 
       const taskList = columnEl.querySelector('#task-list');
       taskList.appendChild(taskEl);
