@@ -24,7 +24,12 @@ import { checkToken } from '../../utils/checkToken.js';
 import { removeActive, hideAll } from '../../utils/elementUtils.js';
 import { loadProjectMembers } from '../loadMembers/loadMembers.js';
 import setupPushNotifications from '../../utils/browserNotification.js';
-import { renderNotification } from '../../utils/browserNotification.js';
+import {
+  renderNotification,
+  lazyLoad,
+} from '../../utils/browserNotification.js';
+import { svgObject } from '../../utils/svgObjects.js';
+import { getColorByType } from '../../utils/globalUtils.js';
 
 const openProjectBtn = document.getElementById('plus-icon');
 openProjectBtn.addEventListener('click', openCreateProjectModal);
@@ -146,6 +151,16 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         }
       }
 
+      let typeSvg;
+      if (task.type === 'task') {
+        typeSvg = `${svgObject.task}`;
+      } else if (task.type === 'story') {
+        typeSvg = `${svgObject.story}`;
+      } else {
+        typeSvg = `${svgObject.bug}`;
+      }
+
+      const statusColor = getColorByType(task);
       const assignee = task.assignee ? userMap[task.assignee] : null;
       const taskEl = document.createElement('div');
 
@@ -182,20 +197,10 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         </div>
         <div class="card-footer flex justify-between items-center text-sm text-gray-400">
           <div class="flex items-center gap-2">
-            <span class="type-tag bg-green-600 text-white text-xs font-semibold p-1 rounded-sm">${
+            <span class="">${typeSvg}</span>
+            <span class="type-tag text-white ${statusColor} text-xs font-semibold p-1 rounded-sm" >${
               task.key
             }</span>
-            <select class="type-selector text-sm border border-black-300 rounded text-black focus:outline-none">
-              <option value="story" ${
-                task.type === 'story' ? 'selected' : ''
-              }>Story</option>
-              <option value="task" ${
-                task.type === 'task' ? 'selected' : ''
-              }>Task</option>
-              <option value="bug" ${
-                task.type === 'bug' ? 'selected' : ''
-              }>Bug</option>
-            </select>
           </div>
           <div class="flex items-center gap-2">
           <div class='flex flex-row'>
@@ -332,8 +337,8 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         taskEl.classList.add('cursor-grab');
       });
 
-      const typeTag = taskEl.querySelector('.type-tag');
-      const typeSelector = taskEl.querySelector('.type-selector');
+      // const typeTag = taskEl.querySelector('.type-tag');
+      // const typeSelector = taskEl.querySelector('.type-selector');
       const cardHeader = taskEl.querySelector('.card-header > p');
 
       taskEl.addEventListener('click', (e) => {
@@ -358,19 +363,19 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         );
       });
 
-      typeSelector.addEventListener('change', (e) => {
-        const value = e.target.value;
-        if (value === 'task') {
-          typeTag.className =
-            'bg-blue-600 text-white text-xs font-semibold py-1 px-2 rounded-sm';
-        } else if (value === 'story') {
-          typeTag.className =
-            'bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm';
-        } else {
-          typeTag.className =
-            'bg-red-600 text-white text-xs font-semibold py-1 px-2 rounded-sm';
-        }
-      });
+      // typeSelector.addEventListener('change', (e) => {
+      //   const value = e.target.value;
+      //   if (value === 'task') {
+      //     typeTag.className =
+      //       'bg-blue-600 text-white text-xs font-semibold py-1 px-2 rounded-sm';
+      //   } else if (value === 'story') {
+      //     typeTag.className =
+      //       'bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm';
+      //   } else {
+      //     typeTag.className =
+      //       'bg-red-600 text-white text-xs font-semibold py-1 px-2 rounded-sm';
+      //   }
+      // });
 
       const taskList = columnEl.querySelector('#task-list');
       taskList.appendChild(taskEl);
@@ -440,4 +445,5 @@ handleAssigneeFilter();
 renderBoard(localStorage.getItem('selectedProject'));
 // renderDashBoardTasks();
 setupPushNotifications();
+lazyLoad();
 renderNotification();
