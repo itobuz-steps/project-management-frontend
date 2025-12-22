@@ -95,13 +95,11 @@ async function createTaskList(task, type, projectType, sprint) {
   tr.classList = ` border-b border-b-gray-200 whitespace-nowrap border-l-3 ${priority} hover:bg-gray-100`;
   tr.dataset.id = task._id;
 
-  console.log(task.dueDate);
   let dateValue;
+  // <p class="wrapper bg-primary-200 px-2 py-1 rounded-sm w-max uppercase font-semibold text-xs">${task.status}<span class="ml-3 text-xs ">▼</span></p>
   dateValue = task.dueDate.split('T');
   const newDate = new Date(dateValue);
-
   dateValue = formatISO(newDate, { representation: 'date' });
-  console.log(dateValue);
 
   tr.innerHTML = /*html*/ `
     <td class="px-4 py-2 ${ifSprint} ${ifKanban} ">
@@ -119,9 +117,15 @@ async function createTaskList(task, type, projectType, sprint) {
         ${typeSvg}
       </div>
     </td>
-    <td class="p-2"><p class="wrapper bg-primary-500 text-white px-2 py-1 rounded-sm w-max uppercase font-semibold text-xs">${task.key}</p></td>
+    <td class="p-2"><p class="wrapper bg-primary-500 text-white px-2 py-1 rounded-md w-max uppercase font-semibold text-xs">${task.key}</p></td>
     <td class="p-2 open-taskDrawer cursor-pointer hover:underline">${task.title}</td>
-    <td class="p-2"><p class="wrapper bg-primary-200 px-2 py-1 rounded-sm w-max uppercase font-semibold text-xs">${task.status}<span class="ml-3 text-xs ">▼</span></p></td>
+    <td class="p-2">
+      <div class="mr-2 px-2 bg-primary-400 rounded-md text-white py-0.5 w-fit">
+        <select class="status-select-${task._id} w-fit outline-none">
+        </select>
+      </div>
+
+    </td>
     <td class="p-2 ${ifKanban} ${!sprint ? 'hidden' : ''}">${sprint ? '<p class="wrapper bg-primary-400 text-white px-2 py-1 rounded-sm w-max uppercase font-semibold text-xs">' + sprint.key + '</p>' : ''}</td>
     <td class="p-2">
       <div class="flex items-center">
@@ -134,7 +138,7 @@ async function createTaskList(task, type, projectType, sprint) {
                       type="date"
                       name="dueDate"
                       id=""
-                      class="${task.key}-due-date ${new Date(task.dueDate) < Date.now() ? 'text-red-600' : ''} block w-28 rounded-md border border-gray-300 bg-gray-50 p-1 text-sm text-black"
+                      class="${task.key}-due-date ${new Date(task.dueDate) < Date.now() ? 'text-red-600' : ''} block w-28 rounded-md border border-gray-300 bg-gray-50 p-1 text-sm text-black outline-none"
                       placeholder="Enter the due date"
                       value="${dateValue}"
                     />
@@ -172,6 +176,16 @@ async function createTaskList(task, type, projectType, sprint) {
       dueDateInput.classList.remove('text-red-600');
     }
   });
+
+  const statusOption = tr.querySelector(`.status-select-${task._id}`);
+  console.log(statusOption);
+  await addStatusOptions(statusOption, task.status);
+
+  statusOption.addEventListener('change', async (e) => {
+    await taskService.updateTask(task._id, { status: e.target.value });
+    e.preventDefault();
+  });
+
   return tr;
 }
 
@@ -1039,5 +1053,22 @@ function addDragEvent(parentElement, allTrs, sprint) {
     });
 
     parentElement.append(tr);
+  });
+}
+
+async function addStatusOptions(selectContainer, taskStatus) {
+  const project = (
+    await projectService.getProjectById(localStorage.getItem('selectedProject'))
+  ).result;
+
+  project.columns.forEach((column) => {
+    const optionEl = document.createElement('option');
+    optionEl.innerText = column;
+    optionEl.value = column;
+
+    if (column === taskStatus) {
+      optionEl.selected = true;
+    }
+    selectContainer.appendChild(optionEl);
   });
 }
