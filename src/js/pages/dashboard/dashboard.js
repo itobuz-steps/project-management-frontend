@@ -167,13 +167,13 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       let type;
       switch (task.type) {
         case 'task':
-          type = 'border-l-green-600';
+          type = 'border-l-[#165dfc]';
           break;
         case 'story':
-          type = 'border-l-primary-600';
+          type = 'border-l-[#00a63d]';
           break;
         case 'bug':
-          type = 'border-l-red-600';
+          type = 'border-l-[#e7000b]';
           break;
       }
 
