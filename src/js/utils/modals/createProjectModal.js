@@ -5,20 +5,46 @@ const createProjectModal = document.getElementById('create-project-modal');
 const closeProjectBtn = document.getElementById('close-button');
 const projectCreateForm = document.getElementById('project-form');
 
+const columnInputWrapper = document.getElementById(
+  'project-columns-input-wrapper'
+);
+const columnInput = document.getElementById('project-columns');
+
+columnInput.addEventListener('input', () => {
+  if (!columnInput.value.endsWith(' ')) {
+    return;
+  }
+
+  if (columnInput.value === ' ') {
+    columnInput.value = '';
+    return;
+  }
+
+  const div = document.createElement('div');
+  div.textContent = columnInput.value.slice(0, columnInput.value.length - 1);
+  div.className =
+    'bg-primary-400 flex items-center justify-center px-2 m-1 rounded-md text-white';
+  columnInputWrapper.insertBefore(div, columnInput);
+  columnInput.value = '';
+});
+
+columnInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Backspace' && columnInput.value === '') {
+    columnInputWrapper.querySelector(':nth-last-child(2)').remove();
+  }
+});
+
 projectCreateForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const name = document.getElementById('name').value.trim();
   const projectType = document.getElementById('projectType').value;
-  const columnInput = document.getElementById('project-columns').value;
-  console.log(columnInput);
-
   let columns = ['todo', 'in-progress', 'done'];
-  if (columnInput) {
-    columns = columnInput
-      .split(',')
-      .map((col) => col.trim())
-      .filter((col) => col.length > 0);
+
+  if (columnInputWrapper.children.length > 1) {
+    columns = Array.from(columnInputWrapper.children)
+      .map((tagEl) => tagEl.textContent)
+      .slice(0, columnInputWrapper.children.length - 1);
   }
 
   const projectData = {

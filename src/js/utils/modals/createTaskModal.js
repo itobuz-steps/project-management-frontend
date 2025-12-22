@@ -19,6 +19,7 @@ const inputFiles = new DataTransfer();
 
 closeTaskModal.addEventListener('click', () => {
   createTaskModal.classList.add('hidden');
+  taskForm.reset();
 });
 
 input.addEventListener('change', () => {
@@ -33,7 +34,7 @@ input.addEventListener('change', () => {
       .map((file) => file.name)
       .join(', ');
   } else if (input.files.length >= 6) {
-    showToast('Maximum 5 files you can insert', 'info');
+    showToast('File limit exceeded', 'info');
   } else {
     fileName.textContent = 'No file chosen';
   }
@@ -98,6 +99,7 @@ taskForm.addEventListener('submit', async (e) => {
 
     await renderSelectedTab(localStorage.getItem('selectedProject'));
     fileName.textContent = 'No file chosen';
+    taskForm.reset();
   } catch (error) {
     console.error(error);
   }
