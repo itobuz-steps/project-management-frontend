@@ -6,7 +6,7 @@ import {
 import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
 import axios from 'axios';
-import { setupNotification } from '../../utils/setupNotification.js';
+// import { setupNotification } from '../../utils/setupNotification.js';
 import showToast from '../../utils/showToast.js';
 import sprintService from '../../services/SprintService.js';
 import { showTaskDrawer } from '../taskDrawer/taskDrawer.js';
@@ -198,7 +198,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
                   </g>
                 </g>
               </svg>
-               <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="hidden subtaskIcon ml-2">
+              <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="hidden subtaskIcon ml-2">
                   <rect x="16" y="9" width="4" height="4" rx="2" transform="rotate(90 16 9)" stroke="#33363F" stroke-width="1"/>
                   <rect x="20" y="17" width="4" height="4" rx="2" transform="rotate(90 20 17)" stroke="#33363F" stroke-width="1"/>
                   <path d="M5 4V15C5 16.8856 5 17.8284 5.58579 18.4142C6.17157 19 7.11438 19 9 19H16" stroke="#33363F" stroke-width="1"/>
@@ -428,16 +428,14 @@ async function checkForInvite() {
   }
 }
 
-checkToken();
-checkForInvite();
-setupSidebar();
-setupNotification();
-setupNavbar();
-loadProjectMembers(localStorage.getItem('selectedProject'));
-handleStatusFilter();
-handleAssigneeFilter();
-renderBoard(localStorage.getItem('selectedProject'));
-// renderDashBoardTasks();
-setupPushNotifications();
-lazyLoad();
-renderNotification();
+await checkToken();
+await checkForInvite();
+await setupSidebar();
+await setupNavbar();
+await loadProjectMembers(localStorage.getItem('selectedProject'));
+await handleStatusFilter();
+await handleAssigneeFilter();
+await renderBoard(localStorage.getItem('selectedProject'));
+await setupPushNotifications();
+await renderNotification();
+await lazyLoad();
