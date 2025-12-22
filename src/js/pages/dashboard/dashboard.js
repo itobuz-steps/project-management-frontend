@@ -126,12 +126,12 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
   project.columns.forEach((column) => {
     const columnEl = document.createElement('div');
     columnEl.innerHTML = /*html*/ `
-      <div class="w-72 bg-white rounded-lg shadow-lg shrink-0 h-full overflow-y-auto">
+      <div class="w-72 bg-white rounded-lg shadow-md shrink-0 h-full overflow-y-auto pb-4">
         <h2 class="text-lg font-semibold sticky top-0 z-10 flex gap-2 px-4 py-2 text-black bg-white shadow-sm shadow-gray-200 items-center">
           ${column.toUpperCase()}
           <div class="issue-count rounded-full w-5 h-5 text-center text-sm text-black bg-gray-200"></div>
         </h2>
-        <div class="flex flex-col gap-3 pb-4 h-96 p-2 " id="task-list"></div>
+        <div class="flex flex-col gap-3 pb-4 h-full p-2 " id="task-list"></div>
       </div>
     `;
 

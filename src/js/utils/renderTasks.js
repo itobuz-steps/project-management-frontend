@@ -6,6 +6,8 @@ import TaskService from '../services/TaskService.js';
 import { showConfirmModal } from './modals/confirmationModal.js';
 import { DateTime } from 'luxon';
 import showToast from './showToast.js';
+import { formatISO } from 'date-fns';
+import { showTaskDrawer } from '../pages/taskDrawer/taskDrawer.js';
 
 const listTableBody = document.getElementById('table-body');
 const emptyListContainer = document.getElementById('empty-list-container');
@@ -93,12 +95,11 @@ async function createTaskList(task, type, projectType, sprint) {
   tr.classList = ` border-b border-b-gray-200 whitespace-nowrap border-l-3 ${priority} hover:bg-gray-100`;
   tr.dataset.id = task._id;
 
-  let dateValue = task.dueDate.split('T')[0];
-  dateValue = new Date(dateValue);
-  dateValue.setDate(dateValue.getDate() + 1);
-  dateValue = dateValue.toLocaleDateString();
-  const splitVal = dateValue.split('/');
-  dateValue = splitVal[2] + '-' + splitVal[1] + '-' + splitVal[0];
+  let dateValue;
+  // <p class="wrapper bg-primary-200 px-2 py-1 rounded-sm w-max uppercase font-semibold text-xs">${task.status}<span class="ml-3 text-xs ">▼</span></p>
+  dateValue = task.dueDate.split('T');
+  const newDate = new Date(dateValue);
+  dateValue = formatISO(newDate, { representation: 'date' });
 
   tr.innerHTML = /*html*/ `
     <td class="px-4 py-2 ${ifSprint} ${ifKanban} ">
@@ -116,9 +117,15 @@ async function createTaskList(task, type, projectType, sprint) {
         ${typeSvg}
       </div>
     </td>
-    <td class="p-2"><p class="wrapper bg-primary-500 text-white px-2 py-1 rounded-sm w-max uppercase font-semibold text-xs">${task.key}</p></td>
-    <td class="p-2">${task.title}</td>
-    <td class="p-2"><p class="wrapper bg-primary-200 px-2 py-1 rounded-sm w-max uppercase font-semibold text-xs">${task.status}<span class="ml-3 text-xs ">▼</span></p></td>
+    <td class="p-2"><p class="wrapper bg-primary-500 text-white px-2 py-1 rounded-md w-max uppercase font-semibold text-xs">${task.key}</p></td>
+    <td class="p-2 open-taskDrawer cursor-pointer hover:underline">${task.title}</td>
+    <td class="p-2">
+      <div class="mr-2 px-2 bg-primary-400 rounded-md text-white py-0.5 w-fit">
+        <select class="status-select-${task._id} w-fit outline-none">
+        </select>
+      </div>
+
+    </td>
     <td class="p-2 ${ifKanban} ${!sprint ? 'hidden' : ''}">${sprint ? '<p class="wrapper bg-primary-400 text-white px-2 py-1 rounded-sm w-max uppercase font-semibold text-xs">' + sprint.key + '</p>' : ''}</td>
     <td class="p-2">
       <div class="flex items-center">
@@ -131,7 +138,7 @@ async function createTaskList(task, type, projectType, sprint) {
                       type="date"
                       name="dueDate"
                       id=""
-                      class="${task.key}-due-date ${new Date(task.dueDate) < Date.now() ? 'text-red-600' : ''} block w-28 rounded-md border border-gray-300 bg-gray-50 p-1 text-sm text-black"
+                      class="${task.key}-due-date ${new Date(task.dueDate) < Date.now() ? 'text-red-600' : ''} block w-28 rounded-md border border-gray-300 bg-gray-50 p-1 text-sm text-black outline-none"
                       placeholder="Enter the due date"
                       value="${dateValue}"
                     />
@@ -153,6 +160,9 @@ async function createTaskList(task, type, projectType, sprint) {
   `;
 
   const dueDateInput = tr.querySelector(`.${task.key}-due-date`);
+  const openTaskDrawer = tr.querySelector('.open-taskDrawer');
+
+  openTaskDrawer.addEventListener('click', () => showTaskDrawer(task._id));
 
   dueDateInput.addEventListener('change', async () => {
     if (new Date(dueDateInput.value) < new Date(task.dueDate)) {
@@ -166,6 +176,16 @@ async function createTaskList(task, type, projectType, sprint) {
       dueDateInput.classList.remove('text-red-600');
     }
   });
+
+  const statusOption = tr.querySelector(`.status-select-${task._id}`);
+  console.log(statusOption);
+  await addStatusOptions(statusOption, task.status);
+
+  statusOption.addEventListener('change', async (e) => {
+    await taskService.updateTask(task._id, { status: e.target.value });
+    e.preventDefault();
+  });
+
   return tr;
 }
 
@@ -327,10 +347,10 @@ function createBacklogTable(projectType) {
 
 
                <div class="relative flex justify-between items-center text-left bg-gray-50 shadow-sm p-2 rounded-md border border-gray-200">
-                  <div class="flex items-center justify-center">
+                  <div class="flex items-center justify-start w-full">
                     <button
                       type="button"
-                      class="flex items-center w-30 md:w-fit gap-3 rounded-md font-semibold cursor-pointer focus:outline-none"
+                      class="flex items-center w-30 md:w-full gap-3 rounded-md font-semibold cursor-pointer focus:outline-none"
                       id="dropdownButton-backlog"
                       aria-expanded="false"
                       aria-haspopup="true"
@@ -1033,5 +1053,22 @@ function addDragEvent(parentElement, allTrs, sprint) {
     });
 
     parentElement.append(tr);
+  });
+}
+
+async function addStatusOptions(selectContainer, taskStatus) {
+  const project = (
+    await projectService.getProjectById(localStorage.getItem('selectedProject'))
+  ).result;
+
+  project.columns.forEach((column) => {
+    const optionEl = document.createElement('option');
+    optionEl.innerText = column;
+    optionEl.value = column;
+
+    if (column === taskStatus) {
+      optionEl.selected = true;
+    }
+    selectContainer.appendChild(optionEl);
   });
 }

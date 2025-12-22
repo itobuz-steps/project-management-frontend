@@ -19,7 +19,7 @@ export async function loadProjectMembers(projectId) {
       img.title = userInfo.name;
 
       img.className =
-        'w-7 h-7 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-white shadow-md hover:z-1 aspect-square';
+        'min-w-10 min-h-10 max-w-10 max-h-10 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-white shadow-md hover:z-1 aspect-square';
 
       img.style.marginLeft = index === 0 ? '0px' : '-10px';
 

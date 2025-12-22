@@ -18,39 +18,13 @@ signUpFormContainer.classList.add('hidden');
 activateLoginTab();
 
 function activateLoginTab() {
-  loginTab.classList.add('bg-[#8c91ff]', 'text-white', 'shadow-md');
-  loginTab.classList.remove(
-    'bg-[#eef0f7]',
-    'text-[#2b2d42]',
-    'hover:bg-white',
-    'hover:text-[#8c91ff]'
-  );
-
-  signUpTab.classList.remove('bg-[#8c91ff]', 'text-white', 'shadow-md');
-  signUpTab.classList.add(
-    'bg-[#eef0f7]',
-    'text-[#2b2d42]',
-    'hover:bg-white',
-    'hover:text-[#8c91ff]'
-  );
+  loginTab.classList.add('active');
+  signUpTab.classList.remove('active');
 }
 
 function activateSignUpTab() {
-  signUpTab.classList.add('bg-[#8c91ff]', 'text-white', 'shadow-md');
-  signUpTab.classList.remove(
-    'bg-[#eef0f7]',
-    'text-[#2b2d42]',
-    'hover:bg-white',
-    'hover:text-[#8c91ff]'
-  );
-
-  loginTab.classList.remove('bg-[#8c91ff]', 'text-white', 'shadow-md');
-  loginTab.classList.add(
-    'bg-[#eef0f7]',
-    'text-[#2b2d42]',
-    'hover:bg-white',
-    'hover:text-[#8c91ff]'
-  );
+  loginTab.classList.remove('active');
+  signUpTab.classList.add('active');
 }
 
 function switchToSignUp() {

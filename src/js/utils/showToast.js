@@ -5,6 +5,9 @@
  */
 function showToast(message, type = 'info', delay = 3000) {
   const container = document.getElementById('toast-container');
+
+  container.className = 'absolute bottom-5 right-5 z-60 flex flex-col gap-3';
+
   if (!container) return;
 
   const colorClasses = {
