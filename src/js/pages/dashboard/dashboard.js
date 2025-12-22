@@ -24,7 +24,10 @@ import { checkToken } from '../../utils/checkToken.js';
 import { removeActive, hideAll } from '../../utils/elementUtils.js';
 import { loadProjectMembers } from '../loadMembers/loadMembers.js';
 import setupPushNotifications from '../../utils/browserNotification.js';
-import { renderNotification } from '../../utils/browserNotification.js';
+import {
+  renderNotification,
+  lazyLoad,
+} from '../../utils/browserNotification.js';
 
 const openProjectBtn = document.getElementById('plus-icon');
 openProjectBtn.addEventListener('click', openCreateProjectModal);
@@ -436,4 +439,5 @@ handleAssigneeFilter();
 renderBoard(localStorage.getItem('selectedProject'));
 // renderDashBoardTasks();
 setupPushNotifications();
+lazyLoad();
 renderNotification();
