@@ -1,7 +1,12 @@
 import axios from 'axios';
 
-export async function getAllNotification(id) {
-  const response = axios.get(`http://localhost:3001/notification/get/${id}`);
+export async function getAllNotification(id, { page, limit } = {}) {
+  const response = axios.get(`http://localhost:3001/notification/get/${id}`, {
+    params: {
+      page,
+      limit,
+    },
+  });
   return response;
 }
 
