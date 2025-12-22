@@ -159,15 +159,30 @@ export function createSubtask(taskDrawer, task) {
           localStorage.getItem('selectedProject')
         )
       ).data.result;
-      const isSubTask = allTasks.some((t) => t.subTask?.includes(task._id));
+      console.log('All tasks is: ', allTasks);
+      const parentTask = allTasks.find((t) => t.subTask?.includes(task._id));
+      console.log('parent tasks is: ', parentTask);
+      let canAddSubtask = false;
 
-      if (task.type === 'task' && isSubTask) {
+      if (task.type === 'story') {
+        canAddSubtask = true;
+      }
+
+      if (
+        task.type === 'task' &&
+        (!parentTask || parentTask.type === 'story')
+      ) {
+        canAddSubtask = true;
+      }
+
+      if (!canAddSubtask) {
         subtaskBtn.style.display = 'none';
       }
     } catch (err) {
       console.error(err);
     }
   }
+
   showDropdown();
 
   function dropdownRender(allTasks) {
