@@ -8,6 +8,7 @@ import { DateTime } from 'luxon';
 import showToast from './showToast.js';
 import { formatISO } from 'date-fns';
 import { showTaskDrawer } from '../pages/taskDrawer/taskDrawer.js';
+import { svgObject } from './svgObjects.js';
 
 const listTableBody = document.getElementById('table-body');
 const emptyListContainer = document.getElementById('empty-list-container');
@@ -27,11 +28,11 @@ async function createTaskList(task, type, projectType, sprint) {
 
   let typeSvg;
   if (task.type === 'task') {
-    typeSvg = `<svg class="h-4 fill-blue-600" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M0 7.5C0 3.35786 3.35786 0 7.5 0C11.6421 0 15 3.35786 15 7.5C15 11.6421 11.6421 15 7.5 15C3.35786 15 0 11.6421 0 7.5ZM7.0718 10.7106L11.3905 5.31232L10.6096 4.68762L6.92825 9.2893L4.32012 7.11586L3.67993 7.88408L7.0718 10.7106Z""></path> </g></svg>`;
+    typeSvg = `${svgObject.task}`;
   } else if (task.type === 'story') {
-    typeSvg = `<svg class="h-4" viewBox="-4 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" fill="#000000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>bookmark</title> <desc>Created with Sketch Beta.</desc> <defs> </defs> <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage"> <g id="Icon-Set-Filled" sketch:type="MSLayerGroup" transform="translate(-419.000000, -153.000000)" fill="#00b31e"> <path d="M437,153 L423,153 C420.791,153 419,154.791 419,157 L419,179 C419,181.209 420.791,183 423,183 L430,176 L437,183 C439.209,183 441,181.209 441,179 L441,157 C441,154.791 439.209,153 437,153" id="bookmark" sketch:type="MSShapeGroup"> </path> </g> </g> </g></svg>`;
+    typeSvg = `${svgObject.story}`;
   } else {
-    typeSvg = `<svg class="h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M7 14.3333C7 13.0872 7 12.4641 7.26795 12C7.44349 11.696 7.69596 11.4435 8 11.2679C8.4641 11 9.08718 11 10.3333 11H13.6667C14.9128 11 15.5359 11 16 11.2679C16.304 11.4435 16.5565 11.696 16.7321 12C17 12.4641 17 13.0872 17 14.3333V16C17 16.9293 17 17.394 16.9231 17.7804C16.6075 19.3671 15.3671 20.6075 13.7804 20.9231C13.394 21 12.9293 21 12 21C11.0707 21 10.606 21 10.2196 20.9231C8.63288 20.6075 7.39249 19.3671 7.07686 17.7804C7 17.394 7 16.9293 7 16V14.3333Z" fill="#db0000" stroke="#db0000" stroke-width="2"></path> <path d="M9 9C9 8.06812 9 7.60218 9.15224 7.23463C9.35523 6.74458 9.74458 6.35523 10.2346 6.15224C10.6022 6 11.0681 6 12 6C12.9319 6 13.3978 6 13.7654 6.15224C14.2554 6.35523 14.6448 6.74458 14.8478 7.23463C15 7.60218 15 8.06812 15 9V11H9V9Z" fill="#db0000" stroke="#db0000" stroke-width="2"></path> <path d="M12 11V15" stroke="#db0000" stroke-width="2"></path> <path d="M15 3L13 6" stroke="#db0000" stroke-width="2"></path> <path d="M9 3L11 6" stroke="#db0000" stroke-width="2"></path> <path d="M7 16H2" stroke="#db0000" stroke-width="2"></path> <path d="M22 16H17" stroke="#db0000" stroke-width="2"></path> <path d="M20 9V10C20 11.6569 18.6569 13 17 13V13" stroke="#db0000" stroke-width="2"></path> <path d="M20 22V22C20 20.3431 18.6569 19 17 19V19" stroke="#db0000" stroke-width="2"></path> <path d="M4 9V10C4 11.6569 5.34315 13 7 13V13" stroke="#db0000" stroke-width="2"></path> <path d="M4 22V22C4 20.3431 5.34315 19 7 19V19" stroke="#db0000" stroke-width="2"></path> </g></svg>`;
+    typeSvg = `${svgObject.bug}`;
   }
 
   let priority;
