@@ -872,12 +872,14 @@
 
                   <div class="md:w-60">
                     <label for="assignee" class="label-primary">Assignee</label>
-                    <select
-                      name="assignee"
-                      id="create-modal-assignee"
-                      class="input-primary"
-                      required
-                    ></select>
+                    <div class="input-primary py-0!">
+                      <select
+                        name="assignee"
+                        id="create-modal-assignee"
+                        class="w-full py-2 outline-none"
+                        required
+                      ></select>
+                    </div>
                   </div>
                 </div>
 
@@ -960,18 +962,18 @@
         tabindex="-1"
         class="fixed inset-0 z-50 flex hidden items-center justify-center bg-black/50"
       >
-        <div class="relative max-h-[80vh] w-full max-w-md p-4 md:max-w-3xl">
-          <div
-            class="relative flex max-h-[80vh] flex-col rounded-lg bg-white shadow-sm"
-          >
+        <div
+          class="xs:max-w-lg relative m-2 max-h-[85vh] w-full max-w-md overflow-y-auto rounded-lg bg-white"
+        >
+          <div class="relative flex flex-col rounded-lg shadow-sm">
             <div
-              class="relative top-0 z-10 flex items-center justify-between rounded-t border-b border-black bg-white p-2 md:p-5"
+              class="xs:px-6 top-0 z-10 flex items-center justify-between rounded-t bg-white px-4 pt-4 sm:pt-6"
             >
-              <h3 class="text-2xl font-semibold text-white">Update Task</h3>
+              <h3 class="text-xl font-semibold text-black">Update Task</h3>
               <button
                 id="close-update-task-modal"
                 type="button"
-                class="end-2.5 ms-auto inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900"
+                class="absolute end-2.5 ms-auto inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900"
               >
                 <svg
                   class="h-3 w-3"
@@ -993,210 +995,169 @@
             </div>
 
             <!--  input forms  -->
-            <div class="overflow-scroll px-4 py-3 md:p-3">
-              <form id="edit-task-form" class="space-y-3 px-3" action="submit">
-                <div
-                  class="flex flex-col gap-2 md:flex-row md:justify-start md:gap-5"
-                >
-                  <div class="md:w-70">
-                    <label
-                      for="title"
-                      class="mb-2 block text-sm font-medium text-black"
-                      >Title</label
-                    >
+            <div class="xs:px-6 overflow-scroll p-4">
+              <form
+                id="edit-task-form"
+                class="flex flex-col gap-2"
+                action="submit"
+              >
+                <div class="flex flex-col gap-2">
+                  <div class="w-full">
+                    <label for="title" class="label-primary">Title</label>
                     <input
                       type="text"
                       name="title"
                       id="title"
-                      class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-black focus:border-blue-500 focus:ring-blue-500"
+                      class="input-primary"
                       placeholder="Enter title"
                       required
                       maxlength="100"
                     />
                   </div>
 
-                  <div class="md:w-110">
-                    <label
-                      for="description"
-                      class="mb-2 block text-sm font-medium text-black"
+                  <div class="w-full">
+                    <label for="description" class="label-primary"
                       >Description</label
                     >
-                    <input
+                    <textarea
                       type="text"
                       name="description"
                       id="description"
-                      class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-black focus:border-blue-500 focus:ring-blue-500"
+                      class="input-primary"
                       placeholder="Enter details"
                       maxlength="1000"
-                    />
+                    ></textarea>
                   </div>
                 </div>
 
-                <div
-                  class="flex flex-col gap-2 md:flex-row md:justify-start md:gap-5"
-                >
-                  <div class="md:w-60">
-                    <label
-                      for="type"
-                      class="mb-2 block text-sm font-medium text-black"
-                      >Type</label
-                    >
-                    <select
-                      name="type"
-                      id="type"
-                      class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-black focus:border-blue-500 focus:ring-blue-500"
-                    >
-                      <option value="">Select a type</option>
-                      <option value="bug">Bug</option>
-                      <option value="feature">Feature</option>
-                      <option value="task">Task</option>
-                      <option value="story">Story</option>
-                    </select>
+                <div class="xs:flex-row xs:gap-3 flex flex-col gap-3 md:gap-5">
+                  <div class="flex-1">
+                    <label for="type" class="label-primary">Type</label>
+                    <div class="input-primary py-0!">
+                      <select
+                        name="type"
+                        id="type"
+                        class="w-full py-2 outline-none"
+                      >
+                        <option value="">Select a type</option>
+                        <option value="bug">Bug</option>
+                        <option value="task">Task</option>
+                        <option value="story">Story</option>
+                      </select>
+                    </div>
                   </div>
 
-                  <div class="md:w-60">
-                    <label
-                      for="priority"
-                      class="mb-2 block text-sm font-medium text-black"
-                      >Priority</label
-                    >
-                    <select
-                      name="priority"
-                      id="priority"
-                      class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-black focus:border-blue-500 focus:ring-blue-500"
-                    >
-                      <option value="">Select a type</option>
-                      <option value="low">Low</option>
-                      <option value="medium">Medium</option>
-                      <option value="high">High</option>
-                      <option value="critical">Critical</option>
-                    </select>
+                  <div class="flex-1">
+                    <label for="priority" class="label-primary">Priority</label>
+                    <div class="input-primary py-0!">
+                      <select
+                        name="priority"
+                        id="priority"
+                        class="w-full py-2 outline-none"
+                      >
+                        <option value="">Select a type</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                        <option value="critical">Critical</option>
+                      </select>
+                    </div>
                   </div>
 
-                  <div class="md:w-60">
-                    <label
-                      for="status"
-                      class="mb-2 block text-sm font-medium text-black"
-                      >Status</label
-                    >
-                    <select
-                      name="status"
-                      id="status"
-                      class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-black focus:border-blue-500 focus:ring-blue-500"
-                    >
-                      <option value="">Select a type</option>
-                      <option value="todo">To-do</option>
-                      <option value="in-progress">In-progress</option>
-                      <option value="done">Done</option>
-                      <option value="review">Review</option>
-                    </select>
+                  <div class="flex-1">
+                    <label for="status" class="label-primary">Status</label>
+                    <div class="input-primary py-0!">
+                      <select
+                        name="status"
+                        id="status"
+                        class="w-full py-2 outline-none"
+                      >
+                        <option value="">Select a type</option>
+                        <option value="todo">To-do</option>
+                        <option value="in-progress">In-progress</option>
+                        <option value="done">Done</option>
+                        <option value="review">Review</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
 
-                <div
-                  class="flex flex-col gap-2 md:flex-row md:justify-start md:gap-5"
-                >
+                <div class="xs:flex-row xs:gap-3 flex flex-col gap-3 md:gap-5">
                   <div class="md:w-60">
-                    <label
-                      for="tags"
-                      class="mb-2 block text-sm font-medium text-black"
-                      >Tags</label
-                    >
+                    <label for="tags" class="label-primary">Tags</label>
                     <input
                       type="text"
                       name="tags"
                       id="tags"
-                      class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-black focus:border-blue-500 focus:ring-blue-500"
+                      class="input-primary"
                       placeholder="Enter tags"
                     />
                   </div>
 
                   <div class="md:w-60">
-                    <label
-                      for="due date"
-                      class="mb-2 block text-sm font-medium text-black"
-                      >Due Date</label
-                    >
+                    <label for="due date" class="label-primary">Due Date</label>
                     <input
                       type="date"
                       name="dueDate"
                       id="dueDate"
-                      class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-black focus:border-blue-500 focus:ring-blue-500"
+                      class="input-primary"
                       placeholder="Enter the due date"
                     />
                   </div>
 
                   <div class="md:w-60">
-                    <label
-                      for="assignee"
-                      class="mb-2 block text-sm font-medium text-black"
-                      >Assignee</label
-                    >
-                    <select
-                      name="assignee"
-                      id="assignee"
-                      class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-black focus:border-blue-500 focus:ring-blue-500"
-                      required
-                    ></select>
+                    <label for="assignee" class="label-primary">Assignee</label>
+                    <div class="input-primary py-0!">
+                      <select
+                        name="assignee"
+                        id="assignee"
+                        class="w-full py-2 outline-none"
+                        required
+                      ></select>
+                    </div>
                   </div>
                 </div>
 
-                <div
-                  class="flex flex-col gap-2 md:flex-row md:justify-start md:gap-5"
-                >
-                  <div class="md:w-60">
-                    <label
-                      for="block"
-                      class="mb-2 block text-sm font-medium text-black"
-                      >Blocks</label
-                    >
+                <div class="xs:flex-row xs:gap-3 flex flex-col gap-3 md:gap-5">
+                  <div class="xs:w-1/3 w-full">
+                    <label for="block" class="label-primary">Blocks</label>
                     <input
                       type="text"
                       name="block"
                       id="block"
-                      class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-black focus:border-blue-500 focus:ring-blue-500"
-                      placeholder=""
+                      class="input-primary"
                     />
                   </div>
 
-                  <div class="md:w-60">
-                    <label
-                      for="BlockedBy"
-                      class="mb-2 block text-sm font-medium text-black"
+                  <div class="xs:w-1/3 w-full">
+                    <label for="BlockedBy" class="label-primary text-xs"
                       >Blocked by Issue</label
                     >
                     <input
                       type="text"
                       name="BlockedBy"
                       id="BlockedBy"
-                      class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-black focus:border-blue-500 focus:ring-blue-500"
+                      class="input-primary"
                       placeholder=""
                     />
                   </div>
 
-                  <div class="md:w-60">
-                    <label
-                      for="relatesTo"
-                      class="mb-2 block text-sm font-medium text-black"
+                  <div class="xs:w-1/3 w-full">
+                    <label for="relatesTo" class="label-primary"
                       >Related To</label
                     >
                     <input
                       type="text"
                       name="relatesTo"
                       id="relatesTo"
-                      class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-black focus:border-blue-500 focus:ring-blue-500"
+                      class="input-primary"
                       placeholder=""
                     />
                   </div>
                 </div>
 
                 <div class="flex justify-between"></div>
-                <button
-                  type="submit"
-                  class="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  Update
-                </button>
+                <button type="submit" class="btn-primary w-full">Update</button>
               </form>
             </div>
           </div>
