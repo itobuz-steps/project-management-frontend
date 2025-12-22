@@ -26,6 +26,7 @@ import { loadProjectMembers } from '../loadMembers/loadMembers.js';
 import setupPushNotifications from '../../utils/browserNotification.js';
 import { renderNotification } from '../../utils/browserNotification.js';
 import { svgObject } from '../../utils/svgObjects.js';
+import { getColorByType } from '../../utils/globalUtils.js';
 
 const openProjectBtn = document.getElementById('plus-icon');
 openProjectBtn.addEventListener('click', openCreateProjectModal);
@@ -157,6 +158,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         typeSvg = `${svgObject.bug}`;
       }
 
+      const statusColor = getColorByType(task);
       const assignee = task.assignee ? userMap[task.assignee] : null;
 
       const taskEl = document.createElement('div');
@@ -182,7 +184,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         <div class="card-footer flex justify-between items-center text-sm text-gray-400">
           <div class="flex items-center gap-2">
             <span class="">${typeSvg}</span>
-            <span class="type-tag text-white ${task.type === 'task' ? 'bg-blue-400' : task.type === 'story' ? 'bg-green-400' : 'bg-red-400'} text-xs font-semibold p-1 rounded-sm" >${
+            <span class="type-tag text-white ${statusColor} text-xs font-semibold p-1 rounded-sm" >${
               task.key
             }</span>
           </div>
