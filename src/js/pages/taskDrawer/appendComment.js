@@ -7,7 +7,7 @@ export function appendCommentToContainer(comment, container) {
     'flex gap-2 md:gap-3 items-start bg-white rounded-lg shadow-md px-2 py-3 md:px-3 ' +
     'border border-[#90e0ef] shadow-lg rounded-lg';
 
-  commentEl.innerHTML = `
+  commentEl.innerHTML = /*html*/ `
   <img
     src="${
       comment.author.profileImage
