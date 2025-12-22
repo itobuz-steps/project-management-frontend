@@ -59,7 +59,6 @@ export async function renderSubtasks(task) {
         </div>
       </div>
     `;
-    console.log(st.subTask);
     const attachmentsLogo = div.querySelector('.attachmentIcon');
     const subtaskLogo = div.querySelector('.subtaskIcon');
 

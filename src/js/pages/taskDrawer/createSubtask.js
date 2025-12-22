@@ -3,6 +3,8 @@ import showToast from '../../utils/showToast';
 import { showTaskDrawer } from './taskDrawer';
 
 export function createSubtask(taskDrawer, task) {
+  console.log('Type of this task is : ', task.type);
+  console.log('Id of this task is : ', task._id);
   const subtaskDropdown = taskDrawer.querySelector('#subtaskDropdown');
   const saveSubtasksBtn = taskDrawer.querySelector('#saveSubtasksBtn');
   const subtaskBtn = taskDrawer.querySelector('#subtaskButton');
@@ -43,9 +45,14 @@ export function createSubtask(taskDrawer, task) {
     isDropdownVisible = true;
 
     const loadSubtasks = async () => {
+      const taskType = (await taskService.getTaskById(task._id)).data.result
+        .type;
+      console.log('this is for checking the task type ', taskType);
+
       const subtasks = (await taskService.getTaskById(task._id)).data.result
         .subTask;
 
+      console.log('this is subtasks: ', subtasks);
       if (!subtasks.length) {
         const allTasks = (
           await taskService.getTaskByProjectId(
@@ -56,6 +63,7 @@ export function createSubtask(taskDrawer, task) {
         subtaskList.innerHTML = '';
 
         allTasks.forEach((t) => {
+          if (task.type === 'task' && t.type !== 'story') return;
           if (t._id === task._id) return;
 
           const isChecked = task.subTask?.includes(t._id);
@@ -88,6 +96,7 @@ export function createSubtask(taskDrawer, task) {
         subtaskList.innerHTML = '';
 
         allTasks.forEach((t) => {
+          if (task.type === 'task' && t.type === 'story') return;
           if (t._id === task._id) return;
 
           const isChecked = task.subTask?.includes(t._id);
