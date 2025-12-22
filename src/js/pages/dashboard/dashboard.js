@@ -87,7 +87,6 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
   const result = {};
 
   project.columns.forEach((column) => (result[column] = []));
-  console.log(project.columns);
 
   const tasks = await getFilteredTasks(projectId, filter, searchInput);
 
@@ -161,11 +160,23 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
       const statusColor = getColorByType(task);
       const assignee = task.assignee ? userMap[task.assignee] : null;
-
       const taskEl = document.createElement('div');
+
+      let type;
+      switch (task.type) {
+        case 'task':
+          type = 'border-l-[#165dfc]';
+          break;
+        case 'story':
+          type = 'border-l-[#00a63d]';
+          break;
+        case 'bug':
+          type = 'border-l-[#e7000b]';
+          break;
+      }
+
       taskEl.dataset._id = task._id;
-      taskEl.className =
-        'task flex flex-col max-w-sm p-3 bg-white rounded-md shadow-sm text-black gap-4 relative cursor-grab border border-gray-100 hover:shadow-md';
+      taskEl.className = `task flex flex-col max-w-sm p-3  bg-white rounded-md shadow-sm text-black gap-4 relative cursor-grab border-2 border-gray-100 hover:shadow-md ${type}`;
       taskEl.innerHTML = /*html*/ `
         <div class="card-header flex justify-between items-center">
           <p id="${
@@ -226,19 +237,12 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       const attachmentsLogo = taskEl.querySelector('.attachmentIcon');
       const subtaskLogo = taskEl.querySelector('.subtaskIcon');
 
-      taskEl.addEventListener('mouseenter', () => {
-        if (task.attachments.length) {
-          attachmentsLogo.classList.remove('hidden');
-        }
-        if (task.subTask.length) {
-          subtaskLogo.classList.remove('hidden');
-        }
-      });
-
-      taskEl.addEventListener('mouseleave', () => {
-        attachmentsLogo.classList.add('hidden');
-        subtaskLogo.classList.add('hidden');
-      });
+      if (task.attachments.length) {
+        attachmentsLogo.classList.remove('hidden');
+      }
+      if (task.subTask.length) {
+        subtaskLogo.classList.remove('hidden');
+      }
 
       const userAvatar = taskEl.querySelector('.user-avatar');
       const avatarDropdown = taskEl.querySelector('.avatar-dropdown');
