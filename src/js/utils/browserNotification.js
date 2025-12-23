@@ -83,6 +83,7 @@ export async function setupPushNotifications() {
 }
 
 function handleNotification(data) {
+  console.log('data passed to notifciation', data);
   const container = document.querySelector('#notificationDropdownMenu ul');
   if (!container) return;
 
@@ -98,11 +99,10 @@ function handleNotification(data) {
   li.innerHTML = `
     <div class="relative">
       ${
-        data.avatar
-          ? `<img src="${data.avatar}" class="h-10 w-10 rounded-full" />`
-          : `<div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">🔔</div>`
+        data.image
+          ? `<img src="http://localhost:3001/uploads/profile/${data.image}" class="h-10 w-10 rounded-full aspect-square" />`
+          : `<div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center"></div>`
       }
-      ${isUnread ? `<span class="absolute -top-1 -right-1 h-2 w-2 bg-blue-600 rounded-full"></span>` : ''}
     </div>
     <div class="flex flex-col">
       <p class="text-sm font-semibold">${data.title}</p>
@@ -135,7 +135,10 @@ export async function renderNotification() {
     notifications.forEach(handleNotification);
 
     hasMore = res.data.pagination.hasMore;
-    if (hasMore) page++;
+
+    if (hasMore) {
+      page++;
+    }
   } catch (error) {
     console.error('Error fetching notifications:', error);
   } finally {
