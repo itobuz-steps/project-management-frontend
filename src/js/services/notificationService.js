@@ -1,13 +1,9 @@
 import axios from 'axios';
 
-export async function getAllNotification(id, { page, limit } = {}) {
-  const response = axios.get(`http://localhost:3001/notification/get/${id}`, {
-    params: {
-      page,
-      limit,
-    },
-  });
-  return response;
+export function getAllNotification(id, { page, limit }) {
+  return axios.get(
+    `http://localhost:3001/notification/get/${id}?page=${page}&limit=${limit}`
+  );
 }
 
 export async function markAsAllRead() {
