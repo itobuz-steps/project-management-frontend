@@ -2,10 +2,10 @@ import axios from 'axios';
 import { getAllNotification } from '../services/notificationService';
 import { DateTime } from 'luxon';
 
-let page = 1;
-let LIMIT = 3;
-let hasMore = true;
+let page = 0;
+const LIMIT = 5;
 let isLoading = false;
+let hasMore = true;
 let notificationObserver = null;
 
 function urlBase64ToUint8Array(base64String) {
@@ -84,64 +84,43 @@ export async function setupPushNotifications() {
 
 function handleNotification(data) {
   const container = document.querySelector('#notificationDropdownMenu ul');
-
   if (!container) return;
 
   const li = document.createElement('li');
-
   const isUnread = data.unread ?? true;
 
   li.className = `
     dropdown-item flex cursor-pointer items-start gap-4 p-4
-    transition-colors duration-200
     hover:bg-gray-50
     ${isUnread ? 'bg-blue-50/40' : ''}
   `;
 
-  li.innerHTML = /*html*/ `
+  li.innerHTML = `
     <div class="relative">
       ${
         data.avatar
-          ? `<img src="${data.avatar}" class="h-10 w-10 rounded-full object-cover" />`
-          : `
-            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" />
-              </svg>
-            </div>
-          `
+          ? `<img src="${data.avatar}" class="h-10 w-10 rounded-full" />`
+          : `<div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">🔔</div>`
       }
-
-      ${
-        isUnread
-          ? `<span class="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-blue-600"></span>`
-          : ''
-      }
+      ${isUnread ? `<span class="absolute -top-1 -right-1 h-2 w-2 bg-blue-600 rounded-full"></span>` : ''}
     </div>
-    <div class="flex flex-1 flex-col gap-1">
-      <h4 class="text-sm font-semibold text-slate-900 leading-snug">
-        ${data.title || 'Notification'}
-      </h4>
-      <span class="mt-1 text-xs font-medium text-blue-600">
-        ${DateTime.fromISO(data.createdAt).toRelative() || 'Just now'}
+    <div class="flex flex-col">
+      <p class="text-sm font-semibold">${data.title}</p>
+      <span class="text-xs text-blue-600">
+        ${DateTime.fromISO(data.createdAt).toRelative()}
       </span>
     </div>
   `;
 
-  container.append(li);
+  container.insertBefore(li, document.getElementById('targetElement'));
 }
 
 export async function renderNotification() {
-  if (isLoading || !hasMore) {
-    return;
-  }
+  if (isLoading || !hasMore) return;
 
   isLoading = true;
 
   const currentProject = localStorage.getItem('selectedProject');
-  console.log(currentProject);
 
   try {
     const res = await getAllNotification(currentProject, {
@@ -149,23 +128,18 @@ export async function renderNotification() {
       limit: LIMIT,
     });
 
-    console.log(res);
-
     const notifications = res.data.result;
-    console.log(notifications);
 
-    if (notifications.length > 0) {
-      notifications.forEach(handleNotification);
+    console.table(notifications);
 
-      hasMore = res.data.pagination?.hasMore ?? false;
-      if (hasMore) {
-        page++;
-      }
-    } else {
-      hasMore = false;
-    }
+    notifications.forEach(handleNotification);
+
+    hasMore = res.data.pagination.hasMore;
+    if (hasMore) page++;
   } catch (error) {
     console.error('Error fetching notifications:', error);
+  } finally {
+    isLoading = false;
   }
 }
 
@@ -173,23 +147,19 @@ export function lazyLoad() {
   const targetElement = document.getElementById('targetElement');
   const rootEl = document.getElementById('notificationDropdownMenu');
 
-  if (!targetElement || !rootEl) return;
-
   if (notificationObserver) return;
 
   notificationObserver = new IntersectionObserver(
     (entries) => {
-      const entry = entries[0];
-
-      if (entry.isIntersecting && !isLoading) {
-        console.log('target element hit');
+      console.log(entries);
+      if (entries[0].isIntersecting) {
+        console.log('Intersecting');
         renderNotification();
       }
     },
     {
-      root: rootEl,
-      threshold: 1.0,
-      rootMargin: '0px',
+      root: null,
+      threshold: 0.5,
     }
   );
 
