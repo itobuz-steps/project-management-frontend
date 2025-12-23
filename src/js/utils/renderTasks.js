@@ -97,7 +97,7 @@ async function createTaskList(task, type, projectType, sprint) {
   tr.dataset.id = task._id;
 
   let dateValue;
-  // <p class="wrapper bg-primary-200 px-2 py-1 rounded-sm w-max uppercase font-semibold text-xs">${task.status}<span class="ml-3 text-xs ">▼</span></p>
+
   dateValue = task.dueDate.split('T');
   const newDate = new Date(dateValue);
   dateValue = formatISO(newDate, { representation: 'date' });
@@ -122,7 +122,7 @@ async function createTaskList(task, type, projectType, sprint) {
     <td class="p-2 open-taskDrawer cursor-pointer hover:underline">${task.title}</td>
     <td class="p-2">
       <div class="mr-2 px-2 bg-primary-400 rounded-md text-white py-0.5 w-fit">
-        <select class="status-select-${task._id} w-fit outline-none">
+        <select class="status-select-${task._id} w-fit outline-none text-center">
         </select>
       </div>
 
@@ -173,13 +173,16 @@ async function createTaskList(task, type, projectType, sprint) {
     }
 
     await taskService.updateTask(task._id, { dueDate: dueDateInput.value });
+
+    showToast('Task Updated successfully', 'success');
+
     if (new Date(dueDateInput.value) >= Date.now()) {
       dueDateInput.classList.remove('text-red-600');
     }
   });
 
   const statusOption = tr.querySelector(`.status-select-${task._id}`);
-  console.log(statusOption);
+
   await addStatusOptions(statusOption, task.status);
 
   statusOption.addEventListener('change', async (e) => {
@@ -471,9 +474,7 @@ export async function renderTasksList(
   listTableBody.innerHTML = '';
 
   const project = (await projectService.getProjectById(projectId)).result;
-
   const tasksArray = await getFilteredTasks(projectId, filter, searchInput);
-  console.log(tasksArray);
 
   if (!tasksArray.length) {
     emptyListContainer.classList.remove('hidden');
@@ -581,7 +582,6 @@ export async function renderDashBoardTasks(
   );
   const project = await projectService.getProjectById(projectId);
   const sprints = await SprintService.getAllSprints(projectId);
-  console.log(tasks);
   const allTasks = tasks.data.result.map((task) => task._id);
 
   const allSprintTasks = [];
@@ -595,15 +595,7 @@ export async function renderDashBoardTasks(
       task.status !== project.result.columns[project.result.columns.length - 1]
   );
 
-  console.log({
-    allTasks,
-    allSprintTasks,
-    backlogTasks,
-    incompleteBacklogTasks,
-  });
-
   const currentSprints = sprints.result.filter((sprint) => !sprint.isCompleted);
-  console.log(currentSprints, sprints);
 
   currentSprints.forEach(async (sprint) => {
     const newSprint = createSprintTable(sprint);
@@ -784,8 +776,7 @@ async function handleSprintCreate(storyPointInput) {
     storyPoint: storyPointInput.value,
   };
 
-  const response = await SprintService.createSprint(newSprint);
-  console.log('Sprint created', response);
+  await SprintService.createSprint(newSprint);
   await renderDashBoardTasks(localStorage.getItem('selectedProject'));
 }
 
@@ -815,7 +806,6 @@ function dropdownEvent(sprint = {}) {
 
 async function handleCompleteSprint(sprintId, project) {
   const sprint = await SprintService.getSprintById(sprintId);
-  console.log(sprint);
 
   let completedTasks = [];
   sprint.result.tasks.forEach((task) => {
@@ -864,7 +854,6 @@ async function handleStartSprint(sprint) {
 
   async function startSprintFunction() {
     if (project.result.currentSprint) {
-      console.log('A sprint is already running');
       toggleStartSprintForm();
     } else {
       sprint.dueDate = dueDateInput.value;
@@ -923,14 +912,13 @@ function handleAddTaskToSprint(currentSprints, sprintDropdown) {
 async function handleAddTaskFromBacklogToSprint(dropdownEl) {
   const backlogBodyChildren = document.getElementById('backlog-body');
   let selectedRows = [];
+
   backlogBodyChildren.querySelectorAll('.checkboxes').forEach((checkbox) => {
     if (checkbox.checked) {
-      console.log(checkbox);
       selectedRows.push(checkbox.dataset.id);
     }
   });
 
-  console.log(dropdownEl.dataset.id, selectedRows);
   await SprintService.addTasksToSprint(dropdownEl.dataset.id, {
     tasks: selectedRows,
   });
@@ -942,7 +930,6 @@ function checkIfEmpty() {
   const tableBodyEl = document.querySelectorAll('.backlog table tbody');
   tableBodyEl.forEach((tb) => {
     const sprintId = tb.dataset.id;
-    console.log(sprintId, tableBodyEl);
     const emptyMessageEl = document.querySelector(
       `.empty-message[data-id="${sprintId}"]`
     );
@@ -975,7 +962,6 @@ async function addDropEvent(
 
   const taskEl = document.querySelector(`.backlog table [data-id="${taskId}"]`);
 
-  console.log(taskEl);
   taskEl.remove();
 
   const task = await TaskService.getTaskById(taskId);

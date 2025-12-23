@@ -79,7 +79,7 @@ async function updateUserList() {
       item.dataset.id = user._id;
       item.id = user.name;
       item.innerHTML = /*html*/ `
-    <div class="flex items-center">
+    <div class="flex items-center cursor-pointer">
     <img class="aspect-square w-6 h-6 rounded-full mr-3" 
           src="${
             user.profileImage
