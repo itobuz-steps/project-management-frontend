@@ -8,6 +8,7 @@ const currentProject = localStorage.getItem('selectedProject');
 
 function renderSubDropdown(item) {
   const subDropdown = document.createElement('div');
+
   subDropdown.className = `px-4 py-2 hover:bg-gray-100 cursor-pointer ${item}-filter`;
   subDropdown.id = `${item}-filter`;
   subDropdown.innerHTML = `
@@ -24,11 +25,9 @@ export async function handleStatusFilter() {
 
   project.columns.forEach((column) => {
     const dropdownEl = renderSubDropdown(column);
+
     statusDropDown.appendChild(dropdownEl);
     dropdownEl.addEventListener('click', async () => {
-      // removeElementChildren(statusDropDown);
-      // removeElementChildren(assigneeDropdown);
-
       await renderSelectedTab(currentProject, 'status', `${column}`);
     });
   });
@@ -37,21 +36,20 @@ export async function handleStatusFilter() {
 export async function handleAssigneeFilter() {
   removeElementChildren(statusDropDown);
   removeElementChildren(assigneeDropdown);
+
   const assignees = await projectService.getProjectMembers(currentProject);
 
   assignees.result.forEach((assignee) => {
     const dropdownEl = renderSubDropdown(assignee.name);
-    assigneeDropdown.appendChild(dropdownEl);
-    dropdownEl.addEventListener('click', async () => {
-      // removeElementChildren(statusDropDown);
-      // removeElementChildren(assigneeDropdown);
 
+    assigneeDropdown.appendChild(dropdownEl);
+
+    dropdownEl.addEventListener('click', async () => {
       await renderSelectedTab(currentProject, 'assignee', `${assignee._id}`);
     });
   });
 }
 
-const priorityDropdown = document.getElementById('priorityDropdown');
 const lowFilterBtn = document.getElementById('low-filter');
 const midFilterBtn = document.getElementById('medium-filter');
 const highFilterBtn = document.getElementById('high-filter');
@@ -80,12 +78,8 @@ document.querySelectorAll('.dropdown-item').forEach((item) => {
 document.addEventListener('click', (e) => {
   mainDropdown.classList.add('hidden');
   subDropdowns.forEach((d) => d.classList.add('hidden'));
-  e.stopPropagation();
-});
 
-priorityDropdown.addEventListener('click', () => {
-  // removeElementChildren(statusDropDown);
-  // removeElementChildren(assigneeDropdown);
+  e.stopPropagation();
 });
 
 lowFilterBtn.addEventListener('click', async () => {
@@ -105,8 +99,5 @@ criticalFilterBtn.addEventListener('click', async () => {
 });
 
 removeFilterBtn.addEventListener('click', async () => {
-  // removeElementChildren(statusDropDown);
-  // removeElementChildren(assigneeDropdown);
-
   await renderSelectedTab(currentProject);
 });

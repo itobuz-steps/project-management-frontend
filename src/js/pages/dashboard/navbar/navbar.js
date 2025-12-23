@@ -3,8 +3,6 @@ import taskService from '../../../services/TaskService.js';
 import renderSelectedTab from '../../../utils/renderSelectedTab.js';
 
 const searchInput = document.getElementById('search-input-field');
-// const notificationIcon = document.querySelector('.notification-icon');
-// const badge = document.querySelector('.notification-badge');
 const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
 const preview = document.getElementById('profileImage');
@@ -55,28 +53,10 @@ export function increaseNotificationCount() {
 }
 
 export async function setupNavbar() {
-  // badge.classList.add('hidden');
-
-  // const notificationCount = localStorage.getItem("notificationCount'");
-
   searchInput.addEventListener('input', (e) => {
     e.preventDefault();
     debounced();
   });
-
-  // dropdownToggle.addEventListener('click', () => {
-  //   localStorage.setItem('notificationCount', 0);
-
-  //   const badge = document.querySelector('.notification-badge');
-
-  //   badge.textContent = 0;
-  //   badge.classList.add('hidden');
-  // });
-
-  // if (notificationCount > 0) {
-  //   badge.textContent = notificationCount;
-  //   badge.classList.remove('hidden');
-  // }
 
   profileBtn.addEventListener('click', () => {
     dropdownMenu.classList.toggle('hidden');

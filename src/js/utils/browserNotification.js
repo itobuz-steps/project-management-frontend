@@ -24,21 +24,16 @@ const PUBLIC_VAPID_KEY =
 
 export async function setupPushNotifications() {
   if (!('serviceWorker' in navigator)) {
-    console.error('Service Worker not supported');
     return;
-  } else {
-    console.log('Service worker supported');
   }
 
   if (!('PushManager' in window)) {
-    console.error('PushManager not supported');
     return;
   }
 
   try {
     const registration =
       await navigator.serviceWorker.register('/serviceWorker.js');
-    console.log('Service Worker registered');
 
     const permission = await Notification.requestPermission();
     if (permission !== 'granted') {
@@ -53,9 +48,6 @@ export async function setupPushNotifications() {
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY),
       });
-      console.log('New subscription created');
-    } else {
-      console.log('Existing subscription found');
     }
 
     const email = localStorage.getItem('userEmail');
@@ -64,8 +56,6 @@ export async function setupPushNotifications() {
       email,
       subscription,
     });
-
-    console.log('Subscription sent to backend');
 
     const channel = new BroadcastChannel('sw-messages');
 

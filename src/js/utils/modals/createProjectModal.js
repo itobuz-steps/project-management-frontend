@@ -11,7 +11,6 @@ projectCreateForm.addEventListener('submit', async (e) => {
   const name = document.getElementById('name').value.trim();
   const projectType = document.getElementById('projectType').value;
   const columnInput = document.getElementById('project-columns').value;
-  console.log(columnInput);
 
   let columns = ['todo', 'in-progress', 'done'];
   if (columnInput) {

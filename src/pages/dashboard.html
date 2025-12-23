@@ -129,7 +129,6 @@
               </ul>
             </div>
           </div>
-          <!-- <div class="profile-image w-7 h-7 bg-blue-400 rounded-full"></div> -->
           <div class="relative">
             <button
               id="profileBtn"
@@ -1415,28 +1414,29 @@
     ></div>
 
     <!-- delete modal -->
-
     <div
       id="confirmationModal"
-      class="modal fixed top-[40%] right-0 left-0 z-100 mx-auto flex hidden w-fit items-center justify-center"
+      class="fixed inset-0 z-50 flex hidden items-center justify-center bg-black/50"
     >
-      <div class="w-70 rounded-lg bg-gray-200 p-6 shadow-xl md:w-96">
-        <h2 id="confirmModalMessage" class="mb-4 text-lg font-semibold"></h2>
-
-        <div class="flex justify-between">
-          <button
-            id="cancelConfirm"
-            class="rounded bg-gray-300 px-4 py-2 font-semibold text-gray-800 hover:bg-gray-400 focus:ring focus:ring-gray-300 focus:outline-none"
-          >
-            Cancel
-          </button>
-
-          <button
-            id="confirm"
-            class="rounded bg-red-500 px-4 py-2 font-semibold text-white hover:bg-red-600 focus:ring focus:ring-red-300 focus:outline-none"
-          >
-            OK
-          </button>
+      <div
+        class="modal fixed top-[40%] right-0 left-0 z-100 mx-auto flex w-fit items-center justify-center"
+      >
+        <div class="w-70 rounded-lg bg-gray-200 p-6 shadow-xl md:w-96">
+          <h2 id="confirmModalMessage" class="mb-4 text-lg font-semibold"></h2>
+          <div class="flex justify-between">
+            <button
+              id="cancelConfirm"
+              class="rounded bg-gray-300 px-4 py-2 font-semibold text-gray-800 hover:bg-gray-400 focus:ring focus:ring-gray-300 focus:outline-none"
+            >
+              Cancel
+            </button>
+            <button
+              id="confirm"
+              class="rounded bg-red-500 px-4 py-2 font-semibold text-white hover:bg-red-600 focus:ring focus:ring-red-300 focus:outline-none"
+            >
+              OK
+            </button>
+          </div>
         </div>
       </div>
     </div>

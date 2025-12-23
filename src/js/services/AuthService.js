@@ -34,7 +34,7 @@ class AuthService {
 
   async login(email, password) {
     const response = await this.api.post(`/login`, { email, password });
-    console.log(response);
+
     localStorage.setItem('access_token', response.data.accessToken);
     localStorage.setItem('refresh_token', response.data.refreshToken);
 
