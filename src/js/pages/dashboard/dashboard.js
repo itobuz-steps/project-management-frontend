@@ -284,8 +284,6 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         if (e.target.tagName === 'LI') {
           selectedUserId = e.target.dataset.id;
 
-          //search for the selected users
-
           selectedUser = activeProjectMembers.find(
             (u) => u._id == selectedUserId
           );
@@ -301,11 +299,11 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
           }
 
           const taskId = taskEl.dataset._id;
+
           await taskService.updateTask(taskId, {
             assignee: selectedUserId,
             profileImage: selectedUser?.profileImage || null,
           });
-          console.log('Assigned user:', selectedUserId);
 
           avatarDropdown.classList.add('hidden');
         }
@@ -320,11 +318,9 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         }
       });
 
-      // end of avatar drop down
-
       taskEl.setAttribute('draggable', 'true');
       taskEl.addEventListener('dragstart', (e) => {
-        const currentCol = e.target.parentElement.parentElement; // getting the whole column dynamically
+        const currentCol = e.target.parentElement.parentElement;
         e.dataTransfer.setData('taskId', task._id);
         e.dataTransfer.effectAllowed = 'move';
         draggedColumn = currentCol;
@@ -337,8 +333,6 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         taskEl.classList.add('cursor-grab');
       });
 
-      // const typeTag = taskEl.querySelector('.type-tag');
-      // const typeSelector = taskEl.querySelector('.type-selector');
       const cardHeader = taskEl.querySelector('.card-header > p');
 
       taskEl.addEventListener('click', (e) => {
@@ -347,35 +341,19 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       cardHeader.addEventListener('click', () => showTaskDrawer(task._id));
 
       taskEl.querySelector('.edit-btn').addEventListener('click', () => {
-        // dropdownMenu.classList.add('hidden');
         openUpdateTaskModal(task._id);
       });
       taskEl.querySelector('.delete-btn').addEventListener('click', (e) => {
         e.stopPropagation();
-        // showDeleteModal(task._id);
+
         showConfirmModal(
           'Are you sure you want to delete this task?',
           async () => {
             await taskService.deleteTask(task._id);
             await renderBoard(localStorage.getItem('selectedProject'));
-            // await renderDashBoardTasks(localStorage.getItem('selectedProject'));
           }
         );
       });
-
-      // typeSelector.addEventListener('change', (e) => {
-      //   const value = e.target.value;
-      //   if (value === 'task') {
-      //     typeTag.className =
-      //       'bg-blue-600 text-white text-xs font-semibold py-1 px-2 rounded-sm';
-      //   } else if (value === 'story') {
-      //     typeTag.className =
-      //       'bg-green-600 text-white text-xs font-semibold py-1 px-2 rounded-sm';
-      //   } else {
-      //     typeTag.className =
-      //       'bg-red-600 text-white text-xs font-semibold py-1 px-2 rounded-sm';
-      //   }
-      // });
 
       const taskList = columnEl.querySelector('#task-list');
       taskList.appendChild(taskEl);
@@ -384,10 +362,11 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
     const taskList = columnEl.querySelector('#task-list');
 
     taskList.addEventListener('dragover', (e) => e.preventDefault());
+
     taskList.addEventListener('drop', async (e) => {
       e.preventDefault();
+
       const taskId = e.dataTransfer.getData('taskId');
-      console.log(`Dropped ${taskId} into column`);
       const taskEl = document.querySelector(`[data-_id="${taskId}"]`);
       const taskTitle = taskEl.querySelector('.task-title');
 
@@ -406,7 +385,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         +columnEl.querySelector('.issue-count').innerText + 1;
 
       draggedColumn.querySelector('.issue-count').innerText =
-        +draggedColumn.querySelector('.issue-count').innerText - 1; // converted from string to number using
+        +draggedColumn.querySelector('.issue-count').innerText - 1;
     });
 
     columnContainer.appendChild(columnEl);
@@ -443,7 +422,6 @@ loadProjectMembers(localStorage.getItem('selectedProject'));
 handleStatusFilter();
 handleAssigneeFilter();
 renderBoard(localStorage.getItem('selectedProject'));
-// renderDashBoardTasks();
 setupPushNotifications();
 lazyLoad();
 renderNotification();

@@ -126,7 +126,6 @@ class TaskService {
     }
 
     if (task.attachments) {
-      console.log(task.attachments);
       Array.from(task.attachments).forEach((file) => {
         formData.append('attachments', file);
       });

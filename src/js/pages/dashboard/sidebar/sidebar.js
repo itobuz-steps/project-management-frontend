@@ -175,7 +175,7 @@ function addEventListenersSidebar() {
 
     const email = emailInput.value.trim();
     if (email === '') {
-      console.log('please enter a valid emil'); // add a confirmation
+      showToast('please enter a valid emil');
       return;
     }
     axios
@@ -186,10 +186,8 @@ function addEventListenersSidebar() {
       .then((response) => {
         if (response.data.success) {
           showToast('Email sent successfully', 'success');
-          console.log('Email sent successfully');
         } else {
           showToast('failed to send invitation', 'error');
-          console.log('failed to sent invitation');
         }
       })
       .catch((error) => {

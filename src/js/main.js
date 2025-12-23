@@ -1,7 +1,4 @@
 import '../style/main.css';
-console.log('Hello');
-
-console.log(window.location.pathname);
 
 if (window.location.pathname.startsWith('/invite')) {
   localStorage.setItem(

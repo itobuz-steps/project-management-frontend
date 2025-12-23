@@ -106,14 +106,9 @@ export function createSubtask(taskDrawer, task) {
     isDropdownVisible = true;
 
     const loadSubtasks = async () => {
-      const taskType = (await taskService.getTaskById(task._id)).data.result
-        .type;
-      console.log('this is for checking the task type ', taskType);
-
       const subtasks = (await taskService.getTaskById(task._id)).data.result
         .subTask;
 
-      console.log('this is subtasks: ', subtasks);
       if (!subtasks.length) {
         const allTasks = (
           await taskService.getTaskByProjectId(
