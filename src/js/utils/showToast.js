@@ -3,7 +3,7 @@
  * @param {"success" | "error" | "info"} type
  * @param {number} delay
  */
-function showToast(message, type = 'info', delay = 3000) {
+function showToast(message, type = 'info', delay = 2000) {
   const container = document.getElementById('toast-container');
 
   container.className = 'absolute bottom-5 right-5 z-60 flex flex-col gap-3';

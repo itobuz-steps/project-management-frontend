@@ -98,7 +98,7 @@ taskForm.addEventListener('submit', async (e) => {
   try {
     await taskService.createTask(task);
     createTaskModal.classList.add('hidden');
-
+    showToast('Task created Successfully', 'success');
     await renderSelectedTab(localStorage.getItem('selectedProject'));
     fileName.textContent = 'No file chosen';
   } catch (error) {

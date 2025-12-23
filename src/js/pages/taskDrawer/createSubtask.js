@@ -26,7 +26,7 @@ export function createSubtask(taskDrawer, task) {
       }
 
       if (
-        task.type === 'task' &&
+        (task.type === 'task' || task.type === 'bug') &&
         (!parentTask || parentTask.type === 'story')
       ) {
         canAddSubtask = true;
