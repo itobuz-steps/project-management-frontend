@@ -3,9 +3,6 @@ import showToast from '../../utils/showToast';
 import { showTaskDrawer } from './taskDrawer';
 
 export function createSubtask(taskDrawer, task) {
-  console.log('Type of this task is : ', task.type);
-  console.log('Id of this task is : ', task._id);
-
   const subtaskDropdown = taskDrawer.querySelector('#subtaskDropdown');
   const saveSubtasksBtn = taskDrawer.querySelector('#saveSubtasksBtn');
   const subtaskBtn = taskDrawer.querySelector('#subtaskButton');
@@ -20,9 +17,8 @@ export function createSubtask(taskDrawer, task) {
           localStorage.getItem('selectedProject')
         )
       ).data.result;
-      console.log('All tasks is: ', allTasks);
       const parentTask = allTasks.find((t) => t.subTask?.includes(task._id));
-      console.log('parent tasks is: ', parentTask);
+
       let canAddSubtask = false;
 
       if (task.type === 'story') {
@@ -54,7 +50,7 @@ export function createSubtask(taskDrawer, task) {
       if (t._id === task._id) {
         return;
       }
-      if (t.subTask.length) {
+      if (t.subTask.length && task.type !== 'story') {
         return;
       }
 

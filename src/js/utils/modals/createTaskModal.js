@@ -23,18 +23,21 @@ closeTaskModal.addEventListener('click', () => {
 });
 
 input.addEventListener('change', () => {
-  for (const file of input.files) {
-    inputFiles.items.add(file);
-  }
+  if (
+    input.files.length + inputFiles.files.length > 0 &&
+    input.files.length + inputFiles.files.length < 6
+  ) {
+    for (const file of input.files) {
+      inputFiles.items.add(file);
+    }
+    input.files = inputFiles.files;
 
-  input.files = inputFiles.files;
-
-  if (input.files.length > 0 && input.files.length < 6) {
     fileName.textContent = Array.from(input.files)
       .map((file) => file.name)
       .join(', ');
-  } else if (input.files.length >= 6) {
-    showToast('File limit exceeded', 'info');
+  } else if (input.files.length + inputFiles.files.length >= 6) {
+    showToast('Maximum 5 files you can insert', 'info');
+    input.files = inputFiles.files;
   } else {
     fileName.textContent = 'No file chosen';
   }

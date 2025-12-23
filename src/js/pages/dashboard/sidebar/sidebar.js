@@ -41,7 +41,6 @@ export async function updateProjectList() {
     const projects = await projectService.getAllProjects();
 
     projectsDropdown.innerHTML = '';
-    console.log('projects: ', projects);
 
     if (!projects.length) {
       projectsDropdown.innerHTML = 'No project Found';
@@ -70,7 +69,6 @@ async function updateUserList() {
   );
 
   userListContainer.innerHTML = '';
-  console.log('users: ', users);
 
   if (!users.result.length) {
     userListContainer.innerHTML = 'No user assigned';
