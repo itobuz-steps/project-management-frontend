@@ -120,8 +120,6 @@ export async function renderNotification() {
 
     const notifications = res.data.result;
 
-    console.table(notifications);
-
     notifications.forEach(handleNotification);
 
     hasMore = res.data.pagination.hasMore;
@@ -135,15 +133,12 @@ export async function renderNotification() {
 
 export function lazyLoad() {
   const targetElement = document.getElementById('targetElement');
-  const rootEl = document.getElementById('notificationDropdownMenu');
 
   if (notificationObserver) return;
 
   notificationObserver = new IntersectionObserver(
     (entries) => {
-      console.log(entries);
       if (entries[0].isIntersecting) {
-        console.log('Intersecting');
         renderNotification();
       }
     },

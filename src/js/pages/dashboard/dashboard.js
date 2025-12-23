@@ -415,7 +415,7 @@ async function checkForInvite() {
 checkToken();
 checkForInvite();
 setupSidebar();
-setupNotification();
+//setupNotification();
 setupNavbar();
 loadProjectMembers(localStorage.getItem('selectedProject'));
 handleStatusFilter();
