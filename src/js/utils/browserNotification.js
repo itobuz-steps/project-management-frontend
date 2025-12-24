@@ -99,9 +99,9 @@ function handleNotification(data) {
 
   <div class="relative shrink-0">
     ${
-      data.image
+      data.profileImage
         ? `<img
-            src="http://localhost:3001/uploads/profile/${data.image}"
+            src="http://localhost:3001/uploads/profile/${data.profileImage}"
             class="h-12 w-12 rounded-full object-cover ring-2 ring-gray-200"
           />`
         : `<img
@@ -153,6 +153,11 @@ export async function renderNotification() {
     if (hasMore) {
       page++;
     }
+
+    if (!hasMore) {
+      const spinner = document.querySelector('.spinner');
+      spinner.classList.add('hidden');
+    }
   } catch (error) {
     console.error('Error fetching notifications:', error);
   } finally {
@@ -176,6 +181,7 @@ export function lazyLoad() {
     },
     {
       root: null,
+      rootMargin: '100px',
       threshold: 0.5,
     }
   );
