@@ -425,4 +425,4 @@ renderBoard(localStorage.getItem('selectedProject'));
 setupPushNotifications();
 lazyLoad();
 renderNotification();
-showTaskDrawer('694a4bb28a887bccf56dbce6');
+showTaskDrawer('694a40c296544c8d4cc96afe');

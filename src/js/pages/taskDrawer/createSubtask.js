@@ -1,6 +1,7 @@
 import taskService from '../../services/TaskService';
 import showToast from '../../utils/showToast';
 import { showTaskDrawer } from './taskDrawer';
+import renderSelectedTab from '../../utils/renderSelectedTab';
 
 export function createSubtask(taskDrawer, task) {
   const subtaskDropdown = taskDrawer.querySelector('#subtaskDropdown');
@@ -80,7 +81,7 @@ export function createSubtask(taskDrawer, task) {
         .map((c) => c.value);
 
       await taskService.updateTask(task._id, { subTask: selectedIds });
-
+      renderSelectedTab(localStorage.getItem('selectedProject'));
       showToast('Subtasks updated!', 'success');
 
       subtaskDropdown.classList.add('hidden');
