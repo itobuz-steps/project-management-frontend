@@ -79,7 +79,7 @@ async function updateUserList() {
       item.dataset.id = user._id;
       item.id = user.name;
       item.innerHTML = /*html*/ `
-    <div class="flex items-center">
+    <div class="flex items-center cursor-pointer">
     <img class="aspect-square w-6 h-6 rounded-full mr-3" 
           src="${
             user.profileImage
@@ -175,7 +175,7 @@ function addEventListenersSidebar() {
 
     const email = emailInput.value.trim();
     if (email === '') {
-      console.log('please enter a valid emil'); // add a confirmation
+      showToast('please enter a valid emil');
       return;
     }
     axios
@@ -186,10 +186,8 @@ function addEventListenersSidebar() {
       .then((response) => {
         if (response.data.success) {
           showToast('Email sent successfully', 'success');
-          console.log('Email sent successfully');
         } else {
           showToast('failed to send invitation', 'error');
-          console.log('failed to sent invitation');
         }
       })
       .catch((error) => {

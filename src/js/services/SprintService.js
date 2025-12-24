@@ -48,9 +48,8 @@ class SprintService {
               localStorage.setItem('access_token', response.data.accessToken);
               localStorage.setItem('refresh_token', response.data.refreshToken);
 
-              originalRequest.headers[
-                'Authorization'
-              ] = `Bearer ${response.data.accessToken}`;
+              originalRequest.headers['Authorization'] =
+                `Bearer ${response.data.accessToken}`;
 
               return this.api(originalRequest);
             }
@@ -67,7 +66,7 @@ class SprintService {
     );
   }
 
-  async getAllSprints(projectId = "") {
+  async getAllSprints(projectId = '') {
     try {
       const response = await this.api.get(`/?projectId=${projectId}`);
 
@@ -106,6 +105,7 @@ class SprintService {
   async updateSprint(id, updatedSprint) {
     try {
       const response = await this.api.put(`/${id}`, updatedSprint);
+
       return response.data;
     } catch (error) {
       throw new Error(
@@ -117,6 +117,7 @@ class SprintService {
   async addTasksToSprint(id, updatedSprint) {
     try {
       const response = await this.api.patch(`/${id}/addTasks`, updatedSprint);
+
       return response.data;
     } catch (error) {
       throw new Error(
@@ -147,7 +148,6 @@ class SprintService {
       );
     }
   }
-
 }
 
 const sprintService = new SprintService();

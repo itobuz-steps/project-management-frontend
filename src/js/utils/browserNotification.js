@@ -2,10 +2,10 @@ import axios from 'axios';
 import { getAllNotification } from '../services/notificationService';
 import { DateTime } from 'luxon';
 
-let page = 1;
-let LIMIT = 3;
-let hasMore = true;
+let page = 0;
+const LIMIT = 5;
 let isLoading = false;
+let hasMore = true;
 let notificationObserver = null;
 
 function urlBase64ToUint8Array(base64String) {
@@ -24,21 +24,16 @@ const PUBLIC_VAPID_KEY =
 
 export async function setupPushNotifications() {
   if (!('serviceWorker' in navigator)) {
-    console.error('Service Worker not supported');
     return;
-  } else {
-    console.log('Service worker supported');
   }
 
   if (!('PushManager' in window)) {
-    console.error('PushManager not supported');
     return;
   }
 
   try {
     const registration =
       await navigator.serviceWorker.register('/serviceWorker.js');
-    console.log('Service Worker registered');
 
     const permission = await Notification.requestPermission();
     if (permission !== 'granted') {
@@ -53,9 +48,6 @@ export async function setupPushNotifications() {
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY),
       });
-      console.log('New subscription created');
-    } else {
-      console.log('Existing subscription found');
     }
 
     const email = localStorage.getItem('userEmail');
@@ -65,8 +57,6 @@ export async function setupPushNotifications() {
       subscription,
     });
 
-    console.log('Subscription sent to backend');
-
     const channel = new BroadcastChannel('sw-messages');
 
     channel.onmessage = (event) => {
@@ -74,6 +64,7 @@ export async function setupPushNotifications() {
 
       if (type === 'PUSH_NOTIFICATION') {
         handleNotification(payload);
+        addNotification();
       }
     };
     return subscription;
@@ -83,65 +74,57 @@ export async function setupPushNotifications() {
 }
 
 function handleNotification(data) {
+  console.log('title', data.title);
+  console.log('data passed to notification', data);
   const container = document.querySelector('#notificationDropdownMenu ul');
-
   if (!container) return;
 
   const li = document.createElement('li');
-
-  const isUnread = data.unread ?? true;
-
   li.className = `
-    dropdown-item flex cursor-pointer items-start gap-4 p-4
-    transition-colors duration-200
-    hover:bg-gray-50
-    ${isUnread ? 'bg-blue-50/40' : ''}
+    dropdown-item notification-item flex cursor-pointer items-start px-4
   `;
 
   li.innerHTML = /*html*/ `
-    <div class="relative">
-      ${
-        data.avatar
-          ? `<img src="${data.avatar}" class="h-10 w-10 rounded-full object-cover" />`
-          : `
-            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z" />
-              </svg>
-            </div>
-          `
-      }
+  <div class="flex items-start gap-2 p-2 bg-white hover:bg-gray-100 transition">
 
-      ${
-        isUnread
-          ? `<span class="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-blue-600"></span>`
-          : ''
-      }
-    </div>
-    <div class="flex flex-1 flex-col gap-1">
-      <h4 class="text-sm font-semibold text-slate-900 leading-snug">
-        ${data.title || 'Notification'}
-      </h4>
-      <span class="mt-1 text-xs font-medium text-blue-600">
-        ${DateTime.fromISO(data.createdAt).toRelative() || 'Just now'}
-      </span>
-    </div>
-  `;
+  <div class="relative shrink-0">
+    ${
+      data.image
+        ? `<img
+            src="http://localhost:3001/uploads/profile/${data.image}"
+            class="h-12 w-12 rounded-full object-cover ring-2 ring-gray-200"
+          />`
+        : `<img
+            src="http://localhost:3001/uploads/profile/default-image.jpg"
+            class="h-12 w-12 rounded-full object-cover ring-2 ring-gray-200"
+          />`
+    }
+  </div>
+  <div class="flex flex-col gap-1">
+    <p class="text-sm font-medium text-gray-900 leading-snug">
+      ${data.title}
+    </p>
 
-  container.append(li);
+    <span class="text-xs text-gray-500">
+      ${DateTime.fromISO(data.createdAt).toRelative()}
+    </span>
+  </div>
+
+</div>
+
+`;
+
+  container.insertBefore(li, document.getElementById('targetElement'));
+
+  updateNotificationBadge();
 }
 
 export async function renderNotification() {
-  if (isLoading || !hasMore) {
-    return;
-  }
+  if (isLoading || !hasMore) return;
 
   isLoading = true;
 
   const currentProject = localStorage.getItem('selectedProject');
-  console.log(currentProject);
 
   try {
     const res = await getAllNotification(currentProject, {
@@ -149,51 +132,82 @@ export async function renderNotification() {
       limit: LIMIT,
     });
 
-    console.log(res);
-
     const notifications = res.data.result;
-    console.log(notifications);
 
-    if (notifications.length > 0) {
-      notifications.forEach(handleNotification);
+    notifications.forEach(handleNotification);
 
-      hasMore = res.data.pagination?.hasMore ?? false;
-      if (hasMore) {
-        page++;
-      }
-    } else {
-      hasMore = false;
+    hasMore = res.data.pagination.hasMore;
+
+    if (hasMore) {
+      page++;
     }
   } catch (error) {
     console.error('Error fetching notifications:', error);
+  } finally {
+    isLoading = false;
   }
 }
 
 export function lazyLoad() {
   const targetElement = document.getElementById('targetElement');
-  const rootEl = document.getElementById('notificationDropdownMenu');
-
-  if (!targetElement || !rootEl) return;
 
   if (notificationObserver) return;
 
   notificationObserver = new IntersectionObserver(
     (entries) => {
-      const entry = entries[0];
-
-      if (entry.isIntersecting && !isLoading) {
-        console.log('target element hit');
+      if (entries[0].isIntersecting) {
         renderNotification();
       }
     },
     {
-      root: rootEl,
-      threshold: 1.0,
-      rootMargin: '0px',
+      root: null,
+      threshold: 0.5,
     }
   );
 
   notificationObserver.observe(targetElement);
 }
 
+function updateNotificationBadge() {
+  const badge = document.getElementById('notificationBadge');
+  if (!badge) return;
+
+  const count = parseInt(localStorage.getItem('notificationCount'), 10) || 0;
+
+  if (count > 0) {
+    badge.textContent = count > 6 ? '6+' : count;
+    badge.classList.remove('hidden');
+  } else {
+    badge.textContent = '';
+    badge.classList.add('hidden');
+  }
+}
+
+function addNotification() {
+  const count =
+    (parseInt(localStorage.getItem('notificationCount'), 10) || 0) + 1;
+  localStorage.setItem('notificationCount', count);
+  updateNotificationBadge();
+}
+
+const badge = document.getElementById('notificationBadge');
+const dropDownToggle = document.getElementById('dropdownToggle');
+function clearNotification() {
+  if (badge) {
+    console.log('badge is: ', badge);
+
+    badge.addEventListener('click', () => {
+      localStorage.setItem('notificationCount', 0);
+      badge.textContent = '0';
+      badge.classList.add('hidden');
+    });
+  }
+}
+badge.addEventListener('click', clearNotification);
+dropDownToggle.addEventListener('click', () => {
+  localStorage.setItem('notificationCount', 0);
+  badge.textContent = '0';
+  badge.classList.add('hidden');
+});
+clearNotification();
 export default setupPushNotifications;

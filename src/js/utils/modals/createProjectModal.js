@@ -1,5 +1,6 @@
 import projectService from '../../services/ProjectService';
 import { updateProjectList } from '../../pages/dashboard/sidebar/sidebar';
+import showToast from '../showToast';
 
 const createProjectModal = document.getElementById('create-project-modal');
 const closeProjectBtn = document.getElementById('close-button');
@@ -56,9 +57,10 @@ projectCreateForm.addEventListener('submit', async (e) => {
   try {
     await projectService.createProject(projectData);
     createProjectModal.classList.add('hidden');
+    showToast('Project created Successfully', 'success');
     updateProjectList();
   } catch (error) {
-    console.error(error.message);
+    showToast(`${error.message}`, 'error');
   }
 });
 

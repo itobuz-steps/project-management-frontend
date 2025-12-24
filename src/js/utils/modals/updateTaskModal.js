@@ -1,6 +1,7 @@
 import taskService from '../../services/TaskService';
 import { handleModalAssignee, handleModalStatus } from './modal';
 import renderSelectedTab from '../renderSelectedTab';
+import showToast from '../showToast';
 
 const closeEditTask = document.getElementById('close-update-task-modal');
 const editModal = document.getElementById('update-task-modal');
@@ -44,7 +45,7 @@ editForm.addEventListener('submit', async (e) => {
   };
   try {
     await taskService.updateTask(selectedTaskId, updatedTask);
-
+    showToast('Task Updated Successfully', 'success');
     editModal.classList.add('hidden');
     await renderSelectedTab(localStorage.getItem('selectedProject'));
 

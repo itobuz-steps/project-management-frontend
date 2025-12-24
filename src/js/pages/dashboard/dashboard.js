@@ -6,7 +6,7 @@ import {
 import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
 import axios from 'axios';
-import { setupNotification } from '../../utils/setupNotification.js';
+// import { setupNotification } from '../../utils/setupNotification.js';
 import showToast from '../../utils/showToast.js';
 import sprintService from '../../services/SprintService.js';
 import { showTaskDrawer } from '../taskDrawer/taskDrawer.js';
@@ -210,7 +210,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
                   </g>
                 </g>
               </svg>
-               <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="hidden subtaskIcon ml-2">
+              <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="hidden subtaskIcon ml-2">
                   <rect x="16" y="9" width="4" height="4" rx="2" transform="rotate(90 16 9)" stroke="#33363F" stroke-width="1"/>
                   <rect x="20" y="17" width="4" height="4" rx="2" transform="rotate(90 20 17)" stroke="#33363F" stroke-width="1"/>
                   <path d="M5 4V15C5 16.8856 5 17.8284 5.58579 18.4142C6.17157 19 7.11438 19 9 19H16" stroke="#33363F" stroke-width="1"/>
@@ -283,8 +283,6 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         if (e.target.tagName === 'LI') {
           selectedUserId = e.target.dataset.id;
 
-          //search for the selected users
-
           selectedUser = activeProjectMembers.find(
             (u) => u._id == selectedUserId
           );
@@ -300,11 +298,11 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
           }
 
           const taskId = taskEl.dataset._id;
+
           await taskService.updateTask(taskId, {
             assignee: selectedUserId,
             profileImage: selectedUser?.profileImage || null,
           });
-          console.log('Assigned user:', selectedUserId);
 
           avatarDropdown.classList.add('hidden');
         }
@@ -319,11 +317,9 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         }
       });
 
-      // end of avatar drop down
-
       taskEl.setAttribute('draggable', 'true');
       taskEl.addEventListener('dragstart', (e) => {
-        const currentCol = e.target.parentElement.parentElement; // getting the whole column dynamically
+        const currentCol = e.target.parentElement.parentElement;
         e.dataTransfer.setData('taskId', task._id);
         e.dataTransfer.effectAllowed = 'move';
         draggedColumn = currentCol;
@@ -336,8 +332,6 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         taskEl.classList.add('cursor-grab');
       });
 
-      // const typeTag = taskEl.querySelector('.type-tag');
-      // const typeSelector = taskEl.querySelector('.type-selector');
       const cardHeader = taskEl.querySelector('.card-header > p');
 
       taskEl.addEventListener('click', (e) => {
@@ -346,12 +340,11 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       cardHeader.addEventListener('click', () => showTaskDrawer(task._id));
 
       taskEl.querySelector('.edit-btn').addEventListener('click', () => {
-        // dropdownMenu.classList.add('hidden');
         openUpdateTaskModal(task._id);
       });
       taskEl.querySelector('.delete-btn').addEventListener('click', (e) => {
         e.stopPropagation();
-        // showDeleteModal(task._id);
+
         showConfirmModal(
           'Are you sure you want to delete this task?',
           async () => {
@@ -368,10 +361,11 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
     const taskList = columnEl.querySelector('#task-list');
 
     taskList.addEventListener('dragover', (e) => e.preventDefault());
+
     taskList.addEventListener('drop', async (e) => {
       e.preventDefault();
+
       const taskId = e.dataTransfer.getData('taskId');
-      console.log(`Dropped ${taskId} into column`);
       const taskEl = document.querySelector(`[data-_id="${taskId}"]`);
       const taskTitle = taskEl.querySelector('.task-title');
 
@@ -390,7 +384,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         +columnEl.querySelector('.issue-count').innerText + 1;
 
       draggedColumn.querySelector('.issue-count').innerText =
-        +draggedColumn.querySelector('.issue-count').innerText - 1; // converted from string to number using
+        +draggedColumn.querySelector('.issue-count').innerText - 1;
     });
 
     columnContainer.appendChild(columnEl);
@@ -422,13 +416,12 @@ async function checkForInvite() {
 checkToken();
 checkForInvite();
 setupSidebar();
-setupNotification();
+//setupNotification();
 setupNavbar();
 loadProjectMembers(localStorage.getItem('selectedProject'));
 handleStatusFilter();
 handleAssigneeFilter();
 renderBoard(localStorage.getItem('selectedProject'));
-// renderDashBoardTasks();
 setupPushNotifications();
 lazyLoad();
 renderNotification();
