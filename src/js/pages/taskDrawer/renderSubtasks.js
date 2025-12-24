@@ -6,7 +6,7 @@ export async function renderSubtasks(task) {
   list.innerHTML = '';
 
   if (!task.subTask.length) {
-    list.innerHTML = "<p class='text-gray-500 text-sm'>No subtasks</p>";
+    list.innerHTML = "<p class='text-gray-400 font-semibold'>No subtasks</p>";
     return;
   }
 
@@ -21,7 +21,7 @@ export async function renderSubtasks(task) {
     const div = document.createElement('div');
 
     div.className =
-      'flex items-start bg-white rounded-lg shadow-md pl-3 py-4 border border-[#90e0ef] subtaskEl cursor-pointer';
+      'flex items-center bg-white rounded-md shadow-sm p-3 subtaskEl cursor-pointer w-full border border-gray-200';
 
     div.innerHTML = /*html*/ `
       <img
@@ -34,15 +34,15 @@ export async function renderSubtasks(task) {
             : '../../../assets/img/profile.png'
         }"
          
-        class="w-8 h-8 rounded-full border-2 border-[#00b4d8]"
+        class="w-8 h-8 rounded-full border-1 border-primary-300"
         title = "${subtaskAssignee ? subtaskAssignee.name : 'unassigned'}"
       />
-      <div class='flex'>
+      <div class='flex flex-1'>
         <div class="ml-3">
-          <span class="font-medium text-[#03045e] text-md">${st.title}</span>
-          <p class="text-sm text-[#03045e]/70">${st.description || ''}</p>
+        <span class="bg-primary-400 text-white rounded-sm py-0.5 px-1 mr-2 text-xs!">${st.key} </span>
+        <span class="font-medium">${st.title}</span>
         </div>
-        <div class='flex gap-0.5'>
+        <div class='flex gap-0.5 ml-auto'>
           <svg width="20px" height="20px" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" class="hidden attachmentIcon ml-2" title="Attachments">
             <g id="attachment_2">
               <g id="attachment">

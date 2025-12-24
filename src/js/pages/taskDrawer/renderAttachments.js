@@ -17,13 +17,10 @@ export function renderAttachments(task) {
     attachmentItem.href = fileUrl;
     attachmentItem.target = '_blank';
     attachmentItem.className =
-      'flex items-center gap-2 px-3 py-2 border rounded-lg hover:bg-gray-200 transition text-[#03045e] text-sm';
+      'w-full no-scrollbar hover:underline text-primary-900 flex hover:text-primary-700 gap-2';
 
     attachmentItem.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-[#03045e]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828L18 9.828a4 4 0 00-5.656-5.656L6.343 10.172a6 6 0 108.485 8.485L20 13" />
-      </svg>
+      <svg viewBox="0 0 24 24" fill="none" class="stroke-primary-900 size-6" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M19 9V17.8C19 18.9201 19 19.4802 18.782 19.908C18.5903 20.2843 18.2843 20.5903 17.908 20.782C17.4802 21 16.9201 21 15.8 21H8.2C7.07989 21 6.51984 21 6.09202 20.782C5.71569 20.5903 5.40973 20.2843 5.21799 19.908C5 19.4802 5 18.9201 5 17.8V6.2C5 5.07989 5 4.51984 5.21799 4.09202C5.40973 3.71569 5.71569 3.40973 6.09202 3.21799C6.51984 3 7.0799 3 8.2 3H13M19 9L13 3M19 9H14C13.4477 9 13 8.55228 13 8V3" stroke="inherit" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>      
       <span class="truncate">${fileName}</span>
     `;
 

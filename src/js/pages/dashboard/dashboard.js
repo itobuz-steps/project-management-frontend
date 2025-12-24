@@ -10,7 +10,7 @@ import axios from 'axios';
 import showToast from '../../utils/showToast.js';
 import sprintService from '../../services/SprintService.js';
 import { showTaskDrawer } from '../taskDrawer/taskDrawer.js';
-import { setupSidebar } from './sidebar/sidebar.js';
+import { setupSidebar, updateProjectList } from './sidebar/sidebar.js';
 import { getFilteredTasks, setupNavbar } from './navbar/navbar.js';
 import { openUpdateTaskModal } from '../../utils/modals/updateTaskModal.js';
 import { openCreateTaskModal } from '../../utils/modals/createTaskModal.js';
@@ -404,6 +404,7 @@ async function checkForInvite() {
         headers: { Authorization: `Bearer ${authToken}` },
       });
       showToast('User Joined The Project Successfully', 'success');
+      updateProjectList();
     } catch (error) {
       console.error(error);
     } finally {
@@ -424,3 +425,4 @@ renderBoard(localStorage.getItem('selectedProject'));
 setupPushNotifications();
 lazyLoad();
 renderNotification();
+showTaskDrawer('694a4bb28a887bccf56dbce6');

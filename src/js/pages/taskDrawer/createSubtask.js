@@ -7,6 +7,7 @@ export function createSubtask(taskDrawer, task) {
   const saveSubtasksBtn = taskDrawer.querySelector('#saveSubtasksBtn');
   const subtaskBtn = taskDrawer.querySelector('#subtaskButton');
   const subtaskList = taskDrawer.querySelector('#subtaskList');
+  const subtaskContainer = taskDrawer.querySelector('#subtaskContainer');
 
   let isDropdownVisible = false;
 
@@ -33,7 +34,7 @@ export function createSubtask(taskDrawer, task) {
       }
 
       if (!canAddSubtask) {
-        subtaskBtn.style.display = 'none';
+        subtaskContainer.style.display = 'none';
       }
     } catch (err) {
       console.error(err);
@@ -57,15 +58,15 @@ export function createSubtask(taskDrawer, task) {
       const isChecked = task.subTask?.includes(t._id);
       const subTask = document.createElement('div');
 
-      subTask.className = 'flex items-center gap-2 mb-1';
+      subTask.className = 'flex items-center gap-4';
       subTask.innerHTML = `
         <input
           type="checkbox"
-          class="subtask-check"
+          class="subtask-check cursor-pointer"
           value="${t._id}"
           ${isChecked ? 'checked' : ''}
         />
-        <span>${t.title}</span>
+        <span><span class="bg-primary-400 text-white rounded-sm py-0.5 px-1 mr-2">${t.key} </span>${t.title}</span>
       `;
 
       subtaskList.appendChild(subTask);

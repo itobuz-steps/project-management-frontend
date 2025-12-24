@@ -19,6 +19,7 @@ const inputFiles = new DataTransfer();
 
 closeTaskModal.addEventListener('click', () => {
   createTaskModal.classList.add('hidden');
+  taskForm.reset();
 });
 
 input.addEventListener('change', () => {
@@ -101,6 +102,7 @@ taskForm.addEventListener('submit', async (e) => {
     showToast('Task created Successfully', 'success');
     await renderSelectedTab(localStorage.getItem('selectedProject'));
     fileName.textContent = 'No file chosen';
+    taskForm.reset();
   } catch (error) {
     console.error(error);
   }

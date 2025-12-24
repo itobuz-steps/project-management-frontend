@@ -57,12 +57,18 @@ async function createTaskList(task, type, projectType, sprint) {
     : '';
 
   let assignee = {};
+
   if (task.assignee) {
     const data = (await TaskService.getUserDetailsById(task.assignee)).data
       .result;
+
     assignee.name = data.name;
-    assignee.profileImage =
-      'http://localhost:3001/uploads/profile/' + data.profileImage;
+    assignee.profileImage = '../../../../assets/img/profile.png';
+
+    if (task.assignee.profileImage) {
+      assignee.profileImage =
+        'http://localhost:3001/uploads/profile/' + data.profileImage;
+    }
   } else {
     assignee = {
       name: 'Unassigned',

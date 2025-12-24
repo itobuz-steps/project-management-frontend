@@ -8,285 +8,225 @@ import { renderSubtasks } from './renderSubtasks';
 import { createSubtask } from './createSubtask';
 
 const taskDrawerInnerHtml = /*html*/ `      
-<div >
-  <button
-    type="button"
-    class="close-btn text-md absolute top-3 right-3 inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-gray-400 hover:bg-gray-200 hover:text-gray-900"
-  >
-    <svg
-      class="h-3 w-3"
-      aria-hidden="true"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 14 14"
-    >
-      <path
-        stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-      />
-    </svg>
-    <span class="sr-only">Close</span>
-  </button>
+<div>
   <div
-    class="mt-8 flex h-[calc(100vh-32px)] flex-col gap-5 bg-white p-6"
+    class="flex flex-col gap-3 p-3"
   >
-    <div class="container flex justify-between">
-      <div class="left-container flex flex-row items-center gap-2">
-        <h2 class="title font-semibold"></h2>
-        <!-- subtask -->
-        <div class="relative">
-          <button id="subtaskButton" class="subtask cursor-pointer">
+    <div class="flex justify-between gap-3 container-secondary">
+        <h2 class="title font-semibold text-[16px]!"></h2>
+      <div class="right-container flex items-start gap-3 items-center">
+        <button
+          id="edit-task-button"
+        >
+          <svg class="w-5 h-5 stroke-black hover:stroke-green-500 hover:stroke-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M11 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22H15C20 22 22 20 22 15V13" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M16.04 3.02001L8.16 10.9C7.86 11.2 7.56 11.79 7.5 12.22L7.07 15.23C6.91 16.32 7.68 17.08 8.77 16.93L11.78 16.5C12.2 16.44 12.79 16.14 13.1 15.84L20.98 7.96001C22.34 6.60001 22.98 5.02001 20.98 3.02001C18.98 1.02001 17.4 1.66001 16.04 3.02001Z" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M14.91 4.1499C15.58 6.5399 17.45 8.4099 19.85 9.0899"  stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+        </button>
+          <button 
+            type="button" 
+            class="close-btn"
+          >
             <svg
-              width="25px"
-              height="25px"
-              viewBox="0 0 24 24"
+              class="h-4 w-4 hover:stroke-2 hover:stroke-red-400 mt-0.5 stroke-gray-600"
+              aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 14 14"
             >
-              <rect x="0" fill="none" width="24" height="24" />
-              <g>
-                <path d="M7 10l5 5 5-5" />
-              </g>
+              <path
+                stroke="inherit"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+              />
             </svg>
           </button>
-          <div
-            id="subtaskDropdown"
-            class="absolute top-12 left-0 z-50 hidden max-h-64 w-64 overflow-y-auto rounded-lg border bg-white p-3 shadow-xl"
+      </div>
+    </div>
+    
+    <div class="container-secondary gap-5 flex flex-col">
+      <div class="flex items-center gap-3">
+        <div class="profile-name">
+          <img
+            src="../assets/img/profile.png"
+            alt="Avatar"
+            class="profile-image h-8 w-8 rounded-full shadow-sm border border-white"
+          />
+        </div>
+        <div class="flex flex-col leading-tight">
+          <p class=" text-gray-500">Assignee</p>
+          <p class="assignee font-medium text-primary-500"></p>
+        </div>
+      </div>
+      <div class="flex flex-col gap-1">
+        <p class="text-md text-gray-500">Due Date</p>
+        <div class="flex items-center gap-2">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 text-gray-400 -ml-1"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
           >
-            <div class="mb-2 font-semibold">Select Subtasks</div>
-            <div id="subtaskList"></div>
-            <button
-              id="saveSubtasksBtn"
-              class="mt-3 hidden w-full rounded bg-blue-600 py-1 text-white"
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.5"
+              d="M8 7V3m8 4V3m-9 8h10m-11 8h12a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"
+            />
+          </svg>
+          <span class="due-date text-gray-600"></span>
+        </div>
+      </div>
+    </div>
+        <!-- Description Container -->
+    <div class="container-secondary">
+      <div class="flex flex-col gap-2">
+        <h2
+          id="descriptionHeader"
+          class="font-semibold"
+        >
+          Description
+        </h2>
+        <h2
+          class="description max-h-28 overflow-auto rounded-md w-full p-1 border border-gray-100"
+        >
+          <p></p>
+        </h2>
+      </div>
+    </div>
+    <!-- subtasks -->
+    <div class="container-secondary flex flex-col gap-2" id="subtaskContainer">
+      <div class=" flex items-center gap-2">
+        <h2 class="font-semibold">
+          Subtasks
+        </h2>
+        <div class="relative">
+            <button id="subtaskButton" class="subtask cursor-pointer p-1 hover:bg-gray-300 rounded-sm bg-gray-200">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class=" size-4 stroke-black">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
+              </svg>
+            </button>
+          </div>
+      </div>
+      <div
+        id="subtaskDropdown"
+        class=" hidden max-h-64 w-64 overflow-y-auto rounded-md shadow-md border border-gray-200 p-3 w-full"
+      >
+        <div id="subtaskList" class="ml-2 flex flex-col gap-2"></div>
+        <button
+          id="saveSubtasksBtn"
+          class="mt-3 hidden w-full rounded bg-primary-500 hover:bg-primary-600 py-2 text-white"
+        >
+          Save Subtasks
+        </button>
+      </div>
+        <div id="subtasksList" class="flex flex-col gap-2 w-full items-center max-h-42 overflow-x-auto"></div>
+    </div>
+    <!-- projects -->
+    <div class="container-secondary">
+      <div class="flex flex-col gap-3">
+        <h2 class="font-semibold">Details</h2>
+        <div class="flex flex-col gap-3 rounded-lg p-2">
+          <div class="flex items-center justify-between">
+            <span class="font-medium text-gray-500">Status</span>
+            <select
+              id="statusSelect"
+              class="appearance-none bg-primary-400 px-2 py-1 rounded-sm text-white text-center min-w-20"
             >
-              Save Subtasks
+            <option value="todo">todo</option>
+            </select>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="font-medium text-gray-500">Priority</span>
+            <select
+              id="prioritySelect"
+              class="appearance-none bg-gray-200 px-2 py-1 rounded-sm text-gray-800 text-center min-w-20"            >
+              <option value="high">
+                High
+              </option>
+              <option value="medium">
+                Medium
+              </option>
+              <option
+                value="low"
+                selected
+              >
+                Low
+              </option>
+              <option
+                value="critical"
+                selected
+              >
+                Critical
+              </option>
+            </select>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="font-medium text-gray-500 flex-1">Story Point</span>
+            <input
+              type="number"
+              id="story-point-value"
+              value="1"
+              class="focus:border-primary-500 border border-gray-300 bg-white p-2 text-sm shadow-xs transition-all duration-200 outline-none placeholder:text-sm placeholder:text-white/50 px-2 py-1 rounded-sm text-gray-800 w-20"/>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Attachment Container -->
+    <div class="container-secondary">
+      <div class="mb-2 flex items-center justify-between px-1">
+        <h2 class="font-semibold ">
+          Attachments
+        </h2>
+      </div>
+        <div id="attachmentsList" class="flex flex-col gap-2 overflow-y-auto items-center"></div>
+    </div>
+    <!-- Comments Container -->
+    <div class="container-secondary flex gap-2 flex-col">
+      <h2
+        id="commentContainerHeaderText"
+        class="font-semibold"
+      >
+        Comments
+      </h2>
+      <div
+        id="commentsContainer"
+        class="flex flex-col gap-2 max-h-64 overflow-y-auto border border-gray-200 bg-white inset-shadow-xs pt-3 rounded-sm"
+      >
+      </div>
+      <!-- comment input  -->
+      <div
+        class="comment-create flex flex-col bg-white"
+      >
+        <textarea
+          type="text"
+          id="commentInput"
+          minlength="3"
+          placeholder="Enter your Comment"
+          class="flex-1 rounded-sm border border-gray-300 border-b-transparent focus:outline-none min-h-20 p-2"
+        ></textarea>
+        <input type="file" id="commentAttachment" class="hidden" />
+        <div class="flex">
+          <div class="flex flex-1 border-b border-l  border-gray-300 items-center px-2">
+            <button
+              type="button"
+              id="attachButton"
+              class=""
+              title="Attach a file"
+            >
+<svg viewBox="0 0 24 24" id="Layer_4" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="fill-black hover:fill-primary-600 size-6"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path class="st0" d="M14.77,20.99c0.138,0,0.251-0.02,0.367-0.041c0.161,0.024,0.322,0.041,0.484,0.041 c2.272,0,4.12-1.848,4.12-4.12c0-1.667-0.994-3.133-2.48-3.763V7.39c0-0.134-0.054-0.263-0.15-0.357l-0.455-0.446 c-0.016-0.022-0.033-0.043-0.052-0.061L13.237,3.16c-0.094-0.096-0.223-0.15-0.357-0.15H8.25c-0.276,0-0.5,0.224-0.5,0.5 s0.224,0.5,0.5,0.5h4.158c-0.02,0.071-0.033,0.145-0.033,0.221V6.38c0,0.833,0.677,1.51,1.51,1.51h2.149 c0.078,0,0.153-0.012,0.226-0.034v4.942c-0.019-0.003-0.036-0.002-0.055-0.005c-0.199-0.033-0.395-0.054-0.585-0.054 c-2.272,0-4.12,1.853-4.12,4.13c0,0.283,0.036,0.558,0.091,0.826c0.017,0.084,0.044,0.164,0.066,0.246 c0.049,0.183,0.108,0.361,0.181,0.534c0.037,0.086,0.075,0.17,0.117,0.254c0.084,0.167,0.18,0.324,0.286,0.477 c0.047,0.068,0.09,0.139,0.141,0.204c0.163,0.208,0.34,0.405,0.541,0.578c0,0,0,0,0.001,0.001H6.74c-0.816,0-1.48-0.673-1.48-1.5 V5.51c0-0.771,0.569-1.412,1.324-1.492c0.274-0.029,0.474-0.275,0.444-0.55C7,3.193,6.759,2.999,6.479,3.024 C5.214,3.158,4.26,4.226,4.26,5.51v12.98c0,1.378,1.113,2.5,2.48,2.5H14.77z M13.885,6.89c-0.281,0-0.51-0.229-0.51-0.51V4.717 l2.173,2.173H13.885z M15.62,13.74c0.237,0,0.502,0.039,0.779,0.115c0.062,0.016,0.124,0.03,0.207,0.061 c1.277,0.414,2.135,1.602,2.135,2.955c0,1.72-1.4,3.12-3.12,3.12c-0.129,0-0.259-0.007-0.479-0.04l-0.139-0.032 c-1.45-0.271-2.502-1.553-2.502-3.048C12.5,15.145,13.9,13.74,15.62,13.74z"></path><path class="st0" d="M14.494,17.37h0.626v0.626c0,0.276,0.224,0.5,0.5,0.5s0.5-0.224,0.5-0.5V17.37h0.626c0.276,0,0.5-0.224,0.5-0.5 s-0.224-0.5-0.5-0.5H16.12v-0.626c0-0.276-0.224-0.5-0.5-0.5s-0.5,0.224-0.5,0.5v0.626h-0.626c-0.276,0-0.5,0.224-0.5,0.5 S14.217,17.37,14.494,17.37z"></path></g></svg>            </button>
+            <span id="commentAttachmentText"></span>
+          </div>
+          <div class="border-l border-t border-gray-300 p-1 rounded-tl-md">
+            <button
+              type="button"
+              id="submitButton"
+              class="btn-primary px-4 py-1! mt-0! rounded-xs!"
+            >
+             <svg class="size-4 fill-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M19,6a1,1,0,0,0-1,1v4a1,1,0,0,1-1,1H7.41l1.3-1.29A1,1,0,0,0,7.29,9.29l-3,3a1,1,0,0,0-.21.33,1,1,0,0,0,0,.76,1,1,0,0,0,.21.33l3,3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42L7.41,14H17a3,3,0,0,0,3-3V7A1,1,0,0,0,19,6Z"></path></g></svg>
             </button>
           </div>
         </div>
       </div>
-      <div class="right-container flex items-center">
-        <button
-          id="edit-task-button"
-          class="rounded border bg-blue-500 px-2 py-1 text-white"
-        >
-          Edit
-        </button>
-      </div>
-    </div>
-    <div class="flex items-center gap-3">
-      <div class="profile-name">
-        <img
-          src="../assets/img/profile.png"
-          alt="Avatar"
-          class="profile-image h-8 w-8 rounded-full"
-        />
-      </div>
-      <div class="flex flex-col leading-tight">
-        <p class="text- md text-gray-500">Assignee</p>
-        <p class="assignee font-medium text-gray-700"></p>
-      </div>
-    </div>
-    <div class="flex flex-col gap-1">
-      <p class="text-md text-gray-500">Due Date</p>
-      <div class="flex items-center gap-2">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5 text-gray-400"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="1.5"
-            d="M8 7V3m8 4V3m-9 8h10m-11 8h12a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"
-          />
-        </svg>
-        <span class="due-date text-gray-600"></span>
-      </div>
-    </div>
-    <!-- subtasks -->
-    <div class="mb-2 flex items-center justify-between px-1">
-      <h2 class="text-xl font-semibold tracking-wide text-[#03045e]">
-        Subtasks
-      </h2>
-    </div>
-    <div
-      id="subtasksContainer"
-      class="scrollbar-thin flex flex-col gap-4 overflow-y-auto rounded-xl border border-[#e5e7eb] bg-gray-50 px-4 py-4"
-      style="
-        min-height: min-content;
-        max-height: 260px;
-        background-color: #ffffff;
-      "
-    >
-      <div id="subtasksList" class="flex flex-col gap-3"></div>
-    </div>
-    <!-- projects -->
-    <div class="flex flex-col gap-3">
-      <div class="text-md font-semibold text-gray-700">Projects</div>
-      <div class="flex flex-col gap-3 rounded-lg p-2">
-        <div class="flex items-center justify-between">
-          <span class="text-md text-gray-500">Status</span>
-          <select
-            id="statusSelect"
-            class="text-md w-auto cursor-pointer appearance-none rounded-full bg-gray-500/20 px-2 py-1 font-medium text-gray-500 focus:outline-none"
-          >
-            <option value="todo" class="text-center text-gray-500">
-              To Do
-            </option>
-            <option value="in-progress" class="text-center text-gray-500">
-              In Progress
-            </option>
-            <option value="done" class="text-center text-green-500">
-              Done
-            </option>
-          </select>
-        </div>
-        <div class="flex items-center justify-between">
-          <span class="text-md text-gray-500">Priority</span>
-          <select
-            id="prioritySelect"
-            class="text-md w-auto cursor-pointer appearance-none rounded-full bg-green-500/20 px-2 py-1 font-medium text-green-500 focus:outline-none"
-          >
-            <option value="high" class="text-center text-red-500">
-              High
-            </option>
-            <option value="medium" class="text-center text-yellow-500">
-              Medium
-            </option>
-            <option
-              value="low"
-              selected
-              class="text-center text-green-500"
-            >
-              Low
-            </option>
-            <option
-              value="critical"
-              selected
-              class="text-center text-green-100"
-            >
-              Critical
-            </option>
-          </select>
-        </div>
-      </div>
-    </div>
-    <div class="story-point flex flex-row justify-between">
-      <div
-        id="story-point-title"
-        class="text-md font-semibold text-gray-700"
-      >
-        Story Point
-      </div>
-      <div class="story-point-value bg-gray-100">1</div>
-    </div>
-    <!-- Description Container -->
-    <div class="flex flex-col gap-2">
-      <div
-        id="descriptionHeader"
-        class="text-md font-semibold text-gray-700"
-      >
-        Description
-      </div>
-      <div
-        class="description max-h-60 overflow-auto rounded-xl border-2 border-[#e5e7eb] p-3 text-gray-600"
-      >
-        <p></p>
-      </div>
-    </div>
-    <!-- Attachment Container -->
-    <div class="mb-2 flex items-center justify-between px-1">
-      <h2 class="text-xl font-semibold tracking-wide text-[#03045e]">
-        Attachments
-      </h2>
-    </div>
-    <div
-      id="attachmentsContainer"
-      class="scrollbar-thin flex flex-col gap-4 overflow-y-auto rounded-xl border border-[#e5e7eb] bg-gray-50 px-4 py-4"
-      style="
-        min-height: min-content;
-        max-height: 260px;
-        background-color: #ffffff;
-      "
-    >
-      <div id="attachmentsList" class="flex flex-col gap-3"></div>
-    </div>
-    <!-- Comments Container -->
-    <div
-      id="commentContainerHeaderText"
-      class="mb-2 ml-4 font-semibold text-[#03045e]"
-    >
-      Comments
-    </div>
-    <div
-      id="commentsContainer"
-      class="scrollbar-thin flex flex-col gap-3 overflow-y-auto rounded-xl border border-[#e5e7eb] bg-gray-50 px-3 py-3"
-      style="
-        min-height: min-content;
-        max-height: 260px;
-        background-color: #ffffff;
-      "
-    >
-      <div
-        id="commentImage"
-        class="flex items-start gap-3 rounded-lg border border-[#90e0ef] bg-white py-3 pl-3 shadow-lg"
-      >
-        <img
-          src="../assets/img/profile.png"
-          alt="Avatar"
-          class="h-7 w-7 rounded-full border-2 border-[#00b4d8]"
-        />
-        <div id="CommentInformation" class="flex flex-col gap-1">
-          <div
-            class="text-md flex items-center gap-2 text-gray-500"
-          >
-            <span
-              class="username font-medium text-gray-700"
-            >
-              John Smith
-            </span>
-            <span>•</span>
-            <span class="text-sm text-[#0077b6]">17th Feb 2024</span>
-          </div>
-          <p class="message text-sm text-gray-700">
-            Hi, I’ll do that task now, you can start working on another
-            task!
-          </p>
-        </div>
-      </div>
-    </div>
-    <!-- comment input  -->
-    <div
-      class="comment-create flex flex-row items-center justify-between gap-3"
-    >
-      <input
-        type="text"
-        id="commentInput"
-        minlength="3"
-        placeholder="Enter your Comment"
-        class="flex-1 rounded-xl border border-[#90e0ef] bg-gray-50 p-3 placeholder-[#03045e] focus:outline-none"
-      />
-      <input type="file" id="commentAttachment" class="hidden" />
-      <button
-        type="button"
-        id="attachButton"
-        class="flex h-12 w-12 transform items-center justify-center rounded-xl bg-[#90e0ef] text-[#03045e] shadow-md transition-all duration-300 hover:scale-105 hover:bg-[#48cae4] hover:shadow-lg"
-        title="Attach a file"
-      >
-        +
-      </button>
-      <button
-        type="button"
-        id="submitButton"
-        class="ml-3 transform rounded-xl bg-[#0077b6] px-6 py-3 text-white shadow-md transition-all duration-300 hover:scale-105 hover:bg-[#005f91] hover:shadow-lg"
-      >
-        Submit
-      </button>
     </div>
   </div>
 </div>`;
@@ -316,6 +256,7 @@ export async function showTaskDrawer(taskId) {
   const editTaskButton = document.querySelector('#edit-task-button');
   const attachmentInput = taskDrawer.querySelector('#commentAttachment');
   const attachButton = taskDrawer.querySelector('#attachButton');
+  const attachmentText = taskDrawer.querySelector('#commentAttachmentText');
 
   attachButton.addEventListener('click', () => {
     attachmentInput.click();
@@ -335,9 +276,14 @@ export async function showTaskDrawer(taskId) {
     }
   });
 
+  attachmentInput.addEventListener('change', (e) => {
+    if (e.target.files[0]) {
+      attachmentText.textContent = e.target.files[0].name;
+    }
+  });
+
   commentSubmit.addEventListener('click', async () => {
     const message = commentInput.value.trim();
-    const attachmentInput = taskDrawer.querySelector('#commentAttachment');
     const formData = new FormData();
 
     if (!message && attachmentInput.files.length) {
@@ -370,7 +316,9 @@ export async function showTaskDrawer(taskId) {
 
   taskDrawer.dataset.id = task._id;
   titleEl.textContent = task.title;
-  descriptionEl.textContent = task.description;
+  descriptionEl.textContent = task.description
+    ? task.description
+    : 'No description added....';
   profileImageEl.src = '../../../assets/img/profile.png';
 
   if (assignee) {
@@ -402,12 +350,7 @@ export async function showTaskDrawer(taskId) {
     const comments = (await commentService.getAllComments(task._id)).result;
 
     const commentContainer = taskDrawer.querySelector('#commentsContainer');
-    commentContainer.innerHTML = `
-    <div id="commentContainerHeaderText" 
-         class="ml-4 font-semibold text-[#03045e]">
-      Comments
-    </div>
-  `;
+    commentContainer.innerHTML = ``;
 
     comments.forEach((comment) =>
       appendCommentToContainer(comment, commentContainer)
