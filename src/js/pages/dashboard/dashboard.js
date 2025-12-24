@@ -88,7 +88,6 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
   const result = {};
 
   project.columns.forEach((column) => (result[column] = []));
-
   const tasks = await getFilteredTasks(projectId, filter, searchInput);
 
   tasks.forEach((task) => result[task.status].push(task));

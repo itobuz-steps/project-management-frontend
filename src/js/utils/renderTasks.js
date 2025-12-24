@@ -12,7 +12,6 @@ import { svgObject } from './svgObjects.js';
 
 const listTableBody = document.getElementById('table-body');
 const emptyListContainer = document.getElementById('empty-list-container');
-
 const sprintBacklogWrapper = document.getElementById('sprint-backlog-wrapper');
 
 async function createTaskList(task, type, projectType, sprint) {
