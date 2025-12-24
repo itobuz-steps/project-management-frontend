@@ -34,6 +34,7 @@ import {
   getSvgByType,
 } from '../../utils/globalUtils.js';
 import renderSelectedTab from '../../utils/renderSelectedTab.js';
+import { handleForYouPage } from '../forYouPage/forYouPage.js';
 
 const openProjectBtn = document.getElementById('plus-icon');
 openProjectBtn.addEventListener('click', openCreateProjectModal);
@@ -424,3 +425,4 @@ renderBoard(localStorage.getItem('selectedProject'));
 setupPushNotifications();
 lazyLoad();
 renderNotification();
+handleForYouPage();
