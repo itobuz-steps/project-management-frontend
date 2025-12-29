@@ -12,11 +12,11 @@ export function getColorByType(task) {
 
 export function getColorByPriority(task) {
   if (task.priority === 'low') {
-    return 'green';
+    return 'green-500';
   } else if (task.priority === 'medium') {
-    return 'blue';
+    return 'primary-400';
   } else if (task.priority === 'high') {
-    return 'yellow';
+    return 'yellow-400';
   } else {
     return 'red';
   }

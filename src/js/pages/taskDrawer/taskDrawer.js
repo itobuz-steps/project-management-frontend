@@ -6,13 +6,16 @@ import { renderAttachments } from './renderAttachments';
 import { appendCommentToContainer } from './appendComment';
 import { renderSubtasks } from './renderSubtasks';
 import { createSubtask } from './createSubtask';
+import projectService from '../../services/ProjectService';
+import renderSelectedTab from '../../utils/renderSelectedTab';
 
-const taskDrawerInnerHtml = /*html*/ `      
+const taskDrawerInnerHtml = /*html*/ `
 <div>
   <div
     class="flex flex-col gap-3 p-3"
   >
     <div class="flex justify-between gap-3 container-secondary">
+    
         <h2 class="title font-semibold text-[16px]!"></h2>
       <div class="right-container flex items-start gap-3 items-center">
         <button
@@ -20,8 +23,8 @@ const taskDrawerInnerHtml = /*html*/ `
         >
           <svg class="w-5 h-5 stroke-black hover:stroke-green-500 hover:stroke-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M11 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22H15C20 22 22 20 22 15V13" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M16.04 3.02001L8.16 10.9C7.86 11.2 7.56 11.79 7.5 12.22L7.07 15.23C6.91 16.32 7.68 17.08 8.77 16.93L11.78 16.5C12.2 16.44 12.79 16.14 13.1 15.84L20.98 7.96001C22.34 6.60001 22.98 5.02001 20.98 3.02001C18.98 1.02001 17.4 1.66001 16.04 3.02001Z" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M14.91 4.1499C15.58 6.5399 17.45 8.4099 19.85 9.0899"  stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
         </button>
-          <button 
-            type="button" 
+          <button
+            type="button"
             class="close-btn"
           >
             <svg
@@ -121,7 +124,7 @@ const taskDrawerInnerHtml = /*html*/ `
       </div>
         <div id="subtasksList" class="flex flex-col gap-2 w-full items-center max-h-42 overflow-x-auto"></div>
     </div>
-    <!-- projects -->
+    <!-- Details -->
     <div class="container-secondary">
       <div class="flex flex-col gap-3">
         <h2 class="font-semibold">Details</h2>
@@ -130,16 +133,16 @@ const taskDrawerInnerHtml = /*html*/ `
             <span class="font-medium text-gray-500">Status</span>
             <select
               id="statusSelect"
-              class="appearance-none bg-primary-400 px-2 py-1 rounded-sm text-white text-center min-w-20"
+              class="outline-none bg-primary-400 px-2 py-2 rounded-sm text-white min-w-20"
             >
-            <option value="todo">todo</option>
+            
             </select>
           </div>
           <div class="flex items-center justify-between">
             <span class="font-medium text-gray-500">Priority</span>
             <select
               id="prioritySelect"
-              class="appearance-none bg-gray-200 px-2 py-1 rounded-sm text-gray-800 text-center min-w-20"            >
+              class=" px-2 py-2 bg-primary-400 rounded-sm text-center min-w-20 text-white outline-none ">
               <option value="high">
                 High
               </option>
@@ -148,15 +151,34 @@ const taskDrawerInnerHtml = /*html*/ `
               </option>
               <option
                 value="low"
-                selected
+                
               >
                 Low
               </option>
               <option
                 value="critical"
-                selected
+                
               >
                 Critical
+              </option>
+            </select>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="font-medium text-gray-500">Type</span>
+            <select
+              id="typeSelect"
+              class=" px-2 py-2 bg-primary-400 rounded-sm text-center min-w-20 text-white outline-none ">
+              <option value="task">
+                Task
+              </option>
+              <option value="story">
+                Story
+              </option>
+              <option
+                value="bug"
+                
+              >
+                Bug
               </option>
             </select>
           </div>
@@ -257,6 +279,11 @@ export async function showTaskDrawer(taskId) {
   const attachmentInput = taskDrawer.querySelector('#commentAttachment');
   const attachButton = taskDrawer.querySelector('#attachButton');
   const attachmentText = taskDrawer.querySelector('#commentAttachmentText');
+  const columns = (
+    await projectService.getProjectById(localStorage.getItem('selectedProject'))
+  ).result.columns;
+  const storyPoint = taskDrawer.querySelector('#story-point-value');
+  const typeSelect = taskDrawer.querySelector('#typeSelect');
 
   attachButton.addEventListener('click', () => {
     attachmentInput.click();
@@ -311,8 +338,71 @@ export async function showTaskDrawer(taskId) {
     }
   });
 
+  columns.forEach((column) => {
+    const option = document.createElement('option');
+    option.value = column;
+    option.textContent = column.charAt(0).toUpperCase() + column.slice(1);
+    status.appendChild(option);
+  });
+
+  status.addEventListener('change', async (e) => {
+    try {
+      await taskService.updateTask(taskId, { status: e.target.value });
+      renderSelectedTab(localStorage.getItem('selectedProject'));
+
+      showToast('Status updated successfully', 'success');
+      e.preventDefault();
+    } catch (err) {
+      showToast('Failed to update status', 'error');
+      console.error(err);
+    }
+  });
+
+  priority.addEventListener('change', async (e) => {
+    try {
+      await taskService.updateTask(taskId, { priority: e.target.value });
+      renderSelectedTab(localStorage.getItem('selectedProject'));
+      showToast('Status updated successfully', 'success');
+
+      e.preventDefault();
+    } catch (err) {
+      showToast('Failed to update priority', 'error');
+      console.error(err);
+    }
+  });
+
+  storyPoint.addEventListener('keydown', async (e) => {
+    try {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        console.log(+e.target.value);
+        await taskService.updateTask(taskId, { storyPoint: +e.target.value });
+        renderSelectedTab(localStorage.getItem('selectedProject'));
+        showToast('Status updated successfully', 'success');
+      }
+    } catch (err) {
+      showToast('Failed to update story point', 'error');
+      console.error(err);
+    }
+  });
+
+  typeSelect.addEventListener('change', async (e) => {
+    try {
+      await taskService.updateTask(taskId, { type: e.target.value });
+      renderSelectedTab(localStorage.getItem('selectedProject'));
+      showToast('Status updated successfully', 'success');
+
+      e.preventDefault();
+    } catch (err) {
+      showToast('Failed to update type', 'error');
+      console.error(err);
+    }
+  });
+
   status.value = task.status;
   priority.value = task.priority;
+  storyPoint.value = task.storyPoint;
+  typeSelect.value = task.type;
 
   taskDrawer.dataset.id = task._id;
   titleEl.textContent = task.title;
@@ -339,19 +429,29 @@ export async function showTaskDrawer(taskId) {
   taskDrawer.classList.add('transform-none');
   drawerBackdrop.classList.remove('hidden');
 
+  drawerBackdrop.addEventListener('click', () => {
+    taskDrawer.classList.add('translate-x-full');
+    taskDrawer.classList.remove('transform-none');
+    drawerBackdrop.classList.add('hidden');
+  });
+
   closeButton.addEventListener('click', () => {
     taskDrawer.classList.add('translate-x-full');
     taskDrawer.classList.remove('transform-none');
     drawerBackdrop.classList.add('hidden');
-    profileImageEl.classList.remove('hidden');
   });
 
   async function updateCommentList() {
     const comments = (await commentService.getAllComments(task._id)).result;
-
     const commentContainer = taskDrawer.querySelector('#commentsContainer');
+
     commentContainer.innerHTML = ``;
 
+    if (!comments.length) {
+      commentContainer.innerHTML = `
+      <p class="text-gray-400 text-sm text-center">No Comments...</p>
+    `;
+    }
     comments.forEach((comment) =>
       appendCommentToContainer(comment, commentContainer)
     );
