@@ -23,6 +23,8 @@ export async function handleForYouPage() {
   const backToHomeBtn = document.getElementById('forYouGoBackBtn');
   const allTasksContainer = document.getElementById('forYouTableBody');
   const forYouGoBackBtn = document.getElementById('forYouGoBackBtn');
+  projectsContainer.innerHTML = '';
+  allTasksContainer.innerHTML = '';
   forYouGoBackBtn.innerHTML = `${svgObject.back}`;
 
   forYouButton.addEventListener('click', () => {
