@@ -130,11 +130,13 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
   project.columns.forEach((column) => {
     const columnEl = document.createElement('div');
+    columnEl.className = 'column';
     columnEl.innerHTML = /*html*/ `
       <div class="w-72 bg-white rounded-lg shadow-md shrink-0 h-full overflow-y-auto pb-4">
-        <h2 class="text-lg font-semibold sticky top-0 z-10 flex gap-2 px-4 py-2 text-black bg-white shadow-sm shadow-gray-200 items-center">
-          ${column.toUpperCase()}
+        <h2 class=" group text-lg font-semibold sticky top-0 z-10 flex gap-2 px-4 py-2 text-black bg-white shadow-sm shadow-gray-200 items-center uppercase">
+          <span class="column-name">${column}</span>
           <div class="issue-count rounded-full w-5 h-5 text-center text-sm text-black bg-gray-200"></div>
+          <div class="add-column-button ml-auto text-lg/tight! group-hover:block hidden cursor-pointer hover:bg-gray-100 rounded-full px-2">+</div>
         </h2>
         <div class="flex flex-col gap-3 pb-4 h-full p-2 " id="task-list"></div>
       </div>
@@ -387,10 +389,51 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         +draggedColumn.querySelector('.issue-count').innerText - 1;
     });
 
+    const newColumnInput = document.createElement('div');
+    newColumnInput.className = 'new-column flex gap-0.5 mt-1 hidden';
+    newColumnInput.innerHTML = /*html*/ `<input placeholder="Enter column name..." class="bg-white border px-2 border-gray-300 h-8 rounded-sm"></input> 
+    `;
+
+    columnEl
+      .querySelector('.add-column-button')
+      .addEventListener('click', () =>
+        newColumnInput.classList.toggle('hidden')
+      );
+
+    newColumnInput
+      .querySelector('input')
+      .addEventListener('keydown', async (e) => {
+        if (e.key !== 'Enter') return;
+        const columnsEl = columnContainer.querySelectorAll(
+          '.column, .new-column:not(.hidden)'
+        );
+
+        const newColumns = Array.from(columnsEl).map((column) => {
+          if (column.classList.contains('column')) {
+            return column.querySelector('.column-name').textContent;
+          } else {
+            return column.querySelector('input').value;
+          }
+        });
+
+        console.log(newColumns);
+
+        await projectService.updateProject(
+          localStorage.getItem('selectedProject'),
+          { columns: newColumns }
+        );
+
+        renderSelectedTab(localStorage.getItem('selectedProject'));
+      });
     columnContainer.appendChild(columnEl);
+    columnContainer.appendChild(newColumnInput);
 
     columnEl.querySelector('.issue-count').innerText =
       taskList.childElementCount;
+
+    columnEl
+      .querySelector('.add-column-button')
+      .addEventListener('click', () => {});
   });
 }
 
@@ -425,4 +468,3 @@ renderBoard(localStorage.getItem('selectedProject'));
 setupPushNotifications();
 lazyLoad();
 renderNotification();
-showTaskDrawer('694a40c296544c8d4cc96afe');
