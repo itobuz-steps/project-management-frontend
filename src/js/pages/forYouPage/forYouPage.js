@@ -63,7 +63,7 @@ function createProjectCard(project) {
   const projectDiv = document.createElement('div');
   projectDiv.dataset.id = project._id;
   projectDiv.className =
-    'flex flex-col gap-4 border-s-2 border-s-primary-500 rounded-md bg-white w-fit px-4 py-2 cursor-pointer hover:bg-primary-50';
+    'flex flex-col gap-3 border-s-2 border-s-primary-500 rounded-sm bg-white md:min-w-64 min-w-48 p-4 cursor-pointer hover:bg-gray-100 shadow-sm border border-gray-200';
   projectDiv.innerHTML = /* HTML */ `
     <p class="font-semibold">${project.name}</p>
 
@@ -102,7 +102,7 @@ async function renderStatusContainers(parentElement) {
       <div class="flex items-center justify-between gap-2">
         <p class="my-2 font-semibold text-gray-500">${column}</p>
         <div
-          class="w-4 rounded-full bg-white text-center text-[10px]! font-semibold text-black"
+          class="w-4 rounded-full bg-gray-200 text-center text-[10px]! font-semibold text-black"
           id="${column}-task-count"
         ></div>
       </div>
@@ -159,20 +159,28 @@ function renderForYouTasks(task, projectName) {
   const prioritySvg = getSvgByPriority(task);
 
   taskEl.className =
-    'bg-white p-2 flex justify-between items-center rounded-md hover:cursor-pointer hover:bg-primary-50';
+    'bg-white p-2 flex justify-between items-center rounded-sm hover:cursor-pointer hover:bg-primary-50 shadow-sm border border-gray-100';
   taskEl.innerHTML = /* HTML */ `
     <div class="flex items-center justify-start gap-2">
       <div class="flex items-center justify-center">${typeSvg}</div>
       <div class="flex flex-col items-start justify-center">
-        <p class="font-semibold">${task.title}</p>
+        <div class="flex gap-2">
+          <p
+            class="smaller-text bg-primary-500 m-auto w-max rounded-sm px-1 text-center font-semibold text-nowrap text-white"
+          >
+            ${task.key}
+          </p>
+          <p class="font-semibold">${task.title}</p>
+        </div>
         <div class="flex items-center justify-center gap-3">
-          <p class="smaller-text">${task.key}</p>
-          <p class="smaller-text">&#x2022;</p>
-          <p class="smaller-text">${projectName}</p>
+          <p class="smaller-text font-medium text-gray-500">${projectName}</p>
         </div>
       </div>
     </div>
-    <p class="smaller-text flex gap-2">${task.priority}${prioritySvg}</p>
+    <p class="smaller-text flex gap-2 font-medium">
+      ${String(task.priority).charAt(0).toUpperCase() +
+      String(task.priority).slice(1)}${prioritySvg}
+    </p>
   `;
 
   taskEl.addEventListener('click', () => showTaskDrawer(task._id));
