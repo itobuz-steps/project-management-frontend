@@ -97,6 +97,10 @@ h1 {
   font-size: 20px;
 }
 
+.smaller-text {
+  font-size: 12px;
+}
+
 .inner-shadow-lg {
   box-shadow: inset 0 0 3px #bbbbbb;
 }

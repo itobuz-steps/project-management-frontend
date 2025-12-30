@@ -120,9 +120,6 @@
                     />
                   </svg>
                 </li>
-                <!-- <li id="targetElement" class="py-4 text-center text-gray-400">
-                  Loading...
-                </li> -->
               </ul>
             </div>
           </div>
@@ -168,6 +165,45 @@
       >
         <div class="flex h-full flex-col gap-5 overflow-y-auto px-3 py-4">
           <ul class="flex flex-col gap-2 font-semibold">
+            <li class="relative" id="foryouMenu">
+              <div
+                class="group hover:bg-primary-200 flex flex-row items-center justify-between rounded-lg border border-gray-50 bg-gray-50 p-2 shadow-sm hover:border-transparent"
+                id="forYouButton"
+              >
+                <a href="#" class="flex items-center gap-4 rounded-lg">
+                  <svg
+                    viewBox="0 0 24 24"
+                    height="25px"
+                    width="25px"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="group-hover:fill-primary-300 group-hover:stroke-primary-800 stroke-black"
+                  >
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g
+                      id="SVGRepo_tracerCarrier"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></g>
+                    <g id="SVGRepo_iconCarrier">
+                      <path
+                        d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      ></path>
+                      <path
+                        d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      ></path>
+                    </g>
+                  </svg>
+                  <p class="group-hover:text-primary-900 text-lg">For you</p>
+                </a>
+              </div>
+            </li>
             <li class="relative" id="projectsMenu">
               <div
                 class="group hover:bg-primary-200 flex flex-row items-center justify-between rounded-lg border border-gray-50 bg-gray-50 p-2 shadow-sm hover:border-transparent"
@@ -369,6 +405,7 @@
 
       <div
         class="main flex flex-1 flex-col gap-2 overflow-auto p-2 transition-all duration-300 sm:p-4 md:gap-3"
+        id="main-section"
       >
         <div
           class="bg-primary-200 flex flex-col gap-1 rounded-lg p-3 shadow-sm md:gap-4 md:p-4"
@@ -661,6 +698,64 @@
             <div class="flex flex-col gap-1" id="sprint-backlog-wrapper"></div>
           </div>
         </div>
+      </div>
+
+      <div
+        id="forYouPage"
+        class="flex hidden flex-1 flex-col gap-2 p-2 transition-all duration-300 sm:p-4 md:gap-3"
+      >
+        <div
+          class="bg-primary-100 flex flex-col gap-4 rounded-lg p-3 shadow-sm md:p-4"
+        >
+          <div
+            class="flex items-center justify-between border-b border-b-gray-400 bg-clip-text pb-2 text-xl font-semibold text-black sm:text-2xl"
+          >
+            <h1
+              class="bg-clip-text text-xl font-semibold text-black sm:text-2xl"
+            >
+              For You
+            </h1>
+            <button
+              class="group cursor-pointer rounded-md p-1"
+              id="forYouGoBackBtn"
+            ></button>
+          </div>
+          <div id="forYouProjects" class="mb-4 flex flex-col gap-2">
+            <h2 class="font-semibold">Your Projects</h2>
+            <div
+              id="forYouProjectsContainer"
+              class="flex flex-wrap gap-2 max-md:flex-col"
+            ></div>
+          </div>
+          <div id="forYouTasks" class="flex flex-col">
+            <h2
+              class="flex w-full gap-1.5 border-b border-b-gray-400 pb-2 text-lg font-semibold"
+            >
+              Your Tasks
+              <div
+                class="h-5 w-5 rounded-full bg-white text-center text-sm text-black"
+                id="forYouTotalTasksCount"
+              ></div>
+            </h2>
+            <div
+              class="flex h-full w-full flex-col gap-3 rounded-md"
+              id="forYouPageTasksWrapper"
+            >
+              <div
+                class="relative overflow-x-auto rounded-md"
+                id="forYouTableBody"
+              ></div>
+
+              <div
+                class="flex hidden w-full justify-center bg-gray-50 p-5 text-center font-semibold text-gray-400"
+                id="empty-for-you-container"
+              >
+                No tasks found!
+              </div>
+            </div>
+          </div>
+        </div>
+        <div></div>
       </div>
     </div>
 

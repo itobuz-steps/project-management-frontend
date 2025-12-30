@@ -18,7 +18,7 @@ const toggleInviteButton = document.getElementById('toggleInviteForm');
 const inviteForm = document.getElementById('inviteForm');
 const emailInput = inviteForm.querySelector('input[type="email"]');
 
-function toggleSidebar(action = 'toggle') {
+export function toggleSidebar(action = 'toggle') {
   if (action === 'toggle') {
     sidebar.classList.toggle('-translate-x-full');
     sidebar.classList.toggle('translate-x-0');

@@ -48,9 +48,8 @@ class ProjectService {
               localStorage.setItem('access_token', response.data.accessToken);
               localStorage.setItem('refresh_token', response.data.refreshToken);
 
-              originalRequest.headers[
-                'Authorization'
-              ] = `Bearer ${response.data.accessToken}`;
+              originalRequest.headers['Authorization'] =
+                `Bearer ${response.data.accessToken}`;
 
               return this.api(originalRequest);
             }
@@ -135,6 +134,18 @@ class ProjectService {
     } catch (error) {
       throw new Error(
         error.response?.data?.message || 'Failed to fetch project members'
+      );
+    }
+  }
+
+  async getProjectsByUserId() {
+    try {
+      const response = await this.api.get('/user-projects');
+
+      return response.data;
+    } catch (error) {
+      throw new Error(
+        error.response?.data?.message || 'Failed to fetch user projects'
       );
     }
   }
