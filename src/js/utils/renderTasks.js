@@ -12,7 +12,6 @@ import { svgObject } from './svgObjects.js';
 
 const listTableBody = document.getElementById('table-body');
 const emptyListContainer = document.getElementById('empty-list-container');
-
 const sprintBacklogWrapper = document.getElementById('sprint-backlog-wrapper');
 
 async function createTaskList(task, type, projectType, sprint) {
@@ -128,7 +127,7 @@ async function createTaskList(task, type, projectType, sprint) {
     <td class="p-2 open-taskDrawer cursor-pointer hover:underline">${task.title}</td>
     <td class="p-2">
       <div class="mr-2 px-2 bg-primary-400 rounded-md text-white py-0.5 w-fit">
-        <select class="status-select-${task._id} w-fit outline-none text-center">
+        <select class="status-select-${task._id} w-fit outline-none">
         </select>
       </div>
 

@@ -2,14 +2,15 @@ import { showConfirmModal } from '../../utils/modals/confirmationModal';
 import showToast from '../../utils/showToast';
 import commentService from '../../services/CommentService';
 import { DateTime } from 'luxon';
+
 export function appendCommentToContainer(comment, container) {
   const commentEl = document.createElement('div');
+
   commentEl.className =
     'flex gap-2 md:gap-3 items-start px-3 pb-4 border-b border-gray-200 ';
 
   commentEl.innerHTML = /*html*/ `
-
-
+  
   <div id="CommentInformation" class="flex flex-col gap-1 md:gap-2 flex-1">
 
     <div class="flex items-center gap-2">

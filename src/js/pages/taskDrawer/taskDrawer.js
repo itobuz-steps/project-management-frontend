@@ -6,8 +6,10 @@ import { renderAttachments } from './renderAttachments';
 import { appendCommentToContainer } from './appendComment';
 import { renderSubtasks } from './renderSubtasks';
 import { createSubtask } from './createSubtask';
+import projectService from '../../services/ProjectService';
+import renderSelectedTab from '../../utils/renderSelectedTab';
 
-const taskDrawerInnerHtml = /*html*/ `      
+const taskDrawerInnerHtml = /*html*/ `
 <div>
   <div
     class="flex flex-col gap-3 p-3"
@@ -119,7 +121,7 @@ const taskDrawerInnerHtml = /*html*/ `
       </div>
         <div id="subtasksList" class="flex flex-col gap-2 w-full items-center max-h-42 overflow-x-auto"></div>
     </div>
-    <!-- projects -->
+    <!-- Details -->
     <div class="container-secondary">
       <div class="flex flex-col gap-3">
         <h2 class="font-semibold">Details</h2>
@@ -128,16 +130,16 @@ const taskDrawerInnerHtml = /*html*/ `
             <span class="font-medium text-gray-500">Status</span>
             <select
               id="statusSelect"
-              class="appearance-none bg-primary-400 px-2 py-1 rounded-sm text-white text-center min-w-20"
+              class="outline-none bg-primary-400 px-2 py-2 rounded-sm text-white min-w-20"
             >
-            <option value="todo">todo</option>
+            
             </select>
           </div>
           <div class="flex items-center justify-between">
             <span class="font-medium text-gray-500">Priority</span>
             <select
               id="prioritySelect"
-              class="appearance-none bg-gray-200 px-2 py-1 rounded-sm text-gray-800 text-center min-w-20"            >
+              class=" px-2 py-2 bg-primary-400 rounded-sm text-center min-w-20 text-white outline-none ">
               <option value="high">
                 High
               </option>
@@ -146,15 +148,34 @@ const taskDrawerInnerHtml = /*html*/ `
               </option>
               <option
                 value="low"
-                selected
+                
               >
                 Low
               </option>
               <option
                 value="critical"
-                selected
+                
               >
                 Critical
+              </option>
+            </select>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="font-medium text-gray-500">Type</span>
+            <select
+              id="typeSelect"
+              class=" px-2 py-2 bg-primary-400 rounded-sm text-center min-w-20 text-white outline-none ">
+              <option value="task">
+                Task
+              </option>
+              <option value="story">
+                Story
+              </option>
+              <option
+                value="bug"
+                
+              >
+                Bug
               </option>
             </select>
           </div>
@@ -255,6 +276,11 @@ export async function showTaskDrawer(taskId) {
   const attachmentInput = taskDrawer.querySelector('#commentAttachment');
   const attachButton = taskDrawer.querySelector('#attachButton');
   const attachmentText = taskDrawer.querySelector('#commentAttachmentText');
+  const columns = (
+    await projectService.getProjectById(localStorage.getItem('selectedProject'))
+  ).result.columns;
+  const storyPoint = taskDrawer.querySelector('#story-point-value');
+  const typeSelect = taskDrawer.querySelector('#typeSelect');
 
   attachButton.addEventListener('click', () => {
     attachmentInput.click();
@@ -309,8 +335,71 @@ export async function showTaskDrawer(taskId) {
     }
   });
 
+  columns.forEach((column) => {
+    const option = document.createElement('option');
+    option.value = column;
+    option.textContent = column.charAt(0).toUpperCase() + column.slice(1);
+    status.appendChild(option);
+  });
+
+  status.addEventListener('change', async (e) => {
+    try {
+      await taskService.updateTask(taskId, { status: e.target.value });
+      renderSelectedTab(localStorage.getItem('selectedProject'));
+
+      showToast('Status updated successfully', 'success');
+      e.preventDefault();
+    } catch (err) {
+      showToast('Failed to update status', 'error');
+      console.error(err);
+    }
+  });
+
+  priority.addEventListener('change', async (e) => {
+    try {
+      await taskService.updateTask(taskId, { priority: e.target.value });
+      renderSelectedTab(localStorage.getItem('selectedProject'));
+      showToast('Status updated successfully', 'success');
+
+      e.preventDefault();
+    } catch (err) {
+      showToast('Failed to update priority', 'error');
+      console.error(err);
+    }
+  });
+
+  storyPoint.addEventListener('keydown', async (e) => {
+    try {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        console.log(+e.target.value);
+        await taskService.updateTask(taskId, { storyPoint: +e.target.value });
+        renderSelectedTab(localStorage.getItem('selectedProject'));
+        showToast('Status updated successfully', 'success');
+      }
+    } catch (err) {
+      showToast('Failed to update story point', 'error');
+      console.error(err);
+    }
+  });
+
+  typeSelect.addEventListener('change', async (e) => {
+    try {
+      await taskService.updateTask(taskId, { type: e.target.value });
+      renderSelectedTab(localStorage.getItem('selectedProject'));
+      showToast('Status updated successfully', 'success');
+
+      e.preventDefault();
+    } catch (err) {
+      showToast('Failed to update type', 'error');
+      console.error(err);
+    }
+  });
+
   status.value = task.status;
   priority.value = task.priority;
+  storyPoint.value = task.storyPoint;
+  typeSelect.value = task.type;
 
   taskDrawer.dataset.id = task._id;
   titleEl.textContent = task.title;
@@ -337,19 +426,29 @@ export async function showTaskDrawer(taskId) {
   taskDrawer.classList.add('transform-none');
   drawerBackdrop.classList.remove('hidden');
 
+  drawerBackdrop.addEventListener('click', () => {
+    taskDrawer.classList.add('translate-x-full');
+    taskDrawer.classList.remove('transform-none');
+    drawerBackdrop.classList.add('hidden');
+  });
+
   closeButton.addEventListener('click', () => {
     taskDrawer.classList.add('translate-x-full');
     taskDrawer.classList.remove('transform-none');
     drawerBackdrop.classList.add('hidden');
-    profileImageEl.classList.remove('hidden');
   });
 
   async function updateCommentList() {
     const comments = (await commentService.getAllComments(task._id)).result;
-
     const commentContainer = taskDrawer.querySelector('#commentsContainer');
+
     commentContainer.innerHTML = ``;
 
+    if (!comments.length) {
+      commentContainer.innerHTML = `
+      <p class="text-gray-400 text-sm text-center mb-3">No Comments...</p>
+    `;
+    }
     comments.forEach((comment) =>
       appendCommentToContainer(comment, commentContainer)
     );

@@ -34,6 +34,7 @@ import {
   getSvgByType,
 } from '../../utils/globalUtils.js';
 import renderSelectedTab from '../../utils/renderSelectedTab.js';
+import { handleForYouPage } from '../forYouPage/forYouPage.js';
 
 const openProjectBtn = document.getElementById('plus-icon');
 openProjectBtn.addEventListener('click', openCreateProjectModal);
@@ -87,7 +88,6 @@ async function getTaskGroupedByStatus(projectId, filter, searchInput) {
   const result = {};
 
   project.columns.forEach((column) => (result[column] = []));
-
   const tasks = await getFilteredTasks(projectId, filter, searchInput);
 
   tasks.forEach((task) => result[task.status].push(task));
@@ -147,7 +147,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       filteredTasks.push(task);
       let isDone = '';
 
-      if (task.status === 'done') {
+      if (task.status === columns[columns.length - 1]) {
         isDone = 'line-through text-gray-400';
       }
 
@@ -387,6 +387,8 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
       draggedColumn.querySelector('.issue-count').innerText =
         +draggedColumn.querySelector('.issue-count').innerText - 1;
+
+      await handleForYouPage();
     });
 
     const newColumnInput = document.createElement('div');
@@ -468,3 +470,4 @@ renderBoard(localStorage.getItem('selectedProject'));
 setupPushNotifications();
 lazyLoad();
 renderNotification();
+handleForYouPage();
