@@ -9,26 +9,49 @@ import { createSubtask } from './createSubtask';
 import projectService from '../../services/ProjectService';
 import renderSelectedTab from '../../utils/renderSelectedTab';
 
-const taskDrawerInnerHtml = /*html*/ `
-<div>
-  <div
-    class="flex flex-col gap-3 p-3"
-  >
-    <div class="flex justify-between gap-3 container-secondary">
-    
-        <h2 class="title font-semibold text-[16px]!"></h2>
-      <div class="right-container flex items-start gap-3 items-center">
-        <button
-          id="edit-task-button"
-        >
-          <svg class="w-5 h-5 stroke-black hover:stroke-green-500 hover:stroke-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M11 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22H15C20 22 22 20 22 15V13" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M16.04 3.02001L8.16 10.9C7.86 11.2 7.56 11.79 7.5 12.22L7.07 15.23C6.91 16.32 7.68 17.08 8.77 16.93L11.78 16.5C12.2 16.44 12.79 16.14 13.1 15.84L20.98 7.96001C22.34 6.60001 22.98 5.02001 20.98 3.02001C18.98 1.02001 17.4 1.66001 16.04 3.02001Z" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M14.91 4.1499C15.58 6.5399 17.45 8.4099 19.85 9.0899"  stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
-        </button>
-          <button
-            type="button"
-            class="close-btn"
-          >
+const taskDrawerInnerHtml = /* HTML */ ` <div>
+  <div class="flex flex-col gap-3 p-3">
+    <div class="container-secondary flex flex-col gap-5">
+      <div class="flex justify-between gap-3">
+        <h2 class="title text-[16px]! font-semibold"></h2>
+        <div class="right-container flex items-center items-start gap-3">
+          <button id="edit-task-button">
             <svg
-              class="h-4 w-4 hover:stroke-2 hover:stroke-red-400 mt-0.5 stroke-gray-600"
+              class="h-5 w-5 stroke-black hover:stroke-green-500 hover:stroke-2"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+              <g
+                id="SVGRepo_tracerCarrier"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></g>
+              <g id="SVGRepo_iconCarrier">
+                <path
+                  d="M11 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22H15C20 22 22 20 22 15V13"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+                <path
+                  d="M16.04 3.02001L8.16 10.9C7.86 11.2 7.56 11.79 7.5 12.22L7.07 15.23C6.91 16.32 7.68 17.08 8.77 16.93L11.78 16.5C12.2 16.44 12.79 16.14 13.1 15.84L20.98 7.96001C22.34 6.60001 22.98 5.02001 20.98 3.02001C18.98 1.02001 17.4 1.66001 16.04 3.02001Z"
+                  stroke-miterlimit="10"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+                <path
+                  d="M14.91 4.1499C15.58 6.5399 17.45 8.4099 19.85 9.0899"
+                  stroke-miterlimit="10"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+              </g>
+            </svg>
+          </button>
+          <button type="button" class="close-btn">
+            <svg
+              class="mt-0.5 h-4 w-4 stroke-gray-600 hover:stroke-red-400 hover:stroke-2"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -42,21 +65,19 @@ const taskDrawerInnerHtml = /*html*/ `
               />
             </svg>
           </button>
+        </div>
       </div>
-    </div>
-    
-    <div class="container-secondary gap-5 flex flex-col">
       <div class="flex items-center gap-3">
         <div class="profile-name">
           <img
             src="../assets/img/profile.png"
             alt="Avatar"
-            class="profile-image h-8 w-8 rounded-full shadow-sm border border-white"
+            class="profile-image h-8 w-8 rounded-full border border-white shadow-sm"
           />
         </div>
         <div class="flex flex-col leading-tight">
-          <p class=" text-gray-500">Assignee</p>
-          <p class="assignee font-medium text-primary-500"></p>
+          <p class="text-gray-500">Assignee</p>
+          <p class="assignee text-primary-500 font-medium"></p>
         </div>
       </div>
       <div class="flex flex-col gap-1">
@@ -64,7 +85,7 @@ const taskDrawerInnerHtml = /*html*/ `
         <div class="flex items-center gap-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 text-gray-400 -ml-1"
+            class="-ml-1 h-5 w-5 text-gray-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -79,18 +100,11 @@ const taskDrawerInnerHtml = /*html*/ `
           <span class="due-date text-gray-600"></span>
         </div>
       </div>
-    </div>
-        <!-- Description Container -->
-    <div class="container-secondary">
+      <!-- Description Container -->
       <div class="flex flex-col gap-2">
+        <h2 id="descriptionHeader" class="font-semibold">Description</h2>
         <h2
-          id="descriptionHeader"
-          class="font-semibold"
-        >
-          Description
-        </h2>
-        <h2
-          class="description max-h-28 overflow-auto rounded-md w-full p-1 border border-gray-100"
+          class="description max-h-28 w-full overflow-auto rounded-md border border-gray-100 p-1"
         >
           <p></p>
         </h2>
@@ -98,31 +112,46 @@ const taskDrawerInnerHtml = /*html*/ `
     </div>
     <!-- subtasks -->
     <div class="container-secondary flex flex-col gap-2" id="subtaskContainer">
-      <div class=" flex items-center gap-2">
-        <h2 class="font-semibold">
-          Subtasks
-        </h2>
+      <div class="flex items-center gap-2">
+        <h2 class="font-semibold">Subtasks</h2>
         <div class="relative">
-            <button id="subtaskButton" class="subtask cursor-pointer p-1 hover:bg-gray-300 rounded-sm bg-gray-200">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class=" size-4 stroke-black">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
-              </svg>
-            </button>
-          </div>
+          <button
+            id="subtaskButton"
+            class="subtask cursor-pointer rounded-sm bg-gray-200 p-1 hover:bg-gray-300"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+              class="size-4 stroke-black"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              ></path>
+            </svg>
+          </button>
+        </div>
       </div>
       <div
         id="subtaskDropdown"
-        class=" hidden max-h-64 w-64 overflow-y-auto rounded-md shadow-md border border-gray-200 p-3 w-full"
+        class="hidden max-h-64 w-64 w-full overflow-y-auto rounded-md border border-gray-200 p-3 shadow-md"
       >
         <div id="subtaskList" class="ml-2 flex flex-col gap-2"></div>
         <button
           id="saveSubtasksBtn"
-          class="mt-3 hidden w-full rounded bg-primary-500 hover:bg-primary-600 py-2 text-white"
+          class="bg-primary-500 hover:bg-primary-600 mt-3 hidden w-full rounded py-2 text-white"
         >
           Save Subtasks
         </button>
       </div>
-        <div id="subtasksList" class="flex flex-col gap-2 w-full items-center max-h-42 overflow-x-auto"></div>
+      <div
+        id="subtasksList"
+        class="flex max-h-42 w-full flex-col items-center gap-2 overflow-x-auto"
+      ></div>
     </div>
     <!-- Details -->
     <div class="container-secondary">
@@ -133,62 +162,40 @@ const taskDrawerInnerHtml = /*html*/ `
             <span class="font-medium text-gray-500">Status</span>
             <select
               id="statusSelect"
-              class="outline-none bg-primary-400 px-2 py-2 rounded-sm text-white min-w-20"
-            >
-            
-            </select>
+              class="bg-primary-400 min-w-20 rounded-sm px-2 py-2 text-white outline-none"
+            ></select>
           </div>
           <div class="flex items-center justify-between">
             <span class="font-medium text-gray-500">Priority</span>
             <select
               id="prioritySelect"
-              class=" px-2 py-2 bg-primary-400 rounded-sm text-center min-w-20 text-white outline-none ">
-              <option value="high">
-                High
-              </option>
-              <option value="medium">
-                Medium
-              </option>
-              <option
-                value="low"
-                
-              >
-                Low
-              </option>
-              <option
-                value="critical"
-                
-              >
-                Critical
-              </option>
+              class="bg-primary-400 min-w-20 rounded-sm px-2 py-2 text-center text-white outline-none"
+            >
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+              <option value="critical">Critical</option>
             </select>
           </div>
           <div class="flex items-center justify-between">
             <span class="font-medium text-gray-500">Type</span>
             <select
               id="typeSelect"
-              class=" px-2 py-2 bg-primary-400 rounded-sm text-center min-w-20 text-white outline-none ">
-              <option value="task">
-                Task
-              </option>
-              <option value="story">
-                Story
-              </option>
-              <option
-                value="bug"
-                
-              >
-                Bug
-              </option>
+              class="bg-primary-400 min-w-20 rounded-sm px-2 py-2 text-center text-white outline-none"
+            >
+              <option value="task">Task</option>
+              <option value="story">Story</option>
+              <option value="bug">Bug</option>
             </select>
           </div>
           <div class="flex items-center justify-between">
-            <span class="font-medium text-gray-500 flex-1">Story Point</span>
+            <span class="flex-1 font-medium text-gray-500">Story Point</span>
             <input
               type="number"
               id="story-point-value"
               value="1"
-              class="focus:border-primary-500 border border-gray-300 bg-white p-2 text-sm shadow-xs transition-all duration-200 outline-none placeholder:text-sm placeholder:text-white/50 px-2 py-1 rounded-sm text-gray-800 w-20"/>
+              class="focus:border-primary-500 w-20 rounded-sm border border-gray-300 bg-white p-2 px-2 py-1 text-sm text-gray-800 shadow-xs transition-all duration-200 outline-none placeholder:text-sm placeholder:text-white/50"
+            />
           </div>
         </div>
       </div>
@@ -196,55 +203,92 @@ const taskDrawerInnerHtml = /*html*/ `
     <!-- Attachment Container -->
     <div class="container-secondary">
       <div class="mb-2 flex items-center justify-between px-1">
-        <h2 class="font-semibold ">
-          Attachments
-        </h2>
+        <h2 class="font-semibold">Attachments</h2>
       </div>
-        <div id="attachmentsList" class="flex flex-col gap-2 overflow-y-auto items-center"></div>
+      <div
+        id="attachmentsList"
+        class="flex flex-col items-center gap-2 overflow-y-auto"
+      ></div>
     </div>
     <!-- Comments Container -->
-    <div class="container-secondary flex gap-2 flex-col">
-      <h2
-        id="commentContainerHeaderText"
-        class="font-semibold"
-      >
-        Comments
-      </h2>
+    <div class="container-secondary flex flex-col gap-2">
+      <h2 id="commentContainerHeaderText" class="font-semibold">Comments</h2>
       <div
         id="commentsContainer"
-        class="flex flex-col gap-2 max-h-64 overflow-y-auto border border-gray-200 bg-white inset-shadow-xs pt-3 rounded-sm"
-      >
-      </div>
+        class="flex max-h-64 flex-col gap-2 overflow-y-auto rounded-sm border border-gray-200 bg-white pt-3 inset-shadow-xs"
+      ></div>
       <!-- comment input  -->
-      <div
-        class="comment-create flex flex-col bg-white"
-      >
+      <div class="comment-create flex flex-col bg-white">
         <textarea
           type="text"
           id="commentInput"
           minlength="3"
           placeholder="Enter your Comment"
-          class="flex-1 rounded-sm border border-gray-300 border-b-transparent focus:outline-none min-h-20 p-2"
+          class="min-h-20 flex-1 rounded-sm border border-gray-300 border-b-transparent p-2 focus:outline-none"
         ></textarea>
         <input type="file" id="commentAttachment" class="hidden" />
         <div class="flex">
-          <div class="flex flex-1 border-b border-l  border-gray-300 items-center px-2">
+          <div
+            class="flex flex-1 items-center border-b border-l border-gray-300 px-2"
+          >
             <button
               type="button"
               id="attachButton"
               class=""
               title="Attach a file"
             >
-<svg viewBox="0 0 24 24" id="Layer_4" version="1.1" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" class="fill-black hover:fill-primary-600 size-6"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path class="st0" d="M14.77,20.99c0.138,0,0.251-0.02,0.367-0.041c0.161,0.024,0.322,0.041,0.484,0.041 c2.272,0,4.12-1.848,4.12-4.12c0-1.667-0.994-3.133-2.48-3.763V7.39c0-0.134-0.054-0.263-0.15-0.357l-0.455-0.446 c-0.016-0.022-0.033-0.043-0.052-0.061L13.237,3.16c-0.094-0.096-0.223-0.15-0.357-0.15H8.25c-0.276,0-0.5,0.224-0.5,0.5 s0.224,0.5,0.5,0.5h4.158c-0.02,0.071-0.033,0.145-0.033,0.221V6.38c0,0.833,0.677,1.51,1.51,1.51h2.149 c0.078,0,0.153-0.012,0.226-0.034v4.942c-0.019-0.003-0.036-0.002-0.055-0.005c-0.199-0.033-0.395-0.054-0.585-0.054 c-2.272,0-4.12,1.853-4.12,4.13c0,0.283,0.036,0.558,0.091,0.826c0.017,0.084,0.044,0.164,0.066,0.246 c0.049,0.183,0.108,0.361,0.181,0.534c0.037,0.086,0.075,0.17,0.117,0.254c0.084,0.167,0.18,0.324,0.286,0.477 c0.047,0.068,0.09,0.139,0.141,0.204c0.163,0.208,0.34,0.405,0.541,0.578c0,0,0,0,0.001,0.001H6.74c-0.816,0-1.48-0.673-1.48-1.5 V5.51c0-0.771,0.569-1.412,1.324-1.492c0.274-0.029,0.474-0.275,0.444-0.55C7,3.193,6.759,2.999,6.479,3.024 C5.214,3.158,4.26,4.226,4.26,5.51v12.98c0,1.378,1.113,2.5,2.48,2.5H14.77z M13.885,6.89c-0.281,0-0.51-0.229-0.51-0.51V4.717 l2.173,2.173H13.885z M15.62,13.74c0.237,0,0.502,0.039,0.779,0.115c0.062,0.016,0.124,0.03,0.207,0.061 c1.277,0.414,2.135,1.602,2.135,2.955c0,1.72-1.4,3.12-3.12,3.12c-0.129,0-0.259-0.007-0.479-0.04l-0.139-0.032 c-1.45-0.271-2.502-1.553-2.502-3.048C12.5,15.145,13.9,13.74,15.62,13.74z"></path><path class="st0" d="M14.494,17.37h0.626v0.626c0,0.276,0.224,0.5,0.5,0.5s0.5-0.224,0.5-0.5V17.37h0.626c0.276,0,0.5-0.224,0.5-0.5 s-0.224-0.5-0.5-0.5H16.12v-0.626c0-0.276-0.224-0.5-0.5-0.5s-0.5,0.224-0.5,0.5v0.626h-0.626c-0.276,0-0.5,0.224-0.5,0.5 S14.217,17.37,14.494,17.37z"></path></g></svg>            </button>
+              <svg
+                viewBox="0 0 24 24"
+                id="Layer_4"
+                version="1.1"
+                xml:space="preserve"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                class="hover:fill-primary-600 size-6 fill-black"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  <path
+                    class="st0"
+                    d="M14.77,20.99c0.138,0,0.251-0.02,0.367-0.041c0.161,0.024,0.322,0.041,0.484,0.041 c2.272,0,4.12-1.848,4.12-4.12c0-1.667-0.994-3.133-2.48-3.763V7.39c0-0.134-0.054-0.263-0.15-0.357l-0.455-0.446 c-0.016-0.022-0.033-0.043-0.052-0.061L13.237,3.16c-0.094-0.096-0.223-0.15-0.357-0.15H8.25c-0.276,0-0.5,0.224-0.5,0.5 s0.224,0.5,0.5,0.5h4.158c-0.02,0.071-0.033,0.145-0.033,0.221V6.38c0,0.833,0.677,1.51,1.51,1.51h2.149 c0.078,0,0.153-0.012,0.226-0.034v4.942c-0.019-0.003-0.036-0.002-0.055-0.005c-0.199-0.033-0.395-0.054-0.585-0.054 c-2.272,0-4.12,1.853-4.12,4.13c0,0.283,0.036,0.558,0.091,0.826c0.017,0.084,0.044,0.164,0.066,0.246 c0.049,0.183,0.108,0.361,0.181,0.534c0.037,0.086,0.075,0.17,0.117,0.254c0.084,0.167,0.18,0.324,0.286,0.477 c0.047,0.068,0.09,0.139,0.141,0.204c0.163,0.208,0.34,0.405,0.541,0.578c0,0,0,0,0.001,0.001H6.74c-0.816,0-1.48-0.673-1.48-1.5 V5.51c0-0.771,0.569-1.412,1.324-1.492c0.274-0.029,0.474-0.275,0.444-0.55C7,3.193,6.759,2.999,6.479,3.024 C5.214,3.158,4.26,4.226,4.26,5.51v12.98c0,1.378,1.113,2.5,2.48,2.5H14.77z M13.885,6.89c-0.281,0-0.51-0.229-0.51-0.51V4.717 l2.173,2.173H13.885z M15.62,13.74c0.237,0,0.502,0.039,0.779,0.115c0.062,0.016,0.124,0.03,0.207,0.061 c1.277,0.414,2.135,1.602,2.135,2.955c0,1.72-1.4,3.12-3.12,3.12c-0.129,0-0.259-0.007-0.479-0.04l-0.139-0.032 c-1.45-0.271-2.502-1.553-2.502-3.048C12.5,15.145,13.9,13.74,15.62,13.74z"
+                  ></path>
+                  <path
+                    class="st0"
+                    d="M14.494,17.37h0.626v0.626c0,0.276,0.224,0.5,0.5,0.5s0.5-0.224,0.5-0.5V17.37h0.626c0.276,0,0.5-0.224,0.5-0.5 s-0.224-0.5-0.5-0.5H16.12v-0.626c0-0.276-0.224-0.5-0.5-0.5s-0.5,0.224-0.5,0.5v0.626h-0.626c-0.276,0-0.5,0.224-0.5,0.5 S14.217,17.37,14.494,17.37z"
+                  ></path>
+                </g>
+              </svg>
+            </button>
             <span id="commentAttachmentText"></span>
           </div>
-          <div class="border-l border-t border-gray-300 p-1 rounded-tl-md">
+          <div class="rounded-tl-md border-t border-l border-gray-300 p-1">
             <button
               type="button"
               id="submitButton"
-              class="btn-primary px-4 py-1! mt-0! rounded-xs!"
+              class="btn-primary mt-0! rounded-xs! px-4 py-1!"
             >
-             <svg class="size-4 fill-white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M19,6a1,1,0,0,0-1,1v4a1,1,0,0,1-1,1H7.41l1.3-1.29A1,1,0,0,0,7.29,9.29l-3,3a1,1,0,0,0-.21.33,1,1,0,0,0,0,.76,1,1,0,0,0,.21.33l3,3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42L7.41,14H17a3,3,0,0,0,3-3V7A1,1,0,0,0,19,6Z"></path></g></svg>
+              <svg
+                class="size-4 fill-white"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  <path
+                    d="M19,6a1,1,0,0,0-1,1v4a1,1,0,0,1-1,1H7.41l1.3-1.29A1,1,0,0,0,7.29,9.29l-3,3a1,1,0,0,0-.21.33,1,1,0,0,0,0,.76,1,1,0,0,0,.21.33l3,3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42L7.41,14H17a3,3,0,0,0,3-3V7A1,1,0,0,0,19,6Z"
+                  ></path>
+                </g>
+              </svg>
             </button>
           </div>
         </div>
@@ -449,7 +493,7 @@ export async function showTaskDrawer(taskId) {
 
     if (!comments.length) {
       commentContainer.innerHTML = `
-      <p class="text-gray-400 text-sm text-center">No Comments...</p>
+      <p class="text-gray-400 text-sm text-center mb-3">No Comments...</p>
     `;
     }
     comments.forEach((comment) =>

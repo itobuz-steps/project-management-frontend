@@ -76,16 +76,17 @@ export async function createTaskList(task, type, projectType, sprint) {
     let labelEl;
 
     if (idx == 3) {
-      labelEl = /*html*/ `
-      <div class ="bg-gray-200 px-2 py-1 rounded-sm">
-        +${task.tags.length - 3}
-      </div>
+      labelEl = /* HTML */ `
+        <div class="rounded-sm bg-gray-200 px-2 py-1">
+          +${task.tags.length - 3}
+        </div>
       `;
     } else {
-      labelEl = /*HTML*/ `
-    <div class="labels bg-primary-100 px-2 py-1 rounded-sm">
-    ${label}
-    </div>`;
+      labelEl = /* HTML */ ` <div
+        class="labels bg-primary-100 rounded-sm px-2 py-1"
+      >
+        ${label}
+      </div>`;
     }
 
     return labelEl;

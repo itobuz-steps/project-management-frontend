@@ -15,55 +15,10 @@ export function createBacklogTable(projectType) {
   backlogContainer.className = ' p-1 rounded-t';
 
   backlogContainer.innerHTML = /* HTML */ `
-    <form
-      class="flex hidden h-7.5 gap-1 md:justify-end"
-      id="sprint-creation-form"
-    >
-      <input
-        type="number"
-        id="sprint-sp-input"
-        aria-describedby="helper-text-explanation"
-        class="bg-neutral-secondary-medium text-heading rounded-base focus:ring-brand focus:border-brand placeholder:text-body block w-23 rounded-lg border border-gray-400 text-center text-sm shadow-xs md:w-30"
-        placeholder="story point"
-        required
-      />
-
-      <button
-        type="submit"
-        id="sprint-form-button"
-        class="w-20 rounded-lg border border-gray-200 bg-white px-0.5 text-sm text-gray-900 hover:bg-cyan-50 hover:text-gray-600 focus:outline-none"
-      >
-        Confirm
-      </button>
-      <svg
-        id="sprint-close-svg"
-        class=""
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-        <g
-          id="SVGRepo_tracerCarrier"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        ></g>
-        <g id="SVGRepo_iconCarrier">
-          <path
-            d="M16 8L8 16M8.00001 8L16 16"
-            stroke="#000000"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          ></path>
-        </g>
-      </svg>
-    </form>
-
     <div
-      class="relative flex items-center justify-between rounded-md border border-gray-200 bg-gray-50 p-2 text-left shadow-sm"
+      class="xs:justify-between xs:items-center relative flex flex-wrap rounded-md border border-gray-200 bg-gray-50 p-2 text-left shadow-sm"
     >
-      <div class="flex w-full items-center justify-start">
+      <div class="flex flex-1 items-center justify-start">
         <button
           type="button"
           class="flex w-30 cursor-pointer items-center gap-3 rounded-md font-semibold focus:outline-none md:w-full"
@@ -92,11 +47,54 @@ export function createBacklogTable(projectType) {
       </div>
 
       <div class="flex items-center gap-1 md:gap-2">
+        <form
+          class="xs:mt-0 xs:pl-0 mt-2 flex hidden h-7.5 gap-1 pl-4 md:justify-end"
+          id="sprint-creation-form"
+        >
+          <input
+            type="number"
+            id="sprint-sp-input"
+            aria-describedby="helper-text-explanation"
+            class="focus:border-primary-400 block w-23 rounded-sm border border-gray-300 pl-2 shadow-xs outline-none placeholder:text-gray-500 md:w-30"
+            placeholder="story point"
+            required
+          />
+          <button
+            type="submit"
+            id="sprint-form-button"
+            class="bg-primary-400 hover:bg-primary-500 w-20 rounded-sm px-2 py-1 text-sm font-medium text-white shadow-xs focus:outline-none"
+          >
+            Confirm
+          </button>
+          <svg
+            id="sprint-close-svg"
+            class="stroke-black hover:stroke-red-400 hover:stroke-2"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+            <g
+              id="SVGRepo_tracerCarrier"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></g>
+            <g id="SVGRepo_iconCarrier">
+              <path
+                d="M16 8L8 16M8.00001 8L16 16"
+                stroke="inherit"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </g>
+          </svg>
+        </form>
         <button
           type="button"
           id="add-to-sprint-button"
           title="Add to sprint"
-          class="my-1 hidden rounded-lg border border-gray-200 bg-white p-1 text-sm font-medium text-gray-900 hover:bg-cyan-50 hover:text-gray-600 focus:outline-none"
+          class="my-1 hidden rounded-sm border border-gray-200 bg-white p-1 text-gray-900 focus:outline-none"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -116,12 +114,12 @@ export function createBacklogTable(projectType) {
 
         <div
           id="sprints-dropdown"
-          class="absolute top-full right-4 z-40 hidden w-35 list-none rounded border bg-white shadow-lg sm:w-40 md:right-4"
+          class="absolute top-full left-4 z-40 hidden w-35 list-none rounded-sm border border-gray-200 bg-white shadow-lg sm:w-40 md:right-4"
         ></div>
         <button
           type="button"
           id="create-sprint-button"
-          class="${ifKanban} my-1 rounded-lg border border-gray-200 bg-white px-2 py-1 text-sm font-medium text-gray-900 hover:bg-cyan-50 hover:text-gray-600 focus:outline-none"
+          class="${ifKanban} bg-primary-400 hover:bg-primary-500 w-max rounded-sm px-2 py-1 font-medium text-white shadow-xs focus:outline-none"
         >
           <p id="create-sprint-text">Create Sprint</p>
         </button>

@@ -97,13 +97,23 @@ async function renderStatusContainers(parentElement) {
   project.columns.forEach((column) => {
     const row = document.createElement('div');
     row.className = 'flex flex-col w-full mb-2';
-    row.innerHTML = /*HTML*/ `
+    row.innerHTML = /* HTML */ `
       <div class="flex items-center justify-between gap-2">
-        <p class="text-gray-500 font-semibold my-2">${column}</p>
-        <div class="w-4 font-semibold rounded-full bg-white text-center text-[10px]! text-black" id='${column}-task-count'></div>
+        <p class="my-2 font-semibold text-gray-500">${column}</p>
+        <div
+          class="w-4 rounded-full bg-white text-center text-[10px]! font-semibold text-black"
+          id="${column}-task-count"
+        ></div>
       </div>
-      <ul class="tasks-container flex flex-col gap-1" id="${column}-task-container">
-        <li class="hidden bg-white p-2 flex justify-center items-center rounded-md hover:cursor-pointer hover:bg-primary-50">No tasks found...</li>
+      <ul
+        class="tasks-container flex flex-col gap-1"
+        id="${column}-task-container"
+      >
+        <li
+          class="hover:bg-primary-50 flex hidden items-center justify-center rounded-md bg-white p-2 hover:cursor-pointer"
+        >
+          No tasks found...
+        </li>
       </ul>
     `;
     parentElement.appendChild(row);

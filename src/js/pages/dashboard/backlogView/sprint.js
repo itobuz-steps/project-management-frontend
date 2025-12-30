@@ -12,50 +12,6 @@ export function createSprintTable(sprint) {
   sprintContainer.dataset.id = sprint._id;
   sprintContainer.className = ' p-1 rounded-t';
   sprintContainer.innerHTML = /* HTML */ `
-    <form
-      class="flex hidden h-7.5 gap-1 md:justify-end"
-      id="${sprint.key}-start-form"
-    >
-      <input
-        type="date"
-        name="dueDate"
-        id="${sprint.key}-due-date"
-        class="required block w-28 rounded-lg border border-gray-300 bg-gray-50 px-1 text-sm text-black focus:border-gray-500 focus:ring-gray-500 md:w-30"
-        placeholder="Enter the due date"
-      />
-
-      <button
-        type="submit"
-        id="${sprint.key}-start-form-button"
-        class="w-20 rounded-lg border border-gray-200 bg-white px-0.5 text-sm text-gray-900 hover:bg-cyan-50 hover:text-gray-600 focus:outline-none"
-      >
-        Confirm
-      </button>
-      <svg
-        id="${sprint.key}-start-close-svg"
-        class=""
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-        <g
-          id="SVGRepo_tracerCarrier"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        ></g>
-        <g id="SVGRepo_iconCarrier">
-          <path
-            d="M16 8L8 16M8.00001 8L16 16"
-            stroke="#000000"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          ></path>
-        </g>
-      </svg>
-    </form>
-
     <div
       class="relative flex items-center justify-between rounded-md border border-gray-200 bg-gray-50 p-2 text-left shadow-sm"
     >
@@ -118,17 +74,61 @@ export function createSprintTable(sprint) {
       </div>
 
       <div class="flex flex-col md:flex-row md:items-center md:gap-3">
+        <form
+          class="flex hidden h-7.5 gap-1 md:justify-end"
+          id="${sprint.key}-start-form"
+        >
+          <input
+            type="date"
+            name="dueDate"
+            id="${sprint.key}-due-date"
+            class="required focus:border-primary-400 w-28 rounded-sm border border-gray-200 bg-white px-1 text-sm shadow-xs outline-none md:w-30"
+            placeholder="Enter the due date"
+          />
+
+          <button
+            type="submit"
+            id="${sprint.key}-start-form-button"
+            class="bg-primary-400 hover:bg-primary-500 w-20 rounded-sm px-2 py-1 font-medium text-white shadow-xs focus:outline-none"
+          >
+            Confirm
+          </button>
+          <svg
+            id="${sprint.key}-start-close-svg"
+            class="stroke-black hover:stroke-red-400 hover:stroke-2"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+            <g
+              id="SVGRepo_tracerCarrier"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            ></g>
+            <g id="SVGRepo_iconCarrier">
+              <path
+                d="M16 8L8 16M8.00001 8L16 16"
+                stroke="inherit"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </g>
+          </svg>
+        </form>
+
         <button
           type="button"
           id="${sprint.key}-sprint-complete-button"
-          class="my-1 hidden rounded-lg border border-gray-200 bg-white px-2 py-1 text-sm font-medium text-gray-900 hover:bg-cyan-50 hover:text-gray-600 focus:outline-none"
+          class="bg-primary-400 hover:bg-primary-500 hidden rounded-sm px-2 py-1 font-medium text-white shadow-xs focus:outline-none"
         >
           Complete Sprint
         </button>
         <button
           type="button"
           id="${sprint.key}-sprint-start-button"
-          class="my-1 rounded-lg border border-gray-200 bg-white px-2 py-1 text-sm font-medium text-gray-900 hover:bg-cyan-50 hover:text-gray-600 focus:outline-none"
+          class="bg-primary-400 hover:bg-primary-500 rounded-sm px-2 py-1 font-medium text-white shadow-xs focus:outline-none"
         >
           Start Sprint
         </button>
