@@ -4,6 +4,8 @@ import taskService from '../../services/TaskService';
 import { getSvgByPriority, getSvgByType } from '../../utils/globalUtils';
 import renderSelectedTab from '../../utils/renderSelectedTab';
 import { svgObject } from '../../utils/svgObjects';
+import { toggleSidebar } from '../dashboard/sidebar/sidebar';
+import { showTaskDrawer } from '../taskDrawer/taskDrawer';
 
 function showForYouPage(flag) {
   const forYouPage = document.getElementById('forYouPage');
@@ -29,6 +31,7 @@ export async function handleForYouPage() {
 
   forYouButton.addEventListener('click', () => {
     showForYouPage(true);
+    toggleSidebar('close');
   });
   const projects = await projectService.getAllProjects();
 
@@ -56,7 +59,7 @@ function createProjectCard(project) {
   const projectDiv = document.createElement('div');
   projectDiv.dataset.id = project._id;
   projectDiv.className =
-    'flex flex-col gap-4 border-s-2 border-s-primary-500 rounded-md bg-white w-fit px-4 py-2 cursor-pointer';
+    'flex flex-col gap-4 border-s-2 border-s-primary-500 rounded-md bg-white w-fit px-4 py-2 cursor-pointer hover:bg-primary-50';
   projectDiv.innerHTML = /* html */ `
     <p class="font-semibold">${project.name}</p>
 
@@ -158,5 +161,7 @@ function renderForYouTasks(task, projectName) {
     </div>
     <p class="smaller-text flex gap-2">${task.priority}${prioritySvg}</p>
   `;
+
+  taskEl.addEventListener('click', () => showTaskDrawer(task._id));
   return taskEl;
 }
