@@ -84,35 +84,32 @@ function handleNotification(data) {
     dropdown-item notification-item flex cursor-pointer items-start px-4
   `;
 
-  li.innerHTML = /*html*/ `
-  <div class="flex items-start gap-2 p-2 bg-white hover:bg-gray-100 transition">
-
-  <div class="relative shrink-0">
-    ${
-      data.image
-        ? `<img
+  li.innerHTML = /* HTML */ `
+    <div
+      class="flex items-start gap-2 bg-white p-2 transition hover:bg-gray-100"
+    >
+      <div class="relative shrink-0">
+        ${data.image
+          ? `<img
             src="http://localhost:3001/uploads/profile/${data.image}"
             class="h-12 w-12 rounded-full object-cover ring-2 ring-gray-200"
           />`
-        : `<img
+          : `<img
             src="http://localhost:3001/uploads/profile/default-image.jpg"
             class="h-12 w-12 rounded-full object-cover ring-2 ring-gray-200"
-          />`
-    }
-  </div>
-  <div class="flex flex-col gap-1">
-    <p class="text-sm font-medium text-gray-900 leading-snug">
-      ${data.title}
-    </p>
+          />`}
+      </div>
+      <div class="flex flex-col gap-1">
+        <p class="text-sm leading-snug font-medium text-gray-900">
+          ${data.title}
+        </p>
 
-    <span class="text-xs text-gray-500">
-      ${DateTime.fromISO(data.createdAt).toRelative()}
-    </span>
-  </div>
-
-</div>
-
-`;
+        <span class="text-xs text-gray-500">
+          ${DateTime.fromISO(data.createdAt).toRelative()}
+        </span>
+      </div>
+    </div>
+  `;
 
   container.insertBefore(li, document.getElementById('targetElement'));
 

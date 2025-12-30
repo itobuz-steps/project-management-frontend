@@ -1,6 +1,6 @@
 import projectService from '../../../services/ProjectService';
-import { renderDashBoardTasks } from '../../../utils/renderTasks';
-import { renderBoard } from '../dashboard';
+import { renderBacklogView } from '../backlogView/renderBacklogView';
+import { renderBoard } from '../boardView/boardView';
 import { loadProjectMembers } from '../../loadMembers/loadMembers';
 import { checkToken } from '../../../utils/checkToken';
 import axios from 'axios';
@@ -78,15 +78,15 @@ async function updateUserList() {
       const item = document.createElement('li');
       item.dataset.id = user._id;
       item.id = user.name;
-      item.innerHTML = /*html*/ `
-    <div class="flex items-center cursor-pointer">
-    <img class="aspect-square w-6 h-6 rounded-full mr-3" 
-          src="${
-            user.profileImage
+      item.innerHTML = /* HTML */ `
+        <div class="flex cursor-pointer items-center">
+          <img
+            class="mr-3 aspect-square h-6 w-6 rounded-full"
+            src="${user.profileImage
               ? 'http://localhost:3001/uploads/profile/' + user.profileImage
-              : '../../../assets/img/profile.png'
-          }">${user.name}
-    </div>
+              : '../../../assets/img/profile.png'}"
+          />${user.name}
+        </div>
       `;
       item.className = 'block p-2 text-black rounded-md';
       userListContainer.appendChild(item);
@@ -161,7 +161,7 @@ function addEventListenersSidebar() {
     });
 
     targetLi.classList.toggle('selected');
-    await renderDashBoardTasks(localStorage.getItem('selectedProject'));
+    await renderBacklogView(localStorage.getItem('selectedProject'));
     await renderBoard(localStorage.getItem('selectedProject'));
     await loadProjectMembers(localStorage.getItem('selectedProject'));
   });

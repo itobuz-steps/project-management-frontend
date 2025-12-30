@@ -1,5 +1,6 @@
-import { renderBoard } from '../pages/dashboard/dashboard';
-import { renderTasksList, renderDashBoardTasks } from './renderTasks';
+import { renderBoard } from '../pages/dashboard/boardView/boardView';
+import { renderBacklogView } from '../pages/dashboard/backlogView/renderBacklogView';
+import { renderTasksList } from '../pages/dashboard/listView/listView';
 
 export default async function renderSelectedTab(
   projectId,
@@ -13,6 +14,6 @@ export default async function renderSelectedTab(
   } else if (selectedTab === 'list') {
     await renderTasksList(projectId, filter, searchInput);
   } else {
-    await renderDashBoardTasks(projectId, filter, searchInput);
+    await renderBacklogView(projectId, filter, searchInput);
   }
 }

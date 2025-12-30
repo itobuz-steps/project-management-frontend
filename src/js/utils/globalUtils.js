@@ -1,4 +1,7 @@
+import axios from 'axios';
 import { svgObject } from './svgObjects';
+import showToast from './showToast';
+import { updateProjectList } from '../pages/dashboard/sidebar/sidebar';
 
 export function getColorByType(task) {
   if (task.type === 'task') {
@@ -41,5 +44,24 @@ export function getSvgByPriority(task) {
     return `${svgObject.high}`;
   } else {
     return `${svgObject.critical}`;
+  }
+}
+
+export async function checkForInvite() {
+  const inviteToken = localStorage.getItem('inviteToken');
+  const authToken = localStorage.getItem('access_token');
+  if (inviteToken) {
+    try {
+      await axios.get('http://localhost:3001/invite/join', {
+        params: { token: inviteToken },
+        headers: { Authorization: `Bearer ${authToken}` },
+      });
+      showToast('User Joined The Project Successfully', 'success');
+      updateProjectList();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      localStorage.removeItem('inviteToken');
+    }
   }
 }

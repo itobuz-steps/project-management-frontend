@@ -11,11 +11,15 @@ function showForYouPage(flag) {
   const forYouPage = document.getElementById('forYouPage');
   const mainPage = document.getElementById('main-section');
   if (flag) {
-    mainPage.classList.add('hidden');
-    forYouPage.classList.remove('hidden');
+    setTimeout(() => {
+      mainPage.classList.add('hidden');
+      forYouPage.classList.remove('hidden');
+    }, 300);
   } else {
-    forYouPage.classList.add('hidden');
-    mainPage.classList.remove('hidden');
+    setTimeout(() => {
+      forYouPage.classList.add('hidden');
+      mainPage.classList.remove('hidden');
+    }, 300);
   }
 }
 
@@ -60,7 +64,7 @@ function createProjectCard(project) {
   projectDiv.dataset.id = project._id;
   projectDiv.className =
     'flex flex-col gap-4 border-s-2 border-s-primary-500 rounded-md bg-white w-fit px-4 py-2 cursor-pointer hover:bg-primary-50';
-  projectDiv.innerHTML = /* html */ `
+  projectDiv.innerHTML = /* HTML */ `
     <p class="font-semibold">${project.name}</p>
 
     <div class="flex flex-col gap-1">
@@ -73,8 +77,8 @@ function createProjectCard(project) {
         <p>Members Assigned</p>
         <p>${project.members.length}</p>
       </div>
-    <div>
-
+      <div></div>
+    </div>
   `;
 
   projectDiv.addEventListener('click', async () => {
@@ -93,13 +97,23 @@ async function renderStatusContainers(parentElement) {
   project.columns.forEach((column) => {
     const row = document.createElement('div');
     row.className = 'flex flex-col w-full mb-2';
-    row.innerHTML = /*html*/ `
+    row.innerHTML = /* HTML */ `
       <div class="flex items-center justify-between gap-2">
-        <p class="text-gray-500 font-semibold my-2">${column}</p>
-        <div class="w-4 font-semibold rounded-full bg-white text-center text-[10px]! text-black" id='${column}-task-count'></div>
+        <p class="my-2 font-semibold text-gray-500">${column}</p>
+        <div
+          class="w-4 rounded-full bg-white text-center text-[10px]! font-semibold text-black"
+          id="${column}-task-count"
+        ></div>
       </div>
-      <ul class="tasks-container flex flex-col gap-1" id="${column}-task-container">
-        <li class="hidden bg-white p-2 flex justify-center items-center rounded-md hover:cursor-pointer hover:bg-primary-50">No tasks found...</li>
+      <ul
+        class="tasks-container flex flex-col gap-1"
+        id="${column}-task-container"
+      >
+        <li
+          class="hover:bg-primary-50 flex hidden items-center justify-center rounded-md bg-white p-2 hover:cursor-pointer"
+        >
+          No tasks found...
+        </li>
       </ul>
     `;
     parentElement.appendChild(row);
@@ -145,14 +159,12 @@ function renderForYouTasks(task, projectName) {
 
   taskEl.className =
     'bg-white p-2 flex justify-between items-center rounded-md hover:cursor-pointer hover:bg-primary-50';
-  taskEl.innerHTML = /* html */ `
-    <div class="flex justify-start items-center gap-2">
-      <div class="flex justify-center items-center">
-        ${typeSvg}
-      </div>
-      <div class="flex flex-col justify-center items-start">
+  taskEl.innerHTML = /* HTML */ `
+    <div class="flex items-center justify-start gap-2">
+      <div class="flex items-center justify-center">${typeSvg}</div>
+      <div class="flex flex-col items-start justify-center">
         <p class="font-semibold">${task.title}</p>
-        <div class="flex gap-3 justify-center items-center">
+        <div class="flex items-center justify-center gap-3">
           <p class="smaller-text">${task.key}</p>
           <p class="smaller-text">&#x2022;</p>
           <p class="smaller-text">${projectName}</p>
