@@ -205,26 +205,6 @@ function createSprintTable(sprint) {
   sprintContainer.dataset.id = sprint._id;
   sprintContainer.className = ' p-1 rounded-t';
   sprintContainer.innerHTML = /*html*/ `
-                  <form class="hidden flex md:justify-end gap-1 h-7.5" id="${sprint.key}-start-form">
-                    <input
-                        type="date"
-                        name="dueDate"
-                        id="${sprint.key}-due-date"
-                        class="w-28 md:w-30 bg-gray-50 border border-gray-300 text-black text-sm rounded-lg focus:ring-gray-500 focus:border-gray-500 block px-1 required"
-                        placeholder="Enter the due date"
-                    />
-
-                    <button
-                    type="submit"
-                    id="${sprint.key}-start-form-button"
-                    class="w-20 text-sm px-0.5 text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-cyan-50 hover:text-gray-600"
-                    >
-                      Confirm
-                    </button>
-                    <svg id="${sprint.key}-start-close-svg" class="" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M16 8L8 16M8.00001 8L16 16" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
-                  </form>
-
-
                 <div class="relative flex justify-between items-center text-left bg-gray-50 shadow-sm p-2 rounded-md border border-gray-200">
                   <div class="flex flex-col md:flex-row">
                     <button
@@ -270,22 +250,39 @@ function createSprintTable(sprint) {
                   </div>
 
                   <div class="flex flex-col md:flex-row md:items-center md:gap-3">
-          
-                  
-                  <button
+                    <form class="hidden flex md:justify-end gap-1 h-7.5" id="${sprint.key}-start-form">
+                      <input
+                          type="date"
+                          name="dueDate"
+                          id="${sprint.key}-due-date"
+                          class="w-28 md:w-30 bg-white border border-gray-200 shadow-xs text-sm rounded-sm px-1 required outline-none focus:border-primary-400"
+                          placeholder="Enter the due date"
+                      />
+
+                      <button
+                      type="submit"
+                      id="${sprint.key}-start-form-button"
+                      class="w-20 py-1 px-2 font-medium focus:outline-none bg-primary-400 text-white rounded-sm hover:bg-primary-500 shadow-xs"
+                      >
+                        Confirm
+                      </button>
+                      <svg id="${sprint.key}-start-close-svg" class="stroke-black hover:stroke-red-400 hover:stroke-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M16 8L8 16M8.00001 8L16 16" stroke="inherit" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                    </form>
+                    
+                    <button
+                      type="button"
+                      id="${sprint.key}-sprint-complete-button"
+                      class="hidden py-1 px-2 font-medium focus:outline-none bg-primary-400 text-white rounded-sm hover:bg-primary-500 shadow-xs"
+                    >
+                      Complete Sprint
+                    </button>
+                    <button
                     type="button"
-                    id="${sprint.key}-sprint-complete-button"
-                    class="hidden py-1 px-2 my-1 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-cyan-50 hover:text-gray-600"
-                  >
-                    Complete Sprint
-                  </button>
-                  <button
-                  type="button"
-                  id="${sprint.key}-sprint-start-button"
-                  class="py-1 px-2 my-1 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-cyan-50 hover:text-gray-600"
-                  >
-                  Start Sprint
-                  </button>
+                    id="${sprint.key}-sprint-start-button"
+                    class="py-1 px-2 font-medium focus:outline-none bg-primary-400 text-white rounded-sm hover:bg-primary-500 shadow-xs"
+                    >
+                    Start Sprint
+                    </button>
                   </div>
                 </div>
 
@@ -341,23 +338,8 @@ function createBacklogTable(projectType) {
   backlogContainer.className = ' p-1 rounded-t';
 
   backlogContainer.innerHTML = /*html*/ `
-                  <form class="hidden flex md:justify-end gap-1 h-7.5" id="sprint-creation-form">
-
-                    <input type="number" id="sprint-sp-input" aria-describedby="helper-text-explanation" class=" w-23 md:w-30 block rounded-lg text-center bg-neutral-secondary-medium border border-gray-400 text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body " placeholder="story point" required />
-
-                    <button
-                    type="submit"
-                    id="sprint-form-button"
-                    class="w-20 text-sm px-0.5 text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-cyan-50 hover:text-gray-600"
-                    >
-                      Confirm
-                    </button>
-                    <svg id="sprint-close-svg" class="" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M16 8L8 16M8.00001 8L16 16" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
-                  </form>
-
-
-               <div class="relative flex justify-between items-center text-left bg-gray-50 shadow-sm p-2 rounded-md border border-gray-200">
-                  <div class="flex items-center justify-start w-full">
+               <div class="relative flex xs:justify-between xs:items-center text-left bg-gray-50 shadow-sm p-2 rounded-md border border-gray-200 flex-wrap">
+                  <div class="flex items-center justify-start flex-1">
                     <button
                       type="button"
                       class="flex items-center w-30 md:w-full gap-3 rounded-md font-semibold cursor-pointer focus:outline-none"
@@ -385,12 +367,23 @@ function createBacklogTable(projectType) {
                     </button>
                   </div>
 
-                  <div class="flex items-center gap-1 md:gap-2">
+                  <div class="flex items-center gap-1 md:gap-2 ">
+                  <form class="hidden flex md:justify-end gap-1 h-7.5  mt-2 xs:mt-0 pl-4 xs:pl-0" id="sprint-creation-form">
+                    <input type="number" id="sprint-sp-input" aria-describedby="helper-text-explanation" class=" w-23 md:w-30 block rounded-sm border border-gray-300 focus:border-primary-400 outline-none pl-2 shadow-xs placeholder:text-gray-500 " placeholder="story point" required />
+                    <button
+                    type="submit"
+                    id="sprint-form-button"
+                    class="w-20 py-1 px-2 text-sm font-medium focus:outline-none bg-primary-400 text-white rounded-sm hover:bg-primary-500 shadow-xs"
+                    >
+                      Confirm
+                    </button>
+                    <svg id="sprint-close-svg" class="stroke-black hover:stroke-red-400 hover:stroke-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M16 8L8 16M8.00001 8L16 16" stroke="inherit" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                  </form>
                   <button
                     type="button"
                     id="add-to-sprint-button"
                     title="Add to sprint"
-                    class="hidden p-1 my-1 text-sm  font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-cyan-50 hover:text-gray-600"
+                    class="hidden p-1 my-1 text-gray-900 focus:outline-none bg-white rounded-sm border border-gray-200"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -410,13 +403,13 @@ function createBacklogTable(projectType) {
 
                   <div
                     id="sprints-dropdown"
-                    class="hidden absolute list-none md:right-4  right-4 top-full bg-white shadow-lg border rounded w-35 sm:w-40 z-40"
+                    class="hidden absolute list-none md:right-4 left-4 border border-gray-200 top-full bg-white shadow-lg rounded-sm w-35 sm:w-40 z-40"
                   >
                   </div>
                   <button
                     type="button"
                     id="create-sprint-button"
-                    class="${ifKanban} py-1 px-2 my-1 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-cyan-50 hover:text-gray-600"
+                    class="${ifKanban} w-max py-1 px-2 font-medium focus:outline-none bg-primary-400 text-white rounded-sm hover:bg-primary-500 shadow-xs"
                   >
                     <p id="create-sprint-text">Create Sprint</p>
                   </button>

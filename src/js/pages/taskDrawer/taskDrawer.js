@@ -12,87 +12,85 @@ const taskDrawerInnerHtml = /*html*/ `
   <div
     class="flex flex-col gap-3 p-3"
   >
-    <div class="flex justify-between gap-3 container-secondary">
-        <h2 class="title font-semibold text-[16px]!"></h2>
-      <div class="right-container flex items-start gap-3 items-center">
-        <button
-          id="edit-task-button"
-        >
-          <svg class="w-5 h-5 stroke-black hover:stroke-green-500 hover:stroke-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M11 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22H15C20 22 22 20 22 15V13" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M16.04 3.02001L8.16 10.9C7.86 11.2 7.56 11.79 7.5 12.22L7.07 15.23C6.91 16.32 7.68 17.08 8.77 16.93L11.78 16.5C12.2 16.44 12.79 16.14 13.1 15.84L20.98 7.96001C22.34 6.60001 22.98 5.02001 20.98 3.02001C18.98 1.02001 17.4 1.66001 16.04 3.02001Z" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M14.91 4.1499C15.58 6.5399 17.45 8.4099 19.85 9.0899"  stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
-        </button>
-          <button 
-            type="button" 
-            class="close-btn"
+  <div class="container-secondary flex flex-col gap-5">
+    
+      <div class="flex justify-between gap-3">
+          <h2 class="title font-semibold text-[16px]!"></h2>
+        <div class="right-container flex items-start gap-3 items-center">
+          <button
+            id="edit-task-button"
           >
+            <svg class="w-5 h-5 stroke-black hover:stroke-green-500 hover:stroke-2" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M11 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22H15C20 22 22 20 22 15V13" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M16.04 3.02001L8.16 10.9C7.86 11.2 7.56 11.79 7.5 12.22L7.07 15.23C6.91 16.32 7.68 17.08 8.77 16.93L11.78 16.5C12.2 16.44 12.79 16.14 13.1 15.84L20.98 7.96001C22.34 6.60001 22.98 5.02001 20.98 3.02001C18.98 1.02001 17.4 1.66001 16.04 3.02001Z" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M14.91 4.1499C15.58 6.5399 17.45 8.4099 19.85 9.0899"  stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+          </button>
+            <button
+              type="button"
+              class="close-btn"
+            >
+              <svg
+                class="h-4 w-4 hover:stroke-2 hover:stroke-red-400 mt-0.5 stroke-gray-600"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 14"
+              >
+                <path
+                  stroke="inherit"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                />
+              </svg>
+            </button>
+        </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="profile-name">
+            <img
+              src="../assets/img/profile.png"
+              alt="Avatar"
+              class="profile-image h-8 w-8 rounded-full shadow-sm border border-white"
+            />
+          </div>
+          <div class="flex flex-col leading-tight">
+            <p class=" text-gray-500">Assignee</p>
+            <p class="assignee font-medium text-primary-500"></p>
+          </div>
+        </div>
+        <div class="flex flex-col gap-1">
+          <p class="text-md text-gray-500">Due Date</p>
+          <div class="flex items-center gap-2">
             <svg
-              class="h-4 w-4 hover:stroke-2 hover:stroke-red-400 mt-0.5 stroke-gray-600"
-              aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 text-gray-400 -ml-1"
               fill="none"
-              viewBox="0 0 14 14"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
               <path
-                stroke="inherit"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                stroke-width="1.5"
+                d="M8 7V3m8 4V3m-9 8h10m-11 8h12a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"
               />
             </svg>
-          </button>
+            <span class="due-date text-gray-600"></span>
+          </div>
       </div>
-    </div>
-    
-    <div class="container-secondary gap-5 flex flex-col">
-      <div class="flex items-center gap-3">
-        <div class="profile-name">
-          <img
-            src="../assets/img/profile.png"
-            alt="Avatar"
-            class="profile-image h-8 w-8 rounded-full shadow-sm border border-white"
-          />
-        </div>
-        <div class="flex flex-col leading-tight">
-          <p class=" text-gray-500">Assignee</p>
-          <p class="assignee font-medium text-primary-500"></p>
-        </div>
-      </div>
-      <div class="flex flex-col gap-1">
-        <p class="text-md text-gray-500">Due Date</p>
-        <div class="flex items-center gap-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 text-gray-400 -ml-1"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+          <!-- Description Container -->
+        <div class="flex flex-col gap-2">
+          <h2
+            id="descriptionHeader"
+            class="font-semibold"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1.5"
-              d="M8 7V3m8 4V3m-9 8h10m-11 8h12a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"
-            />
-          </svg>
-          <span class="due-date text-gray-600"></span>
+            Description
+          </h2>
+          <h2
+            class="description max-h-28 overflow-auto rounded-md w-full p-1 border border-gray-100"
+          >
+            <p></p>
+          </h2>
         </div>
-      </div>
-    </div>
-        <!-- Description Container -->
-    <div class="container-secondary">
-      <div class="flex flex-col gap-2">
-        <h2
-          id="descriptionHeader"
-          class="font-semibold"
-        >
-          Description
-        </h2>
-        <h2
-          class="description max-h-28 overflow-auto rounded-md w-full p-1 border border-gray-100"
-        >
-          <p></p>
-        </h2>
-      </div>
-    </div>
+  </div>
     <!-- subtasks -->
     <div class="container-secondary flex flex-col gap-2" id="subtaskContainer">
       <div class=" flex items-center gap-2">
