@@ -1,6 +1,6 @@
 import projectService from '../../../services/ProjectService';
 import { renderBacklogView } from '../backlogView/renderBacklogView';
-import { renderBoard } from '../dashboard';
+import { renderBoard } from '../boardView/boardView';
 import { loadProjectMembers } from '../../loadMembers/loadMembers';
 import { checkToken } from '../../../utils/checkToken';
 import axios from 'axios';

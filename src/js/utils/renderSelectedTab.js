@@ -1,4 +1,4 @@
-import { renderBoard } from '../pages/dashboard/dashboard';
+import { renderBoard } from '../pages/dashboard/boardView/boardView';
 import { renderBacklogView } from '../pages/dashboard/backlogView/renderBacklogView';
 import { renderTasksList } from '../pages/dashboard/listView/listView';
 
