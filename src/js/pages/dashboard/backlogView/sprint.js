@@ -59,10 +59,10 @@ export function createSprintTable(sprint) {
     <div
       class="relative flex items-center justify-between rounded-md border border-gray-200 bg-gray-50 p-2 text-left shadow-sm"
     >
-      <div class="flex flex-col md:flex-row">
+      <div class="flex flex-1 flex-col md:flex-row">
         <button
           type="button"
-          class="dropdownButton flex w-30 cursor-pointer items-center gap-3 rounded-md text-lg font-semibold focus:outline-none md:w-fit"
+          class="dropdownButton flex w-30 flex-1 cursor-pointer items-center gap-3 rounded-md text-lg font-semibold focus:outline-none md:w-fit"
           id="dropdownButton-${sprint.key}"
           aria-expanded="false"
           aria-haspopup="true"
@@ -84,39 +84,37 @@ export function createSprintTable(sprint) {
             ></path>
           </svg>
           <p class="text-nowrap">${sprint.key}</p>
-        </button>
-        <div
-          class="${sprint.dueDate
-            ? ''
-            : 'hidden'} ml-5 flex items-center gap-1 md:ml-3"
-        >
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            class="stroke-primary-400 h-3 w-3"
+          <div
+            class="${sprint.dueDate ? '' : 'hidden'} flex items-center gap-1"
           >
-            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-            <g
-              id="SVGRepo_tracerCarrier"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            ></g>
-            <g id="SVGRepo_iconCarrier">
-              <path
-                d="M12 7V12L14.5 10.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
-                stroke="inherit"
-                stroke-width="2"
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              class="stroke-primary-400 h-3 w-3"
+            >
+              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+              <g
+                id="SVGRepo_tracerCarrier"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-              ></path>
-            </g>
-          </svg>
-          <p
-            id="${sprint.key}-due-date-preview"
-            class="due-date text-primary-400 text-center text-xs font-semibold"
-          ></p>
-        </div>
+              ></g>
+              <g id="SVGRepo_iconCarrier">
+                <path
+                  d="M12 7V12L14.5 10.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                  stroke="inherit"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+              </g>
+            </svg>
+            <p
+              id="${sprint.key}-due-date-preview"
+              class="due-date text-primary-400 text-center text-xs font-semibold"
+            ></p>
+          </div>
+        </button>
       </div>
 
       <div class="flex flex-col md:flex-row md:items-center md:gap-3">
