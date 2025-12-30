@@ -1,5 +1,5 @@
 import projectService from '../../../services/ProjectService';
-import { renderDashBoardTasks } from '../../../utils/renderTasks';
+import { renderBacklogView } from '../backlogView/renderBacklogView';
 import { renderBoard } from '../dashboard';
 import { loadProjectMembers } from '../../loadMembers/loadMembers';
 import { checkToken } from '../../../utils/checkToken';
@@ -161,7 +161,7 @@ function addEventListenersSidebar() {
     });
 
     targetLi.classList.toggle('selected');
-    await renderDashBoardTasks(localStorage.getItem('selectedProject'));
+    await renderBacklogView(localStorage.getItem('selectedProject'));
     await renderBoard(localStorage.getItem('selectedProject'));
     await loadProjectMembers(localStorage.getItem('selectedProject'));
   });

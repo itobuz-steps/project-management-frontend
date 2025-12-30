@@ -1,8 +1,6 @@
 import '../../../style/main.css';
-import {
-  renderTasksList,
-  renderDashBoardTasks,
-} from '../../utils/renderTasks.js';
+import { renderBacklogView } from './backlogView/renderBacklogView.js';
+import { renderTasksList } from './listView/listView.js';
 import projectService from '../../services/ProjectService.js';
 import taskService from '../../services/TaskService.js';
 import axios from 'axios';
@@ -52,7 +50,7 @@ backlogBtn.addEventListener('click', async () => {
   hideAll(backlogView);
   localStorage.setItem('selectedTab', 'backlog');
 
-  await renderDashBoardTasks(localStorage.getItem('selectedProject'));
+  await renderBacklogView(localStorage.getItem('selectedProject'));
 });
 
 const boardBtn = document.getElementById('board-li');
