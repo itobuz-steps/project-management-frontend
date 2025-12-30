@@ -15,13 +15,13 @@ export function getColorByType(task) {
 
 export function getColorByPriority(task) {
   if (task.priority === 'low') {
-    return 'green-500';
+    return 'bg-green-500';
   } else if (task.priority === 'medium') {
-    return 'primary-400';
+    return 'bg-primary-400';
   } else if (task.priority === 'high') {
-    return 'yellow-400';
+    return 'bg-yellow-400';
   } else {
-    return 'red';
+    return 'bg-red-400';
   }
 }
 

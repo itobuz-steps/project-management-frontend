@@ -96,7 +96,8 @@ async function renderStatusContainers(parentElement) {
 
   project.columns.forEach((column) => {
     const row = document.createElement('div');
-    row.className = 'flex flex-col w-full mb-2';
+    row.className = 'flex flex-col w-full mb-2 hidden';
+    row.id = `${column}-row`;
     row.innerHTML = /* HTML */ `
       <div class="flex items-center justify-between gap-2">
         <p class="my-2 font-semibold text-gray-500">${column}</p>
@@ -108,13 +109,7 @@ async function renderStatusContainers(parentElement) {
       <ul
         class="tasks-container flex flex-col gap-1"
         id="${column}-task-container"
-      >
-        <li
-          class="hover:bg-primary-50 flex hidden items-center justify-center rounded-md bg-white p-2 hover:cursor-pointer"
-        >
-          No tasks found...
-        </li>
-      </ul>
+      ></ul>
     `;
     parentElement.appendChild(row);
   });
@@ -127,7 +122,9 @@ async function renderTasksByStatus(project) {
   const user = await authService.getUserInfo();
   const tasks = (
     await taskService.getTaskByProjectId(
-      localStorage.getItem('selectedProject', 'assignee', user._id)
+      localStorage.getItem('selectedProject'),
+      'assignee',
+      user._id
     )
   ).data.result;
 
@@ -141,9 +138,13 @@ async function renderTasksByStatus(project) {
   project.columns.forEach((column) => {
     const container = document.getElementById(`${column}-task-container`);
     const taskCount = document.getElementById(`${column}-task-count`);
+    const row = document.getElementById(`${column}-row`);
     taskCount.innerText = result[column].length;
 
     const columnTasks = result[column];
+    if (!columnTasks.length) return;
+
+    row.classList.remove('hidden');
     console.log(columnTasks);
     columnTasks.forEach((task) => {
       const newEl = renderForYouTasks(task, project.name);
