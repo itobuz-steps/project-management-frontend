@@ -10,278 +10,57 @@
       defer
     ></script>
   </head>
-  <body class="flex h-screen flex-col bg-white">
-    <div class="header bg-gray-50">
-      <nav
-        class="align-items-center flex flex-row justify-between p-2 shadow-sm md:px-5 md:py-3"
-      >
-        <div class="flex items-center">
-          <button class="toggle-sidebar-btn z-18">
-            <svg
-              width="25"
-              height="25"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-              class="fill-primary-200 hover:fill-primary-300 cursor-pointer stroke-black"
-            >
-              <path
-                d="M21.9707 15V9C21.9707 4 19.9707 2 14.9707 2H8.9707C3.9707 2 1.9707 4 1.9707 9V15C1.9707 20 3.9707 22 8.9707 22H14.9707C19.9707 22 21.9707 20 21.9707 15Z"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                opacity="0.7"
-                d="M14.9707 2V22"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                opacity="0.7"
-                d="M7.9707 9.43994L10.5307 11.9999L7.9707 14.5599"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </button>
-        </div>
-
-        <div class="flex items-center gap-5 max-md:gap-4">
-          <div class="search-icon flex items-center justify-between">
-            <form
-              class="search-input-form w-40 rounded-lg bg-white text-black shadow-sm outline-none placeholder:text-neutral-600 max-[640px]:w-60 max-[420px]:w-40 sm:w-80 md:w-100 lg:w-120"
-              id="search-input-form"
-              autocomplete="off"
-            >
-              <div class="relative">
-                <input
-                  type="search"
-                  id="search-input-field"
-                  class="bg-neutral-secondary-medium text-heading placeholder:text-body block w-full px-2 py-2 ps-6 text-sm outline-none focus-visible:border-gray-200 max-md:p-2"
-                  placeholder="Search"
-                />
-              </div>
-            </form>
-          </div>
-          <!-- notification container -->
-          <div class="relative mx-auto w-max">
-            <button
-              type="button"
-              id="dropdownToggle"
-              class="flex h-12 w-12 items-center justify-center border-none text-white outline-none"
-            >
-              <span class="relative inline-flex">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18px"
-                  class="h-8 w-8 cursor-pointer fill-[#000000] stroke-black max-md:size-6"
-                  viewBox="0 0 371.263 371.263"
-                >
-                  <path
-                    d="M305.402 234.794v-70.54c0-52.396-33.533-98.085-79.702-115.151.539-2.695.838-5.449.838-8.204C226.539 18.324 208.215 0 185.64 0s-40.899 18.324-40.899 40.899c0 2.695.299 5.389.778 7.964-15.868 5.629-30.539 14.551-43.054 26.647-23.593 22.755-36.587 53.354-36.587 86.169v73.115c0 2.575-2.096 4.731-4.731 4.731-22.096 0-40.959 16.647-42.995 37.845-1.138 11.797 2.755 23.533 10.719 32.276 7.904 8.683 19.222 13.713 31.018 13.713h72.217c2.994 26.887 25.869 47.905 53.534 47.905s50.54-21.018 53.534-47.905h72.217c11.797 0 23.114-5.03 31.018-13.713 7.904-8.743 11.797-20.479 10.719-32.276-2.036-21.198-20.958-37.845-42.995-37.845a4.704 4.704 0 0 1-4.731-4.731zM185.64 23.952c9.341 0 16.946 7.605 16.946 16.946 0 .778-.12 1.497-.24 2.275-4.072-.599-8.204-1.018-12.336-1.138-7.126-.24-14.132.24-21.078 1.198-.12-.778-.24-1.497-.24-2.275.002-9.401 7.607-17.006 16.948-17.006zm0 323.358c-14.431 0-26.527-10.3-29.342-23.952h58.683c-2.813 13.653-14.909 23.952-29.341 23.952zm143.655-67.665c.479 5.15-1.138 10.12-4.551 13.892-3.533 3.773-8.204 5.868-13.353 5.868H59.89c-5.15 0-9.82-2.096-13.294-5.868-3.473-3.772-5.09-8.743-4.611-13.892.838-9.042 9.282-16.168 19.162-16.168 15.809 0 28.683-12.874 28.683-28.683v-73.115c0-26.228 10.419-50.719 29.282-68.923 18.024-17.425 41.498-26.887 66.528-26.887 1.198 0 2.335 0 3.533.06 50.839 1.796 92.277 45.929 92.277 98.325v70.54c0 15.809 12.874 28.683 28.683 28.683 9.88 0 18.264 7.126 19.162 16.168z"
-                    data-original="#000000"
-                  ></path>
-                </svg>
-                <span
-                  id="notificationBadge"
-                  class="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-xs font-semibold text-white"
-                >
-                </span>
-              </span>
-            </button>
-
-            <div
-              id="notificationDropdownMenu"
-              class="absolute right-0 z-100 mt-2 mr-3 flex hidden max-h-[500px] min-w-full flex-col items-start overflow-auto rounded-lg bg-white py-2 shadow-lg max-md:w-[220px] md:w-[340px]"
-            >
-              <h3 class="px-6 py-2 text-lg font-semibold">Notification</h3>
-              <ul>
-                <li
-                  id="targetElement"
-                  class="flex w-full items-center justify-center p-3"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="fill-primary-500 me-2 hidden h-4 w-4 animate-spin"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="5px"
-                    height="5px"
-                  >
-                    <path
-                      d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                      fill="inherit"
-                    />
-                    <path
-                      d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                      fill="white"
-                    />
-                  </svg>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="relative">
-            <button
-              id="profileBtn"
-              class="border-primary-400 flex items-center rounded-full border-3"
-            >
-              <div
-                class="profile-image h-7 w-7 cursor-pointer rounded-full bg-gray-400 sm:h-9 sm:w-9"
-              >
-                <img
-                  id="profileImage"
-                  src="../assets/img/profile.png"
-                  alt="Profile Preview"
-                  class="aspect-square size-full rounded-full"
-                />
-              </div>
-            </button>
-
-            <div
-              id="dropdownMenu"
-              class="absolute right-0 z-50 mt-2 hidden w-40 rounded-xs bg-white shadow-lg"
-            >
-              <a
-                href="./editProfile.html"
-                class="block rounded-xs px-4 py-4 text-black hover:bg-gray-100"
-              >
-                Edit Profile
-              </a>
-            </div>
-          </div>
-        </div>
-      </nav>
+  <body class="flex h-screen overflow-hidden bg-white">
+    <div class="border-gray absolute top-5 left-2 mt-2 ml-2 flex items-center">
+      <button class="toggle-sidebar-btn z-18">
+        <svg
+          width="25"
+          height="25"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+          class="hover:fill-primary-200 cursor-pointer fill-white stroke-black"
+        >
+          <path
+            d="M21.9707 15V9C21.9707 4 19.9707 2 14.9707 2H8.9707C3.9707 2 1.9707 4 1.9707 9V15C1.9707 20 3.9707 22 8.9707 22H14.9707C19.9707 22 21.9707 20 21.9707 15Z"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            opacity="0.7"
+            d="M14.9707 2V22"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            opacity="0.7"
+            d="M7.9707 9.43994L10.5307 11.9999L7.9707 14.5599"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
     </div>
-
-    <div
-      class="wrapper flex flex-1 overflow-x-auto transition-all duration-300"
+    <aside
+      id="sidebar"
+      class="sidebar collapsed absolute z-17 h-full bg-white text-black shadow-lg md:static"
     >
-      <aside
-        id="sidebar"
-        class="sidebar absolute top-0 left-0 z-17 h-full w-80 -translate-x-full transform bg-white pt-14 text-black drop-shadow-2xl transition-transform duration-300"
+      <div
+        class="flex h-full flex-col gap-5 overflow-y-auto px-3 py-4 transition-all"
       >
-        <div class="flex h-full flex-col gap-5 overflow-y-auto px-3 py-4">
-          <ul class="flex flex-col gap-2 font-semibold">
-            <li class="relative" id="foryouMenu">
-              <div
-                class="group hover:bg-primary-200 flex flex-row items-center justify-between rounded-lg border border-gray-50 bg-gray-50 p-2 shadow-sm hover:border-transparent"
-                id="forYouButton"
-              >
-                <a href="#" class="flex items-center gap-4 rounded-lg">
-                  <svg
-                    viewBox="0 0 24 24"
-                    height="25px"
-                    width="25px"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="group-hover:fill-primary-300 group-hover:stroke-primary-800 stroke-black"
-                  >
-                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                    <g
-                      id="SVGRepo_tracerCarrier"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    ></g>
-                    <g id="SVGRepo_iconCarrier">
-                      <path
-                        d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      ></path>
-                      <path
-                        d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z"
-                        stroke-width="1.5"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      ></path>
-                    </g>
-                  </svg>
-                  <p class="group-hover:text-primary-900 text-lg">For you</p>
-                </a>
-              </div>
-            </li>
-            <li class="relative" id="projectsMenu">
-              <div
-                class="group hover:bg-primary-200 flex flex-row items-center justify-between rounded-lg border border-gray-50 bg-gray-50 p-2 shadow-sm hover:border-transparent"
-              >
-                <div>
-                  <a href="#" class="flex items-center gap-4 rounded-lg">
-                    <svg
-                      height="25px"
-                      width="25px"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="group-hover:fill-primary-900 group-hover:stroke-primary-800 stroke-black"
-                    >
-                      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                      <g
-                        id="SVGRepo_tracerCarrier"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      ></g>
-                      <g id="SVGRepo_iconCarrier">
-                        <path
-                          d="M18.6 3H5.4A2.4 2.4 0 0 0 3 5.4v13.2A2.4 2.4 0 0 0 5.4 21h13.2a2.4 2.4 0 0 0 2.4-2.4V5.4A2.4 2.4 0 0 0 18.6 3Z"
-                          fill-opacity=".16"
-                          stroke-width="1.5"
-                          stroke-miterlimit="10"
-                        ></path>
-                        <path
-                          d="M12 12V6M7 14V6M17 16V6"
-                          stroke-width="1.5"
-                          stroke-miterlimit="10"
-                          stroke-linecap="round"
-                        ></path>
-                      </g>
-                    </svg>
-                    <p class="group-hover:text-primary-900 text-lg">Projects</p>
-                  </a>
-                </div>
-                <div
-                  id="plus-icon"
-                  class="plus-icon add-project group hover:bg-primary-300 relative cursor-pointer rounded p-0.5"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="2"
-                    stroke="currentColor"
-                    class="group-hover:fill-primary-900 group-hover:stroke-primary-800 peer size-6 stroke-black"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M12 4.5v15m7.5-7.5h-15"
-                    />
-                  </svg>
-                  <span
-                    class="invisible absolute -left-1 mt-2 w-max -translate-x-1/2 rounded bg-black p-1 text-xs text-white opacity-0 transition-opacity peer-hover:visible peer-hover:opacity-100"
-                  >
-                    Add project
-                  </span>
-                </div>
-              </div>
-
-              <ul
-                id="projectsDropdown"
-                class="mt-2 ml-4 flex hidden h-max flex-col gap-1 border-l border-gray-200 pl-2"
-              ></ul>
-            </li>
-            <li id="usersMenu">
-              <a
-                href="#"
-                class="group hover:bg-primary-200 flex flex-row items-center justify-start gap-4 rounded-lg border-gray-50 bg-gray-50 p-2 shadow hover:border-transparent"
-              >
+        <ul class="mt-16 flex flex-col gap-2 font-semibold">
+          <li class="relative" id="foryouMenu">
+            <div
+              class="group hover:bg-primary-200 flex flex-row items-center justify-between rounded-lg border border-gray-50 bg-gray-50 p-2 shadow-sm hover:border-transparent"
+              id="forYouButton"
+            >
+              <a href="#" class="flex items-center gap-4 rounded-lg">
                 <svg
                   viewBox="0 0 24 24"
-                  height="25"
-                  width="25"
+                  height="25px"
+                  width="25px"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                   class="group-hover:fill-primary-300 group-hover:stroke-primary-800 stroke-black"
@@ -294,92 +73,104 @@
                   ></g>
                   <g id="SVGRepo_iconCarrier">
                     <path
-                      d="M13 20V18C13 15.2386 10.7614 13 8 13C5.23858 13 3 15.2386 3 18V20H13ZM13 20H21V19C21 16.0545 18.7614 14 16 14C14.5867 14 13.3103 14.6255 12.4009 15.6311M11 7C11 8.65685 9.65685 10 8 10C6.34315 10 5 8.65685 5 7C5 5.34315 6.34315 4 8 4C9.65685 4 11 5.34315 11 7ZM18 9C18 10.1046 17.1046 11 16 11C14.8954 11 14 10.1046 14 9C14 7.89543 14.8954 7 16 7C17.1046 7 18 7.89543 18 9Z"
-                      stroke="inherit"
+                      d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
+                    <path
+                      d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z"
                       stroke-width="1.5"
                       stroke-linecap="round"
                       stroke-linejoin="round"
                     ></path>
                   </g>
                 </svg>
-                <p class="group-hover:text-primary-900 text-lg">Users</p>
+                <p class="group-hover:text-primary-900 text-lg">For you</p>
               </a>
-              <ul
-                id="usersDropdown"
-                class="mt-2 ml-4 flex hidden h-max flex-col gap-1 overflow-y-auto border-l border-gray-200 bg-inherit pl-2"
-              ></ul>
-            </li>
-            <li>
-              <div
-                id="toggleInviteForm"
-                class="add-user-to-project-button group hover:bg-primary-200 flex cursor-pointer flex-row items-center gap-4 rounded-lg border-gray-50 bg-gray-50 p-2 shadow hover:border-transparent"
-              >
-                <svg
-                  height="25"
-                  width="25"
-                  version="1.1"
-                  id="Layer_1"
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                  viewBox="0 0 512 512"
-                  xml:space="preserve"
-                  class="group-hover:fill-primary-900 fill-black"
-                >
-                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                  <g
-                    id="SVGRepo_tracerCarrier"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  ></g>
-                  <g id="SVGRepo_iconCarrier">
-                    <path
-                      class="group-hover:fill-primary-300 fill-white"
-                      d="M310.481,157.604c0-5.767,0.547-11.404,1.539-16.885H13.246v43.978l196.797,165.457l138.819-116.712 C325.59,216.305,310.481,188.724,310.481,157.604z"
-                    ></path>
-                    <g>
+            </div>
+          </li>
+          <li class="relative" id="projectsMenu">
+            <div
+              class="group hover:bg-primary-200 flex flex-row items-center justify-between rounded-lg border border-gray-50 bg-gray-50 p-2 shadow-sm hover:border-transparent"
+            >
+              <div>
+                <a href="#" class="flex items-center gap-4 rounded-lg">
+                  <svg
+                    height="25px"
+                    width="25px"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="group-hover:fill-primary-900 group-hover:stroke-primary-800 stroke-black"
+                  >
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g
+                      id="SVGRepo_tracerCarrier"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></g>
+                    <g id="SVGRepo_iconCarrier">
                       <path
-                        d="M349.849,249.921c16.048,9.557,34.773,15.068,54.77,15.068c59.21,0,107.381-48.172,107.381-107.383 S463.828,50.223,404.619,50.223c-48.75,0-89.99,32.667-103.05,77.251H13.246C5.93,127.474,0,133.404,0,140.72v3.629v40.347V444.9 v0.128v3.502c0,7.316,5.93,13.246,13.246,13.246h393.595c7.315,0,13.246-5.93,13.246-13.246v-3.629V311.778 c0-7.316-5.932-13.246-13.246-13.246s-13.246,5.93-13.246,13.246v104.679L272.68,314.798L349.849,249.921z M404.619,76.714 c44.603,0,80.889,36.287,80.889,80.89s-36.287,80.89-80.889,80.89c-20.636,0-39.483-7.778-53.789-20.544 c-0.238-0.213-0.483-0.421-0.721-0.637c-0.665-0.608-1.311-1.235-1.955-1.865c-0.425-0.417-0.85-0.835-1.266-1.261 c-0.525-0.534-1.04-1.076-1.548-1.624c-0.595-0.644-1.179-1.299-1.751-1.962c-0.327-0.376-0.658-0.747-0.978-1.129 c-8.988-10.779-15.086-23.76-17.594-37.59c-0.008-0.045-0.016-0.089-0.024-0.134c-0.249-1.392-0.454-2.794-0.631-4.2 c-0.028-0.225-0.06-0.448-0.086-0.673c-0.147-1.256-0.253-2.518-0.34-3.784c-0.021-0.305-0.053-0.607-0.069-0.913 c-0.087-1.519-0.138-3.044-0.138-4.574c0-1.266,0.038-2.525,0.095-3.777c0.041-0.86,0.109-1.723,0.179-2.588 c0.027-0.344,0.048-0.69,0.079-1.033c0.101-1.072,0.224-2.146,0.367-3.222c0.016-0.122,0.03-0.244,0.046-0.366 c0.152-1.106,0.33-2.212,0.526-3.318C331.796,105.501,364.897,76.714,404.619,76.714z M297.234,157.604 c0,1.787,0.046,3.569,0.135,5.345c1.139,23.124,9.646,44.331,23.19,61.362c0.356,0.45,0.702,0.91,1.066,1.355 c0.385,0.469,0.791,0.922,1.184,1.384c1.809,2.139,3.681,4.23,5.661,6.227l-118.429,99.569L26.493,178.528v-24.561h270.805 C297.257,155.183,297.234,156.396,297.234,157.604z M26.493,213.141L147.407,314.8L26.493,416.457V213.141z M374.82,435.284H45.268 l122.722-103.18l33.529,28.19c2.464,2.072,5.493,3.108,8.524,3.108c3.031,0,6.06-1.036,8.524-3.108l33.529-28.19L374.82,435.284z"
+                        d="M18.6 3H5.4A2.4 2.4 0 0 0 3 5.4v13.2A2.4 2.4 0 0 0 5.4 21h13.2a2.4 2.4 0 0 0 2.4-2.4V5.4A2.4 2.4 0 0 0 18.6 3Z"
+                        fill-opacity=".16"
+                        stroke-width="1.5"
+                        stroke-miterlimit="10"
                       ></path>
                       <path
-                        d="M366.867,170.851h24.506v24.506c0,7.316,5.932,13.246,13.246,13.246s13.246-5.93,13.246-13.246 v-24.506h24.506c7.315,0,13.246-5.93,13.246-13.246c0-7.316-5.932-13.246-13.246-13.246h-24.506v-24.506 c0-7.316-5.932-13.246-13.246-13.246s-13.246,5.93-13.246,13.246v24.506h-24.506c-7.315,0-13.246,5.93-13.246,13.246 C353.62,164.92,359.551,170.851,366.867,170.851z"
+                        d="M12 12V6M7 14V6M17 16V6"
+                        stroke-width="1.5"
+                        stroke-miterlimit="10"
+                        stroke-linecap="round"
                       ></path>
                     </g>
-                  </g>
-                </svg>
-                <p class="group-hover:text-primary-900 text-lg">Invite</p>
+                  </svg>
+                  <p class="group-hover:text-primary-900 text-lg">Projects</p>
+                </a>
               </div>
-              <form id="inviteForm" class="mt-2 hidden w-full rounded-md p-4">
-                <label class="mb-2 block text-sm font-semibold text-gray-600"
-                  >User Email</label
+              <div
+                id="plus-icon"
+                class="plus-icon add-project group hover:bg-primary-300 relative cursor-pointer rounded p-0.5"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="currentColor"
+                  class="group-hover:fill-primary-900 group-hover:stroke-primary-800 peer size-5 stroke-black"
                 >
-                <input
-                  type="email"
-                  class="inset-shadow-md mb-3 w-full rounded border border-gray-300 p-2 outline-none focus:ring-2 focus:ring-blue-400"
-                  placeholder="Enter email"
-                  required
-                />
-                <button
-                  type="submit"
-                  class="bg-primary-500 hover:bg-primary-600 w-full rounded-md py-2 font-semibold text-white"
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 4.5v15m7.5-7.5h-15"
+                  />
+                </svg>
+                <span
+                  class="invisible absolute -left-1 mt-2 w-max -translate-x-1/2 rounded bg-black p-1 text-xs text-white opacity-0 transition-opacity peer-hover:visible peer-hover:opacity-100"
                 >
-                  Send Invite
-                </button>
-              </form>
-            </li>
-          </ul>
-          <div class="group my-5">
+                  Add project
+                </span>
+              </div>
+            </div>
+
+            <ul
+              id="projectsDropdown"
+              class="mt-2 ml-4 flex hidden h-max flex-col gap-1 border-l border-gray-200 pl-2"
+            ></ul>
+          </li>
+          <li id="usersMenu">
             <a
               href="#"
-              class="flex items-center gap-4 rounded-lg bg-gray-50 p-2 text-red-700 shadow hover:bg-red-200 hover:text-red-800"
-              id="logout-btn"
+              class="group hover:bg-primary-200 flex flex-row items-center justify-start gap-4 rounded-lg border-gray-50 bg-gray-50 p-2 shadow hover:border-transparent"
             >
               <svg
                 viewBox="0 0 24 24"
+                height="25"
+                width="25"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
-                class="fill-red-300 stroke-red-300 group-hover:fill-red-800 group-hover:stroke-red-800"
-                width="24px"
-                height="24px"
+                class="group-hover:fill-primary-300 group-hover:stroke-primary-800 stroke-black"
               >
                 <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                 <g
@@ -389,20 +180,230 @@
                 ></g>
                 <g id="SVGRepo_iconCarrier">
                   <path
-                    d="M15.0136 3.1644L16.9379 2.84368C18.3733 2.60445 19.091 2.48483 19.6684 2.61679C20.6188 2.834 21.4044 3.4995 21.7749 4.40127C22 4.94911 22 5.67672 22 7.13193V17.066C22 18.3391 22 18.9756 21.8269 19.4628C21.466 20.479 20.5874 21.2232 19.5258 21.4122C19.0168 21.5028 18.3889 21.3981 17.1331 21.1889L17.1331 21.1889L15.0136 20.8356L15.0136 20.8356C12.6191 20.4365 11.4219 20.237 10.7109 19.3977C10 18.5585 10 17.3448 10 14.9172V9.08276C10 6.65525 10 5.44149 10.7109 4.60226C11.4219 3.76302 12.6191 3.56348 15.0136 3.1644Z"
-                    fill-opacity="0.24"
-                  ></path>
-                  <path
-                    d="M3 12L2.53148 11.6252L2.23163 12L2.53148 12.3748L3 12ZM12 12.6C12.3314 12.6 12.6 12.3314 12.6 12C12.6 11.6686 12.3314 11.4 12 11.4V12.6ZM6.53148 6.62518L2.53148 11.6252L3.46852 12.3748L7.46852 7.37482L6.53148 6.62518ZM2.53148 12.3748L6.53148 17.3748L7.46852 16.6252L3.46852 11.6252L2.53148 12.3748ZM3 12.6H12V11.4H3V12.6Z"
+                    d="M13 20V18C13 15.2386 10.7614 13 8 13C5.23858 13 3 15.2386 3 18V20H13ZM13 20H21V19C21 16.0545 18.7614 14 16 14C14.5867 14 13.3103 14.6255 12.4009 15.6311M11 7C11 8.65685 9.65685 10 8 10C6.34315 10 5 8.65685 5 7C5 5.34315 6.34315 4 8 4C9.65685 4 11 5.34315 11 7ZM18 9C18 10.1046 17.1046 11 16 11C14.8954 11 14 10.1046 14 9C14 7.89543 14.8954 7 16 7C17.1046 7 18 7.89543 18 9Z"
+                    stroke="inherit"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
                   ></path>
                 </g>
               </svg>
-              <p class="text-lg font-semibold">Logout</p>
+              <p class="group-hover:text-primary-900 text-lg">Users</p>
             </a>
-          </div>
+            <ul
+              id="usersDropdown"
+              class="mt-2 ml-4 flex hidden h-max flex-col gap-1 overflow-y-auto border-l border-gray-200 bg-inherit pl-2"
+            ></ul>
+          </li>
+          <li>
+            <div
+              id="toggleInviteForm"
+              class="add-user-to-project-button group hover:bg-primary-200 flex cursor-pointer flex-row items-center gap-4 rounded-lg border-gray-50 bg-gray-50 p-2 shadow hover:border-transparent"
+            >
+              <svg
+                height="25"
+                width="25"
+                version="1.1"
+                id="Layer_1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                viewBox="0 0 512 512"
+                xml:space="preserve"
+                class="group-hover:fill-primary-900 fill-black"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  <path
+                    class="group-hover:fill-primary-300 fill-white"
+                    d="M310.481,157.604c0-5.767,0.547-11.404,1.539-16.885H13.246v43.978l196.797,165.457l138.819-116.712 C325.59,216.305,310.481,188.724,310.481,157.604z"
+                  ></path>
+                  <g>
+                    <path
+                      d="M349.849,249.921c16.048,9.557,34.773,15.068,54.77,15.068c59.21,0,107.381-48.172,107.381-107.383 S463.828,50.223,404.619,50.223c-48.75,0-89.99,32.667-103.05,77.251H13.246C5.93,127.474,0,133.404,0,140.72v3.629v40.347V444.9 v0.128v3.502c0,7.316,5.93,13.246,13.246,13.246h393.595c7.315,0,13.246-5.93,13.246-13.246v-3.629V311.778 c0-7.316-5.932-13.246-13.246-13.246s-13.246,5.93-13.246,13.246v104.679L272.68,314.798L349.849,249.921z M404.619,76.714 c44.603,0,80.889,36.287,80.889,80.89s-36.287,80.89-80.889,80.89c-20.636,0-39.483-7.778-53.789-20.544 c-0.238-0.213-0.483-0.421-0.721-0.637c-0.665-0.608-1.311-1.235-1.955-1.865c-0.425-0.417-0.85-0.835-1.266-1.261 c-0.525-0.534-1.04-1.076-1.548-1.624c-0.595-0.644-1.179-1.299-1.751-1.962c-0.327-0.376-0.658-0.747-0.978-1.129 c-8.988-10.779-15.086-23.76-17.594-37.59c-0.008-0.045-0.016-0.089-0.024-0.134c-0.249-1.392-0.454-2.794-0.631-4.2 c-0.028-0.225-0.06-0.448-0.086-0.673c-0.147-1.256-0.253-2.518-0.34-3.784c-0.021-0.305-0.053-0.607-0.069-0.913 c-0.087-1.519-0.138-3.044-0.138-4.574c0-1.266,0.038-2.525,0.095-3.777c0.041-0.86,0.109-1.723,0.179-2.588 c0.027-0.344,0.048-0.69,0.079-1.033c0.101-1.072,0.224-2.146,0.367-3.222c0.016-0.122,0.03-0.244,0.046-0.366 c0.152-1.106,0.33-2.212,0.526-3.318C331.796,105.501,364.897,76.714,404.619,76.714z M297.234,157.604 c0,1.787,0.046,3.569,0.135,5.345c1.139,23.124,9.646,44.331,23.19,61.362c0.356,0.45,0.702,0.91,1.066,1.355 c0.385,0.469,0.791,0.922,1.184,1.384c1.809,2.139,3.681,4.23,5.661,6.227l-118.429,99.569L26.493,178.528v-24.561h270.805 C297.257,155.183,297.234,156.396,297.234,157.604z M26.493,213.141L147.407,314.8L26.493,416.457V213.141z M374.82,435.284H45.268 l122.722-103.18l33.529,28.19c2.464,2.072,5.493,3.108,8.524,3.108c3.031,0,6.06-1.036,8.524-3.108l33.529-28.19L374.82,435.284z"
+                    ></path>
+                    <path
+                      d="M366.867,170.851h24.506v24.506c0,7.316,5.932,13.246,13.246,13.246s13.246-5.93,13.246-13.246 v-24.506h24.506c7.315,0,13.246-5.93,13.246-13.246c0-7.316-5.932-13.246-13.246-13.246h-24.506v-24.506 c0-7.316-5.932-13.246-13.246-13.246s-13.246,5.93-13.246,13.246v24.506h-24.506c-7.315,0-13.246,5.93-13.246,13.246 C353.62,164.92,359.551,170.851,366.867,170.851z"
+                    ></path>
+                  </g>
+                </g>
+              </svg>
+              <p class="group-hover:text-primary-900 text-lg">Invite</p>
+            </div>
+            <form id="inviteForm" class="mt-2 hidden w-full rounded-md p-4">
+              <label class="mb-2 block text-sm font-semibold text-gray-600"
+                >User Email</label
+              >
+              <input
+                type="email"
+                class="inset-shadow-md mb-3 w-full rounded border border-gray-300 p-2 outline-none focus:ring-2 focus:ring-blue-400"
+                placeholder="Enter email"
+                required
+              />
+              <button
+                type="submit"
+                class="bg-primary-500 hover:bg-primary-600 w-full rounded-md py-2 font-semibold text-white"
+              >
+                Send Invite
+              </button>
+            </form>
+          </li>
+        </ul>
+        <div class="group my-5 mt-auto">
+          <a
+            href="#"
+            class="flex items-center gap-4 rounded-lg bg-gray-50 p-2 text-red-700 shadow hover:bg-red-200 hover:text-red-800"
+            id="logout-btn"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              class="fill-red-300 stroke-red-300 group-hover:fill-red-800 group-hover:stroke-red-800"
+              width="24px"
+              height="24px"
+            >
+              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+              <g
+                id="SVGRepo_tracerCarrier"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></g>
+              <g id="SVGRepo_iconCarrier">
+                <path
+                  d="M15.0136 3.1644L16.9379 2.84368C18.3733 2.60445 19.091 2.48483 19.6684 2.61679C20.6188 2.834 21.4044 3.4995 21.7749 4.40127C22 4.94911 22 5.67672 22 7.13193V17.066C22 18.3391 22 18.9756 21.8269 19.4628C21.466 20.479 20.5874 21.2232 19.5258 21.4122C19.0168 21.5028 18.3889 21.3981 17.1331 21.1889L17.1331 21.1889L15.0136 20.8356L15.0136 20.8356C12.6191 20.4365 11.4219 20.237 10.7109 19.3977C10 18.5585 10 17.3448 10 14.9172V9.08276C10 6.65525 10 5.44149 10.7109 4.60226C11.4219 3.76302 12.6191 3.56348 15.0136 3.1644Z"
+                  fill-opacity="0.24"
+                ></path>
+                <path
+                  d="M3 12L2.53148 11.6252L2.23163 12L2.53148 12.3748L3 12ZM12 12.6C12.3314 12.6 12.6 12.3314 12.6 12C12.6 11.6686 12.3314 11.4 12 11.4V12.6ZM6.53148 6.62518L2.53148 11.6252L3.46852 12.3748L7.46852 7.37482L6.53148 6.62518ZM2.53148 12.3748L6.53148 17.3748L7.46852 16.6252L3.46852 11.6252L2.53148 12.3748ZM3 12.6H12V11.4H3V12.6Z"
+                ></path>
+              </g>
+            </svg>
+            <p class="text-lg font-semibold">Logout</p>
+          </a>
         </div>
-      </aside>
+      </div>
+    </aside>
+    <div
+      class="wrapper flex flex-1 flex-col overflow-x-auto transition-all duration-300 md:min-w-[calc(90vw-0.5rem)]"
+    >
+      <div
+        class="header mx-2 mt-2 rounded-lg border border-gray-50 bg-gray-50 md:mx-4 md:mt-4"
+      >
+        <nav
+          class="flex flex-row items-center justify-end rounded-lg p-2 pl-5 shadow-sm md:px-5 md:py-2"
+        >
+          <div class="flex items-center gap-1 md:gap-5">
+            <div class="search-icon flex items-center justify-between">
+              <form
+                class="search-input-form w-40 rounded-lg bg-white text-black shadow-sm outline-none placeholder:text-neutral-600 max-[640px]:w-60 max-[420px]:w-40 sm:w-80 md:w-100 lg:w-120"
+                id="search-input-form"
+                autocomplete="off"
+              >
+                <div class="relative">
+                  <input
+                    type="search"
+                    id="search-input-field"
+                    class="bg-neutral-secondary-medium text-heading placeholder:text-body block w-full px-2 py-2 ps-6 text-sm outline-none focus-visible:border-gray-200 max-md:p-2"
+                    placeholder="Search"
+                  />
+                </div>
+              </form>
+            </div>
+            <!-- notification container -->
+            <div class="relative mx-auto w-max">
+              <button
+                type="button"
+                id="dropdownToggle"
+                class="flex h-12 w-12 items-center justify-center border-none text-white outline-none"
+              >
+                <span class="relative inline-flex">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18px"
+                    class="h-8 w-8 cursor-pointer fill-[#000000] stroke-black max-md:size-6"
+                    viewBox="0 0 371.263 371.263"
+                  >
+                    <path
+                      d="M305.402 234.794v-70.54c0-52.396-33.533-98.085-79.702-115.151.539-2.695.838-5.449.838-8.204C226.539 18.324 208.215 0 185.64 0s-40.899 18.324-40.899 40.899c0 2.695.299 5.389.778 7.964-15.868 5.629-30.539 14.551-43.054 26.647-23.593 22.755-36.587 53.354-36.587 86.169v73.115c0 2.575-2.096 4.731-4.731 4.731-22.096 0-40.959 16.647-42.995 37.845-1.138 11.797 2.755 23.533 10.719 32.276 7.904 8.683 19.222 13.713 31.018 13.713h72.217c2.994 26.887 25.869 47.905 53.534 47.905s50.54-21.018 53.534-47.905h72.217c11.797 0 23.114-5.03 31.018-13.713 7.904-8.743 11.797-20.479 10.719-32.276-2.036-21.198-20.958-37.845-42.995-37.845a4.704 4.704 0 0 1-4.731-4.731zM185.64 23.952c9.341 0 16.946 7.605 16.946 16.946 0 .778-.12 1.497-.24 2.275-4.072-.599-8.204-1.018-12.336-1.138-7.126-.24-14.132.24-21.078 1.198-.12-.778-.24-1.497-.24-2.275.002-9.401 7.607-17.006 16.948-17.006zm0 323.358c-14.431 0-26.527-10.3-29.342-23.952h58.683c-2.813 13.653-14.909 23.952-29.341 23.952zm143.655-67.665c.479 5.15-1.138 10.12-4.551 13.892-3.533 3.773-8.204 5.868-13.353 5.868H59.89c-5.15 0-9.82-2.096-13.294-5.868-3.473-3.772-5.09-8.743-4.611-13.892.838-9.042 9.282-16.168 19.162-16.168 15.809 0 28.683-12.874 28.683-28.683v-73.115c0-26.228 10.419-50.719 29.282-68.923 18.024-17.425 41.498-26.887 66.528-26.887 1.198 0 2.335 0 3.533.06 50.839 1.796 92.277 45.929 92.277 98.325v70.54c0 15.809 12.874 28.683 28.683 28.683 9.88 0 18.264 7.126 19.162 16.168z"
+                      data-original="#000000"
+                    ></path>
+                  </svg>
+                  <span
+                    id="notificationBadge"
+                    class="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-xs font-semibold text-white"
+                  >
+                  </span>
+                </span>
+              </button>
 
+              <div
+                id="notificationDropdownMenu"
+                class="absolute right-0 z-100 mt-2 mr-3 flex hidden max-h-[500px] min-w-full flex-col items-start overflow-auto rounded-lg bg-white py-2 shadow-lg max-md:w-[220px] md:w-[340px]"
+              >
+                <h3 class="px-6 py-2 text-lg font-semibold">Notification</h3>
+                <ul>
+                  <li
+                    id="targetElement"
+                    class="flex w-full items-center justify-center p-3"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="fill-primary-500 me-2 hidden h-4 w-4 animate-spin"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="5px"
+                      height="5px"
+                    >
+                      <path
+                        d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                        fill="inherit"
+                      />
+                      <path
+                        d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                        fill="white"
+                      />
+                    </svg>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="relative">
+              <button
+                id="profileBtn"
+                class="border-primary-400 flex items-center rounded-full border-3"
+              >
+                <div
+                  class="profile-image h-7 w-7 cursor-pointer rounded-full bg-gray-400 sm:h-9 sm:w-9"
+                >
+                  <img
+                    id="profileImage"
+                    src="../assets/img/profile.png"
+                    alt="Profile Preview"
+                    class="aspect-square size-full rounded-full"
+                  />
+                </div>
+              </button>
+
+              <div
+                id="dropdownMenu"
+                class="absolute right-0 z-50 mt-2 hidden w-40 rounded-xs bg-white shadow-lg"
+              >
+                <a
+                  href="./editProfile.html"
+                  class="block rounded-xs px-4 py-4 text-black hover:bg-gray-100"
+                >
+                  Edit Profile
+                </a>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
       <div
         class="main flex flex-1 flex-col gap-2 overflow-auto p-2 transition-all duration-300 sm:p-4 md:gap-3"
         id="main-section"
