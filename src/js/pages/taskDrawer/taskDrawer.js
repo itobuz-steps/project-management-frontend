@@ -77,8 +77,15 @@ const taskDrawerInnerHtml = /* HTML */ ` <div>
         </div>
         <div class="flex flex-col leading-tight">
           <p class="text-gray-500">Assignee</p>
-          <p class="assignee text-primary-500 font-medium"></p>
+          <p
+            class="assignee text-primary-500 cursor-pointer font-medium"
+            id="assignee-name"
+          ></p>
         </div>
+        <select
+          id="assignee-dropdown-taskDrawer"
+          class="top-full left-12 z-50 hidden w-52 rounded-md border bg-white p-2 shadow-md focus:outline-none"
+        ></select>
       </div>
       <div class="flex flex-col gap-1">
         <p class="text-md text-gray-500">Due Date</p>
@@ -310,7 +317,7 @@ export async function showTaskDrawer(taskId) {
   const drawerBackdrop = document.querySelector('.drawer-backdrop');
   const titleEl = taskDrawer.querySelector('.title');
   const descriptionEl = taskDrawer.querySelector('.description');
-  const assigneeEl = taskDrawer.querySelector('.assignee');
+  const assigneeEl = taskDrawer.querySelector('#assignee-name');
   const profileImageEl = taskDrawer.querySelector('.profile-image');
   const dueDateEl = taskDrawer.querySelector('.due-date');
   const closeButton = taskDrawer.querySelector('.close-btn');
@@ -328,6 +335,68 @@ export async function showTaskDrawer(taskId) {
   ).result.columns;
   const storyPoint = taskDrawer.querySelector('#story-point-value');
   const typeSelect = taskDrawer.querySelector('#typeSelect');
+  const assigneeDropdown = taskDrawer.querySelector(
+    '#assignee-dropdown-taskDrawer'
+  );
+
+  assigneeEl.textContent = assignee ? assignee.name : 'No assignee';
+
+  assigneeEl.addEventListener('click', async (e) => {
+    e.stopPropagation();
+
+    assigneeDropdown.classList.remove('hidden');
+    assigneeDropdown.innerHTML = '';
+
+    const defaultOption = document.createElement('option');
+
+    defaultOption.value = '';
+    defaultOption.textContent = 'Select assignee';
+    assigneeDropdown.appendChild(defaultOption);
+
+    const members = (
+      await projectService.getProjectMembers(
+        localStorage.getItem('selectedProject')
+      )
+    ).result;
+
+    members.forEach((member) => {
+      const option = document.createElement('option');
+
+      option.value = member._id;
+      option.textContent = member.name;
+
+      if (member._id === task.assignee) {
+        option.selected = true;
+      }
+
+      assigneeDropdown.appendChild(option);
+    });
+
+    assigneeDropdown.focus();
+  });
+
+  assigneeDropdown.addEventListener('change', async (e) => {
+    const assigneeId = e.target.value;
+
+    if (!assigneeId) return;
+
+    try {
+      await taskService.updateTask(taskId, { assignee: assigneeId });
+
+      const user = (await taskService.getUserDetailsById(assigneeId)).data
+        .result;
+
+      assigneeEl.textContent = user.name;
+
+      assigneeDropdown.classList.add('hidden');
+      renderSelectedTab(localStorage.getItem('selectedProject'));
+      showToast('Assignee updated', 'success');
+      showTaskDrawer(taskId);
+    } catch (err) {
+      showToast('Failed to update assignee', 'error');
+      console.error(err);
+    }
+  });
 
   attachButton.addEventListener('click', () => {
     attachmentInput.click();
