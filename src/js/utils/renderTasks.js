@@ -57,7 +57,7 @@ export async function createTaskList(task, type, projectType, sprint) {
     assignee.name = data.name;
     assignee.profileImage = '../../../../assets/img/profile.png';
 
-    if (task.assignee.profileImage) {
+    if (data.profileImage) {
       assignee.profileImage =
         'http://localhost:3001/uploads/profile/' + data.profileImage;
     }
@@ -218,6 +218,7 @@ async function addStatusOptions(selectContainer, taskStatus) {
 
   project.columns.forEach((column) => {
     const optionEl = document.createElement('option');
+    optionEl.className = 'font-semibold';
     optionEl.innerText = column;
     optionEl.value = column;
 

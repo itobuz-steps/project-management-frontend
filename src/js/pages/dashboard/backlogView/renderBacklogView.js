@@ -2,7 +2,7 @@ import projectService from '../../../services/ProjectService';
 import sprintService from '../../../services/SprintService';
 import taskService from '../../../services/TaskService';
 import { addDropEvent } from '../../../utils/dragAndDropHandler';
-import { dropdownEvent } from '../../../utils/elementUtils';
+import { dropdownEvent, setUpProjectName } from '../../../utils/elementUtils';
 import {
   createSprintTable,
   handleAddTaskToSprint,
@@ -36,6 +36,7 @@ export async function renderBacklogView(
   const sprints = await sprintService.getAllSprints(projectId);
   const allTasks = tasks.data.result.map((task) => task._id);
 
+  setUpProjectName(project.result);
   const allSprintTasks = [];
   sprints.result.forEach((sprint) => allSprintTasks.push(...sprint.tasks));
 

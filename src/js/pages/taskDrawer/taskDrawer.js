@@ -8,13 +8,22 @@ import { renderSubtasks } from './renderSubtasks';
 import { createSubtask } from './createSubtask';
 import projectService from '../../services/ProjectService';
 import renderSelectedTab from '../../utils/renderSelectedTab';
+import { getSvgByType } from '../../utils/globalUtils';
 
 const taskDrawerInnerHtml = /* HTML */ ` <div>
   <div class="flex flex-col gap-3 p-3">
     <div class="container-secondary flex flex-col gap-5">
       <div class="flex justify-between gap-3">
-        <h2 class="title text-[16px]! font-semibold"></h2>
-        <div class="right-container flex items-center items-start gap-3">
+        <div class="title-container flex flex-col gap-2">
+          <div class="flex items-center gap-2">
+            <span class="type-icon"></span>
+            <span
+              class="task-key bg-primary-500 w-fit rounded-sm px-2 py-0.5 text-center text-xs font-semibold text-white"
+            ></span>
+          </div>
+          <h2 class="title text-[16px]! font-semibold"></h2>
+        </div>
+        <div class="right-container flex items-start gap-3">
           <button id="edit-task-button">
             <svg
               class="h-5 w-5 stroke-black hover:stroke-green-500 hover:stroke-2"
@@ -138,7 +147,7 @@ const taskDrawerInnerHtml = /* HTML */ ` <div>
       </div>
       <div
         id="subtaskDropdown"
-        class="hidden max-h-64 w-64 w-full overflow-y-auto rounded-md border border-gray-200 p-3 shadow-md"
+        class="hidden max-h-64 w-full overflow-y-auto rounded-md border border-gray-200 p-3 shadow-md"
       >
         <div id="subtaskList" class="ml-2 flex flex-col gap-2"></div>
         <button
@@ -309,6 +318,8 @@ export async function showTaskDrawer(taskId) {
   const taskDrawer = document.querySelector('.task-drawer');
   const drawerBackdrop = document.querySelector('.drawer-backdrop');
   const titleEl = taskDrawer.querySelector('.title');
+  const taskTypeIcon = taskDrawer.querySelector('.type-icon');
+  const taskKeyEl = taskDrawer.querySelector('.task-key');
   const descriptionEl = taskDrawer.querySelector('.description');
   const assigneeEl = taskDrawer.querySelector('.assignee');
   const profileImageEl = taskDrawer.querySelector('.profile-image');
@@ -450,6 +461,8 @@ export async function showTaskDrawer(taskId) {
 
   taskDrawer.dataset.id = task._id;
   titleEl.textContent = task.title;
+  taskKeyEl.textContent = task.key;
+  taskTypeIcon.innerHTML = getSvgByType(task);
   descriptionEl.textContent = task.description
     ? task.description
     : 'No description added....';

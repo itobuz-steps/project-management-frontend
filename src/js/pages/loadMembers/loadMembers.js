@@ -2,6 +2,8 @@ import projectService from '../../services/ProjectService';
 
 export async function loadProjectMembers(projectId) {
   try {
+    if (!projectId) return;
+
     const data = await projectService.getProjectMembers(projectId);
     const members = data.result;
 

@@ -60,3 +60,16 @@ export function dropdownEvent(sprint = {}) {
     }
   });
 }
+
+export function ifSelectedProject() {
+  if (localStorage.getItem('selectedProject')) {
+    document
+      .getElementById('dashboardOptionsContainer')
+      .classList.remove('hidden');
+  }
+}
+
+export function setUpProjectName(project) {
+  const projectName = document.getElementById('projectName');
+  projectName.innerText = project.name;
+}

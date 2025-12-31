@@ -31,15 +31,15 @@ export async function renderSubtasks(task) {
               subtaskAssignee.profileImage
             : '../../../assets/img/profile.png'
           : '../../../assets/img/profile.png'}"
-        class="border-primary-300 h-8 w-8 rounded-full border-1"
+        class="border-primary-300 h-8 w-8 rounded-full"
         title="${subtaskAssignee ? subtaskAssignee.name : 'unassigned'}"
       />
       <div class="flex flex-1">
-        <div class="ml-3">
+        <div class="ml-3 flex gap-2">
           <span
-            class="bg-primary-400 mr-2 rounded-sm px-1 py-0.5 text-xs! text-white"
-            >${st.key}
-          </span>
+            class="bg-primary-400 w-fit rounded-sm px-2 py-0.5 text-center text-xs font-medium text-white"
+            >${st.key}</span
+          >
           <span class="font-medium">${st.title}</span>
         </div>
         <div class="ml-auto flex gap-0.5">

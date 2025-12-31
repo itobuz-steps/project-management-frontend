@@ -1,30 +1,32 @@
 import projectService from '../../../services/ProjectService';
 import sprintService from '../../../services/SprintService';
 import taskService from '../../../services/TaskService';
+import { setUpProjectName } from '../../../utils/elementUtils';
 import {
-  getColorByPriority,
+  getColorByType,
   getSvgByPriority,
   getSvgByType,
 } from '../../../utils/globalUtils';
 import { showConfirmModal } from '../../../utils/modals/confirmationModal';
 import { openUpdateTaskModal } from '../../../utils/modals/updateTaskModal';
 import renderSelectedTab from '../../../utils/renderSelectedTab';
+import showToast from '../../../utils/showToast';
 import { handleForYouPage } from '../../forYouPage/forYouPage';
 import { showTaskDrawer } from '../../taskDrawer/taskDrawer';
 import { getFilteredTasks } from '../navbar/navbar';
 
 export async function renderBoard(projectId, filter = '', searchInput = '') {
   const currentProject = localStorage.getItem('selectedProject');
-  const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
+  if (!projectId) return;
   const project = (await projectService.getProjectById(projectId)).result;
+  const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const lastColumn = project.columns[project.columns.length - 1];
   const currentSprint = project.currentSprint
     ? await sprintService.getSprintById(project.currentSprint)
     : null;
   let draggedColumn = null;
 
-  const projectName = document.getElementById('projectName');
-  projectName.innerText = project.name;
+  setUpProjectName(project);
 
   const columnContainer = document.getElementById('columns');
   columnContainer.innerHTML = '';
@@ -62,7 +64,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
             class="issue-count h-5 w-5 rounded-full bg-gray-200 text-center text-sm text-black"
           ></div>
           <div
-            class="add-column-button ml-auto hidden cursor-pointer rounded-full px-2 text-lg/tight! group-hover:block hover:bg-gray-100"
+            class="add-column-button ml-auto hidden cursor-pointer rounded-full px-2 text-lg/5! group-hover:block hover:bg-gray-100"
           >
             +
           </div>
@@ -88,8 +90,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
       const typeSvg = getSvgByType(task);
       const prioritySvg = getSvgByPriority(task);
-
-      const statusColor = getColorByPriority(task);
+      const statusColor = getColorByType(task);
       const assignee = task.assignee ? userMap[task.assignee] : null;
       const taskEl = document.createElement('div');
 
@@ -273,10 +274,10 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
               />
             </span>
             <div
-              class="avatar-dropdown absolute top-20 right-10 hidden rounded-2xl"
+              class="avatar-dropdown absolute right-2.5 -bottom-8 hidden rounded-sm"
             >
               <ul
-                class="assignee-list relative z-1 rounded-2xl bg-slate-200 text-sm text-gray-700"
+                class="assignee-list relative z-1 rounded-sm border border-gray-200 bg-white shadow-md"
               ></ul>
             </div>
           </div>
@@ -310,8 +311,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
           activeProjectMembers.forEach((user) => {
             const li = document.createElement('li');
-            li.className =
-              'px-7 py-2 hover:bg-gray-100 cursor-pointer rounded-2xl';
+            li.className = 'min-w-24 hover:bg-gray-100 cursor-pointer p-2';
             li.textContent = user.name;
             li.dataset.id = user._id;
             dropdownList.appendChild(li);
@@ -350,7 +350,6 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
           await taskService.updateTask(taskId, {
             assignee: selectedUserId,
-            profileImage: selectedUser?.profileImage || null,
           });
 
           avatarDropdown.classList.add('hidden');
@@ -453,6 +452,16 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       .querySelector('input')
       .addEventListener('keydown', async (e) => {
         if (e.key !== 'Enter') return;
+
+        const columnAlreadyExists = project.columns.includes(
+          e.target.value.toLowerCase()
+        );
+
+        if (columnAlreadyExists) {
+          showToast('Column with given name already exist', 'error');
+          return;
+        }
+
         const columnsEl = columnContainer.querySelectorAll(
           '.column, .new-column:not(.hidden)'
         );
@@ -461,7 +470,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
           if (column.classList.contains('column')) {
             return column.querySelector('.column-name').textContent;
           } else {
-            return column.querySelector('input').value;
+            return column.querySelector('input').value.toLowerCase();
           }
         });
 
@@ -487,6 +496,8 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 }
 
 async function getTaskGroupedByStatus(projectId, filter, searchInput) {
+  if (!projectId) return;
+
   const project = (await projectService.getProjectById(projectId)).result;
   const result = {};
 

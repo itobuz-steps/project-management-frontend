@@ -161,7 +161,7 @@
     >
       <aside
         id="sidebar"
-        class="sidebar absolute top-0 left-0 z-40 h-full w-80 -translate-x-full transform bg-white pt-14 text-black drop-shadow-2xl transition-transform duration-300"
+        class="sidebar absolute top-0 left-0 z-17 h-full w-80 -translate-x-full transform bg-white pt-14 text-black drop-shadow-2xl transition-transform duration-300"
       >
         <div class="flex h-full flex-col gap-5 overflow-y-auto px-3 py-4">
           <ul class="flex flex-col gap-2 font-semibold">
@@ -421,7 +421,8 @@
             </div>
           </div>
           <div
-            class="flex w-full flex-col items-center justify-start gap-2 sm:flex-row sm:gap-5"
+            class="flex hidden w-full flex-col items-center justify-start gap-2 sm:flex-row sm:gap-5"
+            id="dashboardOptionsContainer"
           >
             <ul
               class="tabs bg-primary-50 grid w-full list-none grid-cols-3 items-center gap-0.5 rounded-lg border-2 border-white p-1 inset-shadow-sm sm:w-64"
@@ -687,7 +688,15 @@
             class="kanban-board w-full flex-1 overflow-x-auto overflow-y-hidden rounded-xl border border-gray-100 bg-gray-50 p-4 inset-shadow-sm"
             id="board-view"
           >
-            <div class="flex h-full min-w-max gap-4" id="columns"></div>
+            <div class="flex h-full min-w-max gap-4" id="columns">
+              <div
+                class="my-auto w-[calc(100vw-50px)] text-center text-xl! font-semibold text-gray-600 sm:w-[calc(100vw-70px)]"
+                id="no-project-text"
+              >
+                No project selected, select one from sidebar or
+                <a href="#" class="text-primary-400 underline">create one</a>
+              </div>
+            </div>
           </div>
 
           <!-- backlog-view -->
@@ -700,12 +709,13 @@
         </div>
       </div>
 
+      <!-- for-you-page -->
       <div
         id="forYouPage"
         class="flex hidden flex-1 flex-col gap-2 p-2 transition-all duration-300 sm:p-4 md:gap-3"
       >
         <div
-          class="bg-primary-100 flex flex-col gap-4 rounded-lg p-3 shadow-sm md:p-4"
+          class="flex flex-col gap-4 rounded-lg bg-gray-50 p-3 inset-shadow-sm md:p-4"
         >
           <div
             class="flex items-center justify-between border-b border-b-gray-400 bg-clip-text pb-2 text-xl font-semibold text-black sm:text-2xl"
@@ -724,7 +734,7 @@
             <h2 class="font-semibold">Your Projects</h2>
             <div
               id="forYouProjectsContainer"
-              class="flex flex-wrap gap-2 max-md:flex-col"
+              class="xs:flex-row flex flex-col flex-wrap gap-2"
             ></div>
           </div>
           <div id="forYouTasks" class="flex flex-col">
@@ -733,7 +743,7 @@
             >
               Your Tasks
               <div
-                class="h-5 w-5 rounded-full bg-white text-center text-sm text-black"
+                class="h-5 w-5 rounded-full bg-gray-200 text-center text-sm text-black"
                 id="forYouTotalTasksCount"
               ></div>
             </h2>
