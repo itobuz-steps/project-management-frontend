@@ -121,6 +121,14 @@ class TaskService {
       formData.append('tags[]', tag);
     });
 
+    task.blocks.forEach((block) => {
+      formData.append('blocks[]', block);
+    });
+
+    task.blockedBy.forEach((blocked) => {
+      formData.append('blockedBy[]', blocked);
+    });
+
     if (task.assignee) {
       formData.append('assignee', task.assignee);
     }
