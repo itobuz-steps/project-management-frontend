@@ -19,6 +19,8 @@ function renderSubDropdown(item) {
 }
 
 export async function handleStatusFilter() {
+  if (!currentProject) return;
+
   removeElementChildren(statusDropDown);
   removeElementChildren(assigneeDropdown);
   const project = (await projectService.getProjectById(currentProject)).result;
@@ -34,6 +36,8 @@ export async function handleStatusFilter() {
 }
 
 export async function handleAssigneeFilter() {
+  if (!currentProject) return;
+
   removeElementChildren(statusDropDown);
   removeElementChildren(assigneeDropdown);
 

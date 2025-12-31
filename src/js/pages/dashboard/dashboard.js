@@ -10,7 +10,11 @@ import {
   handleAssigneeFilter,
 } from './filter/dashboardFilter.js';
 import { checkToken } from '../../utils/checkToken.js';
-import { removeActive, hideAll } from '../../utils/elementUtils.js';
+import {
+  removeActive,
+  hideAll,
+  ifSelectedProject,
+} from '../../utils/elementUtils.js';
 import { loadProjectMembers } from '../loadMembers/loadMembers.js';
 import setupPushNotifications from '../../utils/browserNotification.js';
 import {
@@ -66,8 +70,12 @@ async function setupDashboard() {
     await renderTasksList(localStorage.getItem('selectedProject'));
   });
 
+  const openCreateProjectModalBtn =
+    document.querySelector('#no-project-text a');
+  openCreateProjectModalBtn.addEventListener('click', openCreateProjectModal);
+
+  ifSelectedProject();
   setupSidebar();
-  //setupNotification();
   setupNavbar();
   loadProjectMembers(localStorage.getItem('selectedProject'));
   handleStatusFilter();

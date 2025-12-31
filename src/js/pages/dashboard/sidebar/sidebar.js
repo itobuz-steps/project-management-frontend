@@ -1,10 +1,10 @@
 import projectService from '../../../services/ProjectService';
-import { renderBacklogView } from '../backlogView/renderBacklogView';
-import { renderBoard } from '../boardView/boardView';
 import { loadProjectMembers } from '../../loadMembers/loadMembers';
 import { checkToken } from '../../../utils/checkToken';
 import axios from 'axios';
 import showToast from '../../../utils/showToast';
+import renderSelectedTab from '../../../utils/renderSelectedTab';
+import { ifSelectedProject } from '../../../utils/elementUtils';
 
 const body = document.querySelector('body');
 const sidebar = document.querySelector('#sidebar');
@@ -64,9 +64,14 @@ export async function updateProjectList() {
 }
 
 async function updateUserList() {
-  const users = await projectService.getProjectMembers(
-    localStorage.getItem('selectedProject')
-  );
+  let users;
+  if (localStorage.getItem('selectedProject')) {
+    users = await projectService.getProjectMembers(
+      localStorage.getItem('selectedProject')
+    );
+  } else {
+    return;
+  }
 
   userListContainer.innerHTML = '';
 
@@ -102,9 +107,9 @@ function addEventListenersSidebar() {
 
   document.addEventListener('click', (e) => {
     const clickedSidebar = sidebar.contains(e.target);
-    const clickedToggelButton = toggleBtn.contains(e.target);
+    const clickedToggleButton = toggleBtn.contains(e.target);
 
-    if (clickedSidebar || clickedToggelButton) return;
+    if (clickedSidebar || clickedToggleButton) return;
 
     toggleSidebar('close');
     e.stopPropagation();
@@ -147,7 +152,6 @@ function addEventListenersSidebar() {
     }
 
     projectsDropdown.classList.add('hidden');
-
     userListContainer.classList.add('hidden');
   });
 
@@ -159,10 +163,10 @@ function addEventListenersSidebar() {
     [...targetLi.parentElement.children].forEach((child) => {
       child.classList.remove('selected');
     });
+    ifSelectedProject();
 
     targetLi.classList.toggle('selected');
-    await renderBacklogView(localStorage.getItem('selectedProject'));
-    await renderBoard(localStorage.getItem('selectedProject'));
+    await renderSelectedTab(localStorage.getItem('selectedProject'));
     await loadProjectMembers(localStorage.getItem('selectedProject'));
   });
 

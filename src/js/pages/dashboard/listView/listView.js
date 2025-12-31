@@ -1,6 +1,7 @@
 import { getFilteredTasks } from '../navbar/navbar.js';
 import projectService from '../../../services/ProjectService.js';
 import { createTaskList } from '../../../utils/renderTasks.js';
+import { setUpProjectName } from '../../../utils/elementUtils.js';
 
 const emptyListContainer = document.getElementById('empty-list-container');
 const listTableBody = document.getElementById('table-body');
@@ -14,6 +15,7 @@ export async function renderTasksList(
 
   const project = (await projectService.getProjectById(projectId)).result;
   const tasksArray = await getFilteredTasks(projectId, filter, searchInput);
+  setUpProjectName(project);
 
   if (!tasksArray.length) {
     emptyListContainer.classList.remove('hidden');

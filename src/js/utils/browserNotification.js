@@ -191,7 +191,7 @@ const badge = document.getElementById('notificationBadge');
 const dropDownToggle = document.getElementById('dropdownToggle');
 function clearNotification() {
   if (badge) {
-    console.log('badge is: ', badge);
+    // console.log('badge is: ', badge);
 
     badge.addEventListener('click', () => {
       localStorage.setItem('notificationCount', 0);

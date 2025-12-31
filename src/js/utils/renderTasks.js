@@ -218,6 +218,7 @@ async function addStatusOptions(selectContainer, taskStatus) {
 
   project.columns.forEach((column) => {
     const optionEl = document.createElement('option');
+    optionEl.className = 'font-semibold';
     optionEl.innerText = column;
     optionEl.value = column;
 

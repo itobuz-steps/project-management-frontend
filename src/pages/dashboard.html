@@ -421,7 +421,8 @@
             </div>
           </div>
           <div
-            class="flex w-full flex-col items-center justify-start gap-2 sm:flex-row sm:gap-5"
+            class="flex hidden w-full flex-col items-center justify-start gap-2 sm:flex-row sm:gap-5"
+            id="dashboardOptionsContainer"
           >
             <ul
               class="tabs bg-primary-50 grid w-full list-none grid-cols-3 items-center gap-0.5 rounded-lg border-2 border-white p-1 inset-shadow-sm sm:w-64"
@@ -687,7 +688,15 @@
             class="kanban-board w-full flex-1 overflow-x-auto overflow-y-hidden rounded-xl border border-gray-100 bg-gray-50 p-4 inset-shadow-sm"
             id="board-view"
           >
-            <div class="flex h-full min-w-max gap-4" id="columns"></div>
+            <div class="flex h-full min-w-max gap-4" id="columns">
+              <div
+                class="my-auto w-[calc(100vw-50px)] text-center text-xl! font-semibold text-gray-600 sm:w-[calc(100vw-70px)]"
+                id="no-project-text"
+              >
+                No project selected, select one from sidebar or
+                <a href="#" class="text-primary-400 underline">create one</a>
+              </div>
+            </div>
           </div>
 
           <!-- backlog-view -->

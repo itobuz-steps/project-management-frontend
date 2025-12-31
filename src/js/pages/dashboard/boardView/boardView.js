@@ -1,6 +1,7 @@
 import projectService from '../../../services/ProjectService';
 import sprintService from '../../../services/SprintService';
 import taskService from '../../../services/TaskService';
+import { setUpProjectName } from '../../../utils/elementUtils';
 import {
   getColorByType,
   getSvgByPriority,
@@ -16,16 +17,16 @@ import { getFilteredTasks } from '../navbar/navbar';
 
 export async function renderBoard(projectId, filter = '', searchInput = '') {
   const currentProject = localStorage.getItem('selectedProject');
-  const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
+  if (!projectId) return;
   const project = (await projectService.getProjectById(projectId)).result;
+  const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const lastColumn = project.columns[project.columns.length - 1];
   const currentSprint = project.currentSprint
     ? await sprintService.getSprintById(project.currentSprint)
     : null;
   let draggedColumn = null;
 
-  const projectName = document.getElementById('projectName');
-  projectName.innerText = project.name;
+  setUpProjectName(project);
 
   const columnContainer = document.getElementById('columns');
   columnContainer.innerHTML = '';
@@ -495,6 +496,8 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 }
 
 async function getTaskGroupedByStatus(projectId, filter, searchInput) {
+  if (!projectId) return;
+
   const project = (await projectService.getProjectById(projectId)).result;
   const result = {};
 

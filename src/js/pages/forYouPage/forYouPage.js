@@ -90,6 +90,7 @@ function createProjectCard(project) {
 }
 
 async function renderStatusContainers(parentElement) {
+  if (!localStorage.getItem('selectedProject')) return;
   const project = (
     await projectService.getProjectById(localStorage.getItem('selectedProject'))
   ).result;
