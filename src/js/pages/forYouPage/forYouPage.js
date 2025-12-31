@@ -82,6 +82,7 @@ function createProjectCard(project) {
   `;
 
   projectDiv.addEventListener('click', async () => {
+    localStorage.setItem('selectedProject', project._id);
     await renderSelectedTab(project._id);
     showForYouPage(false);
   });

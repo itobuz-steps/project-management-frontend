@@ -131,7 +131,7 @@ export function createBacklogTable(projectType) {
     >
       <table class="w-full text-left rtl:text-right">
         <thead
-          class="border-b border-gray-200 bg-gray-100 text-xs text-nowrap uppercase hover:bg-gray-200"
+          class="border-b border-l-3 border-gray-200 border-l-gray-100 bg-gray-100 text-xs text-nowrap uppercase hover:bg-gray-200"
         >
           <tr>
             <th scope="col" class="${ifKanban} p-2">
@@ -153,6 +153,7 @@ export function createBacklogTable(projectType) {
             <th scope="col" class="p-2">Created</th>
             <th scope="col" class="p-2">Updated</th>
             <th scope="col" class="min-w-36 p-2">Reporter</th>
+            <th scope="col" class="min-w-px p-2"></th>
           </tr>
         </thead>
         <tbody id="backlog-body" data-id="backlog"></tbody>

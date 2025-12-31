@@ -2,6 +2,7 @@ import projectService from '../../services/ProjectService';
 import { updateProjectList } from '../../pages/dashboard/sidebar/sidebar';
 import showToast from '../showToast';
 import renderSelectedTab from '../renderSelectedTab';
+import { ifSelectedProject } from '../elementUtils';
 
 const createProjectModal = document.getElementById('create-project-modal');
 const closeProjectBtn = document.getElementById('close-button');
@@ -59,6 +60,7 @@ projectCreateForm.addEventListener('submit', async (e) => {
     const project = (await projectService.createProject(projectData)).result;
     localStorage.setItem('selectedProject', project._id);
     await renderSelectedTab(localStorage.getItem('selectedProject'));
+    ifSelectedProject();
 
     createProjectModal.classList.add('hidden');
     showToast('Project created Successfully', 'success');
