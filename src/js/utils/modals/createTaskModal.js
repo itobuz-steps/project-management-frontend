@@ -1,4 +1,9 @@
-import { handleModalAssignee, handleModalStatus } from './modal';
+import {
+  handleModalAssignee,
+  handleModalBlock,
+  handleModalBlockedByIssue,
+  handleModalStatus,
+} from './modal';
 import taskService from '../../services/TaskService';
 import showToast from '../showToast';
 import renderSelectedTab from '../renderSelectedTab';
@@ -12,6 +17,8 @@ const createModalStatusDropdown = document.getElementById(
 const createModalAssigneeDropdown = document.getElementById(
   'create-modal-assignee'
 );
+const createModalBlockDropdown = document.getElementById('block');
+const createModalBlockedByIssueDropdown = document.getElementById('BlockedBy');
 const input = document.getElementById('attachments');
 const fileName = document.getElementById('file-name');
 const taskForm = document.getElementById('task-form');
@@ -70,21 +77,16 @@ taskForm.addEventListener('submit', async (e) => {
           .value.split(',')
           .map((t) => t.trim())
       : [],
-    block: document.getElementById('block').value
+    blocks: document.getElementById('block').value
       ? document
           .getElementById('block')
           .value.split(',')
           .map((t) => t.trim())
       : [],
+
     blockedBy: document.getElementById('BlockedBy').value
       ? document
           .getElementById('BlockedBy')
-          .value.split(',')
-          .map((t) => t.trim())
-      : [],
-    relatesTo: document.getElementById('relatesTo').value
-      ? document
-          .getElementById('relatesTo')
           .value.split(',')
           .map((t) => t.trim())
       : [],
@@ -112,4 +114,6 @@ export function openCreateTaskModal() {
   createTaskModal.classList.remove('hidden');
   handleModalStatus(createModalStatusDropdown);
   handleModalAssignee(createModalAssigneeDropdown);
+  handleModalBlock(createModalBlockDropdown);
+  handleModalBlockedByIssue(createModalBlockedByIssueDropdown);
 }

@@ -1,4 +1,5 @@
 import projectService from '../../services/ProjectService';
+import taskService from '../../services/TaskService';
 
 export async function handleModalAssignee(
   modalAssigneeDropdown,
@@ -60,5 +61,57 @@ export async function handleModalStatus(
 
   if (!selectedStatus) {
     modalStatusDropdown.firstChild.selected = true;
+  }
+}
+
+export async function handleModalBlock(
+  modalBlockDropdown,
+  selectedBlockedTask = null
+) {
+  const tasks = await taskService.taskOfProjectId(
+    localStorage.getItem('selectedProject')
+  );
+
+  modalBlockDropdown.innerHTML = '';
+
+  const nullOption = document.createElement('option');
+  nullOption.value = 'null';
+  nullOption.textContent = 'No Block';
+  modalBlockDropdown.appendChild(nullOption);
+
+  tasks.data.result.forEach((task) => {
+    const option = document.createElement('option');
+    option.textContent = task.title;
+    option.value = task._id;
+    modalBlockDropdown.appendChild(option);
+  });
+  if (selectedBlockedTask) {
+    modalBlockDropdown.value = selectedBlockedTask;
+  }
+}
+
+export async function handleModalBlockedByIssue(
+  modalBlockedByIssueDropdown,
+  selectedBlockedByIssue = null
+) {
+  const tasks = await taskService.taskOfProjectId(
+    localStorage.getItem('selectedProject')
+  );
+
+  modalBlockedByIssueDropdown.innerHTML = '';
+
+  const nullOption = document.createElement('option');
+  nullOption.value = 'null';
+  nullOption.textContent = 'No Block';
+  modalBlockedByIssueDropdown.appendChild(nullOption);
+
+  tasks.data.result.forEach((task) => {
+    const option = document.createElement('option');
+    option.textContent = task.title;
+    option.value = task._id;
+    modalBlockedByIssueDropdown.appendChild(option);
+  });
+  if (selectedBlockedByIssue) {
+    modalBlockedByIssueDropdown.value = selectedBlockedByIssue;
   }
 }
