@@ -6,7 +6,6 @@ import showToast from '../../../utils/showToast';
 import renderSelectedTab from '../../../utils/renderSelectedTab';
 import { ifSelectedProject } from '../../../utils/elementUtils';
 
-const body = document.querySelector('body');
 const sidebar = document.querySelector('#sidebar');
 const toggleBtn = document.querySelector('.toggle-sidebar-btn');
 const projectsDropdown = document.getElementById('projectsDropdown');
@@ -20,13 +19,11 @@ const emailInput = inviteForm.querySelector('input[type="email"]');
 
 export function toggleSidebar(action = 'toggle') {
   if (action === 'toggle') {
-    sidebar.classList.toggle('-translate-x-full');
-    sidebar.classList.toggle('translate-x-0');
-    body.classList.toggle('overflow-hidden');
+    sidebar.classList.toggle('collapsed');
+  } else if (action == 'open') {
+    sidebar.classList.remove('collapsed');
   } else {
-    sidebar.classList.add('-translate-x-full');
-    sidebar.classList.remove('translate-x-0');
-    body.classList.remove('overflow-hidden');
+    sidebar.classList.add('collapsed');
   }
 }
 
@@ -125,6 +122,7 @@ function addEventListenersSidebar() {
       projectsDropdown.classList.add('hidden');
     } else {
       projectsDropdown.classList.remove('hidden');
+      toggleSidebar('open');
     }
   });
 
@@ -138,6 +136,7 @@ function addEventListenersSidebar() {
       userListContainer.classList.add('hidden');
     } else {
       userListContainer.classList.remove('hidden');
+      toggleSidebar('open');
     }
   });
 
@@ -168,10 +167,12 @@ function addEventListenersSidebar() {
     targetLi.classList.toggle('selected');
     await renderSelectedTab(localStorage.getItem('selectedProject'));
     await loadProjectMembers(localStorage.getItem('selectedProject'));
+    toggleSidebar('close');
   });
 
   toggleInviteButton.addEventListener('click', () => {
     inviteForm.classList.toggle('hidden');
+    toggleSidebar('open');
   });
 
   inviteForm.addEventListener('submit', function (event) {

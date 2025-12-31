@@ -132,3 +132,31 @@ p.due-date {
 .container-secondary {
   @apply rounded-md bg-gray-50 p-4 shadow-sm;
 }
+
+.sidebar {
+  min-width: 20rem;
+
+  &.collapsed {
+    display: none;
+  }
+}
+
+@media (width > 768px) {
+  .sidebar {
+    transition: all 0.1s;
+    min-width: 14rem;
+
+    &.collapsed {
+      display: block;
+      min-width: 4rem;
+
+      p,
+      .add-project,
+      #usersDropdown,
+      #projectsDropdown,
+      #inviteForm {
+        display: none;
+      }
+    }
+  }
+}
