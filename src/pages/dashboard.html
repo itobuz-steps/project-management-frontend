@@ -646,13 +646,13 @@
             <div class="gap-y-6 overflow-x-auto">
               <h2 class="mb-4 ml-1 text-lg font-semibold">List View</h2>
               <div
-                class="relative overflow-x-auto rounded-md border border-gray-200"
+                class="no-scrollbar relative overflow-x-auto rounded-md border border-gray-200"
               >
                 <table class="w-full text-left rtl:text-right">
                   <thead
-                    class="border-b border-gray-200 bg-gray-100 text-xs text-nowrap uppercase hover:bg-gray-200"
+                    class="border-b border-l-3 border-gray-200 border-l-gray-100 bg-gray-100 text-xs text-nowrap uppercase hover:bg-gray-200"
                   >
-                    <tr>
+                    <tr class="">
                       <th scope="col" class="p-2 text-center">Type</th>
                       <th scope="col" class="p-2">Key</th>
                       <th scope="col" class="min-w-48 p-2">Summary</th>
@@ -663,6 +663,7 @@
                       <th scope="col" class="p-2">Created</th>
                       <th scope="col" class="p-2">Updated</th>
                       <th scope="col" class="min-w-36 p-2">Reporter</th>
+                      <th scope="col" class="min-w-px p-2"></th>
                     </tr>
                   </thead>
                   <tbody id="table-body"></tbody>

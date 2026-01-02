@@ -154,6 +154,7 @@ export function createSprintTable(sprint) {
             <th scope="col" class="p-2">Created</th>
             <th scope="col" class="p-2">Updated</th>
             <th scope="col" class="min-w-36 p-2">Reporter</th>
+            <th scope="col" class="min-w-px p-2"></th>
           </tr>
         </thead>
         <tbody id="${sprint.key}-body" data-id="${sprint._id}"></tbody>

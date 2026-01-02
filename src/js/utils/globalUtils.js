@@ -65,3 +65,25 @@ export async function checkForInvite() {
     }
   }
 }
+
+export function keyboardEvents() {
+  let keyArray = [];
+  const searchBar = document.getElementById('search-input-field');
+  document.addEventListener('keydown', (e) => {
+    keyArray.push(e.key);
+
+    if (
+      keyArray.length === 2 &&
+      keyArray[0] === 'Meta' &&
+      keyArray[1] === 'k'
+    ) {
+      searchBar.focus();
+    }
+
+    if (keyArray.length === 2) {
+      keyArray = [];
+    }
+  });
+}
+
+keyboardEvents();

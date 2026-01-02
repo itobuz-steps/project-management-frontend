@@ -176,6 +176,7 @@ export async function createTaskList(task, type, projectType, sprint) {
         />${reporter.name}
       </div>
     </td>
+    <td class="p-2">&nbsp;</td>
   `;
 
   const dueDateInput = tr.querySelector(`.${task.key}-due-date`);
