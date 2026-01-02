@@ -116,7 +116,9 @@ class TaskService {
     formData.append('priority', task.priority);
     formData.append('dueDate', task.dueDate);
     formData.append('reporter', task.reporter);
-
+    if (task.parentTask) {
+      formData.append('parentTask', task.parentTask);
+    }
     task.tags.forEach((tag) => {
       formData.append('tags[]', tag);
     });
