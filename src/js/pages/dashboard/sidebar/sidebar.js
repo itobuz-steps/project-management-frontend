@@ -29,7 +29,11 @@ export function toggleSidebar(action = 'toggle') {
 
 const logoutBtn = document.getElementById('logout-btn');
 logoutBtn.addEventListener('click', () => {
+  const theme = localStorage.getItem('theme');
+
   localStorage.clear();
+  localStorage.setItem('theme', theme);
+
   checkToken();
 });
 

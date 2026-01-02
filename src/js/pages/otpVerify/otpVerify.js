@@ -1,8 +1,11 @@
 import authService from '../../services/AuthService.js';
+import { setTheme } from '../../utils/setTheme.js';
 import showToast from '../../utils/showToast.js';
 
 const otpInput = document.getElementById('otp-input');
 const verifyForm = document.querySelector('.verify-form');
+
+setTheme(localStorage.getItem('theme') || 'indigo');
 
 async function handleOtpVerification(event) {
   event.preventDefault();

@@ -24,6 +24,7 @@ import {
 import { handleForYouPage } from '../forYouPage/forYouPage.js';
 import { renderBoard } from './boardView/boardView.js';
 import { checkForInvite } from '../../utils/globalUtils.js';
+import { setTheme } from '../../utils/setTheme.js';
 
 async function setupDashboard() {
   checkToken();
@@ -74,6 +75,7 @@ async function setupDashboard() {
     document.querySelector('#no-project-text a');
   openCreateProjectModalBtn.addEventListener('click', openCreateProjectModal);
 
+  setTheme(localStorage.getItem('theme') || 'indigo');
   ifSelectedProject();
   setupSidebar();
   setupNavbar();

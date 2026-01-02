@@ -114,7 +114,7 @@ export function createBacklogTable(projectType) {
 
         <div
           id="sprints-dropdown"
-          class="absolute top-full left-4 z-40 hidden w-35 list-none rounded-sm border border-gray-200 bg-white shadow-lg sm:w-40 md:right-4"
+          class="xs:right-4 xs:left-auto absolute top-full left-4 z-40 hidden w-35 list-none rounded-sm border border-gray-200 bg-white shadow-lg sm:w-40"
         ></div>
         <button
           type="button"

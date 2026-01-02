@@ -1,11 +1,15 @@
 import authService from '../../../services/AuthService.js';
 import taskService from '../../../services/TaskService.js';
 import renderSelectedTab from '../../../utils/renderSelectedTab.js';
+import { setTheme } from '../../../utils/setTheme.js';
 
 const searchInput = document.getElementById('search-input-field');
 const profileBtn = document.getElementById('profileBtn');
 const dropdownMenu = document.getElementById('dropdownMenu');
 const preview = document.getElementById('profileImage');
+
+const themePicker = document.querySelector('.theme-picker');
+const themeOptions = themePicker.querySelectorAll('.theme-option');
 
 function debounce(fn, delay) {
   let timer;
@@ -70,6 +74,13 @@ export async function setupNavbar() {
     e.stopPropagation();
   });
 
+  themeOptions.forEach((option) => {
+    option.addEventListener('click', () => {
+      localStorage.setItem('theme', option.dataset.value);
+      setTheme(option.dataset.value);
+    });
+  });
+
   const response = await authService.getUserInfo();
 
   if (response.profileImage) {
@@ -79,6 +90,7 @@ export async function setupNavbar() {
     preview.src = '../../../../assets/img/profile.png';
   }
 }
+
 let dropdownToggle = document.getElementById('dropdownToggle');
 let notificationDropdownMenu = document.getElementById(
   'notificationDropdownMenu'

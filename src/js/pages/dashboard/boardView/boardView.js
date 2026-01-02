@@ -61,7 +61,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         >
           <span class="column-name">${column}</span>
           <div
-            class="issue-count h-5 w-5 rounded-full bg-gray-200 text-center text-sm text-black"
+            class="issue-count bg-primary-200 h-5 w-5 rounded-full text-center text-sm text-black"
           ></div>
           <div
             class="add-column-button ml-auto hidden cursor-pointer rounded-full px-2 text-lg/5! group-hover:block hover:bg-gray-100"
