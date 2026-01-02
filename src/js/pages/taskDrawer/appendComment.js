@@ -2,6 +2,7 @@ import { showConfirmModal } from '../../utils/modals/confirmationModal';
 import showToast from '../../utils/showToast';
 import commentService from '../../services/CommentService';
 import { DateTime } from 'luxon';
+import { marked } from 'marked';
 
 export function appendCommentToContainer(comment, container) {
   const commentEl = document.createElement('div');
@@ -114,7 +115,9 @@ export function appendCommentToContainer(comment, container) {
         </div>
       </div>
 
-      <p class="message text-sm text-gray-700">${comment.message}</p>
+      <div class="message prose text-sm text-gray-700">
+        ${marked.parse(comment.message)}
+      </div>
 
       <div class="edit-controls hidden">
         <textarea
