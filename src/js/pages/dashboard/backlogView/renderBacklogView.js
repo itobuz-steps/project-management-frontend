@@ -34,7 +34,19 @@ export async function renderBacklogView(
   );
   const project = await projectService.getProjectById(projectId);
   const sprints = await sprintService.getAllSprints(projectId);
-  const allTasks = tasks.data.result.map((task) => task._id);
+  //const allTasks = tasks.data.result.map((task) => task._id);
+  const allTaskObjects = tasks.data.result;
+  const subtaskIds = new Set();
+
+  allTaskObjects.forEach((t) => {
+    if (t.subTask && t.subTask.length) {
+      t.subTask.forEach((id) => subtaskIds.add(id));
+    }
+  });
+
+  const visibleTasks = allTaskObjects.filter((t) => !subtaskIds.has(t._id));
+
+  const allTasks = visibleTasks.map((task) => task._id);
 
   setUpProjectName(project.result);
   const allSprintTasks = [];
@@ -43,10 +55,16 @@ export async function renderBacklogView(
   const backlogTasks = allTasks.filter(
     (task) => !allSprintTasks.includes(task)
   );
-  const incompleteBacklogTasks = backlogTasks.filter(
-    (task) =>
-      task.status !== project.result.columns[project.result.columns.length - 1]
-  );
+  const incompleteBacklogTasks = backlogTasks
+    .map((id) => allTaskObjects.find((t) => t._id === id))
+    .filter(
+      (task) =>
+        task &&
+        !task.parentTask &&
+        task.status !==
+          project.result.columns[project.result.columns.length - 1]
+    )
+    .map((task) => task._id);
 
   const currentSprints = sprints.result.filter((sprint) => !sprint.isCompleted);
 

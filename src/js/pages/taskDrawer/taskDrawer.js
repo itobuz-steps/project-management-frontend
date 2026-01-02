@@ -506,7 +506,7 @@ export async function showTaskDrawer(taskId) {
         console.log(+e.target.value);
         await taskService.updateTask(taskId, { storyPoint: +e.target.value });
         renderSelectedTab(localStorage.getItem('selectedProject'));
-        showToast('Status updated successfully', 'success');
+        showToast('Story point updated successfully', 'success');
       }
     } catch (err) {
       showToast('Failed to update story point', 'error');
@@ -518,7 +518,7 @@ export async function showTaskDrawer(taskId) {
     try {
       await taskService.updateTask(taskId, { type: e.target.value });
       renderSelectedTab(localStorage.getItem('selectedProject'));
-      showToast('Status updated successfully', 'success');
+      showToast('Type updated successfully', 'success');
 
       e.preventDefault();
     } catch (err) {

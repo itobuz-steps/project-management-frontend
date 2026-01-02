@@ -8,6 +8,9 @@ import taskService from '../../services/TaskService';
 import showToast from '../showToast';
 import renderSelectedTab from '../renderSelectedTab';
 import { addDays, format } from 'date-fns';
+import { renderSubtasks } from '../../pages/taskDrawer/renderSubtasks';
+
+let subtaskContext = null;
 
 const closeTaskModal = document.getElementById('close-task-modal');
 const createTaskModal = document.getElementById('create-task-modal');
@@ -96,21 +99,51 @@ taskForm.addEventListener('submit', async (e) => {
         ? null
         : document.getElementById('create-modal-assignee').value,
     attachments: input.files,
+    parentTask: subtaskContext?._id || null,
   };
 
   try {
-    await taskService.createTask(task);
+    const response = await taskService.createTask(task);
+    const newTask = response.data.result.newTask;
+    const subtaskDropdown = document.getElementById('subtaskDropdown');
+    const saveSubtasksBtn = document.getElementById('saveSubtasksBtn');
+
     createTaskModal.classList.add('hidden');
+
     showToast('Task created Successfully', 'success');
-    await renderSelectedTab(localStorage.getItem('selectedProject'));
+
     fileName.textContent = 'No file chosen';
     taskForm.reset();
+
+    if (subtaskContext) {
+      const parentTaskId = subtaskContext._id;
+      const parentTask = (await taskService.getTaskById(parentTaskId)).data
+        .result;
+      const updatedSubtasks = parentTask.subTask
+        ? [...parentTask.subTask, newTask._id]
+        : [newTask._id];
+
+      await taskService.updateTask(parentTaskId, { subTask: updatedSubtasks });
+
+      renderSubtasks({ ...parentTask, subTask: updatedSubtasks });
+
+      if (subtaskDropdown && saveSubtasksBtn) {
+        subtaskDropdown.classList.add('hidden');
+        saveSubtasksBtn.classList.add('hidden');
+      }
+    } else {
+      await renderSelectedTab(localStorage.getItem('selectedProject'));
+    }
+
+    subtaskContext = null;
   } catch (error) {
     console.error(error);
   }
 });
 
-export function openCreateTaskModal() {
+export function openCreateTaskModal(context = null) {
+  subtaskContext = context;
+
   createTaskModal.classList.remove('hidden');
   handleModalStatus(createModalStatusDropdown);
   handleModalAssignee(createModalAssigneeDropdown);

@@ -2,6 +2,7 @@ import taskService from '../../services/TaskService';
 import showToast from '../../utils/showToast';
 import { showTaskDrawer } from './taskDrawer';
 import renderSelectedTab from '../../utils/renderSelectedTab';
+import { openCreateTaskModal } from '../../utils/modals/createTaskModal';
 
 export function createSubtask(taskDrawer, task) {
   const subtaskDropdown = taskDrawer.querySelector('#subtaskDropdown');
@@ -23,20 +24,15 @@ export function createSubtask(taskDrawer, task) {
 
       let canAddSubtask = false;
 
-      if (task.type === 'story') {
-        canAddSubtask = true;
-      }
+      if (task.type === 'story') canAddSubtask = true;
 
       if (
         (task.type === 'task' || task.type === 'bug') &&
         (!parentTask || parentTask.type === 'story')
-      ) {
+      )
         canAddSubtask = true;
-      }
 
-      if (!canAddSubtask) {
-        subtaskContainer.style.display = 'none';
-      }
+      if (!canAddSubtask) subtaskContainer.style.display = 'none';
     } catch (err) {
       console.error(err);
     }
@@ -44,21 +40,59 @@ export function createSubtask(taskDrawer, task) {
 
   showDropdown();
 
-  function dropdownRender(allTasks) {
+  function dropdownRender(allTasks, parentTask) {
+    const createRow = document.createElement('div');
+
+    createRow.className =
+      'flex items-center gap-2 text-primary-500 cursor-pointer font-medium mb-2';
+    createRow.innerHTML = `
+      <span class="text-lg">+</span>
+      <span>Create Subtask</span>
+    `;
+
+    createRow.onclick = async () => {
+      const response = openCreateTaskModal(task);
+
+      if (response?.newTask) {
+        const updatedSubtasks = parentTask.subTask
+          ? [...parentTask.subTask, response.newTask._id]
+          : [response.newTask._id];
+
+        await taskService.updateTask(parentTask._id, {
+          subTask: updatedSubtasks,
+        });
+
+        const updatedParentTask = (
+          await taskService.getTaskById(parentTask._id)
+        ).data.result;
+
+        subtaskDropdown.classList.add('hidden');
+        saveSubtasksBtn.classList.add('hidden');
+        isDropdownVisible = false;
+
+        subtaskList.innerHTML = '';
+
+        const allTasksUpdated = (
+          await taskService.getTaskByProjectId(
+            localStorage.getItem('selectedProject')
+          )
+        ).data.result;
+
+        dropdownRender(allTasksUpdated, updatedParentTask);
+        renderSelectedTab(localStorage.getItem('selectedProject'));
+      }
+    };
+
+    subtaskList.appendChild(createRow);
+
     allTasks.forEach((t) => {
-      if (task.type === 'task' && t.type === 'story') {
-        return;
-      }
-      if (t._id === task._id) {
-        return;
-      }
-      if (t.subTask.length && task.type !== 'story') {
-        return;
-      }
+      if (task.type === 'task' && t.type === 'story') return;
+      if (t._id === task._id) return;
+      if (t.subTask.length && task.type !== 'story') return;
 
-      const isChecked = task.subTask?.includes(t._id);
+      const isChecked = parentTask.subTask?.includes(t._id);
+
       const subTask = document.createElement('div');
-
       subTask.className = 'flex items-center gap-4';
       subTask.innerHTML = `
         <input
@@ -107,40 +141,34 @@ export function createSubtask(taskDrawer, task) {
     saveSubtasksBtn.classList.remove('hidden');
     isDropdownVisible = true;
 
-    const loadSubtasks = async () => {
-      const subtasks = (await taskService.getTaskById(task._id)).data.result
-        .subTask;
+    const parentTask = (await taskService.getTaskById(task._id)).data.result;
 
-      if (!subtasks.length) {
-        const allTasks = (
-          await taskService.getTaskByProjectId(
-            localStorage.getItem('selectedProject')
-          )
-        ).data.result;
+    let allTasks = (
+      await taskService.getTaskByProjectId(
+        localStorage.getItem('selectedProject')
+      )
+    ).data.result;
 
-        subtaskList.innerHTML = '';
-        dropdownRender(allTasks);
-      } else {
-        let allTasks = [];
-        allTasks = (
-          await taskService.getTaskByProjectId(
-            localStorage.getItem('selectedProject')
-          )
-        ).data.result;
-        const tasksWithSubtasks = await Promise.all(
-          subtasks.map(async (stId) => {
-            const subTask = (await taskService.getTaskById(stId)).data.result;
-            return subTask;
-          })
-        );
+    const allParentTasks = allTasks.filter((t) => t.subTask?.length);
+    const subTaskIds = allParentTasks.reduce(
+      (acc, t) => [...acc, ...t.subTask],
+      []
+    );
 
-        allTasks = [...allTasks, ...tasksWithSubtasks];
+    allTasks = allTasks.filter(
+      (t) => t._id !== parentTask._id && !subTaskIds.includes(t._id)
+    );
 
-        subtaskList.innerHTML = '';
-        dropdownRender(allTasks);
-      }
-    };
+    const tasksWithSubtasks = await Promise.all(
+      (parentTask.subTask || []).map(async (stId) => {
+        const subTask = (await taskService.getTaskById(stId)).data.result;
+        return subTask;
+      })
+    );
 
-    loadSubtasks();
+    allTasks = [...allTasks, ...tasksWithSubtasks];
+
+    subtaskList.innerHTML = '';
+    dropdownRender(allTasks, parentTask);
   };
 }
