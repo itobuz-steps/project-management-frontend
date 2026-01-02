@@ -9,6 +9,7 @@ import { createSubtask } from './createSubtask';
 import projectService from '../../services/ProjectService';
 import renderSelectedTab from '../../utils/renderSelectedTab';
 import { getSvgByType } from '../../utils/globalUtils';
+import { marked } from 'marked';
 
 const taskDrawerInnerHtml = /* HTML */ ` <div>
   <div class="flex flex-col gap-3 p-3">
@@ -119,11 +120,9 @@ const taskDrawerInnerHtml = /* HTML */ ` <div>
       <!-- Description Container -->
       <div class="flex flex-col gap-2">
         <h2 id="descriptionHeader" class="font-semibold">Description</h2>
-        <h2
-          class="description max-h-28 w-full overflow-auto rounded-md border border-gray-100 p-1"
-        >
-          <p></p>
-        </h2>
+        <div
+          class="description prose max-h-28 w-full overflow-auto rounded-md border border-gray-100 p-1"
+        ></div>
       </div>
     </div>
     <!-- subtasks -->
@@ -422,6 +421,10 @@ export async function showTaskDrawer(taskId) {
 
   commentInput.addEventListener('keydown', function (event) {
     if (event.key === 'Enter') {
+      if (event.shiftKey) {
+        return;
+      }
+
       event.preventDefault();
       commentSubmit.click();
     }
@@ -454,6 +457,7 @@ export async function showTaskDrawer(taskId) {
 
       commentInput.value = '';
       attachmentInput.value = '';
+      attachmentText.textContent = '';
 
       updateCommentList();
     } catch (err) {
@@ -532,8 +536,8 @@ export async function showTaskDrawer(taskId) {
   titleEl.textContent = task.title;
   taskKeyEl.textContent = task.key;
   taskTypeIcon.innerHTML = getSvgByType(task);
-  descriptionEl.textContent = task.description
-    ? task.description
+  descriptionEl.innerHTML = task.description
+    ? marked.parse(task.description)
     : 'No description added....';
   profileImageEl.src = '../../../assets/img/profile.png';
 
