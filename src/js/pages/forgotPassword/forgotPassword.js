@@ -1,5 +1,6 @@
 import authService from '../../services/AuthService.js';
 import showToast from '../../utils/showToast.js';
+import { setTheme } from '../../utils/setTheme.js';
 
 const forgotForm = document.querySelector('.forgot-form');
 const emailInput = document.getElementById('email-input');
@@ -13,6 +14,8 @@ let isOtpVerified = false;
 
 otpInput.disabled = true;
 passwordInput.disabled = true;
+
+setTheme(localStorage.getItem('theme') || 'indigo');
 
 sendOtpButton.addEventListener('click', async (e) => {
   e.preventDefault();

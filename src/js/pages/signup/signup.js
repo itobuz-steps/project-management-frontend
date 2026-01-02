@@ -1,5 +1,6 @@
 import authService from '../../services/AuthService.js';
 import showToast from '../../utils/showToast.js';
+import { setTheme } from '../../utils/setTheme.js';
 
 const signUpTab = document.querySelector('.sign-up');
 const loginTab = document.querySelector('.login');
@@ -16,6 +17,7 @@ loginFormContainer.classList.remove('hidden');
 signUpFormContainer.classList.add('hidden');
 
 activateLoginTab();
+setTheme(localStorage.getItem('theme') || 'indigo');
 
 function activateLoginTab() {
   loginTab.classList.add('active');

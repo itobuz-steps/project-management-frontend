@@ -1,6 +1,7 @@
 import '../../../style/main.css';
 import authService from '../../services/AuthService.js';
 import showToast from '../../utils/showToast.js';
+import { setTheme } from '../../utils/setTheme.js';
 
 async function editProfile() {
   const form = document.getElementById('edit-profile-form');
@@ -41,4 +42,5 @@ async function editProfile() {
   });
 }
 
+setTheme(localStorage.getItem('theme') || 'indigo');
 editProfile();

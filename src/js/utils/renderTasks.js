@@ -92,7 +92,7 @@ export async function createTaskList(task, type, projectType, sprint) {
     return labelEl;
   });
 
-  tr.classList = ` border-b border-b-gray-200 whitespace-nowrap border-l-3 ${priority} hover:bg-gray-100`;
+  tr.classList = ` border-b border-b-gray-200 whitespace-nowrap border-l-3 ${priority} bg-white hover:bg-gray-100`;
   tr.dataset.id = task._id;
 
   let dateValue;
