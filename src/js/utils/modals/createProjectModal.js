@@ -12,6 +12,9 @@ const columnInputWrapper = document.getElementById(
   'project-columns-input-wrapper'
 );
 const columnInput = document.getElementById('project-columns');
+const nameInput = document.getElementById('name');
+const name = nameInput.value.trim();
+const createProjectForm = document.getElementById('createProjectForm');
 
 columnInput.addEventListener('input', () => {
   if (!columnInput.value.endsWith(' ')) {
@@ -33,6 +36,7 @@ columnInput.addEventListener('input', () => {
 
 columnInput.addEventListener('keydown', (e) => {
   if (e.key === 'Backspace' && columnInput.value === '') {
+    if (!columnInput.previousElementSibling) return;
     columnInputWrapper.querySelector(':nth-last-child(2)').remove();
   }
 });
@@ -40,14 +44,17 @@ columnInput.addEventListener('keydown', (e) => {
 projectCreateForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const name = document.getElementById('name').value.trim();
   const projectType = document.getElementById('projectType').value;
   let columns = ['todo', 'in-progress', 'done'];
 
   if (columnInputWrapper.children.length > 1) {
     columns = Array.from(columnInputWrapper.children)
-      .map((tagEl) => tagEl.textContent)
-      .slice(0, columnInputWrapper.children.length - 1);
+      .slice(0, columnInputWrapper.children.length - 1)
+      .map((tagEl) => {
+        const text = tagEl.textContent;
+        tagEl.remove();
+        return text;
+      });
   }
 
   const projectData = {
@@ -73,8 +80,81 @@ projectCreateForm.addEventListener('submit', async (e) => {
 
 closeProjectBtn.addEventListener('click', () => {
   createProjectModal.classList.add('hidden');
+  createProjectForm.reset();
+  if (columnInputWrapper.children.length > 1) {
+    Array.from(columnInputWrapper.children)
+      .slice(0, columnInputWrapper.children.length - 1)
+      .forEach((tagEl) => {
+        tagEl.remove();
+      });
+  }
 });
 
 export function openCreateProjectModal() {
   createProjectModal.classList.remove('hidden');
 }
+
+function toggleOpenTemplates() {
+  document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('dropdownButton-template')) {
+      const target = e.target;
+      const dropdownIcon = target.querySelector('.dropdown-icon-template');
+      const content = target.parentElement.parentElement.nextElementSibling;
+
+      if (dropdownIcon.classList.contains('-rotate-90')) {
+        dropdownIcon.classList.remove('-rotate-90');
+        content.classList.remove('hidden');
+      } else {
+        dropdownIcon.classList.add('-rotate-90');
+        content.classList.add('hidden');
+      }
+    }
+  });
+}
+
+function handleTemplateColumns() {
+  const templates = document.querySelectorAll('.template');
+
+  templates.forEach((template) => {
+    template.addEventListener('click', () => {
+      if (columnInputWrapper.children.length > 1) {
+        Array.from(columnInputWrapper.children)
+          .slice(0, columnInputWrapper.children.length - 1)
+          .forEach((tagEl) => {
+            tagEl.remove();
+          });
+      }
+
+      const columns = template.dataset.value.split(',');
+      columns.forEach((column) => {
+        const div = document.createElement('div');
+        div.textContent = column.trim();
+        div.className =
+          'bg-primary-400 flex items-center justify-center px-2 py-1 m-1 rounded-md text-white';
+        columnInputWrapper.insertBefore(div, columnInput);
+      });
+      nameInput.value = template.querySelector('.project-name').innerText;
+    });
+  });
+}
+
+// function toggleActive() {
+//   document.addEventListener('click', (e) => {
+//     if (e.target.classList.contains('dropdownButton-template')) {
+//       const target = e.target;
+//       const dropdownIcon = target.querySelector('.dropdown-icon-template');
+//       const content = target.parentElement.parentElement.nextElementSibling;
+
+//       if (dropdownIcon.classList.contains('-rotate-90')) {
+//         dropdownIcon.classList.remove('-rotate-90');
+//         content.classList.remove('hidden');
+//       } else {
+//         dropdownIcon.classList.add('-rotate-90');
+//         content.classList.add('hidden');
+//       }
+//     }
+//   });
+// }
+
+handleTemplateColumns();
+toggleOpenTemplates();
