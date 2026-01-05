@@ -387,7 +387,7 @@ export async function showTaskDrawer(taskId) {
   labelsName.innerHTML = labelsShow.join('');
   reporterName.textContent = reporter.name;
 
-  if (reporter) {
+  if (reporter.profileImage) {
     reporterProfileImageEl.src =
       'http://localhost:3001/uploads/profile/' + reporter.profileImage;
   } else {
