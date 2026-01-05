@@ -13,7 +13,6 @@ const columnInputWrapper = document.getElementById(
 );
 const columnInput = document.getElementById('project-columns');
 const nameInput = document.getElementById('name');
-const name = nameInput.value.trim();
 const createProjectForm = document.getElementById('createProjectForm');
 
 columnInput.addEventListener('input', () => {
@@ -56,7 +55,7 @@ projectCreateForm.addEventListener('submit', async (e) => {
         return text;
       });
   }
-
+  const name = nameInput.value.trim();
   const projectData = {
     name,
     projectType,
