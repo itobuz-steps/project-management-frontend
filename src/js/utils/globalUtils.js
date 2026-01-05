@@ -79,11 +79,9 @@ export function keyboardEvents() {
     ) {
       searchBar.focus();
     }
+  });
 
-    if (keyArray.length === 2) {
-      keyArray = [];
-    }
+  document.addEventListener('keyup', () => {
+    keyArray = [];
   });
 }
-
-keyboardEvents();
