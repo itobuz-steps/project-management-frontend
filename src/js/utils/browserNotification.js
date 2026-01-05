@@ -95,7 +95,7 @@ function handleNotification(data) {
             class="h-12 w-12 rounded-full object-cover ring-2 ring-gray-200"
           />`
           : `<img
-            src="http://localhost:3001/uploads/profile/default-image.jpg"
+            src="../../assets/img/profile.png"
             class="h-12 w-12 rounded-full object-cover ring-2 ring-gray-200"
           />`}
       </div>
@@ -191,8 +191,6 @@ const badge = document.getElementById('notificationBadge');
 const dropDownToggle = document.getElementById('dropdownToggle');
 function clearNotification() {
   if (badge) {
-    // console.log('badge is: ', badge);
-
     badge.addEventListener('click', () => {
       localStorage.setItem('notificationCount', 0);
       badge.textContent = '0';
