@@ -23,7 +23,7 @@ import {
 } from '../../utils/browserNotification.js';
 import { handleForYouPage } from '../forYouPage/forYouPage.js';
 import { renderBoard } from './boardView/boardView.js';
-import { checkForInvite } from '../../utils/globalUtils.js';
+import { checkForInvite, keyboardEvents } from '../../utils/globalUtils.js';
 import { setTheme } from '../../utils/setTheme.js';
 
 async function setupDashboard() {
@@ -87,6 +87,7 @@ async function setupDashboard() {
   lazyLoad();
   renderNotification();
   handleForYouPage();
+  keyboardEvents();
 }
 
 setupDashboard();

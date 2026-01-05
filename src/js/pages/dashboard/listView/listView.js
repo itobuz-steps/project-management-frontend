@@ -15,10 +15,12 @@ export async function renderTasksList(
 
   const project = (await projectService.getProjectById(projectId)).result;
   const tasksArray = await getFilteredTasks(projectId, filter, searchInput);
+  const loader = document.getElementById(`list-loader`);
   setUpProjectName(project);
 
   if (!tasksArray.length) {
     emptyListContainer.classList.remove('hidden');
+    loader.classList.add('hidden');
   } else {
     emptyListContainer.classList.add('hidden');
     let promiseArray = [];
@@ -28,7 +30,6 @@ export async function renderTasksList(
       );
     }
 
-    const loader = document.getElementById(`list-loader`);
     if (loader.classList.contains('hidden')) {
       loader.classList.remove('hidden');
     }
