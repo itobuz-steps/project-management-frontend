@@ -13,12 +13,12 @@ export function createSprintTable(sprint) {
   sprintContainer.className = ' p-1 rounded-t';
   sprintContainer.innerHTML = /* HTML */ `
     <div
-      class="relative flex items-center justify-between rounded-md border border-gray-200 bg-gray-50 p-2 text-left shadow-sm"
+      class="relative flex flex-wrap items-center justify-between rounded-md border border-gray-200 bg-gray-50 p-2 text-left shadow-sm"
     >
       <div class="flex flex-1 flex-col md:flex-row">
         <button
           type="button"
-          class="dropdownButton flex w-30 flex-1 cursor-pointer items-center gap-3 rounded-md text-lg font-semibold focus:outline-none md:w-fit"
+          class="dropdownButton flex w-full flex-1 cursor-pointer items-center gap-3 rounded-md text-lg font-semibold focus:outline-none md:w-fit"
           id="dropdownButton-${sprint.key}"
           aria-expanded="false"
           aria-haspopup="true"
@@ -140,7 +140,7 @@ export function createSprintTable(sprint) {
     >
       <table class="w-full text-left rtl:text-right">
         <thead
-          class="border-b border-gray-200 bg-gray-100 text-xs text-nowrap uppercase hover:bg-gray-200"
+          class="border-b border-l-3 border-gray-200 border-l-gray-100 bg-gray-100 text-xs text-nowrap uppercase hover:border-l-gray-200 hover:bg-gray-200"
         >
           <tr>
             <th scope="col" class="p-2 text-center">Type</th>
@@ -161,7 +161,7 @@ export function createSprintTable(sprint) {
       </table>
     </div>
     <div
-      class="empty-message flex hidden h-15 w-full items-center justify-center rounded-lg border border-dotted text-center hover:border-purple-600"
+      class="empty-message hover:border-primary-600 hover:text-primary-400 flex hidden h-15 w-full items-center justify-center rounded-lg border border-dotted text-center font-semibold text-gray-400"
       id="${sprint.key}-empty-message"
       data-id="${sprint._id}"
     >
@@ -322,4 +322,29 @@ async function handleAddTaskFromBacklogToSprint(dropdownEl) {
   });
 
   await renderBacklogView(localStorage.getItem('selectedProject'));
+}
+
+export async function handleDashboardSprintPreview() {
+  const project = (
+    await projectService.getProjectById(localStorage.getItem('selectedProject'))
+  ).result;
+  const sprintPreviewContainer = document.getElementById(
+    'dashboardSprintPreview'
+  );
+
+  if (project.projectType === 'scrum') {
+    sprintPreviewContainer.classList.remove('hidden');
+
+    if (project.currentSprint) {
+      const sprintName = document.getElementById('dashboardSprintName');
+      const sprintDueDate = document.getElementById('dashboardSprintDueDate');
+      const sprint = (await sprintService.getSprintById(project.currentSprint))
+        .result;
+      console.log(sprint);
+      sprintName.innerText = sprint.key;
+      sprintDueDate.innerText = new Date(sprint.dueDate).toLocaleDateString();
+    }
+  } else {
+    sprintPreviewContainer.classList.add('hidden');
+  }
 }
