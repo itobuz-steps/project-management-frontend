@@ -164,7 +164,7 @@ export function createBacklogTable(projectType) {
       id="backlog-empty-message"
       data-id="backlog"
     >
-      Create tasks...
+      No Task Found
     </div>
 
     <div class="flex w-full justify-center" id="backlog-loader">

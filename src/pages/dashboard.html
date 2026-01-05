@@ -844,10 +844,10 @@
             <!-- Form -->
             <div
               id="project-form"
-              class="xs:p-6 flex flex-col justify-around gap-3 overflow-scroll p-4 sm:flex-row"
+              class="xs:p-6 flex flex-col justify-around gap-5 overflow-scroll p-4 sm:flex-row"
             >
               <form
-                class="w-1/3 space-y-3"
+                class="space-y-3 sm:max-h-[calc(18rem)] sm:w-1/2 sm:overflow-y-auto"
                 action="submit"
                 id="createProjectForm"
               >
@@ -871,7 +871,7 @@
                     <select
                       name="projectType"
                       id="projectType"
-                      class="w-full py-2 outline-none"
+                      class="w-full cursor-pointer py-2 outline-none"
                       required
                     >
                       <option value="kanban" selected>kanban</option>
@@ -897,43 +897,43 @@
                     />
                   </div>
                 </div>
-                <button type="submit" class="btn-primary w-full">Create</button>
+                <button type="submit" class="btn-primary w-full cursor-pointer">
+                  Create
+                </button>
               </form>
               <div
-                class="flex max-h-[calc(17rem)] w-1/2 flex-col gap-2 overflow-y-scroll"
+                class="flex max-h-[calc(17rem)] flex-col gap-2 overflow-y-scroll sm:w-1/2"
               >
                 <div>
                   <h2 class="text-primary-400 font-semibold">
                     Choose a template
                   </h2>
                   <div
-                    class="xs:justify-between xs:items-center relative flex cursor-pointer rounded-md border border-gray-200 bg-gray-50 p-2 text-left shadow-sm hover:bg-gray-100"
+                    class="xs:justify-between xs:items-center relative flex flex-1 cursor-pointer items-center justify-start rounded-md border border-gray-200 bg-gray-50 text-left shadow-sm hover:bg-gray-100"
                   >
-                    <div class="flex flex-1 items-center justify-start">
-                      <button
-                        type="button"
-                        class="dropdownButton-template flex w-30 cursor-pointer items-center gap-3 rounded-md font-semibold focus:outline-none md:w-full"
-                        aria-expanded="false"
-                        aria-haspopup="true"
+                    <button
+                      type="button"
+                      class="dropdownButton-template flex w-full cursor-pointer items-center gap-3 rounded-md p-2 font-semibold focus:outline-none md:w-full"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                    >
+                      <svg
+                        class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 20 20"
+                        stroke="currentColor"
+                        aria-hidden="true"
                       >
-                        <svg
-                          class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 20 20"
-                          stroke="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M5 7l7 7 7-7"
-                          ></path>
-                        </svg>
-                        Software Development
-                      </button>
-                    </div>
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 7l7 7 7-7"
+                        ></path>
+                      </svg>
+                      Software Development
+                    </button>
                   </div>
                   <div class="no-scrollbar hidden overflow-x-auto">
                     <div class="mt-1 flex min-w-max gap-2">
@@ -1003,33 +1003,31 @@
                 </div>
                 <div>
                   <div
-                    class="xs:justify-between xs:items-center relative flex cursor-pointer rounded-md border border-gray-200 bg-gray-50 p-2 text-left shadow-sm hover:bg-gray-100"
+                    class="xs:justify-between xs:items-center relative flex flex-1 cursor-pointer items-center justify-start rounded-md border border-gray-200 bg-gray-50 text-left shadow-sm hover:bg-gray-100"
                   >
-                    <div class="flex flex-1 items-center justify-start">
-                      <button
-                        type="button"
-                        class="dropdownButton-template flex w-30 cursor-pointer items-center gap-3 rounded-md font-semibold focus:outline-none md:w-full"
-                        aria-expanded="false"
-                        aria-haspopup="true"
+                    <button
+                      type="button"
+                      class="dropdownButton-template flex w-full cursor-pointer items-center gap-3 rounded-md p-2 font-semibold focus:outline-none md:w-full"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                    >
+                      <svg
+                        class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 20 20"
+                        stroke="currentColor"
+                        aria-hidden="true"
                       >
-                        <svg
-                          class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 20 20"
-                          stroke="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M5 7l7 7 7-7"
-                          ></path>
-                        </svg>
-                        Service management
-                      </button>
-                    </div>
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 7l7 7 7-7"
+                        ></path>
+                      </svg>
+                      Service management
+                    </button>
                   </div>
                   <div class="no-scrollbar hidden overflow-x-auto">
                     <div class="mt-1 flex min-w-max gap-2">
@@ -1099,33 +1097,31 @@
                 </div>
                 <div>
                   <div
-                    class="xs:justify-between xs:items-center relative flex cursor-pointer rounded-md border border-gray-200 bg-gray-50 p-2 text-left shadow-sm hover:bg-gray-100"
+                    class="xs:justify-between xs:items-center relative flex flex-1 cursor-pointer items-center justify-start rounded-md border border-gray-200 bg-gray-50 text-left shadow-sm hover:bg-gray-100"
                   >
-                    <div class="flex flex-1 items-center justify-start">
-                      <button
-                        type="button"
-                        class="dropdownButton-template flex w-30 cursor-pointer items-center gap-3 rounded-md font-semibold focus:outline-none md:w-full"
-                        aria-expanded="false"
-                        aria-haspopup="true"
+                    <button
+                      type="button"
+                      class="dropdownButton-template flex w-full cursor-pointer items-center gap-3 rounded-md p-2 font-semibold focus:outline-none md:w-full"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                    >
+                      <svg
+                        class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 20 20"
+                        stroke="currentColor"
+                        aria-hidden="true"
                       >
-                        <svg
-                          class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 20 20"
-                          stroke="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M5 7l7 7 7-7"
-                          ></path>
-                        </svg>
-                        Work management
-                      </button>
-                    </div>
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 7l7 7 7-7"
+                        ></path>
+                      </svg>
+                      Work management
+                    </button>
                   </div>
                   <div class="no-scrollbar hidden overflow-x-auto">
                     <div class="mt-1 flex min-w-max gap-2">
@@ -1200,82 +1196,37 @@
                 </div>
                 <div>
                   <div
-                    class="xs:justify-between xs:items-center relative flex cursor-pointer rounded-md border border-gray-200 bg-gray-50 p-2 text-left shadow-sm hover:bg-gray-100"
+                    class="xs:justify-between xs:items-center relative flex flex-1 cursor-pointer items-center justify-start rounded-md border border-gray-200 bg-gray-50 text-left shadow-sm hover:bg-gray-100"
                   >
-                    <div class="flex flex-1 items-center justify-start">
-                      <button
-                        type="button"
-                        class="dropdownButton-template flex w-30 cursor-pointer items-center gap-3 rounded-md font-semibold focus:outline-none md:w-full"
-                        aria-expanded="false"
-                        aria-haspopup="true"
+                    <button
+                      type="button"
+                      class="dropdownButton-template flex w-full cursor-pointer items-center gap-3 rounded-md p-2 font-semibold focus:outline-none md:w-full"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                    >
+                      <svg
+                        class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 20 20"
+                        stroke="currentColor"
+                        aria-hidden="true"
                       >
-                        <svg
-                          class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 20 20"
-                          stroke="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M5 7l7 7 7-7"
-                          ></path>
-                        </svg>
-                        Product management
-                      </button>
-                    </div>
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 7l7 7 7-7"
+                        ></path>
+                      </svg>
+                      Product management
+                    </button>
                   </div>
                   <div class="no-scrollbar hidden overflow-x-auto">
                     <div class="mt-1 flex min-w-max gap-2">
                       <div
                         tabindex="0"
                         class="template bg-primary-100 focus:border-primary-400 focus:bg-primary-50 hover:border-primary-400 hover:bg-primary-50 flex min-h-30 w-44 cursor-pointer flex-col justify-around rounded-md border-2 border-transparent p-3 transition-all delay-75 hover:scale-95"
-                        data-value="parking lot,discovery,ready for delivery,delivery,impact,archived"
-                      >
-                        <p class="project-name text-center font-semibold">
-                          Product Discovery
-                        </p>
-                        <div
-                          class="mt-1 flex flex-wrap items-center justify-center gap-1 text-center"
-                        >
-                          <p
-                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
-                          >
-                            Parking lot
-                          </p>
-                          <p
-                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
-                          >
-                            Discovery
-                          </p>
-                          <p
-                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
-                          >
-                            Ready for delivery
-                          </p>
-                          <p
-                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
-                          >
-                            Delivery
-                          </p>
-                          <p
-                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
-                          >
-                            Impact
-                          </p>
-                          <p
-                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
-                          >
-                            Archived
-                          </p>
-                        </div>
-                      </div>
-                      <div
-                        tabindex="0"
-                        class="bg-primary-100 hover:border-primary-400 hover:bg-primary-50 flex min-h-30 w-44 cursor-pointer flex-col justify-around rounded-md border-2 border-transparent p-3 transition-all delay-75 hover:scale-95"
                         data-value="parking lot,discovery,ready for delivery,delivery,impact,archived"
                       >
                         <p class="project-name text-center font-semibold">
@@ -1318,7 +1269,7 @@
                       </div>
                       <div
                         tabindex="0"
-                        class="bg-primary-100 hover:border-primary-400 hover:bg-primary-50 flex min-h-30 w-44 cursor-pointer flex-col justify-around rounded-md border-2 border-transparent p-3 transition-all delay-75 hover:scale-95"
+                        class="template bg-primary-100 focus:border-primary-400 focus:bg-primary-50 hover:border-primary-400 hover:bg-primary-50 flex min-h-30 w-44 cursor-pointer flex-col justify-around rounded-md border-2 border-transparent p-3 transition-all delay-75 hover:scale-95"
                         data-value="to do,concepting,design,testing,launch"
                       >
                         <p class="project-name text-center font-semibold">
@@ -1359,33 +1310,31 @@
                 </div>
                 <div>
                   <div
-                    class="xs:justify-between xs:items-center relative flex cursor-pointer rounded-md border border-gray-200 bg-gray-50 p-2 text-left shadow-sm hover:bg-gray-100"
+                    class="xs:justify-between xs:items-center relative flex flex-1 cursor-pointer items-center justify-start rounded-md border border-gray-200 bg-gray-50 text-left shadow-sm hover:bg-gray-100"
                   >
-                    <div class="flex flex-1 items-center justify-start">
-                      <button
-                        type="button"
-                        class="dropdownButton-template flex w-30 cursor-pointer items-center gap-3 rounded-md font-semibold focus:outline-none md:w-full"
-                        aria-expanded="false"
-                        aria-haspopup="true"
+                    <button
+                      type="button"
+                      class="dropdownButton-template flex w-full cursor-pointer items-center gap-3 rounded-md p-2 font-semibold focus:outline-none md:w-full"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                    >
+                      <svg
+                        class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 20 20"
+                        stroke="currentColor"
+                        aria-hidden="true"
                       >
-                        <svg
-                          class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 20 20"
-                          stroke="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M5 7l7 7 7-7"
-                          ></path>
-                        </svg>
-                        Human resources
-                      </button>
-                    </div>
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 7l7 7 7-7"
+                        ></path>
+                      </svg>
+                      Human resources
+                    </button>
                   </div>
                   <div class="no-scrollbar hidden overflow-x-auto">
                     <div class="mt-1 flex min-w-max gap-2">
@@ -1442,33 +1391,31 @@
                 </div>
                 <div>
                   <div
-                    class="xs:justify-between xs:items-center relative flex cursor-pointer rounded-md border border-gray-200 bg-gray-50 p-2 text-left shadow-sm hover:bg-gray-100"
+                    class="xs:justify-between xs:items-center relative flex flex-1 cursor-pointer items-center justify-start rounded-md border border-gray-200 bg-gray-50 text-left shadow-sm hover:bg-gray-100"
                   >
-                    <div class="flex flex-1 items-center justify-start">
-                      <button
-                        type="button"
-                        class="dropdownButton-template flex w-30 cursor-pointer items-center gap-3 rounded-md font-semibold focus:outline-none md:w-full"
-                        aria-expanded="false"
-                        aria-haspopup="true"
+                    <button
+                      type="button"
+                      class="dropdownButton-template flex w-full cursor-pointer items-center gap-3 rounded-md p-2 font-semibold focus:outline-none md:w-full"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                    >
+                      <svg
+                        class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 20 20"
+                        stroke="currentColor"
+                        aria-hidden="true"
                       >
-                        <svg
-                          class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 20 20"
-                          stroke="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M5 7l7 7 7-7"
-                          ></path>
-                        </svg>
-                        Sales
-                      </button>
-                    </div>
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 7l7 7 7-7"
+                        ></path>
+                      </svg>
+                      Sales
+                    </button>
                   </div>
                   <div class="no-scrollbar hidden overflow-x-auto">
                     <div class="mt-1 flex min-w-max gap-2">
@@ -1515,33 +1462,31 @@
                 </div>
                 <div>
                   <div
-                    class="xs:justify-between xs:items-center relative flex cursor-pointer rounded-md border border-gray-200 bg-gray-50 p-2 text-left shadow-sm hover:bg-gray-100"
+                    class="xs:justify-between xs:items-center relative flex flex-1 cursor-pointer items-center justify-start rounded-md border border-gray-200 bg-gray-50 text-left shadow-sm hover:bg-gray-100"
                   >
-                    <div class="flex flex-1 items-center justify-start">
-                      <button
-                        type="button"
-                        class="dropdownButton-template flex w-30 cursor-pointer items-center gap-3 rounded-md font-semibold focus:outline-none md:w-full"
-                        aria-expanded="false"
-                        aria-haspopup="true"
+                    <button
+                      type="button"
+                      class="dropdownButton-template flex w-full cursor-pointer items-center gap-3 rounded-md p-2 font-semibold focus:outline-none md:w-full"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                    >
+                      <svg
+                        class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 20 20"
+                        stroke="currentColor"
+                        aria-hidden="true"
                       >
-                        <svg
-                          class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 20 20"
-                          stroke="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M5 7l7 7 7-7"
-                          ></path>
-                        </svg>
-                        Finance
-                      </button>
-                    </div>
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 7l7 7 7-7"
+                        ></path>
+                      </svg>
+                      Finance
+                    </button>
                   </div>
                   <div class="no-scrollbar hidden overflow-x-auto">
                     <div class="mt-1 flex min-w-max gap-2">
@@ -1593,33 +1538,31 @@
                 </div>
                 <div>
                   <div
-                    class="xs:justify-between xs:items-center relative flex cursor-pointer rounded-md border border-gray-200 bg-gray-50 p-2 text-left shadow-sm hover:bg-gray-100"
+                    class="xs:justify-between xs:items-center relative flex flex-1 cursor-pointer items-center justify-start rounded-md border border-gray-200 bg-gray-50 text-left shadow-sm hover:bg-gray-100"
                   >
-                    <div class="flex flex-1 items-center justify-start">
-                      <button
-                        type="button"
-                        class="dropdownButton-template flex w-30 cursor-pointer items-center gap-3 rounded-md font-semibold focus:outline-none md:w-full"
-                        aria-expanded="false"
-                        aria-haspopup="true"
+                    <button
+                      type="button"
+                      class="dropdownButton-template flex w-full cursor-pointer items-center gap-3 rounded-md p-2 font-semibold focus:outline-none md:w-full"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                    >
+                      <svg
+                        class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 20 20"
+                        stroke="currentColor"
+                        aria-hidden="true"
                       >
-                        <svg
-                          class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 20 20"
-                          stroke="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M5 7l7 7 7-7"
-                          ></path>
-                        </svg>
-                        Nonprofit
-                      </button>
-                    </div>
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 7l7 7 7-7"
+                        ></path>
+                      </svg>
+                      Nonprofit
+                    </button>
                   </div>
                   <div class="no-scrollbar hidden overflow-x-auto">
                     <div class="mt-1 flex min-w-max gap-2">

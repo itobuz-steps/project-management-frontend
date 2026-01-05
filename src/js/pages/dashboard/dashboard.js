@@ -34,7 +34,7 @@ async function setupDashboard() {
   openProjectBtn.addEventListener('click', openCreateProjectModal);
 
   const addTaskButton = document.getElementById('create-task');
-  addTaskButton.addEventListener('click', openCreateTaskModal);
+  addTaskButton.addEventListener('click', () => openCreateTaskModal());
 
   localStorage.setItem('selectedTab', 'board');
 
