@@ -94,11 +94,19 @@ export function openCreateProjectModal() {
 }
 
 function toggleOpenTemplates() {
-  document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('dropdownButton-template')) {
+  const dropDownButtons = document.querySelectorAll('.dropdownButton-template');
+  dropDownButtons.forEach((button) => {
+    button.addEventListener('click', (e) => {
       const target = e.target;
-      const dropdownIcon = target.querySelector('.dropdown-icon-template');
-      const content = target.parentElement.parentElement.nextElementSibling;
+      let dropdownIcon;
+      let content;
+      if (target.classList.contains('dropdown-icon-template')) {
+        dropdownIcon = target;
+        content = target.parentElement.parentElement.nextElementSibling;
+      } else {
+        dropdownIcon = target.querySelector('.dropdown-icon-template');
+        content = target.parentElement.nextElementSibling;
+      }
 
       if (dropdownIcon.classList.contains('-rotate-90')) {
         dropdownIcon.classList.remove('-rotate-90');
@@ -107,7 +115,7 @@ function toggleOpenTemplates() {
         dropdownIcon.classList.add('-rotate-90');
         content.classList.add('hidden');
       }
-    }
+    });
   });
 }
 
@@ -136,24 +144,6 @@ function handleTemplateColumns() {
     });
   });
 }
-
-// function toggleActive() {
-//   document.addEventListener('click', (e) => {
-//     if (e.target.classList.contains('dropdownButton-template')) {
-//       const target = e.target;
-//       const dropdownIcon = target.querySelector('.dropdown-icon-template');
-//       const content = target.parentElement.parentElement.nextElementSibling;
-
-//       if (dropdownIcon.classList.contains('-rotate-90')) {
-//         dropdownIcon.classList.remove('-rotate-90');
-//         content.classList.remove('hidden');
-//       } else {
-//         dropdownIcon.classList.add('-rotate-90');
-//         content.classList.add('hidden');
-//       }
-//     }
-//   });
-// }
 
 handleTemplateColumns();
 toggleOpenTemplates();
