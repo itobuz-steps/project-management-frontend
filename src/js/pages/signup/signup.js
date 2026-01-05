@@ -70,7 +70,7 @@ async function handleSignup(event) {
       window.location.href = 'verifyOtpPage.html';
     }, 1000);
   } catch (error) {
-    showToast(error.message, 'danger');
+    showToast(error.message, 'error');
   } finally {
     signupBtn.textContent = originalText;
     signupBtn.disabled = false;
@@ -108,7 +108,7 @@ async function handleLogin(event) {
     showToast(
       error.response?.data?.message ||
         'Login failed. Please check your credentials.',
-      'danger'
+      'error'
     );
   } finally {
     loginBtn.textContent = originalText;

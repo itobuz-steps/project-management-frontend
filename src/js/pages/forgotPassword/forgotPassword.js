@@ -23,7 +23,7 @@ sendOtpButton.addEventListener('click', async (e) => {
   const email = emailInput.value.trim();
 
   if (!email) {
-    showToast('Enter email.', 'warning');
+    showToast('Enter email.', 'info');
     return;
   }
 
@@ -45,14 +45,17 @@ sendOtpButton.addEventListener('click', async (e) => {
     sendOtpButton.textContent = 'Send OTP';
     emailInput.disabled = false;
 
-    showToast(error.message || 'Failed to send OTP.', 'danger');
+    showToast(error.message || 'Failed to send OTP.', 'error');
   }
 });
 
 otpInput.addEventListener('input', async () => {
   const otp = otpInput.value.trim();
   const email = emailInput.value.trim();
-  if (isOtpVerified || otp.length !== 6) return;
+
+  if (isOtpVerified || otp.length !== 6) {
+    return;
+  }
 
   showToast('Verifying...', 'info');
 
@@ -71,7 +74,7 @@ otpInput.addEventListener('input', async () => {
 
     otpInput.disabled = false;
 
-    showToast(error.message || 'Invalid OTP.', 'danger');
+    showToast(error.message || 'Invalid OTP.', 'error');
   }
 });
 
@@ -83,17 +86,17 @@ forgotForm.addEventListener('submit', async (e) => {
   const newPassword = passwordInput.value;
 
   if (!isOtpSent) {
-    showToast('Send OTP first.', 'warning');
+    showToast('Send OTP first.', 'info');
     return;
   }
 
   if (!isOtpVerified) {
-    showToast('Verify OTP before resetting.', 'warning');
+    showToast('Verify OTP before resetting.', 'info');
     return;
   }
 
   if (!email || !otp || !newPassword) {
-    showToast('All fields required.', 'warning');
+    showToast('All fields required.', 'info');
     return;
   }
 
@@ -117,6 +120,6 @@ forgotForm.addEventListener('submit', async (e) => {
     resetButton.textContent = 'Reset Password';
     resetButton.disabled = false;
 
-    showToast(error.message || 'Failed to reset password.', 'danger');
+    showToast(error.message || 'Failed to reset password.', 'error');
   }
 });
