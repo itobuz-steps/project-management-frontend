@@ -5,6 +5,7 @@ import axios from 'axios';
 import showToast from '../../../utils/showToast';
 import renderSelectedTab from '../../../utils/renderSelectedTab';
 import { ifSelectedProject } from '../../../utils/elementUtils';
+import { handleDashboardSprintPreview } from '../backlogView/sprint';
 
 const sidebar = document.querySelector('#sidebar');
 const toggleBtn = document.querySelector('.toggle-sidebar-btn');
@@ -167,6 +168,7 @@ function addEventListenersSidebar() {
       child.classList.remove('selected');
     });
     ifSelectedProject();
+    await handleDashboardSprintPreview();
 
     targetLi.classList.toggle('selected');
     await renderSelectedTab(localStorage.getItem('selectedProject'));

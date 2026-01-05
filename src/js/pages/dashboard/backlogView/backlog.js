@@ -3,6 +3,7 @@ import { checkIfEmpty } from '../../../utils/elementUtils';
 import { addDragEvent } from '../../../utils/dragAndDropHandler';
 import { createTaskList } from '../../../utils/renderTasks';
 import { toggleHidden } from '../../../utils/elementUtils';
+import { openCreateTaskModal } from '../../../utils/modals/createTaskModal';
 
 export function createBacklogTable(projectType) {
   let ifKanban = '';
@@ -21,7 +22,7 @@ export function createBacklogTable(projectType) {
       <div class="flex flex-1 items-center justify-start">
         <button
           type="button"
-          class="flex w-30 cursor-pointer items-center gap-3 rounded-md font-semibold focus:outline-none md:w-full"
+          class="flex w-full cursor-pointer items-center gap-3 rounded-md font-semibold focus:outline-none md:w-full"
           id="dropdownButton-backlog"
           aria-expanded="false"
           aria-haspopup="true"
@@ -131,7 +132,7 @@ export function createBacklogTable(projectType) {
     >
       <table class="w-full text-left rtl:text-right">
         <thead
-          class="border-b border-l-3 border-gray-200 border-l-gray-100 bg-gray-100 text-xs text-nowrap uppercase hover:bg-gray-200"
+          class="border-b border-l-3 border-gray-200 border-l-gray-100 bg-gray-100 text-xs text-nowrap uppercase hover:border-l-gray-200 hover:bg-gray-200"
         >
           <tr>
             <th scope="col" class="${ifKanban} p-2">
@@ -160,11 +161,13 @@ export function createBacklogTable(projectType) {
       </table>
     </div>
     <div
-      class="empty-message flex hidden w-full justify-center bg-white/80 p-4 text-center text-lg font-bold text-gray-400 backdrop:blur-lg"
+      class="empty-message flex hidden w-full justify-center rounded-md bg-white/80 p-4 text-center text-lg font-bold text-gray-400 backdrop:blur-lg"
       id="backlog-empty-message"
       data-id="backlog"
     >
-      No Task Found
+      <p class="hover:text-primary-400 cursor-pointer">
+        No task found, click here to create one
+      </p>
     </div>
 
     <div class="flex w-full justify-center" id="backlog-loader">
@@ -219,5 +222,12 @@ export function handleBacklogCheckboxAll(isCheckedValue) {
   const backlogBodyChildren = document.getElementById('backlog-body');
   backlogBodyChildren.querySelectorAll('.checkboxes').forEach((box) => {
     box.checked = isCheckedValue;
+  });
+}
+
+export function openCreateTaskModalFromBacklog() {
+  const emptyMessage = document.querySelector('#backlog-empty-message p');
+  emptyMessage.addEventListener('click', () => {
+    openCreateTaskModal();
   });
 }

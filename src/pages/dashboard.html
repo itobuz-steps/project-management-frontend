@@ -447,13 +447,54 @@
           class="bg-primary-200 flex flex-col gap-1 rounded-lg p-3 shadow-sm md:gap-4 md:p-4"
         >
           <div class="project-info">
-            <div class="flex flex-row items-center gap-5">
+            <div
+              class="flex flex-col justify-between text-gray-700 sm:flex-row sm:items-center"
+            >
               <h1
                 class="project-name bg-clip-text text-xl font-semibold text-black sm:text-2xl"
                 id="projectName"
               >
                 No Project Selected
               </h1>
+              <div
+                class="flex hidden items-center gap-5"
+                id="dashboardSprintPreview"
+              >
+                <h2
+                  class="text-primary-700 font-semibold"
+                  id="dashboardSprintName"
+                >
+                  No sprint started
+                </h2>
+                <div class="flex items-center gap-1">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="size-4 stroke-black"
+                  >
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g
+                      id="SVGRepo_tracerCarrier"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></g>
+                    <g id="SVGRepo_iconCarrier">
+                      <path
+                        d="M12 7V12L14.5 10.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                        stroke="inherit"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      ></path>
+                    </g>
+                  </svg>
+                  <p
+                    id="dashboardSprintDueDate"
+                    class="text-center text-xs font-semibold"
+                  ></p>
+                </div>
+              </div>
             </div>
           </div>
           <div
@@ -685,7 +726,7 @@
               >
                 <table class="w-full text-left rtl:text-right">
                   <thead
-                    class="border-b border-l-3 border-gray-200 border-l-gray-100 bg-gray-100 text-xs text-nowrap uppercase hover:bg-gray-200"
+                    class="border-b border-l-3 border-gray-200 border-l-gray-100 bg-gray-100 text-xs text-nowrap uppercase hover:border-l-gray-200 hover:bg-gray-200"
                   >
                     <tr class="">
                       <th scope="col" class="p-2 text-center">Type</th>

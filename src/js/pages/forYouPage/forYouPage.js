@@ -5,6 +5,7 @@ import { ifSelectedProject } from '../../utils/elementUtils';
 import { getSvgByPriority, getSvgByType } from '../../utils/globalUtils';
 import renderSelectedTab from '../../utils/renderSelectedTab';
 import { svgObject } from '../../utils/svgObjects';
+import { handleDashboardSprintPreview } from '../dashboard/backlogView/sprint';
 import { toggleSidebar } from '../dashboard/sidebar/sidebar';
 import { loadProjectMembers } from '../loadMembers/loadMembers';
 import { showTaskDrawer } from '../taskDrawer/taskDrawer';
@@ -89,6 +90,7 @@ function createProjectCard(project) {
     await renderSelectedTab(project._id);
     showForYouPage(false);
     loadProjectMembers(project._id);
+    await handleDashboardSprintPreview();
   });
 
   return projectDiv;
