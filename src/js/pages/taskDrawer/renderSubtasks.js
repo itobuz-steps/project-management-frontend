@@ -3,21 +3,8 @@ import { showTaskDrawer } from './taskDrawer';
 
 export async function renderSubtasks(task) {
   const list = document.getElementById('subtasksList');
+
   list.innerHTML = '';
-
-  let type;
-
-  switch (task.type) {
-    case 'task':
-      type = 'border-l-[#165dfc]';
-      break;
-    case 'story':
-      type = 'border-l-[#00a63d]';
-      break;
-    case 'bug':
-      type = 'border-l-[#e7000b]';
-      break;
-  }
 
   if (!task.subTask.length) {
     list.innerHTML = "<p class='text-gray-400 font-semibold'>No subtasks</p>";
@@ -33,6 +20,20 @@ export async function renderSubtasks(task) {
       ? (await taskService.getUserDetailsById(st.assignee)).data.result
       : null;
     const div = document.createElement('div');
+
+    let type;
+
+    switch (st.type) {
+      case 'task':
+        type = 'border-l-[#165dfc]';
+        break;
+      case 'story':
+        type = 'border-l-[#00a63d]';
+        break;
+      case 'bug':
+        type = 'border-l-[#e7000b]';
+        break;
+    }
 
     div.className = `flex items-center bg-white rounded-md shadow-sm p-3 subtaskEl cursor-pointer w-full border border-gray-200 ${type}`;
 

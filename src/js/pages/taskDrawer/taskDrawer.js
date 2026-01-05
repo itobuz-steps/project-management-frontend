@@ -88,13 +88,13 @@ const taskDrawerInnerHtml = /* HTML */ ` <div>
         <div class="flex flex-col leading-tight">
           <p class="text-gray-500">Assignee</p>
           <p
-            class="assignee text-primary-500 cursor-pointer font-medium"
+            class="assignee text-primary-500  font-medium"
             id="assignee-name"
           ></p>
         </div>
         <select
           id="assignee-dropdown-taskDrawer"
-          class="absolute opacity-0 top-4 left-4 w-52 rounded-sm bg-white border border-gray-200 p-2 shadow-md focus:outline-none"
+          class="absolute opacity-0 top-4 left-4 w-52 rounded-sm bg-white border cursor-pointer border-gray-200 p-2 shadow-md"
         ></select>
       </div>
       <div class="flex flex-col gap-1">
@@ -218,7 +218,7 @@ const taskDrawerInnerHtml = /* HTML */ ` <div>
           <img
             src="../assets/img/profile.png"
             alt="Avatar"
-            class="reporter-profile-image h-8 w-8 rounded-full border border-white shadow-sm"
+            class="reporter-profile-image h-6 w-6 rounded-full border border-white shadow-sm"
           />
             <p
               class="reporter text-primary-500 font-medium text-wrap text-end flex-1"
