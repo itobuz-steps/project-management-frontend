@@ -77,7 +77,7 @@ const taskDrawerInnerHtml = /* HTML */ ` <div>
           </button>
         </div>
       </div>
-      <div class="flex items-center gap-3">
+      <div class="flex items-center gap-3 relative">
         <div class="profile-name">
           <img
             src="../assets/img/profile.png"
@@ -94,7 +94,7 @@ const taskDrawerInnerHtml = /* HTML */ ` <div>
         </div>
         <select
           id="assignee-dropdown-taskDrawer"
-          class="top-full left-12 z-50 hidden w-52 rounded-md border bg-white p-2 shadow-md focus:outline-none"
+          class="absolute opacity-0 top-4 left-4 w-52 rounded-sm bg-white border border-gray-200 p-2 shadow-md focus:outline-none"
         ></select>
       </div>
       <div class="flex flex-col gap-1">
@@ -212,99 +212,118 @@ const taskDrawerInnerHtml = /* HTML */ ` <div>
               class="focus:border-primary-500 w-20 rounded-sm border border-gray-300 bg-white p-2 px-2 py-1 text-sm text-gray-800 shadow-xs transition-all duration-200 outline-none placeholder:text-sm placeholder:text-white/50"
             />
           </div>
+          <div class="flex items-center justify-end gap-3">
+            <span class="flex-1 font-medium text-gray-500" >Reporter</span>
+            <div class='flex items-center gap-1 justify-end'>
+          <img
+            src="../assets/img/profile.png"
+            alt="Avatar"
+            class="reporter-profile-image h-8 w-8 rounded-full border border-white shadow-sm"
+          />
+            <p
+              class="reporter text-primary-500 font-medium text-wrap text-end flex-1"
+              id="reporter-name"
+            ></p>
+            </div>
+          </div>
+          <div class="flex justify-between">
+          <span class="flex-1 font-medium text-gray-500 mr-4">Label</span>
+            <div class="labels flex min-w-18 gap-1 text-xs flex-wrap justify-end"></div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    <!-- Attachment Container -->
-    <div class="container-secondary">
-      <div class="mb-2 flex items-center justify-between px-1">
-        <h2 class="font-semibold">Attachments</h2>
+      <!-- Attachment Container -->
+      <div class="container-secondary">
+        <div class="mb-2 flex items-center justify-between px-1">
+          <h2 class="font-semibold">Attachments</h2>
+        </div>
+        <div
+          id="attachmentsList"
+          class="flex flex-col items-center gap-2 overflow-y-auto"
+        ></div>
       </div>
-      <div
-        id="attachmentsList"
-        class="flex flex-col items-center gap-2 overflow-y-auto"
-      ></div>
-    </div>
-    <!-- Comments Container -->
-    <div class="container-secondary flex flex-col gap-2">
-      <h2 id="commentContainerHeaderText" class="font-semibold">Comments</h2>
-      <div
-        id="commentsContainer"
-        class="flex max-h-64 flex-col gap-2 overflow-y-auto rounded-sm border border-gray-200 bg-white pt-3 inset-shadow-xs"
-      ></div>
-      <!-- comment input  -->
-      <div class="comment-create flex flex-col bg-white">
-        <textarea
-          type="text"
-          id="commentInput"
-          minlength="3"
-          placeholder="Enter your Comment"
-          class="min-h-20 flex-1 rounded-sm border border-gray-300 border-b-transparent p-2 focus:outline-none"
-        ></textarea>
-        <input type="file" id="commentAttachment" class="hidden" />
-        <div class="flex">
-          <div
-            class="flex flex-1 items-center border-b border-l border-gray-300 px-2"
-          >
-            <button
-              type="button"
-              id="attachButton"
-              class=""
-              title="Attach a file"
+      <!-- Comments Container -->
+      <div class="container-secondary flex flex-col gap-2">
+        <h2 id="commentContainerHeaderText" class="font-semibold">Comments</h2>
+        <div
+          id="commentsContainer"
+          class="flex max-h-64 flex-col gap-2 overflow-y-auto rounded-sm border border-gray-200 bg-white pt-3 inset-shadow-xs"
+        ></div>
+        <!-- comment input  -->
+        <div class="comment-create flex flex-col bg-white">
+          <textarea
+            type="text"
+            id="commentInput"
+            minlength="3"
+            placeholder="Enter your Comment"
+            class="min-h-20 flex-1 rounded-sm border border-gray-300 border-b-transparent p-2 focus:outline-none"
+          ></textarea>
+          <input type="file" id="commentAttachment" class="hidden" />
+          <div class="flex">
+            <div
+              class="flex flex-1 items-center border-b border-l border-gray-300 px-2"
             >
-              <svg
-                viewBox="0 0 24 24"
-                id="Layer_4"
-                version="1.1"
-                xml:space="preserve"
-                xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink"
-                class="hover:fill-primary-600 size-6 fill-black"
+              <button
+                type="button"
+                id="attachButton"
+                class=""
+                title="Attach a file"
               >
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g
-                  id="SVGRepo_tracerCarrier"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></g>
-                <g id="SVGRepo_iconCarrier">
-                  <path
-                    class="st0"
-                    d="M14.77,20.99c0.138,0,0.251-0.02,0.367-0.041c0.161,0.024,0.322,0.041,0.484,0.041 c2.272,0,4.12-1.848,4.12-4.12c0-1.667-0.994-3.133-2.48-3.763V7.39c0-0.134-0.054-0.263-0.15-0.357l-0.455-0.446 c-0.016-0.022-0.033-0.043-0.052-0.061L13.237,3.16c-0.094-0.096-0.223-0.15-0.357-0.15H8.25c-0.276,0-0.5,0.224-0.5,0.5 s0.224,0.5,0.5,0.5h4.158c-0.02,0.071-0.033,0.145-0.033,0.221V6.38c0,0.833,0.677,1.51,1.51,1.51h2.149 c0.078,0,0.153-0.012,0.226-0.034v4.942c-0.019-0.003-0.036-0.002-0.055-0.005c-0.199-0.033-0.395-0.054-0.585-0.054 c-2.272,0-4.12,1.853-4.12,4.13c0,0.283,0.036,0.558,0.091,0.826c0.017,0.084,0.044,0.164,0.066,0.246 c0.049,0.183,0.108,0.361,0.181,0.534c0.037,0.086,0.075,0.17,0.117,0.254c0.084,0.167,0.18,0.324,0.286,0.477 c0.047,0.068,0.09,0.139,0.141,0.204c0.163,0.208,0.34,0.405,0.541,0.578c0,0,0,0,0.001,0.001H6.74c-0.816,0-1.48-0.673-1.48-1.5 V5.51c0-0.771,0.569-1.412,1.324-1.492c0.274-0.029,0.474-0.275,0.444-0.55C7,3.193,6.759,2.999,6.479,3.024 C5.214,3.158,4.26,4.226,4.26,5.51v12.98c0,1.378,1.113,2.5,2.48,2.5H14.77z M13.885,6.89c-0.281,0-0.51-0.229-0.51-0.51V4.717 l2.173,2.173H13.885z M15.62,13.74c0.237,0,0.502,0.039,0.779,0.115c0.062,0.016,0.124,0.03,0.207,0.061 c1.277,0.414,2.135,1.602,2.135,2.955c0,1.72-1.4,3.12-3.12,3.12c-0.129,0-0.259-0.007-0.479-0.04l-0.139-0.032 c-1.45-0.271-2.502-1.553-2.502-3.048C12.5,15.145,13.9,13.74,15.62,13.74z"
-                  ></path>
-                  <path
-                    class="st0"
-                    d="M14.494,17.37h0.626v0.626c0,0.276,0.224,0.5,0.5,0.5s0.5-0.224,0.5-0.5V17.37h0.626c0.276,0,0.5-0.224,0.5-0.5 s-0.224-0.5-0.5-0.5H16.12v-0.626c0-0.276-0.224-0.5-0.5-0.5s-0.5,0.224-0.5,0.5v0.626h-0.626c-0.276,0-0.5,0.224-0.5,0.5 S14.217,17.37,14.494,17.37z"
-                  ></path>
-                </g>
-              </svg>
-            </button>
-            <span id="commentAttachmentText"></span>
-          </div>
-          <div class="rounded-tl-md border-t border-l border-gray-300 p-1">
-            <button
-              type="button"
-              id="submitButton"
-              class="btn-primary mt-0! rounded-xs! px-4 py-1!"
-            >
-              <svg
-                class="size-4 fill-white"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
+                <svg
+                  viewBox="0 0 24 24"
+                  id="Layer_4"
+                  version="1.1"
+                  xml:space="preserve"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  class="hover:fill-primary-600 size-6 fill-black"
+                >
+                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                  <g
+                    id="SVGRepo_tracerCarrier"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></g>
+                  <g id="SVGRepo_iconCarrier">
+                    <path
+                      class="st0"
+                      d="M14.77,20.99c0.138,0,0.251-0.02,0.367-0.041c0.161,0.024,0.322,0.041,0.484,0.041 c2.272,0,4.12-1.848,4.12-4.12c0-1.667-0.994-3.133-2.48-3.763V7.39c0-0.134-0.054-0.263-0.15-0.357l-0.455-0.446 c-0.016-0.022-0.033-0.043-0.052-0.061L13.237,3.16c-0.094-0.096-0.223-0.15-0.357-0.15H8.25c-0.276,0-0.5,0.224-0.5,0.5 s0.224,0.5,0.5,0.5h4.158c-0.02,0.071-0.033,0.145-0.033,0.221V6.38c0,0.833,0.677,1.51,1.51,1.51h2.149 c0.078,0,0.153-0.012,0.226-0.034v4.942c-0.019-0.003-0.036-0.002-0.055-0.005c-0.199-0.033-0.395-0.054-0.585-0.054 c-2.272,0-4.12,1.853-4.12,4.13c0,0.283,0.036,0.558,0.091,0.826c0.017,0.084,0.044,0.164,0.066,0.246 c0.049,0.183,0.108,0.361,0.181,0.534c0.037,0.086,0.075,0.17,0.117,0.254c0.084,0.167,0.18,0.324,0.286,0.477 c0.047,0.068,0.09,0.139,0.141,0.204c0.163,0.208,0.34,0.405,0.541,0.578c0,0,0,0,0.001,0.001H6.74c-0.816,0-1.48-0.673-1.48-1.5 V5.51c0-0.771,0.569-1.412,1.324-1.492c0.274-0.029,0.474-0.275,0.444-0.55C7,3.193,6.759,2.999,6.479,3.024 C5.214,3.158,4.26,4.226,4.26,5.51v12.98c0,1.378,1.113,2.5,2.48,2.5H14.77z M13.885,6.89c-0.281,0-0.51-0.229-0.51-0.51V4.717 l2.173,2.173H13.885z M15.62,13.74c0.237,0,0.502,0.039,0.779,0.115c0.062,0.016,0.124,0.03,0.207,0.061 c1.277,0.414,2.135,1.602,2.135,2.955c0,1.72-1.4,3.12-3.12,3.12c-0.129,0-0.259-0.007-0.479-0.04l-0.139-0.032 c-1.45-0.271-2.502-1.553-2.502-3.048C12.5,15.145,13.9,13.74,15.62,13.74z"
+                    ></path>
+                    <path
+                      class="st0"
+                      d="M14.494,17.37h0.626v0.626c0,0.276,0.224,0.5,0.5,0.5s0.5-0.224,0.5-0.5V17.37h0.626c0.276,0,0.5-0.224,0.5-0.5 s-0.224-0.5-0.5-0.5H16.12v-0.626c0-0.276-0.224-0.5-0.5-0.5s-0.5,0.224-0.5,0.5v0.626h-0.626c-0.276,0-0.5,0.224-0.5,0.5 S14.217,17.37,14.494,17.37z"
+                    ></path>
+                  </g>
+                </svg>
+              </button>
+              <span id="commentAttachmentText"></span>
+            </div>
+            <div class="rounded-tl-md border-t border-l border-gray-300 p-1">
+              <button
+                type="button"
+                id="submitButton"
+                class="btn-primary mt-0! rounded-xs! px-4 py-1!"
               >
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g
-                  id="SVGRepo_tracerCarrier"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                ></g>
-                <g id="SVGRepo_iconCarrier">
-                  <path
-                    d="M19,6a1,1,0,0,0-1,1v4a1,1,0,0,1-1,1H7.41l1.3-1.29A1,1,0,0,0,7.29,9.29l-3,3a1,1,0,0,0-.21.33,1,1,0,0,0,0,.76,1,1,0,0,0,.21.33l3,3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42L7.41,14H17a3,3,0,0,0,3-3V7A1,1,0,0,0,19,6Z"
-                  ></path>
-                </g>
-              </svg>
-            </button>
+                <svg
+                  class="size-4 fill-white"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                  <g
+                    id="SVGRepo_tracerCarrier"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></g>
+                  <g id="SVGRepo_iconCarrier">
+                    <path
+                      d="M19,6a1,1,0,0,0-1,1v4a1,1,0,0,1-1,1H7.41l1.3-1.29A1,1,0,0,0,7.29,9.29l-3,3a1,1,0,0,0-.21.33,1,1,0,0,0,0,.76,1,1,0,0,0,.21.33l3,3a1,1,0,0,0,1.42,0,1,1,0,0,0,0-1.42L7.41,14H17a3,3,0,0,0,3-3V7A1,1,0,0,0,19,6Z"
+                    ></path>
+                  </g>
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -318,6 +337,8 @@ export async function showTaskDrawer(taskId) {
   taskDrawerContainer.innerHTML = taskDrawerInnerHtml;
 
   const task = (await taskService.getTaskById(taskId)).data.result;
+  const reporter = (await taskService.getUserDetailsById(task.reporter)).data
+    .result;
   const assignee = task.assignee
     ? (await taskService.getUserDetailsById(task.assignee)).data.result
     : null;
@@ -348,55 +369,80 @@ export async function showTaskDrawer(taskId) {
   const assigneeDropdown = taskDrawer.querySelector(
     '#assignee-dropdown-taskDrawer'
   );
+  const reporterName = taskDrawer.querySelector('#reporter-name');
+  const reporterProfileImageEl = taskDrawer.querySelector(
+    '.reporter-profile-image'
+  );
+  const labelsName = taskDrawer.querySelector('.labels');
+  const labelsShow = task.tags.map((label) => {
+    let labelShow = /* HTML */ ` <div
+      class="label bg-primary-100 rounded-sm px-2 py-1"
+    >
+      ${label}
+    </div>`;
+
+    return labelShow;
+  });
+
+  labelsName.innerHTML = labelsShow.join('');
+  reporterName.textContent = reporter.name;
+
+  if (reporter) {
+    reporterProfileImageEl.src =
+      'http://localhost:3001/uploads/profile/' + reporter.profileImage;
+  } else {
+    profileImageEl.src = '../../../assets/img/profile.png';
+  }
 
   assigneeEl.textContent = assignee ? assignee.name : 'No assignee';
 
-  assigneeEl.addEventListener('click', async (e) => {
-    e.stopPropagation();
+  assigneeDropdown.classList.remove('hidden');
+  assigneeDropdown.innerHTML = '';
 
-    assigneeDropdown.classList.remove('hidden');
-    assigneeDropdown.innerHTML = '';
+  const unassignedOption = document.createElement('option');
 
-    const defaultOption = document.createElement('option');
+  unassignedOption.value = '';
+  unassignedOption.textContent = 'Unassigned';
 
-    defaultOption.value = '';
-    defaultOption.textContent = 'Select assignee';
-    assigneeDropdown.appendChild(defaultOption);
+  if (!task.assignee) {
+    unassignedOption.selected = true;
+  }
 
-    const members = (
-      await projectService.getProjectMembers(
-        localStorage.getItem('selectedProject')
-      )
-    ).result;
+  assigneeDropdown.appendChild(unassignedOption);
 
-    members.forEach((member) => {
-      const option = document.createElement('option');
+  const members = (
+    await projectService.getProjectMembers(
+      localStorage.getItem('selectedProject')
+    )
+  ).result;
 
-      option.value = member._id;
-      option.textContent = member.name;
+  members.forEach((member) => {
+    const option = document.createElement('option');
+    option.value = member._id;
+    option.textContent = member.name;
 
-      if (member._id === task.assignee) {
-        option.selected = true;
-      }
+    if (member._id === task.assignee) {
+      option.selected = true;
+    }
 
-      assigneeDropdown.appendChild(option);
-    });
-
-    assigneeDropdown.focus();
+    assigneeDropdown.appendChild(option);
   });
 
   assigneeDropdown.addEventListener('change', async (e) => {
     const assigneeId = e.target.value;
 
-    if (!assigneeId) return;
-
     try {
-      await taskService.updateTask(taskId, { assignee: assigneeId });
+      await taskService.updateTask(taskId, {
+        assignee: assigneeId || null,
+      });
 
-      const user = (await taskService.getUserDetailsById(assigneeId)).data
-        .result;
-
-      assigneeEl.textContent = user.name;
+      if (!assigneeId) {
+        assigneeEl.textContent = 'Unassigned';
+      } else {
+        const user = (await taskService.getUserDetailsById(assigneeId)).data
+          .result;
+        assigneeEl.textContent = user.name;
+      }
 
       assigneeDropdown.classList.add('hidden');
       renderSelectedTab(localStorage.getItem('selectedProject'));
