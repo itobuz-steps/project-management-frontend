@@ -18,6 +18,7 @@ self.addEventListener('push', async (event) => {
     } catch (err) {
       const text = event.data.text();
       options.body = text;
+      console.log(err);
 
       channel.postMessage({
         type: 'PUSH_NOTIFICATION',
