@@ -25,6 +25,7 @@ import { handleForYouPage } from '../forYouPage/forYouPage.js';
 import { renderBoard } from './boardView/boardView.js';
 import { checkForInvite, keyboardEvents } from '../../utils/globalUtils.js';
 import { setTheme } from '../../utils/setTheme.js';
+import { handleDashboardSprintPreview } from './backlogView/sprint.js';
 
 async function setupDashboard() {
   checkToken();
@@ -88,6 +89,7 @@ async function setupDashboard() {
   renderNotification();
   handleForYouPage();
   keyboardEvents();
+  handleDashboardSprintPreview();
 }
 
 setupDashboard();
