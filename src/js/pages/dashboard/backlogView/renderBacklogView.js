@@ -11,7 +11,10 @@ import {
   handleStartSprint,
   renderSprintTasks,
 } from './sprint';
-import { handleBacklogCheckboxAll } from './backlog';
+import {
+  handleBacklogCheckboxAll,
+  openCreateTaskModalFromBacklog,
+} from './backlog';
 import { toggleHidden } from '../../../utils/elementUtils';
 import { showConfirmModal } from '../../../utils/modals/confirmationModal';
 import { createBacklogTable, renderBacklogTasks } from './backlog';
@@ -235,4 +238,6 @@ export async function renderBacklogView(
       toggleHidden(addToSprintButton);
     }
   });
+
+  openCreateTaskModalFromBacklog();
 }
