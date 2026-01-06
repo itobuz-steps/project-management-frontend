@@ -19,7 +19,7 @@ export function appendCommentToContainer(comment, container) {
               comment.author.profileImage
             : '../../../assets/img/profile.png'}"
           alt="Avatar"
-          class="border-primary-300 h-7 w-7 rounded-full border"
+          class="border-primary-300 h-7 w-7 rounded-full border object-cover"
         />
         <div class="flex flex-1 flex-col">
           <div class="username font-medium">${comment.author.name}</div>

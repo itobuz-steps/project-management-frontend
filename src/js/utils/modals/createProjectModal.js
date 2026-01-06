@@ -1,5 +1,8 @@
 import projectService from '../../services/ProjectService';
-import { updateProjectList } from '../../pages/dashboard/sidebar/sidebar';
+import {
+  updateProjectList,
+  updateUserList,
+} from '../../pages/dashboard/sidebar/sidebar';
 import showToast from '../showToast';
 import renderSelectedTab from '../renderSelectedTab';
 import { ifSelectedProject } from '../elementUtils';
@@ -72,6 +75,7 @@ projectCreateForm.addEventListener('submit', async (e) => {
     showToast('Project created Successfully', 'success');
 
     updateProjectList();
+    updateUserList();
   } catch (error) {
     showToast(`${error.message}`, 'error');
   }

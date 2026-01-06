@@ -79,9 +79,6 @@ export async function setupPushNotifications() {
 }
 
 function handleNotification(data) {
-  console.log('title', data.title);
-  console.log('data passed to notification', data);
-  // console.log('userId', data.userId);
   const container = document.querySelector('#notificationDropdownMenu ul');
   if (!container) return;
 
@@ -128,8 +125,8 @@ function handleNotification(data) {
     showTaskDrawer(data.taskId);
   });
 
-  if (container.length > 0) {
-  }
+  // if (container.length > 0) {
+  // }
 
   container.prepend(li);
   updateNotificationBadge();
