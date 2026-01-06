@@ -65,7 +65,7 @@ export async function updateProjectList() {
   }
 }
 
-async function updateUserList() {
+export async function updateUserList() {
   let users;
   if (localStorage.getItem('selectedProject')) {
     users = await projectService.getProjectMembers(
@@ -88,7 +88,7 @@ async function updateUserList() {
       item.innerHTML = /* HTML */ `
         <div class="flex cursor-pointer items-center">
           <img
-            class="mr-3 aspect-square h-6 w-6 rounded-full"
+            class="mr-3 aspect-square h-6 w-6 rounded-full object-cover"
             src="${user.profileImage
               ? 'http://localhost:3001/uploads/profile/' + user.profileImage
               : '../../../assets/img/profile.png'}"
@@ -131,7 +131,7 @@ function addEventListenersSidebar() {
     }
   });
 
-  usersMenu.addEventListener('click', (e) => {
+  usersMenu.addEventListener('click', async (e) => {
     e.stopPropagation();
     e.preventDefault();
 
@@ -169,6 +169,7 @@ function addEventListenersSidebar() {
     });
     ifSelectedProject();
     await handleDashboardSprintPreview();
+    updateUserList();
 
     targetLi.classList.toggle('selected');
     await renderSelectedTab(localStorage.getItem('selectedProject'));

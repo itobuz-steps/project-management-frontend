@@ -269,7 +269,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
                   ? 'http://localhost:3001/uploads/profile/' +
                     assignee.profileImage
                   : '../../../assets/img/profile.png'}"
-                class="aspect-square h-8 w-8 rounded-full"
+                class="aspect-square h-8 w-8 rounded-full object-cover"
                 title="${assignee?.name || 'Unassigned'}"
               />
             </span>
@@ -448,6 +448,18 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         newColumnInput.classList.toggle('hidden')
       );
 
+    document.addEventListener('click', (e) => {
+      e.stopPropagation();
+
+      if (
+        !e.target.classList.contains('add-column-button') &&
+        !e.target.classList.contains('new-column') &&
+        !e.target.parentElement.classList.contains('new-column')
+      ) {
+        newColumnInput.classList.add('hidden');
+      }
+    });
+
     newColumnInput
       .querySelector('input')
       .addEventListener('keydown', async (e) => {
@@ -473,8 +485,6 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
             return column.querySelector('input').value.toLowerCase();
           }
         });
-
-        console.log(newColumns);
 
         await projectService.updateProject(
           localStorage.getItem('selectedProject'),

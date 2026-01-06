@@ -14,6 +14,7 @@ export default async function renderSelectedTab(
   } else if (selectedTab === 'list') {
     await renderTasksList(projectId, filter, searchInput);
   } else {
+    if ((searchInput && filter) || searchInput || filter) return;
     await renderBacklogView(projectId, filter, searchInput);
   }
 }

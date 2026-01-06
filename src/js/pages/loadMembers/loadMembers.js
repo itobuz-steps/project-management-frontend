@@ -10,7 +10,6 @@ socket.on('connect', () =>
 );
 
 socket.on('userStatusChanged', () => {
-  console.log('');
   loadProjectMembers(localStorage.getItem('selectedProject'));
 });
 
@@ -20,8 +19,6 @@ export async function loadProjectMembers(projectId) {
 
     const data = await projectService.getProjectMembers(projectId);
     const members = data.result;
-
-    console.log(members);
 
     const container = document.getElementById('memberAvatars');
     container.innerHTML = '';

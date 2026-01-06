@@ -127,7 +127,7 @@ export async function createTaskList(task, type, projectType, sprint) {
     </td>
     <td class="p-2">
       <div class="bg-primary-400 mr-2 w-fit rounded-md px-2 py-0.5 text-white">
-        <select class="status-select-${task._id} w-fit outline-none"></select>
+        <select class="status-select-${task._id} w-30 outline-none"></select>
       </div>
     </td>
     <td class="${ifKanban} ${!sprint ? 'hidden' : ''} p-2">
@@ -140,7 +140,7 @@ export async function createTaskList(task, type, projectType, sprint) {
     <td class="p-2">
       <div class="flex items-center">
         <img
-          class="mr-3 aspect-square h-6 w-6 rounded-full"
+          class="mr-3 aspect-square h-6 w-6 rounded-full object-cover"
           src="${assignee.profileImage}"
         />${assignee.name}
       </div>
@@ -169,7 +169,7 @@ export async function createTaskList(task, type, projectType, sprint) {
     <td class="p-2">
       <div class="flex items-center">
         <img
-          class="mr-3 aspect-square h-6 w-6 rounded-full"
+          class="mr-3 aspect-square h-6 w-6 rounded-full object-cover"
           src="${reporter.profileImage
             ? 'http://localhost:3001/uploads/profile/' + reporter.profileImage
             : '../../../assets/img/profile.png'}"
