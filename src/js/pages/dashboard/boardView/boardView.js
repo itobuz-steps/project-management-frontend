@@ -448,6 +448,18 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         newColumnInput.classList.toggle('hidden')
       );
 
+    document.addEventListener('click', (e) => {
+      e.stopPropagation();
+
+      if (
+        !e.target.classList.contains('add-column-button') &&
+        !e.target.classList.contains('new-column') &&
+        !e.target.parentElement.classList.contains('new-column')
+      ) {
+        newColumnInput.classList.add('hidden');
+      }
+    });
+
     newColumnInput
       .querySelector('input')
       .addEventListener('keydown', async (e) => {
