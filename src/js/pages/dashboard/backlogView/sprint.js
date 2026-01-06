@@ -325,6 +325,8 @@ async function handleAddTaskFromBacklogToSprint(dropdownEl) {
 }
 
 export async function handleDashboardSprintPreview() {
+  if (!localStorage.getItem('selectedProject')) return;
+
   const project = (
     await projectService.getProjectById(localStorage.getItem('selectedProject'))
   ).result;
@@ -340,7 +342,7 @@ export async function handleDashboardSprintPreview() {
       const sprintDueDate = document.getElementById('dashboardSprintDueDate');
       const sprint = (await sprintService.getSprintById(project.currentSprint))
         .result;
-      console.log(sprint);
+
       sprintName.innerText = sprint.key;
       sprintDueDate.innerText = new Date(sprint.dueDate).toLocaleDateString();
     }
