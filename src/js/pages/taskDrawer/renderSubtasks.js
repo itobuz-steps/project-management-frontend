@@ -49,7 +49,7 @@ export async function renderSubtasks(task) {
         title="${subtaskAssignee ? subtaskAssignee.name : 'unassigned'}"
       />
       <div class="flex flex-1">
-        <div class="ml-3 flex gap-2">
+        <div class="ml-3 gap-2">
           <span
             class="bg-primary-400 h-fit w-fit rounded-sm px-2 py-0.5 text-center text-xs font-medium text-nowrap text-white"
             >${st.key}</span
