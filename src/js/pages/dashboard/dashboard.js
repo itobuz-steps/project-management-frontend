@@ -16,7 +16,7 @@ import {
   ifSelectedProject,
 } from '../../utils/elementUtils.js';
 import { loadProjectMembers } from '../loadMembers/loadMembers.js';
-import setupPushNotifications from '../../utils/browserNotification.js';
+import { setupPushNotifications } from '../../services/notificationService.js';
 import {
   renderNotification,
   lazyLoad,
