@@ -177,14 +177,14 @@ const taskDrawerInnerHtml = /* HTML */ ` <div>
             <span class="font-medium text-gray-500">Status</span>
             <select
               id="statusSelect"
-              class="bg-primary-400 min-w-20 rounded-sm px-2 py-2 text-white outline-none"
+              class="bg-primary-400 max-w-30 min-w-30 rounded-sm px-2 py-2 text-left text-white outline-none"
             ></select>
           </div>
           <div class="flex items-center justify-between">
             <span class="font-medium text-gray-500">Priority</span>
             <select
               id="prioritySelect"
-              class="bg-primary-400 min-w-20 rounded-sm px-2 py-2 text-center text-white outline-none"
+              class="bg-primary-400 max-w-30 min-w-30 rounded-sm px-2 py-2 text-left text-white outline-none"
             >
               <option value="high">High</option>
               <option value="medium">Medium</option>
@@ -196,7 +196,7 @@ const taskDrawerInnerHtml = /* HTML */ ` <div>
             <span class="font-medium text-gray-500">Type</span>
             <select
               id="typeSelect"
-              class="bg-primary-400 min-w-20 rounded-sm px-2 py-2 text-center text-white outline-none"
+              class="bg-primary-400 max-w-30 min-w-30 rounded-sm px-2 py-2 text-left text-white outline-none"
             >
               <option value="task">Task</option>
               <option value="story">Story</option>
@@ -209,7 +209,7 @@ const taskDrawerInnerHtml = /* HTML */ ` <div>
               type="number"
               id="story-point-value"
               value="1"
-              class="focus:border-primary-500 w-20 rounded-sm border border-gray-300 bg-white p-2 px-2 py-1 text-sm text-gray-800 shadow-xs transition-all duration-200 outline-none placeholder:text-sm placeholder:text-white/50"
+              class="focus:border-primary-500 max-w-30 min-w-30 rounded-sm border border-gray-300 bg-white p-2 px-2 py-1 text-sm text-gray-800 shadow-xs transition-all duration-200 outline-none placeholder:text-sm placeholder:text-white/50"
             />
           </div>
         </div>
@@ -503,7 +503,6 @@ export async function showTaskDrawer(taskId) {
     try {
       if (e.key === 'Enter') {
         e.preventDefault();
-        console.log(+e.target.value);
         await taskService.updateTask(taskId, { storyPoint: +e.target.value });
         renderSelectedTab(localStorage.getItem('selectedProject'));
         showToast('Story point updated successfully', 'success');

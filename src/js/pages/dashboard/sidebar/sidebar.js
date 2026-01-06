@@ -65,7 +65,7 @@ export async function updateProjectList() {
   }
 }
 
-async function updateUserList() {
+export async function updateUserList() {
   let users;
   if (localStorage.getItem('selectedProject')) {
     users = await projectService.getProjectMembers(
@@ -131,7 +131,7 @@ function addEventListenersSidebar() {
     }
   });
 
-  usersMenu.addEventListener('click', (e) => {
+  usersMenu.addEventListener('click', async (e) => {
     e.stopPropagation();
     e.preventDefault();
 
@@ -169,6 +169,7 @@ function addEventListenersSidebar() {
     });
     ifSelectedProject();
     await handleDashboardSprintPreview();
+    updateUserList();
 
     targetLi.classList.toggle('selected');
     await renderSelectedTab(localStorage.getItem('selectedProject'));

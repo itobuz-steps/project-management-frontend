@@ -6,7 +6,7 @@ import { getSvgByPriority, getSvgByType } from '../../utils/globalUtils';
 import renderSelectedTab from '../../utils/renderSelectedTab';
 import { svgObject } from '../../utils/svgObjects';
 import { handleDashboardSprintPreview } from '../dashboard/backlogView/sprint';
-import { toggleSidebar } from '../dashboard/sidebar/sidebar';
+import { toggleSidebar, updateUserList } from '../dashboard/sidebar/sidebar';
 import { loadProjectMembers } from '../loadMembers/loadMembers';
 import { showTaskDrawer } from '../taskDrawer/taskDrawer';
 
@@ -90,6 +90,7 @@ function createProjectCard(project) {
     await renderSelectedTab(project._id);
     showForYouPage(false);
     loadProjectMembers(project._id);
+    updateUserList();
     await handleDashboardSprintPreview();
   });
 
@@ -141,7 +142,6 @@ async function renderTasksByStatus(project) {
 
   project.columns.forEach((column) => (result[column] = []));
   tasks.forEach((task) => result[task.status].push(task));
-  console.log(result);
 
   project.columns.forEach((column) => {
     const container = document.getElementById(`${column}-task-container`);
@@ -153,7 +153,6 @@ async function renderTasksByStatus(project) {
     if (!columnTasks.length) return;
 
     row.classList.remove('hidden');
-    console.log(columnTasks);
     columnTasks.forEach((task) => {
       const newEl = renderForYouTasks(task, project.name);
       container.appendChild(newEl);
