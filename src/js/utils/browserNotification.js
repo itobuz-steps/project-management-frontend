@@ -1,15 +1,14 @@
-import axios from 'axios';
 import { getAllNotification } from '../services/notificationService';
 import { DateTime } from 'luxon';
 import { showTaskDrawer } from '../pages/taskDrawer/taskDrawer';
 
 let page = 0;
-const LIMIT = 5;
+const LIMIT = 10;
 let isLoading = false;
 let hasMore = true;
 let notificationObserver = null;
 
-function urlBase64ToUint8Array(base64String) {
+export function urlBase64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
   const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
   const rawData = window.atob(base64);
@@ -20,65 +19,10 @@ function urlBase64ToUint8Array(base64String) {
   return outputArray;
 }
 
-const PUBLIC_VAPID_KEY =
-  'BBxyBixxdLHGQaKCZSYguTcuFmIW9tyQQnMKOsZcQxgwjBFsHRWbSXMK2aiqQqOWkCriNtu6mDnRljyFzss8kOU';
-
-export async function setupPushNotifications() {
-  if (!('serviceWorker' in navigator)) {
-    return;
-  }
-
-  if (!('PushManager' in window)) {
-    return;
-  }
-
-  try {
-    const registration =
-      await navigator.serviceWorker.register('/serviceWorker.js');
-
-    console.log('service worker registered');
-
-    const permission = await Notification.requestPermission();
-    if (permission !== 'granted') {
-      console.warn('Notification permission denied');
-      return;
-    }
-
-    let subscription = await registration.pushManager.getSubscription();
-
-    console.log('subscription', subscription);
-
-    if (!subscription) {
-      subscription = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY),
-      });
-    }
-
-    const email = localStorage.getItem('userEmail');
-
-    axios.post('http://localhost:3001/notification/subscribe', {
-      email,
-      subscription,
-    });
-
-    const channel = new BroadcastChannel('sw-messages');
-
-    channel.onmessage = (event) => {
-      const { type, payload } = event.data;
-
-      if (type === 'PUSH_NOTIFICATION') {
-        handleNotification(payload);
-        addNotification();
-      }
-    };
-    return subscription;
-  } catch (err) {
-    console.error('Push setup failed:', err);
-  }
-}
-
-function handleNotification(data) {
+export function handleNotification(data, type = 'render') {
+  console.log('title', data.title);
+  console.log('data passed to notification', data);
+  // console.log('userId', data.userId);
   const container = document.querySelector('#notificationDropdownMenu ul');
   if (!container) return;
 
@@ -125,10 +69,10 @@ function handleNotification(data) {
     showTaskDrawer(data.taskId);
   });
 
-  // if (container.length > 0) {
-  // }
+  if (type === 'new') {
+    container.prepend(li);
+  } else container.append(li);
 
-  container.prepend(li);
   updateNotificationBadge();
 }
 
@@ -196,7 +140,7 @@ function updateNotificationBadge() {
   }
 }
 
-function addNotification() {
+export function addNotification() {
   const count =
     (parseInt(localStorage.getItem('notificationCount'), 10) || 0) + 1;
   localStorage.setItem('notificationCount', count);
@@ -220,6 +164,5 @@ dropDownToggle.addEventListener('click', () => {
   badge.textContent = '0';
   badge.classList.add('hidden');
 });
-clearNotification();
 
-export default setupPushNotifications;
+clearNotification();
