@@ -38,6 +38,7 @@ async function setupDashboard() {
   addTaskButton.addEventListener('click', () => openCreateTaskModal());
 
   localStorage.setItem('selectedTab', 'board');
+  const searchbar = document.getElementById('search-input-form');
 
   const backlogBtn = document.getElementById('backlog-li');
   const backlogView = document.getElementById('backlog-view');
@@ -46,6 +47,7 @@ async function setupDashboard() {
     removeActive(backlogBtn);
     hideAll(backlogView);
     localStorage.setItem('selectedTab', 'backlog');
+    searchbar.classList.add('hidden');
 
     await renderBacklogView(localStorage.getItem('selectedProject'));
   });
@@ -57,6 +59,7 @@ async function setupDashboard() {
     removeActive(boardBtn);
     hideAll(boardView);
     localStorage.setItem('selectedTab', 'board');
+    searchbar.classList.remove('hidden');
 
     await renderBoard(localStorage.getItem('selectedProject'));
   });
@@ -68,6 +71,7 @@ async function setupDashboard() {
     removeActive(listBtn);
     hideAll(listView);
     localStorage.setItem('selectedTab', 'list');
+    searchbar.classList.remove('hidden');
 
     await renderTasksList(localStorage.getItem('selectedProject'));
   });
