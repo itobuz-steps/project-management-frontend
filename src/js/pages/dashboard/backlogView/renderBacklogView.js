@@ -166,7 +166,9 @@ export async function renderBacklogView(
   );
   // }
 
-  backlogBody.addEventListener('change', () => {
+  backlogBody.addEventListener('change', (e) => {
+    if (!e.target.classList.contains('checkboxes')) return;
+
     let isChecked = false;
     backlogBody.querySelectorAll('.checkboxes').forEach((checkbox) => {
       if (checkbox.checked) {

@@ -177,14 +177,14 @@ const taskDrawerInnerHtml = /* HTML */ ` <div>
             <span class="font-medium text-gray-500">Status</span>
             <select
               id="statusSelect"
-              class="bg-primary-400 max-w-30 min-w-30 rounded-sm px-2 py-2 text-left text-white outline-none"
+              class="bg-primary-400 w-30 rounded-sm px-2 py-2 text-left text-white outline-none"
             ></select>
           </div>
           <div class="flex items-center justify-between">
             <span class="font-medium text-gray-500">Priority</span>
             <select
               id="prioritySelect"
-              class="bg-primary-400 max-w-30 min-w-30 rounded-sm px-2 py-2 text-left text-white outline-none"
+              class="bg-primary-400 w-30 rounded-sm px-2 py-2 text-left text-white outline-none"
             >
               <option value="high">High</option>
               <option value="medium">Medium</option>
@@ -196,7 +196,7 @@ const taskDrawerInnerHtml = /* HTML */ ` <div>
             <span class="font-medium text-gray-500">Type</span>
             <select
               id="typeSelect"
-              class="bg-primary-400 max-w-30 min-w-30 rounded-sm px-2 py-2 text-left text-white outline-none"
+              class="bg-primary-400 w-30 rounded-sm px-2 py-2 text-left text-white outline-none"
             >
               <option value="task">Task</option>
               <option value="story">Story</option>

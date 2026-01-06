@@ -127,7 +127,7 @@ export async function createTaskList(task, type, projectType, sprint) {
     </td>
     <td class="p-2">
       <div class="bg-primary-400 mr-2 w-fit rounded-md px-2 py-0.5 text-white">
-        <select class="status-select-${task._id} w-fit outline-none"></select>
+        <select class="status-select-${task._id} w-30 outline-none"></select>
       </div>
     </td>
     <td class="${ifKanban} ${!sprint ? 'hidden' : ''} p-2">
