@@ -33,7 +33,7 @@ export async function createTaskList(task, type, projectType, sprint) {
       priority = 'border-l-green-500';
       break;
     case 'medium':
-      priority = 'border-l-primary-500';
+      priority = 'border-l-blue-500';
       break;
     case 'high':
       priority = 'border-l-yellow-400';

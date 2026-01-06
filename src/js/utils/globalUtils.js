@@ -17,7 +17,7 @@ export function getColorByPriority(task) {
   if (task.priority === 'low') {
     return 'bg-green-500';
   } else if (task.priority === 'medium') {
-    return 'bg-primary-400';
+    return 'bg-blue-400';
   } else if (task.priority === 'high') {
     return 'bg-yellow-400';
   } else {

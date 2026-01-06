@@ -186,9 +186,9 @@ const taskDrawerInnerHtml = /* HTML */ ` <div>
               id="prioritySelect"
               class="bg-primary-400 w-30 rounded-sm px-2 py-2 text-left text-white outline-none"
             >
-              <option value="high">High</option>
-              <option value="medium">Medium</option>
-              <option value="low">Low</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
               <option value="critical">Critical</option>
             </select>
           </div>

@@ -44,7 +44,7 @@ function showToast(message, type = 'info', delay = 2000) {
 }
 
 function removeToast(toast) {
-  toast.classList.add('opacity-0', 'translate-y-4');
+  toast.remove();
 }
 
 export default showToast;

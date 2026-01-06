@@ -63,13 +63,13 @@ export function createBacklogTable(projectType) {
           <button
             type="submit"
             id="sprint-form-button"
-            class="bg-primary-400 hover:bg-primary-500 w-20 rounded-sm px-2 py-1 text-sm font-medium text-white shadow-xs focus:outline-none"
+            class="bg-primary-400 hover:bg-primary-500 w-20 cursor-pointer rounded-sm px-2 py-1 text-sm font-medium text-white shadow-xs focus:outline-none"
           >
             Confirm
           </button>
           <svg
             id="sprint-close-svg"
-            class="stroke-black hover:stroke-red-400 hover:stroke-2"
+            class="cursor-pointer stroke-black hover:stroke-red-400 hover:stroke-2"
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -95,7 +95,7 @@ export function createBacklogTable(projectType) {
           type="button"
           id="add-to-sprint-button"
           title="Add to sprint"
-          class="my-1 hidden rounded-sm border border-gray-200 bg-white p-1 text-gray-900 focus:outline-none"
+          class="my-1 hidden cursor-pointer rounded-sm border border-gray-200 bg-white p-1 text-gray-900 focus:outline-none"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -120,7 +120,7 @@ export function createBacklogTable(projectType) {
         <button
           type="button"
           id="create-sprint-button"
-          class="${ifKanban} bg-primary-400 hover:bg-primary-500 w-max rounded-sm px-2 py-1 font-medium text-white shadow-xs focus:outline-none"
+          class="${ifKanban} bg-primary-400 hover:bg-primary-500 w-max cursor-pointer rounded-sm px-2 py-1 font-medium text-white shadow-xs focus:outline-none"
         >
           <p id="create-sprint-text">Create Sprint</p>
         </button>

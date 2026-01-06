@@ -82,20 +82,20 @@ export function createSprintTable(sprint) {
             type="date"
             name="dueDate"
             id="${sprint.key}-due-date"
-            class="required focus:border-primary-400 w-28 rounded-sm border border-gray-200 bg-white px-1 text-sm shadow-xs outline-none md:w-30"
+            class="required focus:border-primary-400 w-28 cursor-pointer rounded-sm border border-gray-200 bg-white px-1 text-sm shadow-xs outline-none md:w-30"
             placeholder="Enter the due date"
           />
 
           <button
             type="submit"
             id="${sprint.key}-start-form-button"
-            class="bg-primary-400 hover:bg-primary-500 w-20 rounded-sm px-2 py-1 font-medium text-white shadow-xs focus:outline-none"
+            class="bg-primary-400 hover:bg-primary-500 w-20 cursor-pointer rounded-sm px-2 py-1 font-medium text-white shadow-xs focus:outline-none"
           >
             Confirm
           </button>
           <svg
             id="${sprint.key}-start-close-svg"
-            class="stroke-black hover:stroke-red-400 hover:stroke-2"
+            class="cursor-pointer stroke-black hover:stroke-red-400 hover:stroke-2"
             viewBox="0 0 24 24"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -121,14 +121,14 @@ export function createSprintTable(sprint) {
         <button
           type="button"
           id="${sprint.key}-sprint-complete-button"
-          class="bg-primary-400 hover:bg-primary-500 hidden rounded-sm px-2 py-1 font-medium text-white shadow-xs focus:outline-none"
+          class="bg-primary-400 hover:bg-primary-500 hidden cursor-pointer rounded-sm px-2 py-1 font-medium text-white shadow-xs focus:outline-none"
         >
           Complete Sprint
         </button>
         <button
           type="button"
           id="${sprint.key}-sprint-start-button"
-          class="bg-primary-400 hover:bg-primary-500 rounded-sm px-2 py-1 font-medium text-white shadow-xs focus:outline-none"
+          class="bg-primary-400 hover:bg-primary-500 cursor-pointer rounded-sm px-2 py-1 font-medium text-white shadow-xs focus:outline-none"
         >
           Start Sprint
         </button>
