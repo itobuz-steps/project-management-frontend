@@ -44,7 +44,7 @@ export function createSubtask(taskDrawer, task) {
     const createRow = document.createElement('div');
 
     createRow.className =
-      'flex items-center gap-2 text-primary-500 cursor-pointer font-medium mb-2';
+      'flex items-center gap-2 text-primary-500 cursor-pointer font-medium mb-2 hover:scale-95 transition-all delay-75';
     createRow.innerHTML = `
       <span class="text-lg">+</span>
       <span>Create Subtask</span>

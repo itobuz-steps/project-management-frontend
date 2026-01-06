@@ -78,7 +78,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       filteredTasks.push(task);
       let isDone = '';
 
-      if (task.status === columns[columns.length - 1]) {
+      if (task.status === project.columns[project.columns.length - 1]) {
         isDone = 'line-through text-gray-400';
       }
 
