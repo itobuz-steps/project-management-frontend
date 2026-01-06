@@ -74,8 +74,6 @@ export async function setupPushNotifications() {
 }
 
 function handleNotification(data) {
-  console.log('title', data.title);
-  console.log('data passed to notification', data);
   const container = document.querySelector('#notificationDropdownMenu ul');
   if (!container) return;
 

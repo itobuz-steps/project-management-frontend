@@ -474,8 +474,6 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
           }
         });
 
-        console.log(newColumns);
-
         await projectService.updateProject(
           localStorage.getItem('selectedProject'),
           { columns: newColumns }
