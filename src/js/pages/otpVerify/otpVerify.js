@@ -9,17 +9,20 @@ setTheme(localStorage.getItem('theme') || 'indigo');
 
 async function handleOtpVerification(event) {
   event.preventDefault();
+
   const otp = otpInput.value;
   const email = localStorage.getItem('pendingEmail');
 
   if (!email) {
-    showToast('Email not found. Please try registering again.', 'warning');
+    showToast('Email not found. Please try registering again.', 'info');
+
     window.location.href = 'signup';
     return;
   }
 
   const verifyButton = document.querySelector('.verify-button');
   const originalText = verifyButton.textContent;
+
   verifyButton.textContent = 'Verifying...';
   verifyButton.disabled = true;
 
@@ -31,12 +34,12 @@ async function handleOtpVerification(event) {
     showToast('OTP verified successfully! Redirecting...', 'success');
 
     setTimeout(() => {
-      window.location.href = 'dashboard';
+      window.location.href = 'signup';
     }, 1000);
   } catch (error) {
     showToast(
       error.message || 'OTP verification failed. Please try again.',
-      'danger'
+      'error'
     );
   } finally {
     verifyButton.textContent = originalText;
@@ -48,7 +51,8 @@ async function handleResendOtp() {
   const email = localStorage.getItem('pendingEmail');
 
   if (!email) {
-    showToast('Email not found. Please try registering again.', 'warning');
+    showToast('Email not found. Please try registering again.', 'info');
+
     window.location.href = 'signup.html';
     return;
   }
@@ -60,7 +64,7 @@ async function handleResendOtp() {
   } catch (error) {
     showToast(
       error.message || 'Failed to resend OTP. Please try again.',
-      'danger'
+      'error'
     );
   } finally {
     resendLink.style.pointerEvents = 'auto';

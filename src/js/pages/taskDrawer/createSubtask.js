@@ -101,7 +101,8 @@ export function createSubtask(taskDrawer, task) {
           value="${t._id}"
           ${isChecked ? 'checked' : ''}
         />
-        <span><span class="bg-primary-400 w-fit rounded-sm px-2 py-0.5 text-center text-xs font-medium text-white mr-2">${t.key}</span>${t.title}</span>
+        <span class="bg-primary-400 w-fit rounded-sm px-2 py-0.5 text-center text-xs font-medium text-white mr-2">${t.key}</span>
+        <span>${t.title}</span>
       `;
 
       subtaskList.appendChild(subTask);

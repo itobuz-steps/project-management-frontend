@@ -343,10 +343,16 @@
 
               <div
                 id="notificationDropdownMenu"
-                class="absolute right-0 z-100 mt-2 mr-3 flex hidden max-h-[500px] min-w-full flex-col items-start overflow-auto rounded-lg bg-white py-2 shadow-lg max-md:w-[220px] md:w-[340px]"
+                class="absolute right-0 z-15 mt-2 mr-3 flex hidden max-h-[500px] min-w-full flex-col items-start overflow-auto rounded-lg bg-white py-2 shadow-lg max-md:w-[220px] md:w-[340px]"
               >
                 <h3 class="px-6 py-2 text-lg font-semibold">Notification</h3>
-                <ul>
+                <ul class="w-full">
+                  <li
+                    id="notificationListEmpty"
+                    class="w-full p-2 text-center text-gray-500"
+                  >
+                    Nothing to see here
+                  </li>
                   <li
                     id="targetElement"
                     class="flex w-full items-center justify-center p-3"
@@ -401,7 +407,7 @@
                 </a>
                 <div class="flex flex-col gap-2">
                   <p class="font-semibold">Select a theme:</p>
-                  <div class="theme-picker flex w-full justify-center gap-0.5">
+                  <div class="theme-picker flex w-full justify-between gap-0.5">
                     <div
                       class="theme-option aspect-square size-4 rounded-full bg-indigo-500 transition-all hover:scale-115 hover:shadow-md [&.selected]:border-2 [&.selected]:border-black"
                       data-value="indigo"

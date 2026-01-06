@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { getAllNotification } from '../services/notificationService';
 import { DateTime } from 'luxon';
+import { showTaskDrawer } from '../pages/taskDrawer/taskDrawer';
 
 let page = 0;
 const LIMIT = 5;
@@ -35,6 +36,8 @@ export async function setupPushNotifications() {
     const registration =
       await navigator.serviceWorker.register('/serviceWorker.js');
 
+    console.log('service worker registered');
+
     const permission = await Notification.requestPermission();
     if (permission !== 'granted') {
       console.warn('Notification permission denied');
@@ -42,6 +45,8 @@ export async function setupPushNotifications() {
     }
 
     let subscription = await registration.pushManager.getSubscription();
+
+    console.log('subscription', subscription);
 
     if (!subscription) {
       subscription = await registration.pushManager.subscribe({
@@ -77,6 +82,14 @@ function handleNotification(data) {
   const container = document.querySelector('#notificationDropdownMenu ul');
   if (!container) return;
 
+  const blankElement = document.getElementById('notificationListEmpty');
+
+  if (container.length === 0) {
+    blankElement.classList.remove('hidden');
+  } else {
+    blankElement.classList.add('hidden');
+  }
+
   const li = document.createElement('li');
   li.className = `
     dropdown-item notification-item flex cursor-pointer items-start px-4
@@ -108,9 +121,14 @@ function handleNotification(data) {
       </div>
     </div>
   `;
+  li.addEventListener('click', () => {
+    showTaskDrawer(data.taskId);
+  });
 
-  container.insertBefore(li, document.getElementById('targetElement'));
+  // if (container.length > 0) {
+  // }
 
+  container.prepend(li);
   updateNotificationBadge();
 }
 
@@ -203,4 +221,5 @@ dropDownToggle.addEventListener('click', () => {
   badge.classList.add('hidden');
 });
 clearNotification();
+
 export default setupPushNotifications;

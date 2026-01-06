@@ -3,6 +3,7 @@ import { showTaskDrawer } from './taskDrawer';
 
 export async function renderSubtasks(task) {
   const list = document.getElementById('subtasksList');
+
   list.innerHTML = '';
 
   if (!task.subTask.length) {
@@ -20,8 +21,21 @@ export async function renderSubtasks(task) {
       : null;
     const div = document.createElement('div');
 
-    div.className =
-      'flex items-center bg-white rounded-md shadow-sm p-3 subtaskEl cursor-pointer w-full border border-gray-200';
+    let type;
+
+    switch (st.type) {
+      case 'task':
+        type = 'border-l-[#165dfc]';
+        break;
+      case 'story':
+        type = 'border-l-[#00a63d]';
+        break;
+      case 'bug':
+        type = 'border-l-[#e7000b]';
+        break;
+    }
+
+    div.className = `flex items-center bg-white rounded-md shadow-sm p-3 subtaskEl cursor-pointer w-full border border-gray-200 ${type}`;
 
     div.innerHTML = /* HTML */ `
       <img
@@ -37,7 +51,7 @@ export async function renderSubtasks(task) {
       <div class="flex flex-1">
         <div class="ml-3 flex gap-2">
           <span
-            class="bg-primary-400 w-fit rounded-sm px-2 py-0.5 text-center text-xs font-medium text-white"
+            class="bg-primary-400 h-fit w-fit rounded-sm px-2 py-0.5 text-center text-xs font-medium text-nowrap text-white"
             >${st.key}</span
           >
           <span class="font-medium">${st.title}</span>
