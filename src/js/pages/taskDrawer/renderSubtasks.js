@@ -31,7 +31,7 @@ export async function renderSubtasks(task) {
               subtaskAssignee.profileImage
             : '../../../assets/img/profile.png'
           : '../../../assets/img/profile.png'}"
-        class="border-primary-300 h-8 w-8 rounded-full"
+        class="border-primary-300 h-8 w-8 rounded-full object-cover"
         title="${subtaskAssignee ? subtaskAssignee.name : 'unassigned'}"
       />
       <div class="flex flex-1">

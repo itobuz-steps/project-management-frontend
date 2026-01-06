@@ -88,7 +88,7 @@ export async function updateUserList() {
       item.innerHTML = /* HTML */ `
         <div class="flex cursor-pointer items-center">
           <img
-            class="mr-3 aspect-square h-6 w-6 rounded-full"
+            class="mr-3 aspect-square h-6 w-6 rounded-full object-cover"
             src="${user.profileImage
               ? 'http://localhost:3001/uploads/profile/' + user.profileImage
               : '../../../assets/img/profile.png'}"

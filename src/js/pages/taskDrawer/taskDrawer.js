@@ -545,6 +545,7 @@ export async function showTaskDrawer(taskId) {
     if (assignee.profileImage) {
       profileImageEl.src =
         'http://localhost:3001/uploads/profile/' + assignee.profileImage;
+      profileImageEl.classList.add('object-cover');
     } else {
       profileImageEl.src = '../../../assets/img/profile.png';
     }

@@ -269,7 +269,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
                   ? 'http://localhost:3001/uploads/profile/' +
                     assignee.profileImage
                   : '../../../assets/img/profile.png'}"
-                class="aspect-square h-8 w-8 rounded-full"
+                class="aspect-square h-8 w-8 rounded-full object-cover"
                 title="${assignee?.name || 'Unassigned'}"
               />
             </span>

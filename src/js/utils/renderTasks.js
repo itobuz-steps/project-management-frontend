@@ -140,7 +140,7 @@ export async function createTaskList(task, type, projectType, sprint) {
     <td class="p-2">
       <div class="flex items-center">
         <img
-          class="mr-3 aspect-square h-6 w-6 rounded-full"
+          class="mr-3 aspect-square h-6 w-6 rounded-full object-cover"
           src="${assignee.profileImage}"
         />${assignee.name}
       </div>
@@ -169,7 +169,7 @@ export async function createTaskList(task, type, projectType, sprint) {
     <td class="p-2">
       <div class="flex items-center">
         <img
-          class="mr-3 aspect-square h-6 w-6 rounded-full"
+          class="mr-3 aspect-square h-6 w-6 rounded-full object-cover"
           src="${reporter.profileImage
             ? 'http://localhost:3001/uploads/profile/' + reporter.profileImage
             : '../../../assets/img/profile.png'}"
