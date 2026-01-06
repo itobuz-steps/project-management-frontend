@@ -224,6 +224,7 @@ export async function handleCompleteSprint(sprintId, project) {
   await sprintService.updateSprint(sprintId, { isCompleted: true, tasks: [] });
   await projectService.updateProject(project._id, { currentSprint: null });
   await renderBacklogView(localStorage.getItem('selectedProject'));
+  handleDashboardSprintPreview();
 }
 
 export async function handleStartSprint(sprint) {
@@ -268,6 +269,7 @@ export async function handleStartSprint(sprint) {
       });
       await checkIfSprintStarted(response.result);
       await renderBacklogView(localStorage.getItem('selectedProject'));
+      handleDashboardSprintPreview();
     }
   }
 
@@ -333,18 +335,25 @@ export async function handleDashboardSprintPreview() {
   const sprintPreviewContainer = document.getElementById(
     'dashboardSprintPreview'
   );
+  const sprintName = document.getElementById('dashboardSprintName');
+  const sprintDueDateWrapper = document.getElementById(
+    'dashboardSprintDueDateWrapper'
+  );
 
   if (project.projectType === 'scrum') {
     sprintPreviewContainer.classList.remove('hidden');
 
     if (project.currentSprint) {
-      const sprintName = document.getElementById('dashboardSprintName');
       const sprintDueDate = document.getElementById('dashboardSprintDueDate');
       const sprint = (await sprintService.getSprintById(project.currentSprint))
         .result;
 
+      sprintDueDateWrapper.classList.remove('hidden');
       sprintName.innerText = sprint.key;
       sprintDueDate.innerText = new Date(sprint.dueDate).toLocaleDateString();
+    } else {
+      sprintDueDateWrapper.classList.add('hidden');
+      sprintName.innerText = 'No sprint started';
     }
   } else {
     sprintPreviewContainer.classList.add('hidden');
