@@ -6,6 +6,7 @@ import showToast from '../../../utils/showToast';
 import renderSelectedTab from '../../../utils/renderSelectedTab';
 import { ifSelectedProject } from '../../../utils/elementUtils';
 import { handleDashboardSprintPreview } from '../backlogView/sprint';
+import { handleForYouPage, showForYouPage } from '../../forYouPage/forYouPage';
 
 const sidebar = document.querySelector('#sidebar');
 const toggleBtn = document.querySelector('.toggle-sidebar-btn');
@@ -208,6 +209,13 @@ function addEventListenersSidebar() {
       });
     inviteForm.classList.add('hidden');
     emailInput.value = '';
+  });
+
+  const forYouButton = document.getElementById('forYouButton');
+  forYouButton.addEventListener('click', async () => {
+    showForYouPage(true);
+    toggleSidebar('close');
+    await handleForYouPage();
   });
 }
 

@@ -1,4 +1,3 @@
-import authService from '../../services/AuthService';
 import projectService from '../../services/ProjectService';
 import taskService from '../../services/TaskService';
 import { ifSelectedProject } from '../../utils/elementUtils';
@@ -7,14 +6,13 @@ import renderSelectedTab from '../../utils/renderSelectedTab';
 import { svgObject } from '../../utils/svgObjects';
 import { handleDashboardSprintPreview } from '../dashboard/backlogView/sprint';
 import {
-  toggleSidebar,
   updateProjectList,
   updateUserList,
 } from '../dashboard/sidebar/sidebar';
 import { loadProjectMembers } from '../loadMembers/loadMembers';
 import { showTaskDrawer } from '../taskDrawer/taskDrawer';
 
-function showForYouPage(flag) {
+export function showForYouPage(flag) {
   const forYouPage = document.getElementById('forYouPage');
   const mainPage = document.getElementById('main-section');
   if (flag) {
@@ -31,7 +29,6 @@ function showForYouPage(flag) {
 }
 
 export async function handleForYouPage() {
-  const forYouButton = document.getElementById('forYouButton');
   const projectsContainer = document.getElementById('forYouProjectsContainer');
   const backToHomeBtn = document.getElementById('forYouGoBackBtn');
   const allTasksContainer = document.getElementById('forYouTableBody');
@@ -40,10 +37,6 @@ export async function handleForYouPage() {
   allTasksContainer.innerHTML = '';
   forYouGoBackBtn.innerHTML = `${svgObject.back}`;
 
-  forYouButton.addEventListener('click', () => {
-    showForYouPage(true);
-    toggleSidebar('close');
-  });
   const projects = await projectService.getAllProjects();
 
   projects.forEach((project) => {
@@ -103,18 +96,26 @@ function createProjectCard(project) {
 }
 
 async function renderStatusContainers(parentElement) {
-  if (!localStorage.getItem('selectedProject')) return;
-  const project = (
-    await projectService.getProjectById(localStorage.getItem('selectedProject'))
-  ).result;
+  const totalTasksCount = document.getElementById('forYouTotalTasksCount');
+  const tasks = (await taskService.getAllUserTasks()).data.result;
 
-  project.columns.forEach((column) => {
+  totalTasksCount.innerText = tasks.length;
+  let result = {};
+
+  tasks.forEach((task) => {
+    if (!result[task.status]) {
+      result[task.status] = [];
+    }
+    result[task.status].push(task);
+  });
+
+  Object.keys(result).forEach((column) => {
     const row = document.createElement('div');
     row.className = 'flex flex-col w-full mb-2 hidden';
     row.id = `${column}-row`;
     row.innerHTML = /* HTML */ `
       <div class="flex items-center justify-between gap-2">
-        <p class="my-2 font-semibold text-gray-500">${column}</p>
+        <p class="my-2 font-semibold text-gray-500 uppercase">${column}</p>
         <div
           class="w-4 rounded-full bg-gray-200 text-center text-[10px]! font-semibold text-black"
           id="${column}-task-count"
@@ -128,38 +129,22 @@ async function renderStatusContainers(parentElement) {
     parentElement.appendChild(row);
   });
 
-  await renderTasksByStatus(project);
+  await renderTasksByStatus(result);
 }
 
-async function renderTasksByStatus(project) {
-  const totalTasksCount = document.getElementById('forYouTotalTasksCount');
-  const user = await authService.getUserInfo();
-  const tasks = (
-    await taskService.getTaskByProjectId(
-      localStorage.getItem('selectedProject'),
-      'assignee',
-      user._id
-    )
-  ).data.result;
-
-  totalTasksCount.innerText = tasks.length;
-  let result = {};
-
-  project.columns.forEach((column) => (result[column] = []));
-  tasks.forEach((task) => result[task.status].push(task));
-
-  project.columns.forEach((column) => {
+async function renderTasksByStatus(groupedTask) {
+  Object.keys(groupedTask).forEach((column) => {
     const container = document.getElementById(`${column}-task-container`);
     const taskCount = document.getElementById(`${column}-task-count`);
     const row = document.getElementById(`${column}-row`);
-    taskCount.innerText = result[column].length;
+    taskCount.innerText = groupedTask[column].length;
 
-    const columnTasks = result[column];
+    const columnTasks = groupedTask[column];
     if (!columnTasks.length) return;
 
     row.classList.remove('hidden');
     columnTasks.forEach((task) => {
-      const newEl = renderForYouTasks(task, project.name);
+      const newEl = renderForYouTasks(task, task.projectId.name);
       container.appendChild(newEl);
     });
   });

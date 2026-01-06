@@ -72,6 +72,11 @@ class TaskService {
     return response;
   }
 
+  async getAllUserTasks() {
+    const response = await this.api.get(`/me`);
+    return response;
+  }
+
   async getTaskById(id) {
     const response = await this.api.get(`/${id}`);
     return response;
