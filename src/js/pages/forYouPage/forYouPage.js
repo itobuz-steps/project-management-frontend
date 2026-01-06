@@ -6,7 +6,11 @@ import { getSvgByPriority, getSvgByType } from '../../utils/globalUtils';
 import renderSelectedTab from '../../utils/renderSelectedTab';
 import { svgObject } from '../../utils/svgObjects';
 import { handleDashboardSprintPreview } from '../dashboard/backlogView/sprint';
-import { toggleSidebar, updateUserList } from '../dashboard/sidebar/sidebar';
+import {
+  toggleSidebar,
+  updateProjectList,
+  updateUserList,
+} from '../dashboard/sidebar/sidebar';
 import { loadProjectMembers } from '../loadMembers/loadMembers';
 import { showTaskDrawer } from '../taskDrawer/taskDrawer';
 
@@ -92,6 +96,7 @@ function createProjectCard(project) {
     loadProjectMembers(project._id);
     updateUserList();
     await handleDashboardSprintPreview();
+    updateProjectList();
   });
 
   return projectDiv;
