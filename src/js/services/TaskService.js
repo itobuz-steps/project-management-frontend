@@ -109,6 +109,7 @@ class TaskService {
 
     formData.append('projectId', task.projectId);
     formData.append('title', task.title);
+    formData.append('storyPoint', task.storyPoint);
     formData.append('description', task.description);
     formData.append('type', task.type);
     formData.append('key', task.key);
@@ -116,19 +117,12 @@ class TaskService {
     formData.append('priority', task.priority);
     formData.append('dueDate', task.dueDate);
     formData.append('reporter', task.reporter);
+
     if (task.parentTask) {
       formData.append('parentTask', task.parentTask);
     }
     task.tags.forEach((tag) => {
       formData.append('tags[]', tag);
-    });
-
-    task.blocks.forEach((block) => {
-      formData.append('blocks[]', block);
-    });
-
-    task.blockedBy.forEach((blocked) => {
-      formData.append('blockedBy[]', blocked);
     });
 
     if (task.assignee) {

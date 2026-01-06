@@ -1,9 +1,4 @@
-import {
-  handleModalAssignee,
-  handleModalBlock,
-  handleModalBlockedByIssue,
-  handleModalStatus,
-} from './modal';
+import { handleModalAssignee, handleModalStatus } from './modal';
 import taskService from '../../services/TaskService';
 import showToast from '../showToast';
 import renderSelectedTab from '../renderSelectedTab';
@@ -20,8 +15,6 @@ const createModalStatusDropdown = document.getElementById(
 const createModalAssigneeDropdown = document.getElementById(
   'create-modal-assignee'
 );
-const createModalBlockDropdown = document.getElementById('block');
-const createModalBlockedByIssueDropdown = document.getElementById('BlockedBy');
 const input = document.getElementById('attachments');
 const fileName = document.getElementById('file-name');
 const taskForm = document.getElementById('task-form');
@@ -70,6 +63,7 @@ taskForm.addEventListener('submit', async (e) => {
   const task = {
     projectId: localStorage.getItem('selectedProject'),
     title: document.getElementById('create-task-modal-title').value.trim(),
+    storyPoint: document.getElementById('story-point').value.trim(),
     description: document.getElementById('description').value.trim(),
     type: document.getElementById('type').value,
     priority: document.getElementById('priority').value,
@@ -77,19 +71,6 @@ taskForm.addEventListener('submit', async (e) => {
     tags: document.getElementById('tags').value
       ? document
           .getElementById('tags')
-          .value.split(',')
-          .map((t) => t.trim())
-      : [],
-    blocks: document.getElementById('block').value
-      ? document
-          .getElementById('block')
-          .value.split(',')
-          .map((t) => t.trim())
-      : [],
-
-    blockedBy: document.getElementById('BlockedBy').value
-      ? document
-          .getElementById('BlockedBy')
           .value.split(',')
           .map((t) => t.trim())
       : [],
@@ -147,6 +128,4 @@ export function openCreateTaskModal(context = null) {
   createTaskModal.classList.remove('hidden');
   handleModalStatus(createModalStatusDropdown);
   handleModalAssignee(createModalAssigneeDropdown);
-  handleModalBlock(createModalBlockDropdown);
-  handleModalBlockedByIssue(createModalBlockedByIssueDropdown);
 }
