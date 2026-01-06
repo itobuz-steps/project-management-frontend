@@ -14,26 +14,13 @@ editForm.addEventListener('submit', async (e) => {
 
   const updatedTask = {
     title: editModal.querySelector('#title').value,
+    storyPoint: editModal.querySelector('#story-point-update').value,
     description: editModal.querySelector('#description').value,
     type: editModal.querySelector('#type').value,
     priority: editModal.querySelector('#priority').value,
     status: editModal.querySelector('#status').value,
     tags: editModal
       .querySelector('#tags')
-      .value.split(',')
-      .map((t) => t.trim()),
-    relatesTo: editModal
-      .querySelector('#relatesTo')
-      .value.split(',')
-      .map((t) => t.trim()),
-
-    blockedBy: editModal
-      .querySelector('#BlockedBy')
-      .value.split(',')
-      .map((t) => t.trim()),
-
-    block: editModal
-      .querySelector('#block')
       .value.split(',')
       .map((t) => t.trim()),
 
@@ -51,11 +38,9 @@ editForm.addEventListener('submit', async (e) => {
 
     setTimeout(() => {
       const taskDrawer = document.getElementById('task-side-drawer');
-      const profileImageEl = taskDrawer.querySelector('.profile-image');
       taskDrawer.classList.add('translate-x-full');
       taskDrawer.classList.remove('transform-none');
       drawerBackdrop.classList.add('hidden');
-      profileImageEl.classList.remove('hidden');
     }, 100);
   } catch (error) {
     console.error(error);
@@ -73,6 +58,7 @@ export async function openUpdateTaskModal(taskId) {
     const task = response.data.result;
     const status = editModal.querySelector('#status');
     editModal.querySelector('#title').value = task.title;
+    editModal.querySelector('#story-point-update').value = task.storyPoint;
     editModal.querySelector('#description').value = task.description;
     editModal.querySelector('#type').value = task.type;
     editModal.querySelector('#priority').value = task.priority;
@@ -80,9 +66,6 @@ export async function openUpdateTaskModal(taskId) {
     await handleModalStatus(status, task.status);
 
     editModal.querySelector('#tags').value = task.tags?.join(', ') || '';
-    editModal.querySelector('#block').value = task.block || '';
-    editModal.querySelector('#BlockedBy').value = task.blockedBy || '';
-    editModal.querySelector('#relatesTo').value = task.relatesTo || '';
 
     if (task.dueDate) {
       const dueDate = new Date(task.dueDate);

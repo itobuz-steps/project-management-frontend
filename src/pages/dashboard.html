@@ -1710,19 +1710,37 @@
             <div class="xs:px-6 overflow-scroll p-4">
               <form id="task-form" class="flex flex-col gap-2" action="submit">
                 <div class="flex flex-col gap-2">
-                  <div class="w-full">
-                    <label for="create-task-modal-title" class="label-primary"
-                      >Title</label
+                  <div class="xs:flex-row flex w-full flex-col gap-2">
+                    <div class="w-full">
+                      <label for="create-task-modal-title" class="label-primary"
+                        >Title</label
+                      >
+                      <input
+                        type="text"
+                        name="title"
+                        id="create-task-modal-title"
+                        class="input-primary"
+                        placeholder="Enter title"
+                        required
+                        maxlength="100"
+                      />
+                    </div>
+                    <div
+                      class="xs:flex-row xs:gap-3 flex flex-col gap-3 md:gap-5"
                     >
-                    <input
-                      type="text"
-                      name="title"
-                      id="create-task-modal-title"
-                      class="input-primary"
-                      placeholder="Enter title"
-                      required
-                      maxlength="100"
-                    />
+                      <div class="xs:w-22">
+                        <label for="block" class="label-primary"
+                          >Story Point</label
+                        >
+                        <input
+                          type="number"
+                          name="block"
+                          id="story-point"
+                          class="input-primary"
+                          min="0"
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   <div class="w-full">
@@ -1822,44 +1840,6 @@
                   </div>
                 </div>
 
-                <div class="xs:flex-row xs:gap-3 flex flex-col gap-3 md:gap-5">
-                  <div class="xs:w-1/3 w-full">
-                    <label for="block" class="label-primary">Blocks</label>
-                    <select
-                      type="text"
-                      name="block"
-                      id="block"
-                      class="input-primary"
-                    ></select>
-                  </div>
-
-                  <div class="xs:w-1/3 w-full">
-                    <label for="BlockedBy" class="label-primary text-xs"
-                      >Blocked by Issue</label
-                    >
-                    <select
-                      type="text"
-                      name="BlockedBy"
-                      id="BlockedBy"
-                      class="input-primary"
-                      placeholder=""
-                    ></select>
-                  </div>
-
-                  <div class="xs:w-1/3 w-full">
-                    <label for="relatesTo" class="label-primary"
-                      >Related To</label
-                    >
-                    <input
-                      type="text"
-                      name="relatesTo"
-                      id="relatesTo"
-                      class="input-primary"
-                      placeholder=""
-                    />
-                  </div>
-                </div>
-
                 <!-- attachments -->
                 <div>
                   <label for="attachments" class="label-primary block">
@@ -1941,17 +1921,35 @@
                 action="submit"
               >
                 <div class="flex flex-col gap-2">
-                  <div class="w-full">
-                    <label for="title" class="label-primary">Title</label>
-                    <input
-                      type="text"
-                      name="title"
-                      id="title"
-                      class="input-primary"
-                      placeholder="Enter title"
-                      required
-                      maxlength="100"
-                    />
+                  <div class="xs:flex-row flex w-full flex-col gap-2">
+                    <div class="w-full">
+                      <label for="title" class="label-primary">Title</label>
+                      <input
+                        type="text"
+                        name="title"
+                        id="title"
+                        class="input-primary"
+                        placeholder="Enter title"
+                        required
+                        maxlength="100"
+                      />
+                    </div>
+                    <div
+                      class="xs:flex-row xs:gap-3 flex flex-col gap-3 md:gap-5"
+                    >
+                      <div class="xs:w-22">
+                        <label for="block" class="label-primary"
+                          >Story Point</label
+                        >
+                        <input
+                          type="number"
+                          name="block"
+                          id="story-point-update"
+                          class="input-primary"
+                          min="0"
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   <div class="w-full">
