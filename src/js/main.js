@@ -13,3 +13,6 @@ if (localStorage.getItem('access_token')) {
 } else {
   window.location.href = '/pages/signup';
 }
+if (window.location.pathname === '/') {
+  window.location.href = '/pages/signup';
+}
