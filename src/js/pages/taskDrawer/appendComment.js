@@ -196,6 +196,8 @@ async function editComment(input, commentId, comment, messageEl, editControls) {
     comment.message = updatedComment;
     messageEl.textContent = updatedComment;
 
+    showToast('Comment Updated successfully', 'success');
+
     editControls.classList.add('hidden');
     messageEl.classList.remove('hidden');
   } catch (err) {
