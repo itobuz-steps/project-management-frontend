@@ -10,8 +10,6 @@ if (window.location.pathname.startsWith('/invite')) {
 
 if (localStorage.getItem('access_token')) {
   window.location.href = '/pages/dashboard';
-} else {
-  window.location.href = '/pages/signup';
 }
 if (window.location.pathname === '/') {
   window.location.href = '/pages/signup';
