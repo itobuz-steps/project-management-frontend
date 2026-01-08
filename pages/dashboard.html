@@ -1,0 +1,2181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Project Management</title>
+    <script type="module" crossorigin src="../assets/dashboard-DFLq4uv7.js"></script>
+    <link rel="modulepreload" crossorigin href="../assets/main-DiITyB4b.js">
+    <link rel="modulepreload" crossorigin href="../assets/setTheme-XohNhFF_.js">
+    <link rel="stylesheet" crossorigin href="../assets/main-CdIu6_9Q.css">
+  </head>
+  <body class="flex h-screen overflow-hidden bg-white">
+    <div class="border-gray absolute top-5 left-2 mt-2 ml-2 flex items-center">
+      <button class="toggle-sidebar-btn z-18">
+        <svg
+          width="25"
+          height="25"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+          class="hover:fill-primary-200 cursor-pointer fill-white stroke-black"
+        >
+          <path
+            d="M21.9707 15V9C21.9707 4 19.9707 2 14.9707 2H8.9707C3.9707 2 1.9707 4 1.9707 9V15C1.9707 20 3.9707 22 8.9707 22H14.9707C19.9707 22 21.9707 20 21.9707 15Z"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            opacity="0.7"
+            d="M14.9707 2V22"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            opacity="0.7"
+            d="M7.9707 9.43994L10.5307 11.9999L7.9707 14.5599"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+    </div>
+    <aside
+      id="sidebar"
+      class="sidebar collapsed absolute z-17 h-full bg-white text-black shadow-lg md:static"
+    >
+      <div
+        class="flex h-full flex-col gap-5 overflow-y-auto px-3 py-4 transition-all"
+      >
+        <ul class="mt-16 flex flex-col gap-2 font-semibold">
+          <li class="relative" id="foryouMenu">
+            <div
+              class="group hover:bg-primary-200 flex flex-row items-center justify-between rounded-lg border border-gray-50 bg-gray-50 p-2 shadow-sm hover:border-transparent"
+              id="forYouButton"
+            >
+              <a href="#" class="flex items-center gap-4 rounded-lg">
+                <svg
+                  viewBox="0 0 24 24"
+                  height="25px"
+                  width="25px"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="group-hover:fill-primary-300 group-hover:stroke-primary-800 stroke-black"
+                >
+                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                  <g
+                    id="SVGRepo_tracerCarrier"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></g>
+                  <g id="SVGRepo_iconCarrier">
+                    <path
+                      d="M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
+                    <path
+                      d="M12 14C8.13401 14 5 17.134 5 21H19C19 17.134 15.866 14 12 14Z"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></path>
+                  </g>
+                </svg>
+                <p class="group-hover:text-primary-900 text-lg">For you</p>
+              </a>
+            </div>
+          </li>
+          <li class="relative" id="projectsMenu">
+            <div
+              class="group hover:bg-primary-200 flex flex-row items-center justify-between rounded-lg border border-gray-50 bg-gray-50 p-2 shadow-sm hover:border-transparent"
+            >
+              <div>
+                <a href="#" class="flex items-center gap-4 rounded-lg">
+                  <svg
+                    height="25px"
+                    width="25px"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="group-hover:fill-primary-900 group-hover:stroke-primary-800 stroke-black"
+                  >
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g
+                      id="SVGRepo_tracerCarrier"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></g>
+                    <g id="SVGRepo_iconCarrier">
+                      <path
+                        d="M18.6 3H5.4A2.4 2.4 0 0 0 3 5.4v13.2A2.4 2.4 0 0 0 5.4 21h13.2a2.4 2.4 0 0 0 2.4-2.4V5.4A2.4 2.4 0 0 0 18.6 3Z"
+                        fill-opacity=".16"
+                        stroke-width="1.5"
+                        stroke-miterlimit="10"
+                      ></path>
+                      <path
+                        d="M12 12V6M7 14V6M17 16V6"
+                        stroke-width="1.5"
+                        stroke-miterlimit="10"
+                        stroke-linecap="round"
+                      ></path>
+                    </g>
+                  </svg>
+                  <p class="group-hover:text-primary-900 text-lg">Projects</p>
+                </a>
+              </div>
+              <div
+                id="plus-icon"
+                class="plus-icon add-project group hover:bg-primary-300 relative cursor-pointer rounded p-0.5"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="2"
+                  stroke="currentColor"
+                  class="group-hover:fill-primary-900 group-hover:stroke-primary-800 peer size-5 stroke-black"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 4.5v15m7.5-7.5h-15"
+                  />
+                </svg>
+                <span
+                  class="invisible absolute -left-1 mt-2 w-max -translate-x-1/2 rounded bg-black p-1 text-xs text-white opacity-0 transition-opacity peer-hover:visible peer-hover:opacity-100"
+                >
+                  Add project
+                </span>
+              </div>
+            </div>
+
+            <ul
+              id="projectsDropdown"
+              class="mt-2 ml-4 flex hidden h-max flex-col gap-1 border-l border-gray-200 pl-2"
+            ></ul>
+          </li>
+          <li id="usersMenu">
+            <a
+              href="#"
+              class="group hover:bg-primary-200 flex flex-row items-center justify-start gap-4 rounded-lg border-gray-50 bg-gray-50 p-2 shadow hover:border-transparent"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                height="25"
+                width="25"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                class="group-hover:fill-primary-300 group-hover:stroke-primary-800 stroke-black"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  <path
+                    d="M13 20V18C13 15.2386 10.7614 13 8 13C5.23858 13 3 15.2386 3 18V20H13ZM13 20H21V19C21 16.0545 18.7614 14 16 14C14.5867 14 13.3103 14.6255 12.4009 15.6311M11 7C11 8.65685 9.65685 10 8 10C6.34315 10 5 8.65685 5 7C5 5.34315 6.34315 4 8 4C9.65685 4 11 5.34315 11 7ZM18 9C18 10.1046 17.1046 11 16 11C14.8954 11 14 10.1046 14 9C14 7.89543 14.8954 7 16 7C17.1046 7 18 7.89543 18 9Z"
+                    stroke="inherit"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></path>
+                </g>
+              </svg>
+              <p class="group-hover:text-primary-900 text-lg">Users</p>
+            </a>
+            <ul
+              id="usersDropdown"
+              class="mt-2 ml-4 flex hidden h-max flex-col gap-1 overflow-y-auto border-l border-gray-200 bg-inherit pl-2"
+            ></ul>
+          </li>
+          <li>
+            <div
+              id="toggleInviteForm"
+              class="add-user-to-project-button group hover:bg-primary-200 flex cursor-pointer flex-row items-center gap-4 rounded-lg border-gray-50 bg-gray-50 p-2 shadow hover:border-transparent"
+            >
+              <svg
+                height="25"
+                width="25"
+                version="1.1"
+                id="Layer_1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                viewBox="0 0 512 512"
+                xml:space="preserve"
+                class="group-hover:fill-primary-900 fill-black"
+              >
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g
+                  id="SVGRepo_tracerCarrier"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></g>
+                <g id="SVGRepo_iconCarrier">
+                  <path
+                    class="group-hover:fill-primary-300 fill-white"
+                    d="M310.481,157.604c0-5.767,0.547-11.404,1.539-16.885H13.246v43.978l196.797,165.457l138.819-116.712 C325.59,216.305,310.481,188.724,310.481,157.604z"
+                  ></path>
+                  <g>
+                    <path
+                      d="M349.849,249.921c16.048,9.557,34.773,15.068,54.77,15.068c59.21,0,107.381-48.172,107.381-107.383 S463.828,50.223,404.619,50.223c-48.75,0-89.99,32.667-103.05,77.251H13.246C5.93,127.474,0,133.404,0,140.72v3.629v40.347V444.9 v0.128v3.502c0,7.316,5.93,13.246,13.246,13.246h393.595c7.315,0,13.246-5.93,13.246-13.246v-3.629V311.778 c0-7.316-5.932-13.246-13.246-13.246s-13.246,5.93-13.246,13.246v104.679L272.68,314.798L349.849,249.921z M404.619,76.714 c44.603,0,80.889,36.287,80.889,80.89s-36.287,80.89-80.889,80.89c-20.636,0-39.483-7.778-53.789-20.544 c-0.238-0.213-0.483-0.421-0.721-0.637c-0.665-0.608-1.311-1.235-1.955-1.865c-0.425-0.417-0.85-0.835-1.266-1.261 c-0.525-0.534-1.04-1.076-1.548-1.624c-0.595-0.644-1.179-1.299-1.751-1.962c-0.327-0.376-0.658-0.747-0.978-1.129 c-8.988-10.779-15.086-23.76-17.594-37.59c-0.008-0.045-0.016-0.089-0.024-0.134c-0.249-1.392-0.454-2.794-0.631-4.2 c-0.028-0.225-0.06-0.448-0.086-0.673c-0.147-1.256-0.253-2.518-0.34-3.784c-0.021-0.305-0.053-0.607-0.069-0.913 c-0.087-1.519-0.138-3.044-0.138-4.574c0-1.266,0.038-2.525,0.095-3.777c0.041-0.86,0.109-1.723,0.179-2.588 c0.027-0.344,0.048-0.69,0.079-1.033c0.101-1.072,0.224-2.146,0.367-3.222c0.016-0.122,0.03-0.244,0.046-0.366 c0.152-1.106,0.33-2.212,0.526-3.318C331.796,105.501,364.897,76.714,404.619,76.714z M297.234,157.604 c0,1.787,0.046,3.569,0.135,5.345c1.139,23.124,9.646,44.331,23.19,61.362c0.356,0.45,0.702,0.91,1.066,1.355 c0.385,0.469,0.791,0.922,1.184,1.384c1.809,2.139,3.681,4.23,5.661,6.227l-118.429,99.569L26.493,178.528v-24.561h270.805 C297.257,155.183,297.234,156.396,297.234,157.604z M26.493,213.141L147.407,314.8L26.493,416.457V213.141z M374.82,435.284H45.268 l122.722-103.18l33.529,28.19c2.464,2.072,5.493,3.108,8.524,3.108c3.031,0,6.06-1.036,8.524-3.108l33.529-28.19L374.82,435.284z"
+                    ></path>
+                    <path
+                      d="M366.867,170.851h24.506v24.506c0,7.316,5.932,13.246,13.246,13.246s13.246-5.93,13.246-13.246 v-24.506h24.506c7.315,0,13.246-5.93,13.246-13.246c0-7.316-5.932-13.246-13.246-13.246h-24.506v-24.506 c0-7.316-5.932-13.246-13.246-13.246s-13.246,5.93-13.246,13.246v24.506h-24.506c-7.315,0-13.246,5.93-13.246,13.246 C353.62,164.92,359.551,170.851,366.867,170.851z"
+                    ></path>
+                  </g>
+                </g>
+              </svg>
+              <p class="group-hover:text-primary-900 text-lg">Invite</p>
+            </div>
+            <form id="inviteForm" class="mt-2 hidden w-full rounded-md p-4">
+              <label class="mb-2 block text-sm font-semibold text-gray-600"
+                >User Email</label
+              >
+              <input
+                type="email"
+                class="inset-shadow-md mb-3 w-full rounded border border-gray-300 p-2 outline-none focus:ring-2 focus:ring-blue-400"
+                placeholder="Enter email"
+                required
+              />
+              <button
+                type="submit"
+                class="bg-primary-500 hover:bg-primary-600 w-full rounded-md py-2 font-semibold text-white"
+              >
+                Send Invite
+              </button>
+            </form>
+          </li>
+        </ul>
+        <div class="group my-5 mt-auto">
+          <a
+            href="#"
+            class="flex items-center gap-4 rounded-lg bg-gray-50 p-2 text-red-700 shadow hover:bg-red-200 hover:text-red-800"
+            id="logout-btn"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              class="fill-red-400 stroke-red-500 group-hover:fill-red-800 group-hover:stroke-red-800"
+              width="24px"
+              height="24px"
+            >
+              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+              <g
+                id="SVGRepo_tracerCarrier"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></g>
+              <g id="SVGRepo_iconCarrier">
+                <path
+                  d="M15.0136 3.1644L16.9379 2.84368C18.3733 2.60445 19.091 2.48483 19.6684 2.61679C20.6188 2.834 21.4044 3.4995 21.7749 4.40127C22 4.94911 22 5.67672 22 7.13193V17.066C22 18.3391 22 18.9756 21.8269 19.4628C21.466 20.479 20.5874 21.2232 19.5258 21.4122C19.0168 21.5028 18.3889 21.3981 17.1331 21.1889L17.1331 21.1889L15.0136 20.8356L15.0136 20.8356C12.6191 20.4365 11.4219 20.237 10.7109 19.3977C10 18.5585 10 17.3448 10 14.9172V9.08276C10 6.65525 10 5.44149 10.7109 4.60226C11.4219 3.76302 12.6191 3.56348 15.0136 3.1644Z"
+                  fill-opacity="0.24"
+                ></path>
+                <path
+                  d="M3 12L2.53148 11.6252L2.23163 12L2.53148 12.3748L3 12ZM12 12.6C12.3314 12.6 12.6 12.3314 12.6 12C12.6 11.6686 12.3314 11.4 12 11.4V12.6ZM6.53148 6.62518L2.53148 11.6252L3.46852 12.3748L7.46852 7.37482L6.53148 6.62518ZM2.53148 12.3748L6.53148 17.3748L7.46852 16.6252L3.46852 11.6252L2.53148 12.3748ZM3 12.6H12V11.4H3V12.6Z"
+                ></path>
+              </g>
+            </svg>
+            <p class="text-lg font-semibold">Logout</p>
+          </a>
+        </div>
+      </div>
+    </aside>
+    <div
+      class="wrapper flex flex-1 flex-col overflow-x-auto transition-all duration-300 md:min-w-[calc(90vw-0.5rem)]"
+    >
+      <div
+        class="header mx-2 mt-2 rounded-lg border border-gray-50 bg-gray-50 md:mx-4 md:mt-4"
+      >
+        <nav
+          class="flex flex-row items-center justify-end rounded-lg p-2 pl-5 shadow-sm md:px-5 md:py-2"
+        >
+          <div class="flex items-center gap-1 md:gap-5">
+            <div class="search-icon flex items-center justify-between">
+              <form
+                class="search-input-form w-40 rounded-lg bg-white text-black shadow-sm placeholder:text-neutral-600 max-[640px]:w-60 max-[420px]:w-40 sm:w-80 md:w-100 lg:w-120"
+                id="search-input-form"
+                autocomplete="off"
+              >
+                <div class="relative">
+                  <input
+                    type="search"
+                    id="search-input-field"
+                    class="bg-neutral-secondary-medium text-heading placeholder:text-body focus-visible:outline-primary-200 block w-full rounded-lg px-2 py-2 ps-6 text-sm focus-visible:outline-2 max-md:p-2"
+                    placeholder="Search"
+                  />
+                </div>
+              </form>
+            </div>
+            <!-- notification container -->
+            <div class="relative mx-auto w-max">
+              <button
+                type="button"
+                id="dropdownToggle"
+                class="flex h-12 w-12 items-center justify-center border-none text-white outline-none"
+              >
+                <span class="relative inline-flex">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18px"
+                    class="h-8 w-8 cursor-pointer fill-[#000000] stroke-black max-md:size-6"
+                    viewBox="0 0 371.263 371.263"
+                  >
+                    <path
+                      d="M305.402 234.794v-70.54c0-52.396-33.533-98.085-79.702-115.151.539-2.695.838-5.449.838-8.204C226.539 18.324 208.215 0 185.64 0s-40.899 18.324-40.899 40.899c0 2.695.299 5.389.778 7.964-15.868 5.629-30.539 14.551-43.054 26.647-23.593 22.755-36.587 53.354-36.587 86.169v73.115c0 2.575-2.096 4.731-4.731 4.731-22.096 0-40.959 16.647-42.995 37.845-1.138 11.797 2.755 23.533 10.719 32.276 7.904 8.683 19.222 13.713 31.018 13.713h72.217c2.994 26.887 25.869 47.905 53.534 47.905s50.54-21.018 53.534-47.905h72.217c11.797 0 23.114-5.03 31.018-13.713 7.904-8.743 11.797-20.479 10.719-32.276-2.036-21.198-20.958-37.845-42.995-37.845a4.704 4.704 0 0 1-4.731-4.731zM185.64 23.952c9.341 0 16.946 7.605 16.946 16.946 0 .778-.12 1.497-.24 2.275-4.072-.599-8.204-1.018-12.336-1.138-7.126-.24-14.132.24-21.078 1.198-.12-.778-.24-1.497-.24-2.275.002-9.401 7.607-17.006 16.948-17.006zm0 323.358c-14.431 0-26.527-10.3-29.342-23.952h58.683c-2.813 13.653-14.909 23.952-29.341 23.952zm143.655-67.665c.479 5.15-1.138 10.12-4.551 13.892-3.533 3.773-8.204 5.868-13.353 5.868H59.89c-5.15 0-9.82-2.096-13.294-5.868-3.473-3.772-5.09-8.743-4.611-13.892.838-9.042 9.282-16.168 19.162-16.168 15.809 0 28.683-12.874 28.683-28.683v-73.115c0-26.228 10.419-50.719 29.282-68.923 18.024-17.425 41.498-26.887 66.528-26.887 1.198 0 2.335 0 3.533.06 50.839 1.796 92.277 45.929 92.277 98.325v70.54c0 15.809 12.874 28.683 28.683 28.683 9.88 0 18.264 7.126 19.162 16.168z"
+                      data-original="#000000"
+                    ></path>
+                  </svg>
+                  <span
+                    id="notificationBadge"
+                    class="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-xs font-semibold text-white"
+                  >
+                  </span>
+                </span>
+              </button>
+
+              <div
+                id="notificationDropdownMenu"
+                class="absolute right-0 z-15 mt-2 mr-3 flex hidden max-h-[500px] min-w-full flex-col items-start overflow-auto rounded-lg bg-white py-2 shadow-lg max-md:w-[220px] md:w-[340px]"
+              >
+                <h3 class="px-6 py-2 text-lg font-semibold">Notification</h3>
+                <ul class="w-full">
+                  <li
+                    id="notificationListEmpty"
+                    class="w-full p-2 text-center text-gray-500"
+                  >
+                    Nothing to see here
+                  </li>
+                </ul>
+                <li
+                  id="targetElement"
+                  class="flex w-full items-center justify-center p-3"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="fill-primary-500 me-2 hidden h-4 w-4 animate-spin"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="5px"
+                    height="5px"
+                  >
+                    <path
+                      d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                      fill="inherit"
+                    />
+                    <path
+                      d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                      fill="white"
+                    />
+                  </svg>
+                </li>
+              </div>
+            </div>
+            <div class="relative">
+              <button
+                id="profileBtn"
+                class="border-primary-400 flex items-center rounded-full border-3"
+              >
+                <div
+                  class="profile-image h-7 w-7 cursor-pointer rounded-full bg-gray-400 sm:h-9 sm:w-9"
+                >
+                  <img
+                    id="profileImage"
+                    src="../assets/profile-qgUyy1c7.png"
+                    alt="Profile Preview"
+                    class="aspect-square size-full rounded-full object-cover"
+                  />
+                </div>
+              </button>
+
+              <div
+                id="dropdownMenu"
+                class="absolute right-0 z-50 mt-2 flex hidden w-40 flex-col gap-3 rounded-sm border border-gray-200 bg-white p-4 shadow-lg"
+              >
+                <a
+                  href="./editProfile.html"
+                  class="block rounded-xs bg-gray-50 p-2 font-medium text-black shadow-sm hover:bg-gray-100"
+                >
+                  Edit Profile
+                </a>
+                <div class="flex flex-col gap-2">
+                  <p class="font-semibold">Select a theme:</p>
+                  <div class="theme-picker flex w-full justify-between gap-0.5">
+                    <div
+                      class="theme-option aspect-square size-4 rounded-full bg-indigo-500 transition-all hover:scale-115 hover:shadow-md [&.selected]:border-2 [&.selected]:border-black"
+                      data-value="indigo"
+                    ></div>
+                    <div
+                      class="theme-option aspect-square size-4 rounded-full bg-black transition-all hover:scale-110 hover:shadow-md"
+                      data-value="custom_2"
+                    ></div>
+                    <div
+                      class="theme-option aspect-square size-4 rounded-full bg-[#c27180] transition-all hover:scale-110 hover:shadow-md"
+                      data-value="custom_1"
+                    ></div>
+                    <div
+                      class="theme-option aspect-square size-4 rounded-full bg-purple-500 transition-all hover:scale-110 hover:shadow-md"
+                      data-value="purple"
+                    ></div>
+                    <div
+                      class="theme-option aspect-square size-4 rounded-full bg-rose-500 transition-all hover:scale-110 hover:shadow-md"
+                      data-value="rose"
+                    ></div>
+                    <div
+                      class="theme-option aspect-square size-4 rounded-full bg-[#1dac60] transition-all hover:scale-110 hover:shadow-md"
+                      data-value="custom_3"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+      <div
+        class="main flex flex-1 flex-col gap-2 overflow-auto p-2 transition-all duration-300 sm:p-4 md:gap-3"
+        id="main-section"
+      >
+        <div
+          class="bg-primary-200 flex flex-col gap-1 rounded-lg p-3 shadow-sm md:gap-4 md:p-4"
+        >
+          <div class="project-info">
+            <div
+              class="flex flex-col justify-between text-gray-700 sm:flex-row sm:items-center"
+            >
+              <h1
+                class="project-name bg-clip-text text-xl font-semibold text-black sm:text-2xl"
+                id="projectName"
+              >
+                No Project Selected
+              </h1>
+              <div
+                class="flex hidden items-center gap-5"
+                id="dashboardSprintPreview"
+              >
+                <h2
+                  class="text-primary-700 font-semibold"
+                  id="dashboardSprintName"
+                >
+                  No sprint started
+                </h2>
+                <div
+                  class="flex hidden items-center gap-1"
+                  id="dashboardSprintDueDateWrapper"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="size-4 stroke-black"
+                  >
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g
+                      id="SVGRepo_tracerCarrier"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    ></g>
+                    <g id="SVGRepo_iconCarrier">
+                      <path
+                        d="M12 7V12L14.5 10.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                        stroke="inherit"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      ></path>
+                    </g>
+                  </svg>
+                  <p
+                    id="dashboardSprintDueDate"
+                    class="text-center text-xs font-semibold"
+                  ></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="flex hidden w-full flex-col items-center justify-start gap-2 sm:flex-row sm:gap-5"
+            id="dashboardOptionsContainer"
+          >
+            <ul
+              class="tabs bg-primary-50 grid w-full list-none grid-cols-3 items-center gap-0.5 rounded-lg border-2 border-white p-1 inset-shadow-sm sm:w-64"
+            >
+              <li
+                id="backlog-li"
+                class="[&.active]:bg-primary-400 hover:bg-primary-100 cursor-pointer rounded-lg p-2 text-center transition ease-in-out [&.active]:text-white [&.active]:shadow-md"
+              >
+                Backlog
+              </li>
+              <li
+                id="board-li"
+                tabindex="1"
+                class="active [&.active]:bg-primary-400 hover:bg-primary-100 cursor-pointer rounded-lg p-2 text-center transition ease-in-out [&.active]:text-white [&.active]:shadow-md"
+              >
+                Board
+              </li>
+              <li
+                id="list-li"
+                class="[&.active]:bg-primary-400 hover:bg-primary-100 [ cursor-pointer rounded-lg p-2 text-center transition ease-in-out [&.active]:text-white [&.active]:shadow-md"
+              >
+                List
+              </li>
+            </ul>
+            <div
+              class="xs:gap-3 flex w-full flex-1 flex-row items-center justify-start gap-1 sm:items-center"
+            >
+              <div
+                id="create-task"
+                class="form-container xs:px-5 xs:py-3 bg-primary-500 hover:bg-primary-600 task-create flex w-1/2 cursor-pointer items-center justify-between gap-1 rounded-lg px-3 py-2 text-white sm:w-auto sm:gap-3"
+              >
+                <div>Add Task</div>
+                <div class="plus-icon">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="3"
+                    stroke="currentColor"
+                    class="size-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M12 4.5v15m7.5-7.5h-15"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div
+                class="form-container xs:px-5 xs:py-3 bg-primary-500 hover:bg-primary-600 task-create relative flex w-1/2 cursor-pointer items-center justify-between rounded-lg px-3 py-2 sm:w-auto"
+                id="filterBox"
+              >
+                <div
+                  class="flex w-full items-center justify-between gap-1 sm:gap-3"
+                >
+                  <div class="text-white">Filter</div>
+                  <div class="filter-icon">
+                    <svg
+                      width="24px"
+                      height="24px"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="fill-white stroke-white"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M7 11h10v2H7zM4 7h16v2H4zm6 8h4v2h-4z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+                <!-- MAIN DROPDOWN -->
+                <div
+                  id="mainDropdown"
+                  class="text-balck absolute top-[110%] left-0 z-40 hidden w-35 rounded-md bg-white shadow-lg sm:w-40"
+                >
+                  <div
+                    class="dropdown-item hidden cursor-pointer px-4 py-2 hover:bg-gray-50"
+                    data-target="sprintDropdown"
+                  >
+                    Sprint
+                  </div>
+                  <div
+                    class="dropdown-item cursor-pointer rounded-md px-4 py-2 hover:bg-gray-100"
+                    data-target="assigneeDropdown"
+                  >
+                    Assignee
+                  </div>
+                  <div
+                    class="dropdown-item cursor-pointer px-4 py-2 hover:bg-gray-100"
+                    data-target="statusDropdown"
+                  >
+                    Status
+                  </div>
+                  <div
+                    class="dropdown-item cursor-pointer px-4 py-2 hover:bg-gray-100"
+                    data-target="priorityDropdown"
+                  >
+                    Priority
+                  </div>
+                  <div
+                    id="sprintDropdown"
+                    class="subDropdown absolute z-50 hidden w-35 rounded border bg-white shadow-lg sm:w-40"
+                  ></div>
+                  <div
+                    id="assigneeDropdown"
+                    class="subDropdown absolute top-0 right-[95%] z-50 hidden w-35 cursor-pointer rounded-l-lg bg-white shadow-lg sm:w-40 md:left-[97%] md:rounded-l-none md:rounded-r-lg"
+                  ></div>
+                  <div
+                    id="statusDropdown"
+                    class="subDropdown absolute top-0 right-[95%] z-50 hidden w-35 cursor-pointer rounded-l-lg bg-white shadow-lg sm:w-40 md:left-[97%] md:rounded-l-none md:rounded-r-lg"
+                  ></div>
+                  <div
+                    id="priorityDropdown"
+                    class="subDropdown absolute top-0 right-[95%] z-50 hidden w-35 cursor-pointer rounded-l-lg bg-white shadow-lg sm:w-40 md:left-[97%] md:rounded-l-none md:rounded-r-lg"
+                  >
+                    <div
+                      class="cursor-pointer px-4 py-2 hover:bg-gray-50"
+                      id="low-filter"
+                    >
+                      Low
+                    </div>
+                    <div
+                      class="cursor-pointer px-4 py-2 hover:bg-gray-50"
+                      id="medium-filter"
+                    >
+                      Medium
+                    </div>
+                    <div
+                      class="cursor-pointer px-4 py-2 hover:bg-gray-50"
+                      id="high-filter"
+                    >
+                      High
+                    </div>
+                    <div
+                      class="cursor-pointer px-4 py-2 hover:bg-gray-50"
+                      id="critical-filter"
+                    >
+                      Critical
+                    </div>
+                  </div>
+                </div>
+                <!-- SUBDROPDOWNS -->
+              </div>
+              <div
+                class="flex w-10 items-center self-center md:w-8"
+                id="remove-filter-btn"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="group cursor-pointer"
+                >
+                  <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                  <g
+                    id="SVGRepo_tracerCarrier"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  ></g>
+                  <g id="SVGRepo_iconCarrier">
+                    <path
+                      d="M21.6309 14.75C21.6309 15.64 21.3809 16.48 20.9409 17.2C20.1209 18.58 18.6109 19.5 16.8809 19.5C15.1509 19.5 13.6409 18.57 12.8209 17.2C12.3809 16.49 12.1309 15.64 12.1309 14.75C12.1309 12.13 14.2609 10 16.8809 10C19.5009 10 21.6309 12.13 21.6309 14.75Z"
+                      stroke="gray"
+                      stroke-width="1.5"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="group-hover:stroke-red-300"
+                    ></path>
+                    <path
+                      d="M18.1487 15.99L15.6387 13.48"
+                      stroke="gray"
+                      stroke-width="1.5"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="group-hover:stroke-red-300"
+                    ></path>
+                    <path
+                      d="M18.1291 13.5098L15.6191 16.0198"
+                      stroke="gray"
+                      stroke-width="1.5"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="group-hover:stroke-red-300"
+                    ></path>
+                    <path
+                      opacity="0.6"
+                      d="M20.6905 4.02002V6.23999C20.6905 7.04999 20.1805 8.06001 19.6805 8.57001L17.9205 10.12C17.5905 10.04 17.2405 10 16.8805 10C14.2605 10 12.1305 12.13 12.1305 14.75C12.1305 15.64 12.3805 16.48 12.8205 17.2C13.1905 17.82 13.7005 18.35 14.3205 18.73V19.07C14.3205 19.68 13.9205 20.49 13.4105 20.79L12.0005 21.7C10.6905 22.51 8.87055 21.6 8.87055 19.98V14.63C8.87055 13.92 8.46055 13.01 8.06055 12.51L4.22055 8.46997C3.72055 7.95997 3.31055 7.05001 3.31055 6.45001V4.12C3.31055 2.91 4.22055 2 5.33055 2H18.6705C19.7805 2 20.6905 2.91002 20.6905 4.02002Z"
+                      stroke="black"
+                      stroke-width="2"
+                      stroke-miterlimit="10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      class="stroke-black group-hover:stroke-red-600"
+                    ></path>
+                  </g>
+                </svg>
+              </div>
+            </div>
+            <div
+              id="memberAvatars"
+              class="inner-shadow-lg order-first ml-0 flex h-max w-max items-center self-start rounded-full border-2 border-white bg-white sm:order-last md:ml-auto"
+            ></div>
+          </div>
+        </div>
+
+        <div
+          class="content flex max-h-[calc(100vh-280px)] flex-1 sm:max-h-[calc(100vh-235px)]"
+        >
+          <!-- list-view -->
+          <div
+            class="task-list bg-primary-50 flex hidden h-full w-full flex-col gap-3 overflow-x-auto overflow-y-auto rounded-xl p-4 inset-shadow-sm"
+            id="list-view"
+          >
+            <div class="gap-y-6 overflow-x-auto">
+              <h2 class="mb-4 ml-1 text-lg font-semibold">List View</h2>
+              <div
+                class="no-scrollbar relative overflow-x-auto rounded-md border border-gray-200"
+              >
+                <table class="w-full text-left rtl:text-right">
+                  <thead
+                    class="border-b border-l-3 border-gray-200 border-l-gray-100 bg-gray-100 text-xs text-nowrap uppercase hover:border-l-gray-200 hover:bg-gray-200"
+                  >
+                    <tr class="">
+                      <th scope="col" class="p-2 text-center">Type</th>
+                      <th scope="col" class="p-2">Key</th>
+                      <th scope="col" class="min-w-48 p-2">Summary</th>
+                      <th scope="col" class="min-w-14 p-2">Status</th>
+                      <th scope="col" class="min-w-48 p-2">Assignee</th>
+                      <th scope="col" class="p-2">Due Date</th>
+                      <th scope="col" class="min-w-36 p-2">Labels</th>
+                      <th scope="col" class="p-2">Created</th>
+                      <th scope="col" class="p-2">Updated</th>
+                      <th scope="col" class="min-w-36 p-2">Reporter</th>
+                      <th scope="col" class="min-w-px p-2"></th>
+                    </tr>
+                  </thead>
+                  <tbody id="table-body"></tbody>
+                </table>
+              </div>
+
+              <div
+                class="flex w-full justify-center bg-gray-50 p-5 text-center font-semibold text-gray-400"
+                id="empty-list-container"
+              >
+                No tasks found!
+              </div>
+
+              <div class="flex w-full justify-center" id="list-loader">
+                <svg viewBox="25 25 50 50" class="loader">
+                  <circle r="20" cy="50" cx="50"></circle>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- board-view -->
+          <div
+            class="kanban-board bg-primary-50 w-full flex-1 overflow-x-auto overflow-y-hidden rounded-xl border border-gray-100 p-4 inset-shadow-sm"
+            id="board-view"
+          >
+            <div class="flex h-full min-w-max gap-4" id="columns">
+              <div
+                class="my-auto w-[calc(100vw-50px)] text-center text-xl! font-semibold text-gray-600 sm:w-[calc(100vw-70px)]"
+                id="no-project-text"
+              >
+                No project selected, select one from sidebar or
+                <a href="#" class="text-primary-400 underline">create one</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- backlog-view -->
+          <div
+            class="backlog bg-primary-50 hidden w-full overflow-x-auto overflow-y-auto rounded-xl p-4 inset-shadow-sm"
+            id="backlog-view"
+          >
+            <div class="flex flex-col gap-1" id="sprint-backlog-wrapper"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- for-you-page -->
+      <div
+        id="forYouPage"
+        class="flex hidden flex-1 flex-col gap-2 p-2 transition-all duration-300 sm:p-4 md:gap-3"
+      >
+        <div
+          class="flex flex-col gap-4 rounded-lg bg-gray-50 p-3 inset-shadow-sm md:p-4"
+        >
+          <div
+            class="flex items-center justify-between border-b border-b-gray-400 bg-clip-text pb-2 text-xl font-semibold text-black sm:text-2xl"
+          >
+            <h1
+              class="bg-clip-text text-xl font-semibold text-black sm:text-2xl"
+            >
+              For You
+            </h1>
+            <button
+              class="group cursor-pointer rounded-md p-1"
+              id="forYouGoBackBtn"
+            ></button>
+          </div>
+          <div id="forYouProjects" class="mb-4 flex flex-col gap-2">
+            <h2 class="font-semibold">Your Projects</h2>
+            <div
+              id="forYouProjectsContainer"
+              class="xs:flex-row flex flex-col flex-wrap gap-2"
+            ></div>
+          </div>
+          <div id="forYouTasks" class="flex flex-col">
+            <h2
+              class="flex w-full gap-1.5 border-b border-b-gray-400 pb-2 text-lg font-semibold"
+            >
+              Your Tasks
+              <div
+                class="h-5 w-5 rounded-full bg-gray-200 text-center text-sm text-black"
+                id="forYouTotalTasksCount"
+              >
+                0
+              </div>
+            </h2>
+            <div
+              class="flex h-full w-full flex-col gap-3 rounded-md"
+              id="forYouPageTasksWrapper"
+            >
+              <div
+                class="relative overflow-x-auto rounded-md"
+                id="forYouTableBody"
+              ></div>
+
+              <div
+                class="flex hidden w-full justify-center bg-gray-50 p-5 text-center font-semibold text-gray-400"
+                id="empty-for-you-container"
+              >
+                No tasks found!
+              </div>
+            </div>
+          </div>
+        </div>
+        <div></div>
+      </div>
+    </div>
+
+    <!-- modal -->
+    <div id="modal-container">
+      <div
+        id="create-project-modal"
+        tabindex="-1"
+        aria-hidden="true"
+        class="fixed inset-0 z-50 flex hidden items-center justify-center bg-black/50"
+      >
+        <div class="relative w-full max-w-[calc(46rem)] overflow-y-auto p-2">
+          <div class="relative flex flex-col rounded-lg bg-white shadow-sm">
+            <!-- Header -->
+            <div
+              class="xs:px-6 top-0 z-10 flex items-center justify-between rounded-t bg-white px-4 pt-4 sm:pt-6"
+            >
+              <h3 class="text-xl font-semibold text-black">Create Project</h3>
+              <button
+                id="close-button"
+                type="button"
+                class="absolute end-2.5 ms-auto inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900"
+              >
+                <svg
+                  class="h-3 w-3"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 14 14"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                  />
+                </svg>
+                <span class="sr-only">Close modal</span>
+              </button>
+            </div>
+
+            <!-- Form -->
+            <div
+              id="project-form"
+              class="xs:p-6 flex flex-col justify-around gap-5 overflow-scroll p-4 sm:flex-row"
+            >
+              <form
+                class="space-y-3 sm:max-h-[calc(18rem)] sm:w-1/2 sm:overflow-y-auto"
+                action="submit"
+                id="createProjectForm"
+              >
+                <div>
+                  <label for="name" class="label-primary">Name</label>
+                  <input
+                    type="text"
+                    name="name"
+                    id="name"
+                    class="input-primary"
+                    placeholder="Enter project name"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label for="projectType" class="label-primary"
+                    >Project Type</label
+                  >
+                  <div class="input-primary py-0!">
+                    <select
+                      name="projectType"
+                      id="projectType"
+                      class="w-full cursor-pointer py-2 outline-none"
+                      required
+                    >
+                      <option value="kanban" selected>kanban</option>
+                      <option value="scrum">scrum</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label for="project-columns" class="label-primary">
+                    Columns
+                  </label>
+                  <div
+                    id="project-columns-input-wrapper"
+                    class="input-primary flex flex-wrap p-0!"
+                  >
+                    <input
+                      type="text"
+                      name="project-columns"
+                      id="project-columns"
+                      placeholder="Enter your fields"
+                      class="min-w-1/6 flex-1 p-2 text-sm outline-none placeholder:text-sm placeholder:text-white/50"
+                    />
+                  </div>
+                </div>
+                <button type="submit" class="btn-primary w-full cursor-pointer">
+                  Create
+                </button>
+              </form>
+              <div
+                class="flex max-h-[calc(17rem)] flex-col gap-2 overflow-y-scroll sm:w-1/2"
+              >
+                <div>
+                  <h2 class="text-primary-400 font-semibold">
+                    Choose a template
+                  </h2>
+                  <div
+                    class="xs:justify-between xs:items-center relative flex flex-1 cursor-pointer items-center justify-start rounded-md border border-gray-200 bg-gray-50 text-left shadow-sm hover:bg-gray-100"
+                  >
+                    <button
+                      type="button"
+                      class="dropdownButton-template flex w-full cursor-pointer items-center gap-3 rounded-md p-2 font-semibold focus:outline-none md:w-full"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                    >
+                      <svg
+                        class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 20 20"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 7l7 7 7-7"
+                        ></path>
+                      </svg>
+                      Software Development
+                    </button>
+                  </div>
+                  <div class="no-scrollbar hidden overflow-x-auto">
+                    <div class="mt-1 flex min-w-max gap-2">
+                      <div
+                        tabindex="0"
+                        class="template bg-primary-100 focus:border-primary-400 focus:bg-primary-50 hover:border-primary-400 hover:bg-primary-50 flex min-h-30 w-44 cursor-pointer flex-col justify-around rounded-md border-2 border-transparent p-3 transition-all delay-75 hover:scale-95"
+                        data-value="todo,in progress,done"
+                      >
+                        <p class="project-name z-0 text-center font-semibold">
+                          Project Management
+                        </p>
+                        <div
+                          class="mt-1 flex flex-wrap items-center justify-center gap-1 text-center"
+                        >
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            To Do
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            In Progress
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Done
+                          </p>
+                        </div>
+                      </div>
+                      <div
+                        tabindex="0"
+                        class="template bg-primary-100 focus:border-primary-400 focus:bg-primary-50 hover:border-primary-400 hover:bg-primary-50 flex min-h-30 w-44 cursor-pointer flex-col justify-around rounded-md border-2 border-transparent p-3 transition-all delay-75 hover:scale-95"
+                        data-value="todo,in progress,in review,done"
+                      >
+                        <p class="project-name text-center font-semibold">
+                          Bug tracking
+                        </p>
+                        <div
+                          class="mt-1 flex flex-wrap items-center justify-center gap-1 text-center"
+                        >
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            To Do
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            In Progress
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            In Review
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Done
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div
+                    class="xs:justify-between xs:items-center relative flex flex-1 cursor-pointer items-center justify-start rounded-md border border-gray-200 bg-gray-50 text-left shadow-sm hover:bg-gray-100"
+                  >
+                    <button
+                      type="button"
+                      class="dropdownButton-template flex w-full cursor-pointer items-center gap-3 rounded-md p-2 font-semibold focus:outline-none md:w-full"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                    >
+                      <svg
+                        class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 20 20"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 7l7 7 7-7"
+                        ></path>
+                      </svg>
+                      Service management
+                    </button>
+                  </div>
+                  <div class="no-scrollbar hidden overflow-x-auto">
+                    <div class="mt-1 flex min-w-max gap-2">
+                      <div
+                        tabindex="0"
+                        class="template bg-primary-100 focus:border-primary-400 focus:bg-primary-50 hover:border-primary-400 hover:bg-primary-50 flex min-h-30 w-44 cursor-pointer flex-col justify-around rounded-md border-2 border-transparent p-3 transition-all delay-75 hover:scale-95"
+                        data-value="todo,pending,in progress,done"
+                      >
+                        <p class="project-name text-center font-semibold">
+                          General service management
+                        </p>
+                        <div
+                          class="mt-1 flex flex-wrap items-center justify-center gap-1 text-center"
+                        >
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            To Do
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Pending
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            In Progress
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Done
+                          </p>
+                        </div>
+                      </div>
+                      <div
+                        tabindex="0"
+                        class="template bg-primary-100 focus:border-primary-400 focus:bg-primary-50 hover:border-primary-400 hover:bg-primary-50 flex min-h-30 w-44 cursor-pointer flex-col justify-around rounded-md border-2 border-transparent p-3 transition-all delay-75 hover:scale-95"
+                        data-value="todo,in progress,done"
+                      >
+                        <p class="project-name text-center font-semibold">
+                          Blank project
+                        </p>
+                        <div
+                          class="mt-1 flex flex-wrap items-center justify-center gap-1 text-center"
+                        >
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            To Do
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            In Progress
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Done
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div
+                    class="xs:justify-between xs:items-center relative flex flex-1 cursor-pointer items-center justify-start rounded-md border border-gray-200 bg-gray-50 text-left shadow-sm hover:bg-gray-100"
+                  >
+                    <button
+                      type="button"
+                      class="dropdownButton-template flex w-full cursor-pointer items-center gap-3 rounded-md p-2 font-semibold focus:outline-none md:w-full"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                    >
+                      <svg
+                        class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 20 20"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 7l7 7 7-7"
+                        ></path>
+                      </svg>
+                      Work management
+                    </button>
+                  </div>
+                  <div class="no-scrollbar hidden overflow-x-auto">
+                    <div class="mt-1 flex min-w-max gap-2">
+                      <div
+                        tabindex="0"
+                        class="template bg-primary-100 focus:border-primary-400 focus:bg-primary-50 hover:border-primary-400 hover:bg-primary-50 flex min-h-30 w-44 cursor-pointer flex-col justify-around rounded-md border-2 border-transparent p-3 transition-all delay-75 hover:scale-95"
+                        data-value="todo,done"
+                      >
+                        <p class="project-name text-center font-semibold">
+                          Task tracking
+                        </p>
+                        <div
+                          class="mt-1 flex flex-wrap items-center justify-center gap-1 text-center"
+                        >
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            To Do
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Done
+                          </p>
+                        </div>
+                      </div>
+                      <div
+                        tabindex="0"
+                        class="template bg-primary-100 focus:border-primary-400 focus:bg-primary-50 hover:border-primary-400 hover:bg-primary-50 flex min-h-30 w-44 cursor-pointer flex-col justify-around rounded-md border-2 border-transparent p-3 transition-all delay-75 hover:scale-95"
+                        data-value="open,in progress,cancelled,in review,rejected,done"
+                      >
+                        <p class="project-name text-center font-semibold">
+                          Process control
+                        </p>
+                        <div
+                          class="mt-1 flex flex-wrap items-center justify-center gap-1 text-center"
+                        >
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Open
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            In Progress
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Cancelled
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            In review
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Rejected
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Done
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div
+                    class="xs:justify-between xs:items-center relative flex flex-1 cursor-pointer items-center justify-start rounded-md border border-gray-200 bg-gray-50 text-left shadow-sm hover:bg-gray-100"
+                  >
+                    <button
+                      type="button"
+                      class="dropdownButton-template flex w-full cursor-pointer items-center gap-3 rounded-md p-2 font-semibold focus:outline-none md:w-full"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                    >
+                      <svg
+                        class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 20 20"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 7l7 7 7-7"
+                        ></path>
+                      </svg>
+                      Product management
+                    </button>
+                  </div>
+                  <div class="no-scrollbar hidden overflow-x-auto">
+                    <div class="mt-1 flex min-w-max gap-2">
+                      <div
+                        tabindex="0"
+                        class="template bg-primary-100 focus:border-primary-400 focus:bg-primary-50 hover:border-primary-400 hover:bg-primary-50 flex min-h-30 w-44 cursor-pointer flex-col justify-around rounded-md border-2 border-transparent p-3 transition-all delay-75 hover:scale-95"
+                        data-value="parking lot,discovery,ready for delivery,delivery,impact,archived"
+                      >
+                        <p class="project-name text-center font-semibold">
+                          Product Roadmap
+                        </p>
+                        <div
+                          class="mt-1 flex flex-wrap items-center justify-center gap-1 text-center"
+                        >
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Parking lot
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Discovery
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Ready for delivery
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Delivery
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Impact
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Archived
+                          </p>
+                        </div>
+                      </div>
+                      <div
+                        tabindex="0"
+                        class="template bg-primary-100 focus:border-primary-400 focus:bg-primary-50 hover:border-primary-400 hover:bg-primary-50 flex min-h-30 w-44 cursor-pointer flex-col justify-around rounded-md border-2 border-transparent p-3 transition-all delay-75 hover:scale-95"
+                        data-value="to do,concepting,design,testing,launch"
+                      >
+                        <p class="project-name text-center font-semibold">
+                          UX design
+                        </p>
+                        <div
+                          class="mt-1 flex flex-wrap items-center justify-center gap-1 text-center"
+                        >
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            To Do
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Concepting
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Design
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Testing
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Launch
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div
+                    class="xs:justify-between xs:items-center relative flex flex-1 cursor-pointer items-center justify-start rounded-md border border-gray-200 bg-gray-50 text-left shadow-sm hover:bg-gray-100"
+                  >
+                    <button
+                      type="button"
+                      class="dropdownButton-template flex w-full cursor-pointer items-center gap-3 rounded-md p-2 font-semibold focus:outline-none md:w-full"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                    >
+                      <svg
+                        class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 20 20"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 7l7 7 7-7"
+                        ></path>
+                      </svg>
+                      Human resources
+                    </button>
+                  </div>
+                  <div class="no-scrollbar hidden overflow-x-auto">
+                    <div class="mt-1 flex min-w-max gap-2">
+                      <div
+                        tabindex="0"
+                        class="template bg-primary-100 focus:border-primary-400 focus:bg-primary-50 hover:border-primary-400 hover:bg-primary-50 flex min-h-30 w-44 cursor-pointer flex-col justify-around rounded-md border-2 border-transparent p-3 transition-all delay-75 hover:scale-95"
+                        data-value="applications,screening,interviewing,interview debrief,offer discussion,accepted,rejected"
+                      >
+                        <p class="project-name text-center font-semibold">
+                          Recruitment tracking
+                        </p>
+                        <div
+                          class="mt-1 flex flex-wrap items-center justify-center gap-1 text-center"
+                        >
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Applications
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Screening
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Interviewing
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Interview debrief
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Offer discussion
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Accepted
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Rejected
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div
+                    class="xs:justify-between xs:items-center relative flex flex-1 cursor-pointer items-center justify-start rounded-md border border-gray-200 bg-gray-50 text-left shadow-sm hover:bg-gray-100"
+                  >
+                    <button
+                      type="button"
+                      class="dropdownButton-template flex w-full cursor-pointer items-center gap-3 rounded-md p-2 font-semibold focus:outline-none md:w-full"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                    >
+                      <svg
+                        class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 20 20"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 7l7 7 7-7"
+                        ></path>
+                      </svg>
+                      Sales
+                    </button>
+                  </div>
+                  <div class="no-scrollbar hidden overflow-x-auto">
+                    <div class="mt-1 flex min-w-max gap-2">
+                      <div
+                        tabindex="0"
+                        class="template bg-primary-100 focus:border-primary-400 focus:bg-primary-50 hover:border-primary-400 hover:bg-primary-50 flex min-h-30 w-44 cursor-pointer flex-col justify-around rounded-md border-2 border-transparent p-3 transition-all delay-75 hover:scale-95"
+                        data-value="opportunity,contacted,in negotiation,won,lost"
+                      >
+                        <p class="project-name text-center font-semibold">
+                          Sales lead tracking
+                        </p>
+                        <div
+                          class="mt-1 flex flex-wrap items-center justify-center gap-1 text-center"
+                        >
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Opportunity
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Contacted
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            In Negotiation
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Won
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Lost
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div
+                    class="xs:justify-between xs:items-center relative flex flex-1 cursor-pointer items-center justify-start rounded-md border border-gray-200 bg-gray-50 text-left shadow-sm hover:bg-gray-100"
+                  >
+                    <button
+                      type="button"
+                      class="dropdownButton-template flex w-full cursor-pointer items-center gap-3 rounded-md p-2 font-semibold focus:outline-none md:w-full"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                    >
+                      <svg
+                        class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 20 20"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 7l7 7 7-7"
+                        ></path>
+                      </svg>
+                      Finance
+                    </button>
+                  </div>
+                  <div class="no-scrollbar hidden overflow-x-auto">
+                    <div class="mt-1 flex min-w-max gap-2">
+                      <div
+                        tabindex="0"
+                        class="template bg-primary-100 focus:border-primary-400 focus:bg-primary-50 hover:border-primary-400 hover:bg-primary-50 flex min-h-30 w-44 cursor-pointer flex-col justify-around rounded-md border-2 border-transparent p-3 transition-all delay-75 hover:scale-95"
+                        data-value="to do,in progress,feedback,approval,done - approved,done - not approved"
+                      >
+                        <p class="project-name text-center font-semibold">
+                          Budget planning
+                        </p>
+                        <div
+                          class="mt-1 flex flex-wrap items-center justify-center gap-1 text-center"
+                        >
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            To Do
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            In Progress
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Feedback
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Approval
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Done - approved
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Done - not approved
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div
+                    class="xs:justify-between xs:items-center relative flex flex-1 cursor-pointer items-center justify-start rounded-md border border-gray-200 bg-gray-50 text-left shadow-sm hover:bg-gray-100"
+                  >
+                    <button
+                      type="button"
+                      class="dropdownButton-template flex w-full cursor-pointer items-center gap-3 rounded-md p-2 font-semibold focus:outline-none md:w-full"
+                      aria-expanded="false"
+                      aria-haspopup="true"
+                    >
+                      <svg
+                        class="dropdown-icon-template mt-1 h-4 w-4 -rotate-90"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 20 20"
+                        stroke="currentColor"
+                        aria-hidden="true"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 7l7 7 7-7"
+                        ></path>
+                      </svg>
+                      Nonprofit
+                    </button>
+                  </div>
+                  <div class="no-scrollbar hidden overflow-x-auto">
+                    <div class="mt-1 flex min-w-max gap-2">
+                      <div
+                        tabindex="0"
+                        class="template bg-primary-100 focus:border-primary-400 focus:bg-primary-50 hover:border-primary-400 hover:bg-primary-50 flex min-h-30 w-44 cursor-pointer flex-col justify-around rounded-md border-2 border-transparent p-3 transition-all delay-75 hover:scale-95"
+                        data-value="research,design,planning,delivery,evaluation & learning,completed"
+                      >
+                        <p class="project-name text-center font-semibold">
+                          Nonprofit management
+                        </p>
+                        <div
+                          class="mt-1 flex flex-wrap items-center justify-center gap-1 text-center"
+                        >
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Research
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Design
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Planning
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Delivery
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Evaluation & Learning
+                          </p>
+                          <p
+                            class="smaller-text bg-primary-500 rounded-sm px-1 text-center text-white"
+                          >
+                            Completed
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- create task -->
+      <div
+        id="create-task-modal"
+        tabindex="-1"
+        class="fixed inset-0 z-50 flex hidden items-center justify-center bg-black/50"
+      >
+        <div
+          class="xs:max-w-lg relative m-2 max-h-[85vh] w-full max-w-md overflow-y-auto rounded-lg bg-white"
+        >
+          <div class="relative flex flex-col rounded-lg shadow-sm">
+            <div
+              class="xs:px-6 top-0 z-10 flex items-center justify-between rounded-t bg-white px-4 pt-4 sm:pt-6"
+            >
+              <h3 class="text-xl font-semibold text-black">Create Issue</h3>
+              <button
+                id="close-task-modal"
+                type="button"
+                class="absolute end-2.5 ms-auto inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900"
+              >
+                <svg
+                  class="h-3 w-3"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 14 14"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                  />
+                </svg>
+                <span class="sr-only">Close modal</span>
+              </button>
+            </div>
+
+            <!--  input forms  -->
+            <div class="xs:px-6 overflow-scroll p-4">
+              <form id="task-form" class="flex flex-col gap-2" action="submit">
+                <div class="flex flex-col gap-2">
+                  <div class="xs:flex-row flex w-full flex-col gap-2">
+                    <div class="w-full">
+                      <label for="create-task-modal-title" class="label-primary"
+                        >Title</label
+                      >
+                      <input
+                        type="text"
+                        name="title"
+                        id="create-task-modal-title"
+                        class="input-primary"
+                        placeholder="Enter title"
+                        required
+                        maxlength="100"
+                      />
+                    </div>
+                    <div
+                      class="xs:flex-row xs:gap-3 flex flex-col gap-3 md:gap-5"
+                    >
+                      <div class="xs:w-22">
+                        <label for="block" class="label-primary"
+                          >Story Point</label
+                        >
+                        <input
+                          type="number"
+                          name="block"
+                          id="story-point"
+                          class="input-primary"
+                          min="0"
+                          value="0"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="w-full">
+                    <label for="description" class="label-primary"
+                      >Description</label
+                    >
+                    <textarea
+                      name="description"
+                      id="description"
+                      class="input-primary"
+                      maxlength="1000"
+                    ></textarea>
+                  </div>
+                </div>
+
+                <div class="xs:flex-row xs:gap-3 flex flex-col gap-3 md:gap-5">
+                  <div class="flex-1">
+                    <label for="type" class="label-primary">Type</label>
+                    <div class="input-primary py-0!">
+                      <select
+                        name="type"
+                        id="type"
+                        class="w-full py-2 outline-none"
+                        required
+                      >
+                        <option value="task" selected>Task</option>
+                        <option value="story">Story</option>
+                        <option value="bug">Bug</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="flex-1">
+                    <label for="priority" class="label-primary">Priority</label>
+                    <div class="input-primary py-0!">
+                      <select
+                        name="priority"
+                        id="priority"
+                        class="w-full py-2 outline-none"
+                        required
+                      >
+                        <option value="low">low</option>
+                        <option value="medium" selected>medium</option>
+                        <option value="high">high</option>
+                        <option value="critical">critical</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="flex-1">
+                    <label for="status" class="label-primary">Status</label>
+                    <div class="input-primary py-0!">
+                      <select
+                        name="status"
+                        id="status-create-task-modal"
+                        class="w-full py-2 outline-none"
+                        required
+                      ></select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="xs:flex-row xs:gap-3 flex flex-col gap-3 md:gap-5">
+                  <div class="md:w-60">
+                    <label for="tags" class="label-primary">Tags</label>
+                    <input
+                      type="text"
+                      name="tags"
+                      id="tags"
+                      class="input-primary"
+                      placeholder="Enter tags"
+                    />
+                  </div>
+
+                  <div class="md:w-60">
+                    <label for="due date" class="label-primary">Due Date</label>
+                    <input
+                      type="date"
+                      name="dueDate"
+                      id="dueDate"
+                      class="input-primary"
+                      placeholder="Enter the due date"
+                      value=""
+                    />
+                  </div>
+
+                  <div class="md:w-60">
+                    <label for="assignee" class="label-primary">Assignee</label>
+                    <div class="input-primary py-0!">
+                      <select
+                        name="assignee"
+                        id="create-modal-assignee"
+                        class="w-full py-2 outline-none"
+                        required
+                      ></select>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- attachments -->
+                <div>
+                  <label for="attachments" class="label-primary block">
+                    Enter files (max 5)
+                  </label>
+
+                  <label
+                    for="attachments"
+                    class="bg-primary-400 hover:bg-primary-500 inline-block cursor-pointer rounded-lg px-4 py-2 text-sm font-medium text-white"
+                  >
+                    Choose Files
+                  </label>
+
+                  <span id="file-name" class="ml-3 font-semibold text-gray-400"
+                    >No file chosen</span
+                  >
+
+                  <input
+                    type="file"
+                    name="attachments"
+                    id="attachments"
+                    class="hidden"
+                    accept="*/*"
+                    multiple
+                  />
+                </div>
+
+                <div class="flex justify-between"></div>
+                <button type="submit" class="btn-primary w-full">Create</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- update task -->
+      <div
+        id="update-task-modal"
+        tabindex="-1"
+        class="fixed inset-0 z-50 flex hidden items-center justify-center bg-black/50"
+      >
+        <div
+          class="xs:max-w-lg relative m-2 max-h-[85vh] w-full max-w-md overflow-y-auto rounded-lg bg-white"
+        >
+          <div class="relative flex flex-col rounded-lg shadow-sm">
+            <div
+              class="xs:px-6 top-0 z-10 flex items-center justify-between rounded-t bg-white px-4 pt-4 sm:pt-6"
+            >
+              <h3 class="text-xl font-semibold text-black">Update Task</h3>
+              <button
+                id="close-update-task-modal"
+                type="button"
+                class="absolute end-2.5 ms-auto inline-flex h-8 w-8 items-center justify-center rounded-lg bg-transparent text-sm text-gray-400 hover:bg-gray-200 hover:text-gray-900"
+              >
+                <svg
+                  class="h-3 w-3"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 14 14"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                  />
+                </svg>
+                <span class="sr-only">Close modal</span>
+              </button>
+            </div>
+
+            <!--  input forms  -->
+            <div class="xs:px-6 overflow-scroll p-4">
+              <form
+                id="edit-task-form"
+                class="flex flex-col gap-2"
+                action="submit"
+              >
+                <div class="flex flex-col gap-2">
+                  <div class="xs:flex-row flex w-full flex-col gap-2">
+                    <div class="w-full">
+                      <label for="title" class="label-primary">Title</label>
+                      <input
+                        type="text"
+                        name="title"
+                        id="title"
+                        class="input-primary"
+                        placeholder="Enter title"
+                        required
+                        maxlength="100"
+                      />
+                    </div>
+                    <div
+                      class="xs:flex-row xs:gap-3 flex flex-col gap-3 md:gap-5"
+                    >
+                      <div class="xs:w-22">
+                        <label for="block" class="label-primary"
+                          >Story Point</label
+                        >
+                        <input
+                          type="number"
+                          name="block"
+                          id="story-point-update"
+                          class="input-primary"
+                          min="0"
+                          value="0"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="w-full">
+                    <label for="description" class="label-primary"
+                      >Description</label
+                    >
+                    <textarea
+                      type="text"
+                      name="description"
+                      id="description"
+                      class="input-primary"
+                      placeholder="Enter details"
+                      maxlength="1000"
+                    ></textarea>
+                  </div>
+                </div>
+
+                <div class="xs:flex-row xs:gap-3 flex flex-col gap-3 md:gap-5">
+                  <div class="flex-1">
+                    <label for="type" class="label-primary">Type</label>
+                    <div class="input-primary py-0!">
+                      <select
+                        name="type"
+                        id="type"
+                        class="w-full py-2 outline-none"
+                      >
+                        <option value="">Select a type</option>
+                        <option value="bug">Bug</option>
+                        <option value="task">Task</option>
+                        <option value="story">Story</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="flex-1">
+                    <label for="priority" class="label-primary">Priority</label>
+                    <div class="input-primary py-0!">
+                      <select
+                        name="priority"
+                        id="priority"
+                        class="w-full py-2 outline-none"
+                      >
+                        <option value="">Select a type</option>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                        <option value="critical">Critical</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="flex-1">
+                    <label for="status" class="label-primary">Status</label>
+                    <div class="input-primary py-0!">
+                      <select
+                        name="status"
+                        id="status"
+                        class="w-full py-2 outline-none"
+                      >
+                        <option value="">Select a type</option>
+                        <option value="todo">To-do</option>
+                        <option value="in-progress">In-progress</option>
+                        <option value="done">Done</option>
+                        <option value="review">Review</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="xs:flex-row xs:gap-3 flex flex-col gap-3 md:gap-5">
+                  <div class="md:w-60">
+                    <label for="tags" class="label-primary">Tags</label>
+                    <input
+                      type="text"
+                      name="tags"
+                      id="tags"
+                      class="input-primary"
+                      placeholder="Enter tags"
+                    />
+                  </div>
+
+                  <div class="md:w-60">
+                    <label for="due date" class="label-primary">Due Date</label>
+                    <input
+                      type="date"
+                      name="dueDate"
+                      id="dueDate"
+                      class="input-primary"
+                      placeholder="Enter the due date"
+                    />
+                  </div>
+
+                  <div class="md:w-60">
+                    <label for="assignee" class="label-primary">Assignee</label>
+                    <div class="input-primary py-0!">
+                      <select
+                        name="assignee"
+                        id="assignee"
+                        class="w-full py-2 outline-none"
+                        required
+                      ></select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="xs:flex-row xs:gap-3 flex flex-col gap-3 md:gap-5">
+                  <div class="xs:w-1/3 w-full">
+                    <label for="block" class="label-primary">Blocks</label>
+                    <input
+                      type="text"
+                      name="block"
+                      id="block"
+                      class="input-primary"
+                    />
+                  </div>
+
+                  <div class="xs:w-1/3 w-full">
+                    <label for="BlockedBy" class="label-primary text-xs"
+                      >Blocked by Issue</label
+                    >
+                    <input
+                      type="text"
+                      name="BlockedBy"
+                      id="BlockedBy"
+                      class="input-primary"
+                      placeholder=""
+                    />
+                  </div>
+
+                  <div class="xs:w-1/3 w-full">
+                    <label for="relatesTo" class="label-primary"
+                      >Related To</label
+                    >
+                    <input
+                      type="text"
+                      name="relatesTo"
+                      id="relatesTo"
+                      class="input-primary"
+                      placeholder=""
+                    />
+                  </div>
+                </div>
+
+                <div class="flex justify-between"></div>
+                <button type="submit" class="btn-primary w-full">Update</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- task drawer -->
+    <div
+      class="task-drawer bg-primary-100 fixed top-0 right-0 z-42 h-screen w-[320px] translate-x-full overflow-y-auto transition-transform lg:w-[400px]"
+      id="task-side-drawer"
+    ></div>
+
+    <!-- delete modal -->
+    <div
+      id="confirmationModal"
+      class="fixed inset-0 z-50 flex hidden items-center justify-center bg-black/50"
+    >
+      <div
+        class="modal fixed top-[40%] right-0 left-0 z-100 mx-auto flex w-fit items-center justify-center"
+      >
+        <div class="w-70 rounded-lg bg-gray-200 p-6 shadow-xl md:w-96">
+          <h2 id="confirmModalMessage" class="mb-4 text-lg font-semibold"></h2>
+          <div class="flex justify-between">
+            <button
+              id="cancelConfirm"
+              class="rounded bg-gray-300 px-4 py-2 font-semibold text-gray-800 hover:bg-gray-400 focus:ring focus:ring-gray-300 focus:outline-none"
+            >
+              Cancel
+            </button>
+            <button
+              id="confirm"
+              class="rounded bg-red-500 px-4 py-2 font-semibold text-white hover:bg-red-600 focus:ring focus:ring-red-300 focus:outline-none"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="drawer-backdrop fixed inset-0 z-20 hidden bg-gray-900/50 dark:bg-gray-900/80"
+    ></div>
+    <div
+      class="notification fixed right-5 bottom-5 z-50 flex hidden items-center space-x-3 rounded-lg bg-gray-200 p-4 text-slate-800 shadow-lg"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="#000000"
+        viewBox="0 0 24 24"
+        class="h-6 w-6"
+      >
+        <path
+          d="M10,20h4a2,2,0,0,1-4,0Zm8-4V10a6,6,0,0,0-5-5.91V3a1,1,0,0,0-2,0V4.09A6,6,0,0,0,6,10v6L4,18H20Z"
+        />
+      </svg>
+      <p class="message font-semibold"></p>
+      <button
+        class="dismiss ml-auto text-slate-600 hover:text-black focus:outline-none"
+      >
+        <svg
+          class="h-4 w-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
+        </svg>
+      </button>
+    </div>
+    <div
+      id="toast-container"
+      class="fixed right-4 bottom-4 z-50 flex flex-col gap-3"
+    ></div>
+  </body>
+</html>
