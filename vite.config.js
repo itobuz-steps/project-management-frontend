@@ -9,6 +9,8 @@ const __dirname = dirname(__filename);
 export default {
   root: resolve(__dirname, 'src'),
   publicDir: resolve(__dirname, 'public'),
+  // Use relative asset URLs so static hosts (S3/serve) work under any path.
+  base: './',
   build: {
     outDir: '../dist',
     rollupOptions: {
@@ -17,6 +19,8 @@ export default {
         index: resolve(__dirname, 'src/index.html'),
         forgotPassword: resolve(__dirname, 'src/pages/forgotPasswordPage.html'),
         otp: resolve(__dirname, 'src/pages/verifyOtpPage.html'),
+        dashboard: resolve(__dirname, 'src/pages/dashboard.html'),
+        editProfile: resolve(__dirname, 'src/pages/editProfile.html'),
       },
     },
   },

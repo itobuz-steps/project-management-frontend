@@ -1,16 +1,21 @@
 import '../style/main.css';
 
-if (window.location.pathname.startsWith('/invite')) {
+// Use path checks that work on file://, nested folders, and static hosts.
+const path = window.location.pathname;
+const isIndex =
+  path.endsWith('/') ||
+  path.endsWith('/index.html') ||
+  path.endsWith('index.html');
+const isInvite = path.includes('/invite');
+
+if (isInvite) {
   localStorage.setItem(
     'inviteToken',
     new URLSearchParams(window.location.search).get('token')
   );
-  window.location.href = '/pages/signup';
-}
-
-if (localStorage.getItem('access_token')) {
-  window.location.href = '/pages/dashboard';
-}
-if (window.location.pathname === '/') {
-  window.location.href = '/pages/signup';
+  window.location.href = './pages/signup.html';
+} else if (localStorage.getItem('access_token')) {
+  window.location.href = './pages/dashboard.html';
+} else if (isIndex) {
+  window.location.href = './pages/signup.html';
 }
