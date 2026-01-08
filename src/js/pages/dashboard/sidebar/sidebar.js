@@ -7,6 +7,7 @@ import renderSelectedTab from '../../../utils/renderSelectedTab';
 import { ifSelectedProject } from '../../../utils/elementUtils';
 import { handleDashboardSprintPreview } from '../backlogView/sprint';
 import { handleForYouPage, showForYouPage } from '../../forYouPage/forYouPage';
+import { config } from '../../../config/config';
 
 const sidebar = document.querySelector('#sidebar');
 const toggleBtn = document.querySelector('.toggle-sidebar-btn');
@@ -91,7 +92,7 @@ export async function updateUserList() {
           <img
             class="mr-3 aspect-square h-6 w-6 rounded-full object-cover"
             src="${user.profileImage
-              ? 'http://localhost:3001/uploads/profile/' + user.profileImage
+              ? config.API_BASE_URL + '/uploads/profile/' + user.profileImage
               : '../../../assets/img/profile.png'}"
           />${user.name}
         </div>
@@ -192,7 +193,7 @@ function addEventListenersSidebar() {
       return;
     }
     axios
-      .post('http://localhost:3001/invite/email', {
+      .post(config.API_BASE_URL + '/invite/email', {
         email: email,
         projectId: localStorage.getItem('selectedProject'),
       })

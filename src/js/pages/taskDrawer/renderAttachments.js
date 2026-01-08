@@ -1,3 +1,5 @@
+import { config } from '../../config/config';
+
 export function renderAttachments(task) {
   const attachmentsList = document.getElementById('attachmentsList');
   attachmentsList.innerHTML = '';
@@ -10,7 +12,7 @@ export function renderAttachments(task) {
   }
 
   task.attachments.forEach((fileName) => {
-    const fileUrl = `http://localhost:3001/uploads/attachments/${fileName}`;
+    const fileUrl = `${config.API_BASE_URL}/uploads/attachments/${fileName}`;
 
     const attachmentItem = document.createElement('a');
 

@@ -2,6 +2,7 @@ import '../../../style/main.css';
 import authService from '../../services/AuthService.js';
 import showToast from '../../utils/showToast.js';
 import { setTheme } from '../../utils/setTheme.js';
+import { config } from '../../config/config.js';
 
 async function editProfile() {
   const form = document.getElementById('edit-profile-form');
@@ -22,7 +23,7 @@ async function editProfile() {
 
   if (userInfo.profileImage) {
     preview.src =
-      'http://localhost:3001/uploads/profile/' + userInfo.profileImage;
+      config.API_BASE_URL + '/uploads/profile/' + userInfo.profileImage;
   }
 
   userEmail.innerText = userInfo.email;

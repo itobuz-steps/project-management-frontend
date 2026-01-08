@@ -1,10 +1,11 @@
 import axios from 'axios';
+import { config } from '../config/config';
 
-const API_BASE_URL = 'http://localhost:3001/project';
+const API_URL = config.API_BASE_URL + '/project';
 
 class ProjectService {
   api = axios.create({
-    baseURL: API_BASE_URL,
+    baseURL: API_URL,
   });
 
   constructor() {
@@ -35,7 +36,7 @@ class ProjectService {
 
           try {
             const response = await axios.get(
-              'http://localhost:3001/auth/refresh-token',
+              config.API_BASE_URL + '/auth/refresh-token',
               {
                 headers: {
                   Authorization:

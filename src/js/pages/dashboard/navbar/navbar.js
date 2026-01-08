@@ -2,6 +2,7 @@ import authService from '../../../services/AuthService.js';
 import taskService from '../../../services/TaskService.js';
 import renderSelectedTab from '../../../utils/renderSelectedTab.js';
 import { setTheme } from '../../../utils/setTheme.js';
+import { config } from '../../../config/config.js';
 
 const searchInput = document.getElementById('search-input-field');
 const profileBtn = document.getElementById('profileBtn');
@@ -84,7 +85,7 @@ export async function setupNavbar() {
   const response = await authService.getUserInfo();
 
   if (response.profileImage) {
-    preview.src = `http://localhost:3001/uploads/profile/${response.profileImage}`;
+    preview.src = `${config.API_BASE_URL}/uploads/profile/${response.profileImage}`;
     preview.title = response.email;
   } else {
     preview.src = '../../../../assets/img/profile.png';

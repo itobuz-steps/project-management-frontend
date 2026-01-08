@@ -1,11 +1,11 @@
-//todo:-  update the throw err.response.data to throw new Error('Message')
-
 import axios from 'axios';
-const API_BASE_URL = 'http://localhost:3001/auth';
+import { config } from '../config/config';
+
+const API_URL = config.API_BASE_URL + '/auth';
 
 class AuthService {
   api = axios.create({
-    baseURL: API_BASE_URL,
+    baseURL: API_URL,
   });
 
   async signup(name, email, password) {

@@ -1,10 +1,11 @@
 import axios from 'axios';
+import { config } from '../config/config';
 
-const API_BASE_URL = 'http://localhost:3001/comments';
+const API_URL = config.API_BASE_URL + '/comments';
 
 class CommentService {
   api = axios.create({
-    baseURL: API_BASE_URL,
+    baseURL: API_URL,
   });
 
   constructor() {
@@ -35,7 +36,7 @@ class CommentService {
 
           try {
             const response = await axios.get(
-              'http://localhost:3001/auth/refresh-token',
+              config.API_BASE_URL + '/auth/refresh-token',
               {
                 headers: {
                   Authorization:
@@ -48,9 +49,8 @@ class CommentService {
               localStorage.setItem('access_token', response.data.accessToken);
               localStorage.setItem('refresh_token', response.data.refreshToken);
 
-              originalRequest.headers[
-                'Authorization'
-              ] = `Bearer ${response.data.accessToken}`;
+              originalRequest.headers['Authorization'] =
+                `Bearer ${response.data.accessToken}`;
 
               return this.api(originalRequest);
             }

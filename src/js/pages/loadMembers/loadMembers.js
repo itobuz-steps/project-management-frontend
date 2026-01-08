@@ -1,7 +1,8 @@
 import projectService from '../../services/ProjectService';
 import { io } from 'socket.io-client';
+import { config } from '../../config/config';
 
-const socket = io('http://localhost:3001/', {
+const socket = io(config.API_BASE_URL + '/', {
   auth: { token: localStorage.getItem('access_token') },
 });
 
@@ -26,7 +27,7 @@ export async function loadProjectMembers(projectId) {
     members.forEach((userInfo, index) => {
       const img = document.createElement('img');
       const imageUrl = userInfo.profileImage
-        ? `http://localhost:3001/uploads/profile/${userInfo.profileImage}`
+        ? `${config.API_BASE_URL}/uploads/profile/${userInfo.profileImage}`
         : `../../../assets/img/profile.png`;
 
       img.src = imageUrl;

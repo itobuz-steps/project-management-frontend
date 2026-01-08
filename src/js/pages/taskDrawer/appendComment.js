@@ -3,6 +3,7 @@ import showToast from '../../utils/showToast';
 import commentService from '../../services/CommentService';
 import { DateTime } from 'luxon';
 import { marked } from 'marked';
+import { config } from '../../config/config';
 
 export function appendCommentToContainer(comment, container) {
   const commentEl = document.createElement('div');
@@ -15,7 +16,8 @@ export function appendCommentToContainer(comment, container) {
       <div class="flex items-center gap-2">
         <img
           src="${comment.author.profileImage
-            ? 'http://localhost:3001/uploads/profile/' +
+            ? config.API_BASE_URL +
+              '/uploads/profile/' +
               comment.author.profileImage
             : '../../../assets/img/profile.png'}"
           alt="Avatar"
@@ -144,7 +146,7 @@ ${comment.message}</textarea
   }
 
   attachmentLogo.addEventListener('click', () => {
-    const fileUrl = `http://localhost:3001/uploads/commentsAttachment/${comment.attachment}`;
+    const fileUrl = `${config.API_BASE_URL}/uploads/commentsAttachment/${comment.attachment}`;
     window.open(fileUrl, '_blank');
   });
 

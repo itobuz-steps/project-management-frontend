@@ -1,5 +1,6 @@
 import taskService from '../../services/TaskService';
 import { showTaskDrawer } from './taskDrawer';
+import { config } from '../../config/config';
 
 export async function renderSubtasks(task) {
   const list = document.getElementById('subtasksList');
@@ -41,7 +42,8 @@ export async function renderSubtasks(task) {
       <img
         src="${subtaskAssignee
           ? subtaskAssignee.profileImage
-            ? 'http://localhost:3001/uploads/profile/' +
+            ? config.API_BASE_URL +
+              '/uploads/profile/' +
               subtaskAssignee.profileImage
             : '../../../assets/img/profile.png'
           : '../../../assets/img/profile.png'}"
