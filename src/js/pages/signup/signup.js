@@ -102,7 +102,7 @@ async function handleLogin(event) {
     showToast('Login successful', 'success');
 
     setTimeout(() => {
-      window.location.href = 'dashboard';
+      window.location.href = 'dashboard.html';
     }, 2000);
   } catch (error) {
     showToast(

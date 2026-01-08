@@ -16,7 +16,7 @@ async function handleOtpVerification(event) {
   if (!email) {
     showToast('Email not found. Please try registering again.', 'info');
 
-    window.location.href = 'signup';
+    window.location.href = 'signup.html';
     return;
   }
 
@@ -34,7 +34,7 @@ async function handleOtpVerification(event) {
     showToast('OTP verified successfully! Redirecting...', 'success');
 
     setTimeout(() => {
-      window.location.href = 'signup';
+      window.location.href = 'signup.html';
     }, 1000);
   } catch (error) {
     showToast(

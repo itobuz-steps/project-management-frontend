@@ -114,7 +114,7 @@ forgotForm.addEventListener('submit', async (e) => {
     showToast('Password reset successful! Redirecting...', 'success');
 
     setTimeout(() => {
-      window.location.href = 'signup';
+      window.location.href = 'signup.html';
     }, 2000);
   } catch (error) {
     resetButton.textContent = 'Reset Password';

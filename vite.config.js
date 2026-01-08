@@ -11,6 +11,7 @@ export default {
   publicDir: resolve(__dirname, 'public'),
   // Use relative asset URLs so static hosts (S3/serve) work under any path.
   base: './',
+  assetsInclude: ['src/assets'],
   build: {
     outDir: '../dist',
     rollupOptions: {

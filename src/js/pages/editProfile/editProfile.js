@@ -35,7 +35,7 @@ async function editProfile() {
       showToast('Profile Updated', 'success');
 
       setTimeout(() => {
-        window.location.href = 'dashboard';
+        window.location.href = 'dashboard.html';
       }, 1500);
     } catch (err) {
       showToast(`${err.response.data.error}`, 'danger');
