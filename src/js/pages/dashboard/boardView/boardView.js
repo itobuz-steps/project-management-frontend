@@ -14,6 +14,7 @@ import showToast from '../../../utils/showToast';
 import { handleForYouPage } from '../../forYouPage/forYouPage';
 import { showTaskDrawer } from '../../taskDrawer/taskDrawer';
 import { getFilteredTasks } from '../navbar/navbar';
+import { config } from '../../../config/config';
 
 export async function renderBoard(projectId, filter = '', searchInput = '') {
   const currentProject = localStorage.getItem('selectedProject');
@@ -266,7 +267,8 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
             >
               <img
                 src="${assignee?.profileImage
-                  ? 'http://localhost:3001/uploads/profile/' +
+                  ? config.API_BASE_URL +
+                    '/uploads/profile/' +
                     assignee.profileImage
                   : '../../../assets/img/profile.png'}"
                 class="aspect-square h-8 w-8 rounded-full object-cover"
@@ -340,7 +342,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
             const avatarImg = userAvatar.querySelector('img');
 
             if (selectedUser.profileImage) {
-              avatarImg.src = `http://localhost:3001/uploads/profile/${selectedUser.profileImage}`;
+              avatarImg.src = `${config.API_BASE_URL}/uploads/profile/${selectedUser.profileImage}`;
             } else {
               avatarImg.src = '../../../assets/img/profile.png';
             }

@@ -4,9 +4,10 @@ import {
   urlBase64ToUint8Array,
   addNotification,
 } from '../utils/browserNotification';
+import { config } from '../config/config';
 
 const api = axios.create({
-  baseURL: 'http://localhost:3001/notification/',
+  baseURL: config.API_BASE_URL + '/notification/',
 });
 
 api.interceptors.request.use(
@@ -36,7 +37,7 @@ api.interceptors.response.use(
 
       try {
         const response = await axios.get(
-          'http://localhost:3001/auth/refresh-token',
+          config.API_BASE_URL + '/auth/refresh-token',
           {
             headers: {
               Authorization: 'Bearer ' + localStorage.getItem('refresh_token'),

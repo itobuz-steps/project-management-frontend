@@ -6,6 +6,7 @@ import showToast from './showToast.js';
 import { formatISO } from 'date-fns';
 import { showTaskDrawer } from '../pages/taskDrawer/taskDrawer.js';
 import { svgObject } from './svgObjects.js';
+import { config } from '../config/config.js';
 
 export async function createTaskList(task, type, projectType, sprint) {
   let ifSprint = `hidden`;
@@ -59,7 +60,7 @@ export async function createTaskList(task, type, projectType, sprint) {
 
     if (data.profileImage) {
       assignee.profileImage =
-        'http://localhost:3001/uploads/profile/' + data.profileImage;
+        config.API_BASE_URL + '/uploads/profile/' + data.profileImage;
     }
   } else {
     assignee = {
@@ -171,7 +172,7 @@ export async function createTaskList(task, type, projectType, sprint) {
         <img
           class="mr-3 aspect-square h-6 w-6 rounded-full object-cover"
           src="${reporter.profileImage
-            ? 'http://localhost:3001/uploads/profile/' + reporter.profileImage
+            ? config.API_BASE_URL + '/uploads/profile/' + reporter.profileImage
             : '../../../assets/img/profile.png'}"
         />${reporter.name}
       </div>

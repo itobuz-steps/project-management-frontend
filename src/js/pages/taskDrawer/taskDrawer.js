@@ -10,6 +10,7 @@ import projectService from '../../services/ProjectService';
 import renderSelectedTab from '../../utils/renderSelectedTab';
 import { getSvgByType } from '../../utils/globalUtils';
 import { marked } from 'marked';
+import { config } from '../../config/config';
 
 const taskDrawerInnerHtml = /* HTML */ ` <div>
   <div class="flex flex-col gap-3 p-3">
@@ -389,7 +390,7 @@ export async function showTaskDrawer(taskId) {
 
   if (reporter.profileImage) {
     reporterProfileImageEl.src =
-      'http://localhost:3001/uploads/profile/' + reporter.profileImage;
+      config.API_BASE_URL + '/uploads/profile/' + reporter.profileImage;
   } else {
     profileImageEl.src = '../../../assets/img/profile.png';
   }
@@ -590,7 +591,7 @@ export async function showTaskDrawer(taskId) {
     assigneeEl.textContent = assignee.name;
     if (assignee.profileImage) {
       profileImageEl.src =
-        'http://localhost:3001/uploads/profile/' + assignee.profileImage;
+        config.API_BASE_URL + '/uploads/profile/' + assignee.profileImage;
       profileImageEl.classList.add('object-cover');
     } else {
       profileImageEl.src = '../../../assets/img/profile.png';

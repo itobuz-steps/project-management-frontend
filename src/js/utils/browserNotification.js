@@ -1,6 +1,7 @@
 import { getAllNotification } from '../services/notificationService';
 import { DateTime } from 'luxon';
 import { showTaskDrawer } from '../pages/taskDrawer/taskDrawer';
+import { config } from '../config/config';
 
 let page = 0;
 const LIMIT = 10;
@@ -46,7 +47,7 @@ export function handleNotification(data, type = 'render') {
       <div class="relative shrink-0">
         ${data.image
           ? `<img
-            src="http://localhost:3001/uploads/profile/${data.image}"
+            src="${config.API_BASE_URL}/uploads/profile/${data.image}"
             class="h-12 w-12 rounded-full object-cover ring-2 ring-gray-200"
           />`
           : `<img

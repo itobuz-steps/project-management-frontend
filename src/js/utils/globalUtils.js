@@ -2,6 +2,7 @@ import axios from 'axios';
 import { svgObject } from './svgObjects';
 import showToast from './showToast';
 import { updateProjectList } from '../pages/dashboard/sidebar/sidebar';
+import { config } from '../config/config';
 
 export function getColorByType(task) {
   if (task.type === 'task') {
@@ -52,7 +53,7 @@ export async function checkForInvite() {
   const authToken = localStorage.getItem('access_token');
   if (inviteToken) {
     try {
-      await axios.get('http://localhost:3001/invite/join', {
+      await axios.get(config.API_BASE_URL + '/invite/join', {
         params: { token: inviteToken },
         headers: { Authorization: `Bearer ${authToken}` },
       });
