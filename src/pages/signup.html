@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Registration</title>
+    <script type="module" src="../js/main.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="flex h-screen w-screen items-center justify-center">
+    <div class="bg-primary-100 flex h-full w-full">
+      <div
+        class="bg-opacity-50 hidden bg-[url(../assets/img/bg-signup.svg)] bg-center bg-no-repeat p-6 md:block md:min-w-2/5 lg:min-w-1/2"
+      ></div>
+
+      <div
+        class="relative z-10 flex w-full flex-col items-center justify-center overflow-hidden bg-white shadow-md md:m-4 md:rounded-2xl"
+      >
+        <div
+          class="relative flex h-full w-full flex-col items-center justify-center gap-10"
+        >
+          <div
+            class="xs:min-w-[380px] flex min-w-[90%] overflow-hidden rounded-lg bg-gray-50 text-gray-600 inset-shadow-sm"
+          >
+            <button
+              class="sign-up [&.active]:bg-primary-400 flex-1 cursor-pointer py-3 font-medium transition-all duration-300 [&.active]:text-white"
+            >
+              Sign up
+            </button>
+            <button
+              class="login [&.active]:bg-primary-400 flex-1 cursor-pointer py-3 font-medium transition-all duration-300 [&.active]:text-white"
+            >
+              Login
+            </button>
+          </div>
+
+          <div
+            class="login-form-container xs:px-10 xs:w-auto block min-h-[400px] w-[90%] rounded-lg bg-gray-50 px-5 py-10 text-center inset-shadow-sm"
+          >
+            <h1 class="mb-12 text-lg font-semibold">Login Form</h1>
+
+            <form
+              class="login-form xs:min-w-[300px] flex flex-col items-center gap-4"
+            >
+              <input
+                id="email-input"
+                type="email"
+                placeholder="Email"
+                required
+                class="input-field focus:border-primary-300 w-full rounded-lg border border-gray-300 bg-white p-3 text-sm shadow-xs transition-all duration-300 outline-none"
+              />
+
+              <input
+                id="password-input"
+                type="password"
+                placeholder="Password"
+                required
+                class="input-field focus:border-primary-300 w-full rounded-lg border border-gray-300 bg-white p-3 text-sm shadow-xs transition-all duration-300 outline-none"
+              />
+
+              <div class="forgot-password -mt-2 ml-auto">
+                <a
+                  href="./forgotPasswordPage.html"
+                  class="text-primary-300 hover:text-primary-400 w-full font-semibold transition-colors duration-300"
+                >
+                  Forgot password?
+                </a>
+              </div>
+
+              <button
+                class="login-button bg-primary-500 hover:bg-primary-600 mt-8 w-full cursor-pointer rounded-lg py-3 font-semibold text-white transition-all duration-300"
+                type="submit"
+              >
+                Login
+              </button>
+            </form>
+          </div>
+
+          <div
+            class="signup-form-container xs:w-auto block min-h-[400px] w-[90%] rounded-lg bg-gray-50 px-5 py-10 text-center inset-shadow-sm sm:px-10"
+          >
+            <h1 class="mb-7 text-lg font-semibold">Sign Up Form</h1>
+
+            <form
+              class="signup-form xs:min-w-[300px] flex flex-col items-center justify-between gap-3"
+            >
+              <input
+                id="username"
+                type="text"
+                placeholder="Username"
+                required
+                class="input-field focus:border-primary-300 w-full rounded-lg border border-gray-300 bg-white p-3 text-sm shadow-xs transition-all duration-300 outline-none"
+              />
+
+              <input
+                id="email"
+                type="email"
+                placeholder="Email"
+                required
+                class="input-field focus:border-primary-300 w-full rounded-lg border border-gray-300 bg-white p-3 text-sm shadow-xs transition-all duration-300 outline-none"
+              />
+
+              <input
+                id="password"
+                type="password"
+                placeholder="Password"
+                required
+                class="input-field focus:border-primary-300 w-full rounded-lg border border-gray-300 bg-white p-3 text-sm shadow-xs transition-all duration-300 outline-none"
+              />
+
+              <p id="signup-message" class="text-center"></p>
+              <button
+                class="signup-button bg-primary-500 hover:bg-primary-600 disabled:text-gra mt-5 w-full cursor-pointer rounded-lg py-3 font-semibold text-white transition-all duration-300 disabled:bg-gray-300"
+                type="submit"
+              >
+                Sign Up
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast-container"></div>
+    <script type="module" src="../js/pages/signup/signup.js"></script>
+  </body>
+</html>

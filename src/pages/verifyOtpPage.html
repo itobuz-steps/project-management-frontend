@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Verify OTP</title>
+    <script type="module" src="../js/main.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="flex h-screen w-screen items-center justify-center">
+    <div class="bg-primary-200 flex h-full w-full">
+      <div
+        class="bg-opacity-50 hidden bg-[url(../assets/img/bg-forget-password.svg)] bg-center bg-no-repeat p-6 md:block md:min-w-2/5 lg:min-w-1/2"
+      ></div>
+
+      <div
+        class="form-box relative z-10 flex w-full flex-col items-center justify-center overflow-hidden bg-white shadow-md md:m-4 md:rounded-2xl"
+      >
+        <div
+          class="verify-form-container xs:px-10 block min-h-[400px] min-w-[300px] rounded-lg bg-gray-50 px-5 py-10 text-center inset-shadow-sm"
+        >
+          <h1 class="mb-10 text-lg font-semibold">Enter OTP</h1>
+
+          <form
+            class="verify-form xs:min-w-[300px] flex h-full flex-col items-center gap-3"
+          >
+            <input
+              autocomplete="off"
+              id="otp-input"
+              type="text"
+              maxlength="6"
+              placeholder="Enter OTP"
+              required
+              class="input-field focus:border-primary-300 w-full rounded-lg border border-gray-300 bg-white p-3 text-sm shadow-xs transition-all duration-300 outline-none"
+            />
+
+            <button
+              type="submit"
+              class="verify-button bg-primary-500 hover:bg-primary-600 mt-5 w-full cursor-pointer rounded-lg py-3 font-semibold text-white transition-all duration-300"
+            >
+              Verify
+            </button>
+
+            <p class="mt-4 text-gray-600">
+              Didn't receive the OTP?
+              <a
+                href=""
+                class="resend text-primary-400 hover:text-primary-500 self-end text-sm font-semibold transition-colors duration-300"
+                >Resend OTP</a
+              >
+            </p>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div id="toast-container"></div>
+    <script type="module" src="../js/pages/otpVerify/otpVerify.js"></script>
+  </body>
+</html>
