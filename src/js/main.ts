@@ -1,10 +1,13 @@
+// eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
 import '../style/main.css';
 
 if (window.location.pathname.startsWith('/invite')) {
-  localStorage.setItem(
-    'inviteToken',
-    new URLSearchParams(window.location.search).get('token')
-  );
+  const token = new URLSearchParams(window.location.search).get('token');
+
+  if (token) {
+    localStorage.setItem('inviteToken', token);
+  }
+
   window.location.href = '/pages/signup';
 }
 
