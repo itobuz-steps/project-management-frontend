@@ -6,7 +6,7 @@ import showToast from './showToast.js';
 import { formatISO } from 'date-fns';
 import { showTaskDrawer } from '../pages/taskDrawer/taskDrawer.js';
 import { svgObject } from './svgObjects.js';
-import { config } from '../config/config.js';
+import { config } from '../config/config.ts';
 
 export async function createTaskList(task, type, projectType, sprint) {
   let ifSprint = `hidden`;

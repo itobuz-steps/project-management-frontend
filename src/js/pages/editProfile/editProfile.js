@@ -2,7 +2,7 @@ import '../../../style/main.css';
 import authService from '../../services/AuthService.js';
 import showToast from '../../utils/showToast.js';
 import { setTheme } from '../../utils/setTheme.js';
-import { config } from '../../config/config.js';
+import { config } from '../../config/config.ts';
 
 async function editProfile() {
   const form = document.getElementById('edit-profile-form');

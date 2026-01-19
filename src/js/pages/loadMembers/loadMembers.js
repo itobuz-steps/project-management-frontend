@@ -1,6 +1,6 @@
 import projectService from '../../services/ProjectService';
 import { io } from 'socket.io-client';
-import { config } from '../../config/config';
+import { config } from '../../config/config.ts';
 
 const socket = io(config.API_BASE_URL + '/', {
   auth: { token: localStorage.getItem('access_token') },

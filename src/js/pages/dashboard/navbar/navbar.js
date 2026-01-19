@@ -2,7 +2,7 @@ import authService from '../../../services/AuthService.js';
 import taskService from '../../../services/TaskService.js';
 import renderSelectedTab from '../../../utils/renderSelectedTab.js';
 import { setTheme } from '../../../utils/setTheme.js';
-import { config } from '../../../config/config.js';
+import { config } from '../../../config/config.ts';
 
 const searchInput = document.getElementById('search-input-field');
 const profileBtn = document.getElementById('profileBtn');
