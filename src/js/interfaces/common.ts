@@ -10,8 +10,9 @@ export interface Project {
 }
 
 export interface Sprint {
-  projectId: string;
-  storyPoint: number;
+  projectId?: string;
+  storyPoint?: number;
+  key?: string;
 }
 
 export interface Task {

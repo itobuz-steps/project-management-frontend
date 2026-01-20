@@ -3,9 +3,9 @@ import { renderBacklogView } from '../pages/dashboard/backlogView/renderBacklogV
 import { renderTasksList } from '../pages/dashboard/listView/listView';
 
 export default async function renderSelectedTab(
-  projectId,
-  filter = '',
-  searchInput = ''
+  projectId: string,
+  filter: string,
+  searchInput: string,
 ) {
   const selectedTab = localStorage.getItem('selectedTab');
 

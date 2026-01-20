@@ -3,8 +3,9 @@ import { svgObject } from './svgObjects';
 import showToast from './showToast';
 import { updateProjectList } from '../pages/dashboard/sidebar/sidebar';
 import { config } from '../config/config';
+import type { Task } from '../interfaces/common';
 
-export function getColorByType(task) {
+export function getColorByType(task: Task) {
   if (task.type === 'task') {
     return 'bg-blue-600';
   } else if (task.type === 'story') {
@@ -14,7 +15,7 @@ export function getColorByType(task) {
   }
 }
 
-export function getColorByPriority(task) {
+export function getColorByPriority(task: Task) {
   if (task.priority === 'low') {
     return 'bg-green-500';
   } else if (task.priority === 'medium') {
@@ -26,7 +27,7 @@ export function getColorByPriority(task) {
   }
 }
 
-export function getSvgByType(task) {
+export function getSvgByType(task: Task) {
   if (task.type === 'task') {
     return `${svgObject.task}`;
   } else if (task.type === 'story') {
@@ -36,7 +37,7 @@ export function getSvgByType(task) {
   }
 }
 
-export function getSvgByPriority(task) {
+export function getSvgByPriority(task: Task) {
   if (task.priority === 'low') {
     return `${svgObject.low}`;
   } else if (task.priority === 'medium') {
@@ -67,10 +68,13 @@ export async function checkForInvite() {
   }
 }
 
-export function keyboardEvents() {
-  let keyArray = [];
-  const searchBar = document.getElementById('search-input-field');
-  document.addEventListener('keydown', (e) => {
+export function keyboardEvents(): void {
+  let keyArray: string[] = [];
+  const searchBar = document.getElementById(
+    'search-input-field'
+  ) as HTMLInputElement | null;
+
+  document.addEventListener('keydown', (e: KeyboardEvent) => {
     keyArray.push(e.key);
 
     if (
@@ -78,7 +82,7 @@ export function keyboardEvents() {
       keyArray[0] === 'Meta' &&
       keyArray[1] === 'k'
     ) {
-      searchBar.focus();
+      searchBar?.focus();
     }
   });
 

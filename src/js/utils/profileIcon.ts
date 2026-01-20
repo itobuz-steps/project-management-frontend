@@ -1,6 +1,6 @@
 import authService from '../services/AuthService.js';
 
-export async function profileNameIcon(profileName) {
+export async function profileNameIcon(profileName: HTMLElement) {
   const response = await authService.getUserInfo();
 
   if (response.name) {
