@@ -9,7 +9,27 @@ export interface Project {
   columns: string[];
 }
 
-export interface sprint {
+export interface Sprint {
   projectId: string;
   storyPoint: number;
+}
+
+export interface Task {
+  projectId: string;
+  title: string;
+  storyPoint: number;
+  description: string;
+  type: string;
+  key: string;
+  status: string;
+  priority: string;
+  dueDate: string;
+  reporter: string;
+
+  parentTask?: string;
+  assignee?: string;
+
+  tags: string[];
+
+  attachments?: FileList | File[];
 }

@@ -1,6 +1,6 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { config } from '../config/config';
-import type { sprint } from '../interfaces/common';
+import type { Sprint } from '../interfaces/common';
 
 const API_URL = config.API_BASE_URL + '/sprint';
 
@@ -73,7 +73,11 @@ class SprintService {
       const response = await this.api.get(`/?projectId=${projectId}`);
 
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
+      if (!(error instanceof AxiosError)) {
+        return;
+      }
+
       throw new Error(
         error.response?.data?.message || 'Failed to fetch sprints'
       );
@@ -85,43 +89,59 @@ class SprintService {
       const response = await this.api.get(`/${id}`);
 
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
+      if (!(error instanceof AxiosError)) {
+        return;
+      }
+
       throw new Error(
         error.response?.data?.message || 'Failed to fetch sprint'
       );
     }
   }
 
-  async createSprint(sprint: sprint) {
+  async createSprint(sprint: Sprint) {
     try {
       const response = await this.api.post(`/`, sprint);
 
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
+      if (!(error instanceof AxiosError)) {
+        return;
+      }
+
       throw new Error(
         error.response?.data?.message || 'Failed to create sprint'
       );
     }
   }
 
-  async updateSprint(id: string, updatedSprint: sprint) {
+  async updateSprint(id: string, updatedSprint: Sprint) {
     try {
       const response = await this.api.put(`/${id}`, updatedSprint);
 
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
+      if (!(error instanceof AxiosError)) {
+        return;
+      }
+
       throw new Error(
         error.response?.data?.message || 'Failed to update sprint'
       );
     }
   }
 
-  async addTasksToSprint(id: string, updatedSprint: sprint) {
+  async addTasksToSprint(id: string, updatedSprint: Sprint) {
     try {
       const response = await this.api.patch(`/${id}/addTasks`, updatedSprint);
 
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
+      if (!(error instanceof AxiosError)) {
+        return;
+      }
+
       throw new Error(
         error.response?.data?.message || 'Failed to update sprint'
       );
@@ -132,7 +152,11 @@ class SprintService {
     try {
       const response = await this.api.patch(`/${sprintId}/removeTasks`, taskId);
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
+      if (!(error instanceof AxiosError)) {
+        return;
+      }
+
       throw new Error(
         error.response?.data?.message || 'Failed to update sprint'
       );
@@ -144,7 +168,11 @@ class SprintService {
       const response = await this.api.delete(`/${id}`);
 
       return response.data;
-    } catch (error: any) {
+    } catch (error) {
+      if (!(error instanceof AxiosError)) {
+        return;
+      }
+
       throw new Error(
         error.response?.data?.message || 'Failed to delete sprint'
       );

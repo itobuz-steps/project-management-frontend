@@ -1,5 +1,6 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { config } from '../config/config';
+import type { Task } from '../interfaces/common';
 
 const API_URL = config.API_BASE_URL + '/tasks';
 
@@ -79,17 +80,21 @@ class TaskService {
     return response;
   }
 
-  async getTaskById(id) {
+  async getTaskById(id: string) {
     const response = await this.api.get(`/${id}`);
     return response;
   }
 
-  async getUserDetailsById(userId) {
+  async getUserDetailsById(userId: string) {
     const response = await this.api.get(`/user/${userId}`);
     return response;
   }
 
-  async getTaskByProjectId(projectId, filter, searchInput) {
+  async getTaskByProjectId(
+    projectId: string,
+    filter: string,
+    searchInput: string
+  ) {
     const response = await this.api.get(
       `/?projectId=${projectId}&filter=${filter}&searchInput=${searchInput}`
     );
@@ -97,7 +102,7 @@ class TaskService {
     return response;
   }
 
-  async getMultipleUsers(userIds) {
+  async getMultipleUsers(userIds: string[]) {
     try {
       const response = await this.api.get(
         `/users/batch?ids=${userIds.join(',')}`
@@ -105,18 +110,22 @@ class TaskService {
 
       return response.data;
     } catch (error) {
+      if (!(error instanceof AxiosError)) {
+        return;
+      }
+
       throw new Error(
         error.response?.data?.message || 'Failed to fetch multiple users'
       );
     }
   }
 
-  async createTask(task) {
+  async createTask(task: Task) {
     const formData = new FormData();
 
     formData.append('projectId', task.projectId);
     formData.append('title', task.title);
-    formData.append('storyPoint', task.storyPoint);
+    formData.append('storyPoint', task.storyPoint.toString());
     formData.append('description', task.description);
     formData.append('type', task.type);
     formData.append('key', task.key);
@@ -128,7 +137,7 @@ class TaskService {
     if (task.parentTask) {
       formData.append('parentTask', task.parentTask);
     }
-    task.tags.forEach((tag) => {
+    task.tags.forEach((tag: string) => {
       formData.append('tags[]', tag);
     });
 
@@ -147,31 +156,43 @@ class TaskService {
 
       return response;
     } catch (error) {
+      if (!(error instanceof AxiosError)) {
+        return;
+      }
+
       throw new Error(error.response?.data?.message || 'Failed to create task');
     }
   }
 
-  async updateTask(id, updatedTask) {
+  async updateTask(id: string, updatedTask: Task) {
     try {
       const response = await this.api.put(`/${id}`, updatedTask);
 
       return response;
     } catch (error) {
+      if (!(error instanceof AxiosError)) {
+        return;
+      }
+
       throw new Error(error.response?.data?.message || 'Failed to update task');
     }
   }
 
-  async deleteTask(id) {
+  async deleteTask(id: string) {
     try {
       const response = await this.api.delete(`/${id}`);
 
       return response;
     } catch (error) {
+      if (!(error instanceof AxiosError)) {
+        return;
+      }
+
       throw new Error(error.response?.data?.message || 'Failed to delete task');
     }
   }
 
-  async taskOfProjectId(projectId) {
+  async taskOfProjectId(projectId: string) {
     const response = await this.api.get(`/projectId/${projectId}`);
     return response;
   }

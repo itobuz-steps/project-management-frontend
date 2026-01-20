@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import authService from '../../services/AuthService';
 import { setTheme } from '../../utils/setTheme';
 import showToast from '../../utils/showToast';
@@ -43,7 +44,11 @@ async function handleOtpVerification(event: SubmitEvent): Promise<void> {
     setTimeout(() => {
       window.location.href = 'signup';
     }, 1000);
-  } catch (error: any) {
+  } catch (error) {
+    if (!(error instanceof AxiosError)) {
+      return;
+    }
+    
     showToast(
       error?.message || 'OTP verification failed. Please try again.',
       'error'
@@ -73,7 +78,11 @@ async function handleResendOtp(): Promise<void> {
   try {
     await authService.sendOtp(email);
     showToast('OTP has been resent to your email.', 'success');
-  } catch (error: any) {
+  } catch (error) {
+    if (!(error instanceof AxiosError)) {
+      return;
+    }
+
     showToast(
       error?.message ?? 'Failed to resend OTP. Please try again.',
       'error'

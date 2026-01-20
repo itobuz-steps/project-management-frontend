@@ -1,18 +1,26 @@
 import authService from '../../services/AuthService';
 import showToast from '../../utils/showToast';
 import { setTheme } from '../../utils/setTheme';
+import { AxiosError } from 'axios';
 
 const forgotForm = document.querySelector<HTMLFormElement>('.forgot-form');
-const emailInput = document.getElementById('email-input') as HTMLInputElement | null;
-const otpInput = document.getElementById('otp-input') as HTMLInputElement | null;
-const passwordInput = document.getElementById('password-input') as HTMLInputElement | null;
+const emailInput = document.getElementById(
+  'email-input'
+) as HTMLInputElement | null;
+const otpInput = document.getElementById(
+  'otp-input'
+) as HTMLInputElement | null;
+const passwordInput = document.getElementById(
+  'password-input'
+) as HTMLInputElement | null;
 
 if (!forgotForm || !emailInput || !otpInput || !passwordInput) {
   throw new Error('Required form elements not found');
 }
 
 const sendOtpButton = forgotForm.querySelector<HTMLButtonElement>('.send');
-const resetButton = forgotForm.querySelector<HTMLButtonElement>('.reset-button');
+const resetButton =
+  forgotForm.querySelector<HTMLButtonElement>('.reset-button');
 
 if (!sendOtpButton || !resetButton) {
   throw new Error('Action buttons not found');
@@ -50,7 +58,10 @@ sendOtpButton.addEventListener('click', async (e: MouseEvent) => {
     passwordInput.disabled = false;
 
     showToast('OTP sent! Check email.', 'success');
-  } catch (error: unknown) {
+  } catch (error) {
+    if (!(error instanceof AxiosError)) {
+      return;
+    }
     sendOtpButton.textContent = 'Send OTP';
     emailInput.disabled = false;
 
@@ -77,13 +88,16 @@ otpInput.addEventListener('input', async () => {
     otpInput.disabled = false;
 
     showToast('OTP verified! Enter new password.', 'success');
-  } catch (error: unknown) {
+  } catch (error) {
+    if (!(error instanceof AxiosError)) {
+      return;
+    }
+    
     isOtpVerified = false;
     otpInput.value = '';
     otpInput.disabled = false;
 
-    const message =
-      error instanceof Error ? error.message : 'Invalid OTP.';
+    const message = error instanceof Error ? error.message : 'Invalid OTP.';
     showToast(message, 'error');
   }
 });
@@ -126,7 +140,11 @@ forgotForm.addEventListener('submit', async (e: SubmitEvent) => {
     setTimeout(() => {
       window.location.href = 'signup';
     }, 2000);
-  } catch (error: unknown) {
+  } catch (error) {
+    if (!(error instanceof AxiosError)) {
+      return;
+    }
+
     resetButton.textContent = 'Reset Password';
     resetButton.disabled = false;
 

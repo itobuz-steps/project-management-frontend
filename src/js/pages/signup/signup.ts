@@ -1,6 +1,7 @@
 import authService from '../../services/AuthService';
 import showToast from '../../utils/showToast';
 import { setTheme } from '../../utils/setTheme';
+import { AxiosError } from 'axios';
 
 const signUpTab = document.querySelector<HTMLElement>('.sign-up');
 const loginTab = document.querySelector<HTMLElement>('.login');
@@ -91,7 +92,11 @@ async function handleSignup(event: SubmitEvent): Promise<void> {
     setTimeout(() => {
       window.location.href = 'verifyOtpPage.html';
     }, 1000);
-  } catch (error: any) {
+  } catch (error) {
+    if (!(error instanceof AxiosError)) {
+      return;
+    }
+    
     showToast(error?.message ?? 'Signup failed', 'error');
   } finally {
     signupBtn.textContent = originalText;
@@ -123,7 +128,11 @@ async function handleLogin(event: SubmitEvent): Promise<void> {
     setTimeout(() => {
       window.location.href = 'dashboard';
     }, 2000);
-  } catch (error: any) {
+  } catch (error) {
+    if (!(error instanceof AxiosError)) {
+      return;
+    }
+
     showToast(
       error?.response?.data?.message ||
         'Login failed. Please check your credentials.',
