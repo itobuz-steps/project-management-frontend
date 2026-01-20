@@ -128,7 +128,7 @@ export async function setupPushNotifications(): Promise<PushSubscription | void>
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(
           PUBLIC_VAPID_KEY
-        ) as Uint8Array,
+        ) as BufferSource,
       });
     }
 
