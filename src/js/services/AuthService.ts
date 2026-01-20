@@ -1,5 +1,4 @@
 import axios from 'axios';
-import type { AxiosError, AxiosInstance } from 'axios';
 import { config } from '../config/config';
 
 interface SignupPayload {
@@ -30,7 +29,7 @@ class AuthService {
   async signup(payload: SignupPayload) {
     try {
       const response = await this.api.post('/signup', payload);
-
+      
       return response;
     } catch (error) {
       throw this.handleError(error);
