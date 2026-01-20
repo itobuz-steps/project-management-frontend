@@ -186,6 +186,9 @@ badge?.addEventListener('click', () => {
 });
 
 dropdownToggle?.addEventListener('click', () => {
+  localStorage.setItem('notificationCount', '0');
+  updateNotificationBadge();
+
   resetNotifications();
   renderNotification();
 });
