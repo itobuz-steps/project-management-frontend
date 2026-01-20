@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { config } from '../config/config';
+import type { sprint } from '../interfaces/common';
 
 const API_URL = config.API_BASE_URL + '/sprint';
 
@@ -72,78 +73,78 @@ class SprintService {
       const response = await this.api.get(`/?projectId=${projectId}`);
 
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(
         error.response?.data?.message || 'Failed to fetch sprints'
       );
     }
   }
 
-  async getSprintById(id) {
+  async getSprintById(id: String) {
     try {
       const response = await this.api.get(`/${id}`);
 
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(
         error.response?.data?.message || 'Failed to fetch sprint'
       );
     }
   }
 
-  async createSprint(sprint) {
+  async createSprint(sprint: sprint) {
     try {
       const response = await this.api.post(`/`, sprint);
 
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(
         error.response?.data?.message || 'Failed to create sprint'
       );
     }
   }
 
-  async updateSprint(id, updatedSprint) {
+  async updateSprint(id: string, updatedSprint: sprint) {
     try {
       const response = await this.api.put(`/${id}`, updatedSprint);
 
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(
         error.response?.data?.message || 'Failed to update sprint'
       );
     }
   }
 
-  async addTasksToSprint(id, updatedSprint) {
+  async addTasksToSprint(id: string, updatedSprint: sprint) {
     try {
       const response = await this.api.patch(`/${id}/addTasks`, updatedSprint);
 
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(
         error.response?.data?.message || 'Failed to update sprint'
       );
     }
   }
 
-  async removeTaskFromSprint(sprintId, taskId) {
+  async removeTaskFromSprint(sprintId: string, taskId: string) {
     try {
       const response = await this.api.patch(`/${sprintId}/removeTasks`, taskId);
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(
         error.response?.data?.message || 'Failed to update sprint'
       );
     }
   }
 
-  async deleteSprint(id) {
+  async deleteSprint(id: string) {
     try {
       const response = await this.api.delete(`/${id}`);
 
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       throw new Error(
         error.response?.data?.message || 'Failed to delete sprint'
       );

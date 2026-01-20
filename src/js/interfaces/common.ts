@@ -8,3 +8,8 @@ export interface Project {
   projectType: string;
   columns: string[];
 }
+
+export interface sprint {
+  projectId: string;
+  storyPoint: number;
+}
