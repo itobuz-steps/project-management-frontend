@@ -4,8 +4,8 @@ import { renderTasksList } from '../pages/dashboard/listView/listView';
 
 export default async function renderSelectedTab(
   projectId: string,
-  filter: string,
-  searchInput: string,
+  filter: string = '',
+  searchInput: string = ''
 ) {
   const selectedTab = localStorage.getItem('selectedTab');
 

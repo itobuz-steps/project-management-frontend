@@ -164,7 +164,7 @@ class TaskService {
     }
   }
 
-  async updateTask(id: string, updatedTask: Task) {
+  async updateTask(id: string, updatedTask: Partial<Task>) {
     try {
       const response = await this.api.put(`/${id}`, updatedTask);
 
