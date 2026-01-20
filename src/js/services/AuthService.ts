@@ -1,23 +1,7 @@
 import axios from 'axios';
+import type { SignupPayload, User } from '../interfaces/auth';
+import type { RefreshTokenResponse } from '../interfaces/common';
 import { config } from '../config/config';
-
-interface SignupPayload {
-  name: string;
-  email: string;
-  password: string;
-}
-
-interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
-}
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  profileImage?: string;
-}
 
 const API_URL = `${config.API_BASE_URL}/auth`;
 
@@ -29,7 +13,7 @@ class AuthService {
   async signup(payload: SignupPayload) {
     try {
       const response = await this.api.post('/signup', payload);
-      
+
       return response;
     } catch (error) {
       throw this.handleError(error);
@@ -46,7 +30,7 @@ class AuthService {
   }
 
   async login(email: string, password: string) {
-    const response = await this.api.post<LoginResponse>('/login', {
+    const response = await this.api.post<RefreshTokenResponse>('/login', {
       email,
       password,
     });

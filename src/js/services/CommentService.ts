@@ -1,32 +1,8 @@
 import axios from 'axios';
 import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import type { UpdateCommentPayload } from '../interfaces/comment';
+import type { RefreshTokenResponse } from '../interfaces/common';
 import { config as appConfig } from '../config/config';
-
-export interface CommentAuthor {
-  _id: string;
-  name: string;
-  profileImage?: string;
-}
-
-export interface Comment {
-  _id: string;
-  taskId: string;
-  message: string;
-  author: CommentAuthor;
-  attachment?: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface UpdateCommentPayload {
-  message?: string;
-  attachment?: string | null;
-}
-
-interface RefreshTokenResponse {
-  accessToken: string;
-  refreshToken: string;
-}
 
 const API_URL = `${appConfig.API_BASE_URL}/comments`;
 
