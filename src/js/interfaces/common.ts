@@ -15,6 +15,7 @@ export interface Sprint {
 }
 
 export interface Task {
+  _id: string;
   projectId: string;
   title: string;
   storyPoint: number;
@@ -32,4 +33,9 @@ export interface Task {
   tags: string[];
 
   attachments?: FileList | File[];
+}
+
+export interface ProjectMember {
+  _id: string;
+  email: string;
 }

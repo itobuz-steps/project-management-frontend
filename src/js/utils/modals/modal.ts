@@ -1,13 +1,20 @@
+import type { Project, ProjectMember, Task } from '../../interfaces/common';
 import projectService from '../../services/ProjectService';
 import taskService from '../../services/TaskService';
 
 export async function handleModalAssignee(
-  modalAssigneeDropdown,
+  modalAssigneeDropdown: HTMLSelectElement,
   selectedAssignee = null
 ) {
-  const assignees = await projectService.getProjectMembers(
-    localStorage.getItem('selectedProject')
-  );
+  const projectId = localStorage.getItem('selectedProject');
+
+  if (!projectId) {
+    return;
+  }
+
+  const assignees = (await projectService.getProjectMembers(projectId)) as {
+    result: ProjectMember[];
+  };
 
   modalAssigneeDropdown.innerHTML = '';
 
@@ -41,15 +48,22 @@ export async function handleModalAssignee(
 }
 
 export async function handleModalStatus(
-  modalStatusDropdown,
+  modalStatusDropdown: HTMLSelectElement,
   selectedStatus = null
 ) {
-  const project = (
-    await projectService.getProjectById(localStorage.getItem('selectedProject'))
-  ).result;
+  const projectId = localStorage.getItem('selectedProject');
+
+  if (!projectId) {
+    return;
+  }
+  const projectData = (await projectService.getProjectById(projectId)) as {
+    result: Project;
+  };
+  const project = projectData.result;
+  console.log(project)
   modalStatusDropdown.innerHTML = '';
 
-  project.columns.forEach((column) => {
+  project.columns.forEach((column: string) => {
     const option = document.createElement('option');
     option.innerText = column;
     option.value = column;
@@ -59,18 +73,23 @@ export async function handleModalStatus(
     modalStatusDropdown.appendChild(option);
   });
 
-  if (!selectedStatus) {
-    modalStatusDropdown.firstChild.selected = true;
+  if (!selectedStatus && modalStatusDropdown.firstElementChild) {
+    (modalStatusDropdown.firstElementChild as HTMLOptionElement).selected =
+      true;
   }
 }
 
 export async function handleModalBlock(
-  modalBlockDropdown,
+  modalBlockDropdown: HTMLSelectElement,
   selectedBlockedTask = null
 ) {
-  const tasks = await taskService.taskOfProjectId(
-    localStorage.getItem('selectedProject')
-  );
+  const projectId = localStorage.getItem('selectedProject');
+
+  if (!projectId) {
+    return;
+  }
+
+  const tasks = await taskService.taskOfProjectId(projectId);
 
   modalBlockDropdown.innerHTML = '';
 
@@ -79,7 +98,7 @@ export async function handleModalBlock(
   nullOption.textContent = 'No Block';
   modalBlockDropdown.appendChild(nullOption);
 
-  tasks.data.result.forEach((task) => {
+  tasks.data.result.forEach((task: Task) => {
     const option = document.createElement('option');
     option.textContent = task.title;
     option.value = task._id;
@@ -91,12 +110,16 @@ export async function handleModalBlock(
 }
 
 export async function handleModalBlockedByIssue(
-  modalBlockedByIssueDropdown,
+  modalBlockedByIssueDropdown: HTMLSelectElement,
   selectedBlockedByIssue = null
 ) {
-  const tasks = await taskService.taskOfProjectId(
-    localStorage.getItem('selectedProject')
-  );
+  const projectId = localStorage.getItem('selectedProject');
+
+  if (!projectId) {
+    return;
+  }
+
+  const tasks = await taskService.taskOfProjectId(projectId);
 
   modalBlockedByIssueDropdown.innerHTML = '';
 
@@ -105,7 +128,7 @@ export async function handleModalBlockedByIssue(
   nullOption.textContent = 'No Block';
   modalBlockedByIssueDropdown.appendChild(nullOption);
 
-  tasks.data.result.forEach((task) => {
+  tasks.data.result.forEach((task: Task) => {
     const option = document.createElement('option');
     option.textContent = task.title;
     option.value = task._id;
