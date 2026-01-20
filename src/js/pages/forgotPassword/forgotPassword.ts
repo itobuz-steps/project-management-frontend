@@ -1,13 +1,22 @@
-import authService from '../../services/AuthService.js';
-import showToast from '../../utils/showToast.js';
-import { setTheme } from '../../utils/setTheme.js';
+import authService from '../../services/AuthService';
+import showToast from '../../utils/showToast';
+import { setTheme } from '../../utils/setTheme';
 
-const forgotForm = document.querySelector('.forgot-form');
-const emailInput = document.getElementById('email-input');
-const otpInput = document.getElementById('otp-input');
-const passwordInput = document.getElementById('password-input');
-const sendOtpButton = forgotForm.querySelector('.send');
-const resetButton = forgotForm.querySelector('.reset-button');
+const forgotForm = document.querySelector<HTMLFormElement>('.forgot-form');
+const emailInput = document.getElementById('email-input') as HTMLInputElement | null;
+const otpInput = document.getElementById('otp-input') as HTMLInputElement | null;
+const passwordInput = document.getElementById('password-input') as HTMLInputElement | null;
+
+if (!forgotForm || !emailInput || !otpInput || !passwordInput) {
+  throw new Error('Required form elements not found');
+}
+
+const sendOtpButton = forgotForm.querySelector<HTMLButtonElement>('.send');
+const resetButton = forgotForm.querySelector<HTMLButtonElement>('.reset-button');
+
+if (!sendOtpButton || !resetButton) {
+  throw new Error('Action buttons not found');
+}
 
 let isOtpSent = false;
 let isOtpVerified = false;
@@ -17,7 +26,7 @@ passwordInput.disabled = true;
 
 setTheme(localStorage.getItem('theme') || 'indigo');
 
-sendOtpButton.addEventListener('click', async (e) => {
+sendOtpButton.addEventListener('click', async (e: MouseEvent) => {
   e.preventDefault();
 
   const email = emailInput.value.trim();
@@ -41,11 +50,13 @@ sendOtpButton.addEventListener('click', async (e) => {
     passwordInput.disabled = false;
 
     showToast('OTP sent! Check email.', 'success');
-  } catch (error) {
+  } catch (error: unknown) {
     sendOtpButton.textContent = 'Send OTP';
     emailInput.disabled = false;
 
-    showToast(error.message || 'Failed to send OTP.', 'error');
+    const message =
+      error instanceof Error ? error.message : 'Failed to send OTP.';
+    showToast(message, 'error');
   }
 });
 
@@ -53,9 +64,7 @@ otpInput.addEventListener('input', async () => {
   const otp = otpInput.value.trim();
   const email = emailInput.value.trim();
 
-  if (isOtpVerified || otp.length !== 6) {
-    return;
-  }
+  if (isOtpVerified || otp.length !== 6) return;
 
   showToast('Verifying...', 'info');
 
@@ -68,17 +77,18 @@ otpInput.addEventListener('input', async () => {
     otpInput.disabled = false;
 
     showToast('OTP verified! Enter new password.', 'success');
-  } catch (error) {
+  } catch (error: unknown) {
     isOtpVerified = false;
     otpInput.value = '';
-
     otpInput.disabled = false;
 
-    showToast(error.message || 'Invalid OTP.', 'error');
+    const message =
+      error instanceof Error ? error.message : 'Invalid OTP.';
+    showToast(message, 'error');
   }
 });
 
-forgotForm.addEventListener('submit', async (e) => {
+forgotForm.addEventListener('submit', async (e: SubmitEvent) => {
   e.preventDefault();
 
   const email = emailInput.value.trim();
@@ -116,10 +126,12 @@ forgotForm.addEventListener('submit', async (e) => {
     setTimeout(() => {
       window.location.href = 'signup';
     }, 2000);
-  } catch (error) {
+  } catch (error: unknown) {
     resetButton.textContent = 'Reset Password';
     resetButton.disabled = false;
 
-    showToast(error.message || 'Failed to reset password.', 'error');
+    const message =
+      error instanceof Error ? error.message : 'Failed to reset password.';
+    showToast(message, 'error');
   }
 });
