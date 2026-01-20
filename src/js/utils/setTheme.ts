@@ -1,3 +1,17 @@
+type ThemeColors = readonly [
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+  string,
+];
+
 const THEME_COLORS = {
   indigo: [
     'oklch(96.2% 0.018 272.314)',
@@ -116,19 +130,22 @@ const THEME_COLORS = {
     '#0c482c',
     '#052919',
   ],
-};
+} as const satisfies Record<string, ThemeColors>;
 
-export function setTheme(theme = 'indigo') {
+export type ThemeName = keyof typeof THEME_COLORS;
+
+export function setTheme(theme?: string | null): void {
   const root = document.documentElement;
-  let colors = THEME_COLORS[theme];
 
-  if (!colors || !theme) {
-    colors = THEME_COLORS['indigo'];
-  }
+  const safeTheme: ThemeName =
+    theme && theme in THEME_COLORS ? (theme as ThemeName) : 'indigo';
+
+  const colors = THEME_COLORS[safeTheme];
 
   root.style.setProperty('--color-primary-50', colors[0]);
   root.style.setProperty('--color-primary-950', colors[10]);
+
   for (let i = 1; i <= 9; i++) {
-    root.style.setProperty('--color-primary-' + i * 100, colors[i]);
+    root.style.setProperty(`--color-primary-${i * 100}`, colors[i]);
   }
 }
