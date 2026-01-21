@@ -15,7 +15,7 @@ export async function renderSubtasks(task: Task) {
     return;
   }
 
-  const subtasks = (await taskService.getTaskById(task._id)).data.result
+  const subtasks = (await taskService.getTaskById(task._id!)).data.result
     .subTask;
 
   subtasks?.forEach(async (sub) => {

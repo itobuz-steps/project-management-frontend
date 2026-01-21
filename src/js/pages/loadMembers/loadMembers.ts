@@ -1,7 +1,6 @@
 import projectService from '../../services/ProjectService';
 import { io, Socket } from 'socket.io-client';
 import { config } from '../../config/config';
-import type { ProjectMember } from '../../interfaces/common';
 
 const socket: Socket = io(`${config.API_BASE_URL}/`, {
   auth: {
@@ -25,11 +24,9 @@ socket.on('userStatusChanged', () => {
 
 export async function loadProjectMembers(projectId: string): Promise<void> {
   try {
-    const data = await projectService.getProjectMembers<{
-      result: ProjectMember[];
-    }>(projectId);
+    const data = await projectService.getProjectMembers(projectId);
 
-    const members: ProjectMember[] = data.result;
+    const members = data.result;
 
     const container = document.getElementById('memberAvatars');
     if (!container) return;

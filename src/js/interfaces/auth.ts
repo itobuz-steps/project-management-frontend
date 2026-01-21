@@ -9,4 +9,14 @@ export interface User {
   name: string;
   email: string;
   profileImage?: string;
+  onlineStatus?: string;
+}
+
+export interface ProjectMembers {
+  result: User[];
+  message?: string;
+  success: boolean;
+  // profileImage: string;
+  // name: string;
+  // onlineStatus: 'online' | 'offline';
 }

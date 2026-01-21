@@ -91,7 +91,8 @@ export async function openUpdateTaskModal(taskId: string) {
 
     (editModal.querySelector('#title') as HTMLInputElement).value = task.title;
     (editModal.querySelector('#story-point-update') as HTMLInputElement).value =
-      task.storyPoint;
+      task.storyPoint.toString();
+
     (editModal.querySelector('#description') as HTMLTextAreaElement).value =
       task.description;
     (editModal.querySelector('#type') as HTMLSelectElement).value = task.type;

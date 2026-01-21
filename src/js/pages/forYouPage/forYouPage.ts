@@ -82,17 +82,17 @@ function createProjectCard(project: Project): HTMLDivElement {
 
       <div class="flex justify-between">
         <p>Members Assigned</p>
-        <p>${project.members.length}</p>
+        <p>${project.members!.length}</p>
       </div>
     </div>
   `;
 
   projectDiv.addEventListener('click', async () => {
-    localStorage.setItem('selectedProject', project._id);
+    localStorage.setItem('selectedProject', project._id!);
     ifSelectedProject();
-    await renderSelectedTab(project._id);
+    await renderSelectedTab(project._id!);
     showForYouPage(false);
-    loadProjectMembers(project._id);
+    loadProjectMembers(project._id!);
     updateUserList();
     await handleDashboardSprintPreview();
     updateProjectList();
@@ -165,14 +165,15 @@ async function renderTasksByStatus(
     row.classList.remove('hidden');
 
     tasks.forEach((task) => {
-      container.appendChild(renderForYouTask(task, task.projectId.name));
+      container.appendChild(
+        renderForYouTask(
+          task,
+          (task.projectId as { name: string }).name as string
+        )
+      );
     });
   });
 }
-
-/* ------------------------------------------------------------------ */
-/* Single task */
-/* ------------------------------------------------------------------ */
 
 function renderForYouTask(task: Task, projectName: string): HTMLLIElement {
   const taskEl = document.createElement('li');
@@ -205,7 +206,7 @@ function renderForYouTask(task: Task, projectName: string): HTMLLIElement {
     </p>
   `;
 
-  taskEl.addEventListener('click', () => showTaskDrawer(task._id));
+  taskEl.addEventListener('click', () => showTaskDrawer(task._id!));
 
   return taskEl;
 }

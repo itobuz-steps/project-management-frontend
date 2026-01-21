@@ -15,36 +15,48 @@ import { handleForYouPage } from '../../forYouPage/forYouPage';
 import { showTaskDrawer } from '../../taskDrawer/taskDrawer';
 import { getFilteredTasks } from '../navbar/navbar';
 import { config } from '../../../config/config';
+import type { Task } from '../../../interfaces/common';
+import type { User } from '../../../interfaces/auth';
 
-export async function renderBoard(projectId, filter = '', searchInput = '') {
-  const currentProject = localStorage.getItem('selectedProject');
+export async function renderBoard(
+  projectId: string,
+  filter: string = '',
+  searchInput: string = ''
+) {
+  // const currentProject = localStorage.getItem('selectedProject');
   if (!projectId) return;
+
   const project = (await projectService.getProjectById(projectId)).result;
   const columns = await getTaskGroupedByStatus(projectId, filter, searchInput);
   const lastColumn = project.columns[project.columns.length - 1];
   const currentSprint = project.currentSprint
     ? await sprintService.getSprintById(project.currentSprint)
     : null;
-  let draggedColumn = null;
+
+  let draggedColumn: HTMLElement | null = null;
 
   setUpProjectName(project);
 
   const columnContainer = document.getElementById('columns');
+  if (!columnContainer) return;
   columnContainer.innerHTML = '';
 
-  let filteredTasks = [];
-  const allTasks = [];
+  const filteredTasks: Task[] = [];
+  const allTasks: Task[] = [];
+
   project.columns.forEach((col) => {
-    allTasks.push(...(columns[col] || []));
+    allTasks.push(...(columns?.[col] || []));
   });
 
   const assigneeIds = [
     ...new Set(allTasks.map((t) => t.assignee).filter(Boolean)),
   ];
 
-  let userMap = {};
-  if (assigneeIds.length > 0) {
-    const usersResp = await taskService.getMultipleUsers(assigneeIds);
+  let userMap: Record<string, User> = {};
+  if (assigneeIds && assigneeIds.length > 0) {
+    const usersResp = await taskService.getMultipleUsers(
+      assigneeIds as string[]
+    );
     usersResp.result.forEach((u) => {
       userMap[u._id] = u;
     });
@@ -74,7 +86,7 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
       </div>
     `;
 
-    const tasks = columns[column] || [];
+    const tasks = columns?.[column] || [];
     tasks.forEach((task) => {
       filteredTasks.push(task);
       let isDone = '';
@@ -286,27 +298,37 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         </div>
       `;
 
-      const attachmentsLogo = taskEl.querySelector('.attachmentIcon');
-      const subtaskLogo = taskEl.querySelector('.subtaskIcon');
+      const attachmentsLogo =
+        taskEl.querySelector<HTMLElement>('.attachmentIcon');
+      const subtaskLogo = taskEl.querySelector<HTMLElement>('.subtaskIcon');
+      const userAvatar = taskEl.querySelector<HTMLElement>('.user-avatar')!;
+      const avatarDropdown =
+        taskEl.querySelector<HTMLElement>('.avatar-dropdown')!;
+      const list = taskEl.querySelector<HTMLUListElement>('.assignee-list')!;
 
-      if (task.attachments.length) {
+      if (task.attachments && task.attachments.length && attachmentsLogo) {
         attachmentsLogo.classList.remove('hidden');
       }
-      if (task.subTask.length) {
+      if (task.subTask && task.subTask.length && subtaskLogo) {
         subtaskLogo.classList.remove('hidden');
       }
 
-      const userAvatar = taskEl.querySelector('.user-avatar');
-      const avatarDropdown = taskEl.querySelector('.avatar-dropdown');
-      const list = taskEl.querySelector('.assignee-list');
-      let activeProjectMembers = [];
-      let selectedUserId = null;
-      let selectedUser = null;
+      let activeProjectMembers: {
+        _id: string;
+        name: string;
+        profileImage?: string;
+      }[] = [];
+      let selectedUserId: string | null = null;
+      let selectedUser: (typeof activeProjectMembers)[0] | null = null;
 
-      async function populateAvatarDropdown(dropdownList) {
+      async function populateAvatarDropdown(dropdownList: HTMLUListElement) {
         try {
+          const currentProject = localStorage.getItem('selectedProject');
+          if (!currentProject) return; // stop if null
+
           const response =
             await projectService.getProjectMembers(currentProject);
+
           activeProjectMembers = response.result;
 
           dropdownList.innerHTML = '';
@@ -330,113 +352,132 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
         }
       });
 
-      list.addEventListener('click', async (e) => {
-        if (e.target.tagName === 'LI') {
-          selectedUserId = e.target.dataset.id;
+      list.addEventListener('click', async (e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+        if (target.tagName === 'LI') {
+          selectedUserId = target.dataset.id ?? null;
 
-          selectedUser = activeProjectMembers.find(
-            (u) => u._id == selectedUserId
-          );
+          selectedUser =
+            activeProjectMembers.find((u) => u._id === selectedUserId) ?? null;
 
           if (selectedUser) {
-            const avatarImg = userAvatar.querySelector('img');
-
-            if (selectedUser.profileImage) {
-              avatarImg.src = `${config.API_BASE_URL}/uploads/profile/${selectedUser.profileImage}`;
-            } else {
-              avatarImg.src = '../../../assets/img/profile.png';
-            }
+            const avatarImg =
+              userAvatar.querySelector<HTMLImageElement>('img')!;
+            avatarImg.src = selectedUser.profileImage
+              ? `${config.API_BASE_URL}/uploads/profile/${selectedUser.profileImage}`
+              : '../../../assets/img/profile.png';
           }
 
-          const taskId = taskEl.dataset._id;
-
-          await taskService.updateTask(taskId, {
-            assignee: selectedUserId,
-          });
-
+          const taskId = taskEl.dataset._id!;
+          await taskService.updateTask(taskId, { assignee: selectedUserId });
           avatarDropdown.classList.add('hidden');
         }
       });
 
       document.addEventListener('click', (e) => {
-        const isAvatar = userAvatar.contains(e.target);
-        const isDropdown = avatarDropdown.contains(e.target);
-
-        if (!isAvatar && !isDropdown) {
+        const target = e.target as Node;
+        if (!userAvatar.contains(target) && !avatarDropdown.contains(target)) {
           avatarDropdown.classList.add('hidden');
         }
       });
 
       taskEl.setAttribute('draggable', 'true');
-      taskEl.addEventListener('dragstart', (e) => {
-        const currentCol = e.target.parentElement.parentElement;
-        e.dataTransfer.setData('taskId', task._id);
-        e.dataTransfer.effectAllowed = 'move';
+      taskEl.addEventListener('dragstart', (e: DragEvent) => {
+        const target = e.target as HTMLElement;
+        const currentCol = target.parentElement?.parentElement ?? null;
         draggedColumn = currentCol;
-        taskEl.classList.remove('cursor-grab');
-        taskEl.classList.add('cursor-grabbing');
+        e.dataTransfer?.setData('taskId', task._id!);
+        if (e.dataTransfer) e.dataTransfer.effectAllowed = 'move';
+        taskEl.classList.replace('cursor-grab', 'cursor-grabbing');
       });
 
       taskEl.addEventListener('dragend', () => {
-        taskEl.classList.remove('cursor-grabbing');
-        taskEl.classList.add('cursor-grab');
+        taskEl.classList.replace('cursor-grabbing', 'cursor-grab');
       });
 
-      const cardHeader = taskEl.querySelector('.card-header > p');
+      // const cardHeader = taskEl.querySelector('.card-header > p');
 
       taskEl.addEventListener('click', (e) => {
-        if (e.target === taskEl) showTaskDrawer(task._id);
+        if (e.target === taskEl) showTaskDrawer(task._id!);
       });
-      cardHeader.addEventListener('click', () => showTaskDrawer(task._id));
+      const cardHeader = taskEl.querySelector('.card-header > p');
+      if (cardHeader && task._id) {
+        cardHeader.addEventListener('click', () => showTaskDrawer(task._id!));
+      }
 
-      taskEl.querySelector('.edit-btn').addEventListener('click', () => {
-        openUpdateTaskModal(task._id);
-      });
-      taskEl.querySelector('.delete-btn').addEventListener('click', (e) => {
-        e.stopPropagation();
+      const editBtn = taskEl.querySelector('.edit-btn');
+      if (editBtn && task._id) {
+        editBtn.addEventListener('click', () => openUpdateTaskModal(task._id!));
+      }
+      const deleteBtn = taskEl.querySelector('.delete-btn');
+      if (deleteBtn && task._id) {
+        deleteBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
 
-        showConfirmModal(
-          'Are you sure you want to delete this task?',
-          async () => {
-            await taskService.deleteTask(task._id);
-            await renderSelectedTab(localStorage.getItem('selectedProject'));
-          }
-        );
-      });
+          showConfirmModal(
+            'Are you sure you want to delete this task?',
+            async () => {
+              await taskService.deleteTask(task._id!);
+              const selectedProject = localStorage.getItem('selectedProject');
+              if (selectedProject) {
+                await renderSelectedTab(selectedProject);
+              }
+            }
+          );
+        });
+      }
 
       const taskList = columnEl.querySelector('#task-list');
-      taskList.appendChild(taskEl);
+      taskList?.appendChild(taskEl);
     });
 
     const taskList = columnEl.querySelector('#task-list');
 
-    taskList.addEventListener('dragover', (e) => e.preventDefault());
+    taskList?.addEventListener('dragover', (e) => e.preventDefault());
 
-    taskList.addEventListener('drop', async (e) => {
+    taskList?.addEventListener('drop', (e: Event) => {
       e.preventDefault();
 
-      const taskId = e.dataTransfer.getData('taskId');
-      const taskEl = document.querySelector(`[data-_id="${taskId}"]`);
-      const taskTitle = taskEl.querySelector('.task-title');
+      // Cast the event to DragEvent
+      const dragEvent = e as DragEvent;
 
-      if (column === lastColumn) {
-        taskTitle.classList.add('line-through', 'text-gray-400');
-      } else {
-        taskTitle.classList.remove('line-through', 'text-gray-400');
+      const taskId = dragEvent.dataTransfer?.getData('taskId');
+      if (!taskId) return;
+
+      const taskEl = document.querySelector<HTMLElement>(
+        `[data-_id="${taskId}"]`
+      );
+      if (!taskEl) return;
+
+      const taskTitle = taskEl.querySelector<HTMLElement>('.task-title');
+      if (taskTitle) {
+        if (column === lastColumn) {
+          taskTitle.classList.add('line-through', 'text-gray-400');
+        } else {
+          taskTitle.classList.remove('line-through', 'text-gray-400');
+        }
       }
+
       taskList.appendChild(taskEl);
 
       taskService.updateTask(taskId, { status: column }).catch((err) => {
         console.error('Failed to update task status', err);
       });
 
-      columnEl.querySelector('.issue-count').innerText =
-        +columnEl.querySelector('.issue-count').innerText + 1;
+      const issueCountEl = columnEl.querySelector<HTMLElement>('.issue-count');
+      if (issueCountEl) {
+        issueCountEl.innerText = `${Number(issueCountEl.innerText) + 1}`;
+      }
 
-      draggedColumn.querySelector('.issue-count').innerText =
-        +draggedColumn.querySelector('.issue-count').innerText - 1;
+      if (draggedColumn) {
+        const draggedIssueCountEl =
+          draggedColumn.querySelector<HTMLElement>('.issue-count');
+        if (draggedIssueCountEl) {
+          draggedIssueCountEl.innerText = `${Number(draggedIssueCountEl.innerText) - 1}`;
+        }
+      }
 
-      await handleForYouPage();
+      handleForYouPage().catch(console.error);
     });
 
     const newColumnInput = document.createElement('div');
@@ -444,31 +485,35 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
     newColumnInput.innerHTML = /* HTML */ `<input placeholder="Enter column name..." class="bg-white border px-2 border-gray-300 h-8 rounded-sm"></input> 
     `;
 
-    columnEl
-      .querySelector('.add-column-button')
-      .addEventListener('click', () =>
-        newColumnInput.classList.toggle('hidden')
-      );
+    const addColumnButton =
+      columnEl.querySelector<HTMLElement>('.add-column-button');
+    addColumnButton?.addEventListener('click', () => {
+      newColumnInput.classList.toggle('hidden');
+    });
 
-    document.addEventListener('click', (e) => {
+    document.addEventListener('click', (e: MouseEvent) => {
       e.stopPropagation();
 
+      const target = e.target as HTMLElement;
       if (
-        !e.target.classList.contains('add-column-button') &&
-        !e.target.classList.contains('new-column') &&
-        !e.target.parentElement.classList.contains('new-column')
+        !target.classList.contains('add-column-button') &&
+        !target.classList.contains('new-column') &&
+        !target.parentElement?.classList.contains('new-column')
       ) {
         newColumnInput.classList.add('hidden');
       }
     });
 
-    newColumnInput
-      .querySelector('input')
-      .addEventListener('keydown', async (e) => {
+    const newColumnInputField =
+      newColumnInput.querySelector<HTMLInputElement>('input');
+    newColumnInputField?.addEventListener(
+      'keydown',
+      async (e: KeyboardEvent) => {
+        const input = e.target as HTMLInputElement;
         if (e.key !== 'Enter') return;
 
         const columnAlreadyExists = project.columns.includes(
-          e.target.value.toLowerCase()
+          input.value.toLowerCase()
         );
 
         if (columnAlreadyExists) {
@@ -482,41 +527,60 @@ export async function renderBoard(projectId, filter = '', searchInput = '') {
 
         const newColumns = Array.from(columnsEl).map((column) => {
           if (column.classList.contains('column')) {
-            return column.querySelector('.column-name').textContent;
+            const nameEl = column.querySelector<HTMLElement>('.column-name');
+            return nameEl?.textContent ?? '';
           } else {
-            return column.querySelector('input').value.toLowerCase();
+            const inputEl = column.querySelector<HTMLInputElement>('input');
+            return inputEl?.value.toLowerCase() ?? '';
           }
         });
 
-        await projectService.updateProject(
-          localStorage.getItem('selectedProject'),
-          { columns: newColumns }
-        );
+        const selectedProject = localStorage.getItem('selectedProject');
+        if (!selectedProject) return;
 
-        renderSelectedTab(localStorage.getItem('selectedProject'));
-      });
+        await projectService.updateProject(selectedProject, {
+          columns: newColumns,
+        });
+        await renderSelectedTab(selectedProject);
+      }
+    );
     columnContainer.appendChild(columnEl);
     columnContainer.appendChild(newColumnInput);
 
-    columnEl.querySelector('.issue-count').innerText =
-      taskList.childElementCount;
+    const issueCountEl = columnEl.querySelector<HTMLElement>('.issue-count');
+    if (issueCountEl && taskList) {
+      issueCountEl.innerText = `${taskList.childElementCount}`;
+    }
 
-    columnEl
-      .querySelector('.add-column-button')
-      .addEventListener('click', () => {});
+    const addColumnBtn =
+      columnEl.querySelector<HTMLElement>('.add-column-button');
+    addColumnBtn?.addEventListener('click', () => {
+      newColumnInput.classList.toggle('hidden');
+    });
   });
 }
 
-async function getTaskGroupedByStatus(projectId, filter, searchInput) {
+async function getTaskGroupedByStatus(
+  projectId: string,
+  filter?: string,
+  searchInput?: string
+) {
   if (!projectId) return;
 
   const project = (await projectService.getProjectById(projectId)).result;
-  const result = {};
+  const result: Record<string, Task[]> = {};
 
   project.columns.forEach((column) => (result[column] = []));
-  const tasks = await getFilteredTasks(projectId, filter, searchInput);
 
-  tasks.forEach((task) => result[task.status].push(task));
+  const tasks: Task[] = await getFilteredTasks(projectId, filter, searchInput);
+
+  tasks.forEach((task: Task) => {
+    if (task.status in result) {
+      result[task.status].push(task);
+    } else {
+      result[task.status] = [task];
+    }
+  });
 
   return result;
 }

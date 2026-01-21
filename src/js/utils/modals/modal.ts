@@ -4,7 +4,7 @@ import taskService from '../../services/TaskService';
 
 export async function handleModalAssignee(
   modalAssigneeDropdown: HTMLSelectElement,
-  selectedAssignee = null
+  selectedAssignee: string | null | undefined = null
 ) {
   const projectId = localStorage.getItem('selectedProject');
 
@@ -49,7 +49,7 @@ export async function handleModalAssignee(
 
 export async function handleModalStatus(
   modalStatusDropdown: HTMLSelectElement,
-  selectedStatus = null
+  selectedStatus: string | null | undefined = null
 ) {
   const projectId = localStorage.getItem('selectedProject');
 
@@ -60,7 +60,7 @@ export async function handleModalStatus(
     result: Project;
   };
   const project = projectData.result;
-  console.log(project)
+  console.log(project);
   modalStatusDropdown.innerHTML = '';
 
   project.columns.forEach((column: string) => {
@@ -105,7 +105,7 @@ export async function handleModalBlock(
     if (task._id) {
       option.value = task._id;
     }
-    
+
     modalBlockDropdown.appendChild(option);
   });
   if (selectedBlockedTask) {

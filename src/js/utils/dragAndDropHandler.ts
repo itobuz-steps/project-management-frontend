@@ -41,7 +41,7 @@ export async function addDropEvent(
   parentContainer: HTMLElement,
   projectType: string,
   ifBacklog: boolean,
-  sprint: Sprint
+  sprint: Sprint | null
 ) {
   e.preventDefault();
 
@@ -104,9 +104,11 @@ export async function addDropEvent(
     }
 
     if (sprint?._id) {
-      sprintService.addTasksToSprint(sprint._id, [taskId]).catch((err) => {
-        console.error('Failed to update sprint tasks', err);
-      });
+      sprintService
+        .addTasksToSprint(sprint._id, { tasks: [taskId] })
+        .catch((err) => {
+          console.error('Failed to update sprint tasks', err);
+        });
     }
   }
   checkIfEmpty();
