@@ -1,7 +1,11 @@
 import { config } from '../../config/config';
+import type { Task } from '../../interfaces/common';
 
-export function renderAttachments(task) {
+export function renderAttachments(task: Task) {
   const attachmentsList = document.getElementById('attachmentsList');
+
+  if (!attachmentsList) return;
+
   attachmentsList.innerHTML = '';
 
   if (!task.attachments || task.attachments.length === 0) {
@@ -11,7 +15,11 @@ export function renderAttachments(task) {
     return;
   }
 
-  task.attachments.forEach((fileName) => {
+  const attachmentsArray = Array.isArray(task.attachments)
+    ? task.attachments
+    : Array.from(task.attachments);
+
+  attachmentsArray.forEach((fileName) => {
     const fileUrl = `${config.API_BASE_URL}/uploads/attachments/${fileName}`;
 
     const attachmentItem = document.createElement('a');
