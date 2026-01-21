@@ -4,28 +4,37 @@ import showToast from '../showToast';
 import renderSelectedTab from '../renderSelectedTab';
 import { addDays, format } from 'date-fns';
 import { renderSubtasks } from '../../pages/taskDrawer/renderSubtasks';
+import type { Task } from '../../interfaces/common';
 
-let subtaskContext = null;
+let subtaskContext: { _id: string } | null = null;
 
-const closeTaskModal = document.getElementById('close-task-modal');
-const createTaskModal = document.getElementById('create-task-modal');
+const closeTaskModal = document.getElementById(
+  'close-task-modal'
+) as HTMLElement;
+const createTaskModal = document.getElementById(
+  'create-task-modal'
+) as HTMLElement;
 const createModalStatusDropdown = document.getElementById(
   'status-create-task-modal'
-);
+) as HTMLSelectElement;
 const createModalAssigneeDropdown = document.getElementById(
   'create-modal-assignee'
-);
-const input = document.getElementById('attachments');
-const fileName = document.getElementById('file-name');
-const taskForm = document.getElementById('task-form');
+) as HTMLSelectElement;
+const input = document.getElementById('attachments') as HTMLInputElement;
+const fileName = document.getElementById('file-name') as HTMLElement;
+const taskForm = document.getElementById('task-form') as HTMLFormElement;
 const inputFiles = new DataTransfer();
 
-closeTaskModal.addEventListener('click', () => {
+closeTaskModal?.addEventListener('click', () => {
   createTaskModal.classList.add('hidden');
   taskForm.reset();
 });
 
 input.addEventListener('change', () => {
+  if (!input.files) {
+    return;
+  }
+
   if (
     input.files.length + inputFiles.files.length > 0 &&
     input.files.length + inputFiles.files.length < 6
@@ -49,43 +58,72 @@ input.addEventListener('change', () => {
 taskForm.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  let dateValue;
+  const projectId = localStorage.getItem('selectedProject');
 
-  if (!document.getElementById('dueDate').value) {
-    dateValue = new Date();
-    dateValue = addDays(dateValue, 7);
-    dateValue = format(dateValue, 'yyyy-MM-dd');
-  } else {
-    dateValue = document.getElementById('dueDate').value;
-    dateValue = format(dateValue, 'yyyy-MM-dd');
+  if (!projectId) {
+    return;
   }
 
-  const task = {
-    projectId: localStorage.getItem('selectedProject'),
-    title: document.getElementById('create-task-modal-title').value.trim(),
-    storyPoint: document.getElementById('story-point').value.trim(),
-    description: document.getElementById('description').value.trim(),
-    type: document.getElementById('type').value,
-    priority: document.getElementById('priority').value,
-    status: document.getElementById('status-create-task-modal').value,
-    tags: document.getElementById('tags').value
-      ? document
-          .getElementById('tags')
-          .value.split(',')
+  let dateValue: string;
+
+  const dueDateInput = document.getElementById('dueDate') as HTMLInputElement;
+
+  if (!dueDateInput.value) {
+    dateValue = format(addDays(new Date(), 7), 'yyyy-MM-dd');
+  } else {
+    dateValue = format(new Date(dueDateInput.value), 'yyyy-MM-dd');
+  }
+
+  const task: Task = {
+    projectId,
+    title: (
+      document.getElementById('create-task-modal-title') as HTMLInputElement
+    ).value.trim(),
+
+    storyPoint: Number(
+      (document.getElementById('story-point') as HTMLInputElement).value.trim()
+    ),
+
+    description: (
+      document.getElementById('description') as HTMLInputElement
+    ).value.trim(),
+
+    type: (document.getElementById('type') as HTMLSelectElement).value,
+    priority: (document.getElementById('priority') as HTMLSelectElement).value,
+    status: (
+      document.getElementById('status-create-task-modal') as HTMLSelectElement
+    ).value,
+
+    tags: (document.getElementById('tags') as HTMLInputElement).value
+      ? (document.getElementById('tags') as HTMLInputElement).value
+          .split(',')
           .map((t) => t.trim())
       : [],
+
     dueDate: dateValue,
+
     assignee:
-      document.getElementById('create-modal-assignee').value === 'null'
-        ? null
-        : document.getElementById('create-modal-assignee').value,
-    attachments: input.files,
-    parentTask: subtaskContext?._id || null,
+      (document.getElementById('create-modal-assignee') as HTMLSelectElement)
+        .value === 'null'
+        ? undefined
+        : (
+            document.getElementById(
+              'create-modal-assignee'
+            ) as HTMLSelectElement
+          ).value,
+
+    attachments: input.files ?? undefined,
+    parentTask: subtaskContext?._id ?? undefined,
   };
 
   try {
     const response = await taskService.createTask(task);
+
+    if (!response) {
+      return;
+    }
     const newTask = response.data.result.newTask;
+
     const subtaskDropdown = document.getElementById('subtaskDropdown');
     const saveSubtasksBtn = document.getElementById('saveSubtasksBtn');
 
@@ -113,7 +151,7 @@ taskForm.addEventListener('submit', async (e) => {
         saveSubtasksBtn.classList.add('hidden');
       }
     } else {
-      await renderSelectedTab(localStorage.getItem('selectedProject'));
+      await renderSelectedTab(projectId);
     }
 
     subtaskContext = null;

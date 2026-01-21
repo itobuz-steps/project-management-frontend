@@ -17,20 +17,21 @@ export interface Sprint {
 }
 
 export interface Task {
-  _id: string;
+  _id?: string;
   projectId: string;
   title: string;
   storyPoint: number;
   description: string;
   type: string;
-  key: string;
+  key?: string;
   status: string;
   priority: string;
   dueDate: string;
-  reporter: string;
+  reporter?: string;
 
   parentTask?: string;
   assignee?: string;
+  subTask?: string[];
 
   tags: string[];
 

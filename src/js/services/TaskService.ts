@@ -123,16 +123,22 @@ class TaskService {
   async createTask(task: Task) {
     const formData = new FormData();
 
+    if (task.key) {
+      formData.append('key', task.key);
+    }
+
+    if (task.reporter) {
+      formData.append('reporter', task.reporter);
+    }
+
     formData.append('projectId', task.projectId);
     formData.append('title', task.title);
     formData.append('storyPoint', task.storyPoint.toString());
     formData.append('description', task.description);
     formData.append('type', task.type);
-    formData.append('key', task.key);
     formData.append('status', task.status);
     formData.append('priority', task.priority);
     formData.append('dueDate', task.dueDate);
-    formData.append('reporter', task.reporter);
 
     if (task.parentTask) {
       formData.append('parentTask', task.parentTask);

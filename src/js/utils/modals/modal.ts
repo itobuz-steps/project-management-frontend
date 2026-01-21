@@ -101,7 +101,11 @@ export async function handleModalBlock(
   tasks.data.result.forEach((task: Task) => {
     const option = document.createElement('option');
     option.textContent = task.title;
-    option.value = task._id;
+
+    if (task._id) {
+      option.value = task._id;
+    }
+    
     modalBlockDropdown.appendChild(option);
   });
   if (selectedBlockedTask) {
@@ -131,7 +135,11 @@ export async function handleModalBlockedByIssue(
   tasks.data.result.forEach((task: Task) => {
     const option = document.createElement('option');
     option.textContent = task.title;
-    option.value = task._id;
+
+    if (task._id) {
+      option.value = task._id;
+    }
+
     modalBlockedByIssueDropdown.appendChild(option);
   });
   if (selectedBlockedByIssue) {
