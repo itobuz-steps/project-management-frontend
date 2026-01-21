@@ -18,10 +18,7 @@ import {
 } from '../../utils/elementUtils';
 import { loadProjectMembers } from '../loadMembers/loadMembers';
 import { setupPushNotifications } from '../../services/notificationService';
-import {
-  renderNotification,
-  lazyLoad,
-} from '../../utils/browserNotification';
+import { renderNotification, lazyLoad } from '../../utils/browserNotification';
 import { handleForYouPage } from '../forYouPage/forYouPage';
 import { renderBoard } from './boardView/boardView';
 import { checkForInvite, keyboardEvents } from '../../utils/globalUtils';
@@ -96,10 +93,7 @@ async function setupDashboard(): Promise<void> {
   const openCreateProjectModalBtn =
     document.querySelector<HTMLAnchorElement>('#no-project-text a');
 
-  openCreateProjectModalBtn?.addEventListener(
-    'click',
-    openCreateProjectModal
-  );
+  openCreateProjectModalBtn?.addEventListener('click', openCreateProjectModal);
 
   setTheme(localStorage.getItem('theme') || 'indigo');
 
