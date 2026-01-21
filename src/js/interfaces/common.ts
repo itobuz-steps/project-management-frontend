@@ -4,11 +4,12 @@ export interface RefreshTokenResponse {
 }
 
 export interface Project {
-  _id?: string;
+  _id: string;
   name: string;
   projectType: string;
   columns: string[];
   currentSprint?: string | null;
+  members: unknown[];
 }
 
 export interface Sprint {
@@ -32,7 +33,10 @@ export interface AddTasks {
 
 export interface Task {
   _id?: string;
-  projectId: string;
+  projectId: {
+    _id: string;
+    name: string;
+  };
   title: string;
   storyPoint: number;
   description: string;
@@ -57,8 +61,12 @@ export interface Task {
 
 export interface ProjectMember {
   _id: string;
-  email: string;
+  name: string;
+  profileImage?: string;
+  onlineStatus: OnlineStatus;
 }
+
+export type OnlineStatus = 'online' | 'offline';
 
 export interface ApiResponse<T> {
   result: T;

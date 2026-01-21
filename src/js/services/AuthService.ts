@@ -65,7 +65,7 @@ class AuthService {
     }
   }
 
-  async updateUserInfo(name: string, profileImage: File): Promise<User> {
+  async updateUserInfo(name: string, profileImage?: File): Promise<User> {
     const token = localStorage.getItem('access_token');
     if (!token) {
       throw new Error('Unauthorized');
@@ -73,7 +73,11 @@ class AuthService {
 
     const formData = new FormData();
     formData.append('name', name);
-    formData.append('profileImage', profileImage);
+
+    // ✅ Only append if file exists
+    if (profileImage) {
+      formData.append('profileImage', profileImage);
+    }
 
     const response = await this.api.post('/user-update', formData, {
       headers: {
