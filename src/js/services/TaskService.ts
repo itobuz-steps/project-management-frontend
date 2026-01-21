@@ -1,6 +1,7 @@
 import axios, { AxiosError, type AxiosResponse } from 'axios';
 import { config } from '../config/config';
 import type { Task } from '../interfaces/common';
+import type { User } from '../interfaces/auth';
 
 const API_URL = config.API_BASE_URL + '/tasks';
 
@@ -102,7 +103,7 @@ class TaskService {
     return response;
   }
 
-  async getMultipleUsers(userIds: string[]) {
+  async getMultipleUsers(userIds: string[]): Promise<{ result: User[] }> {
     try {
       const response = await this.api.get(
         `/users/batch?ids=${userIds.join(',')}`
@@ -111,7 +112,7 @@ class TaskService {
       return response.data;
     } catch (error) {
       if (!(error instanceof AxiosError)) {
-        return;
+        throw error;
       }
 
       throw new Error(

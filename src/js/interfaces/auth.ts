@@ -10,3 +10,8 @@ export interface User {
   email: string;
   profileImage?: string;
 }
+
+export interface ProjectMembers {
+  result: User[];
+  message?: string;
+}
