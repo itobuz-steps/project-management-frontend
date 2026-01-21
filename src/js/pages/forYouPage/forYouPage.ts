@@ -12,36 +12,41 @@ import {
 import { loadProjectMembers } from '../loadMembers/loadMembers';
 import { showTaskDrawer } from '../taskDrawer/taskDrawer';
 
-export function showForYouPage(flag) {
+import type { Project } from '../../interfaces/common';
+import type { Task } from '../../interfaces/common';
+
+export function showForYouPage(flag: boolean): void {
   const forYouPage = document.getElementById('forYouPage');
   const mainPage = document.getElementById('main-section');
-  if (flag) {
-    setTimeout(() => {
+
+  if (!forYouPage || !mainPage) return;
+
+  setTimeout(() => {
+    if (flag) {
       mainPage.classList.add('hidden');
       forYouPage.classList.remove('hidden');
-    }, 300);
-  } else {
-    setTimeout(() => {
+    } else {
       forYouPage.classList.add('hidden');
       mainPage.classList.remove('hidden');
-    }, 300);
-  }
+    }
+  }, 300);
 }
 
-export async function handleForYouPage() {
+export async function handleForYouPage(): Promise<void> {
   const projectsContainer = document.getElementById('forYouProjectsContainer');
-  const backToHomeBtn = document.getElementById('forYouGoBackBtn');
   const allTasksContainer = document.getElementById('forYouTableBody');
-  const forYouGoBackBtn = document.getElementById('forYouGoBackBtn');
+  const backToHomeBtn = document.getElementById('forYouGoBackBtn');
+
+  if (!projectsContainer || !allTasksContainer || !backToHomeBtn) return;
+
   projectsContainer.innerHTML = '';
   allTasksContainer.innerHTML = '';
-  forYouGoBackBtn.innerHTML = `${svgObject.back}`;
+  backToHomeBtn.innerHTML = svgObject.back;
 
-  const projects = await projectService.getAllProjects();
+  const projects: Project[] = await projectService.getAllProjects();
 
   projects.forEach((project) => {
-    const projectCard = createProjectCard(project);
-    projectsContainer.appendChild(projectCard);
+    projectsContainer.appendChild(createProjectCard(project));
   });
 
   backToHomeBtn.addEventListener('click', () => {
@@ -51,19 +56,21 @@ export async function handleForYouPage() {
   await renderStatusContainers(allTasksContainer);
 
   allTasksContainer
-    .querySelectorAll('.tasks-container')
+    .querySelectorAll<HTMLElement>('.tasks-container')
     .forEach((container) => {
       if (container.childElementCount === 1) {
-        container.firstElementChild.classList.remove('hidden');
+        container.firstElementChild?.classList.remove('hidden');
       }
     });
 }
 
-function createProjectCard(project) {
+function createProjectCard(project: Project): HTMLDivElement {
   const projectDiv = document.createElement('div');
+
   projectDiv.dataset.id = project._id;
   projectDiv.className =
     'flex flex-col gap-3 border-s-2 border-s-primary-500 rounded-sm bg-white md:min-w-64 min-w-48 p-4 cursor-pointer hover:bg-gray-100 shadow-sm border border-gray-200';
+
   projectDiv.innerHTML = /* HTML */ `
     <p class="font-semibold">${project.name}</p>
 
@@ -77,7 +84,6 @@ function createProjectCard(project) {
         <p>Members Assigned</p>
         <p>${project.members.length}</p>
       </div>
-      <div></div>
     </div>
   `;
 
@@ -95,68 +101,87 @@ function createProjectCard(project) {
   return projectDiv;
 }
 
-async function renderStatusContainers(parentElement) {
+async function renderStatusContainers(
+  parentElement: HTMLElement
+): Promise<void> {
   const totalTasksCount = document.getElementById('forYouTotalTasksCount');
-  const tasks = (await taskService.getAllUserTasks()).data.result;
 
-  totalTasksCount.innerText = tasks.length;
-  let result = {};
+  if (!totalTasksCount) return;
+
+  const response = await taskService.getAllUserTasks();
+  const tasks: Task[] = response.data.result;
+
+  totalTasksCount.innerText = String(tasks.length);
+
+  const groupedTasks: Record<string, Task[]> = {};
 
   tasks.forEach((task) => {
-    if (!result[task.status]) {
-      result[task.status] = [];
+    if (!groupedTasks[task.status]) {
+      groupedTasks[task.status] = [];
     }
-    result[task.status].push(task);
+    groupedTasks[task.status].push(task);
   });
 
-  Object.keys(result).forEach((column) => {
+  Object.keys(groupedTasks).forEach((status) => {
     const row = document.createElement('div');
     row.className = 'flex flex-col w-full mb-2 hidden';
-    row.id = `${column}-row`;
+    row.id = `${status}-row`;
+
     row.innerHTML = /* HTML */ `
       <div class="flex items-center justify-between gap-2">
-        <p class="my-2 font-semibold text-gray-500 uppercase">${column}</p>
+        <p class="my-2 font-semibold text-gray-500 uppercase">${status}</p>
         <div
           class="w-4 rounded-full bg-gray-200 text-center text-[10px]! font-semibold text-black"
-          id="${column}-task-count"
+          id="${status}-task-count"
         ></div>
       </div>
       <ul
         class="tasks-container flex flex-col gap-1"
-        id="${column}-task-container"
+        id="${status}-task-container"
       ></ul>
     `;
+
     parentElement.appendChild(row);
   });
 
-  await renderTasksByStatus(result);
+  await renderTasksByStatus(groupedTasks);
 }
 
-async function renderTasksByStatus(groupedTask) {
-  Object.keys(groupedTask).forEach((column) => {
-    const container = document.getElementById(`${column}-task-container`);
-    const taskCount = document.getElementById(`${column}-task-count`);
-    const row = document.getElementById(`${column}-row`);
-    taskCount.innerText = groupedTask[column].length;
+async function renderTasksByStatus(
+  groupedTasks: Record<string, Task[]>
+): Promise<void> {
+  Object.keys(groupedTasks).forEach((status) => {
+    const container = document.getElementById(`${status}-task-container`);
+    const taskCount = document.getElementById(`${status}-task-count`);
+    const row = document.getElementById(`${status}-row`);
 
-    const columnTasks = groupedTask[column];
-    if (!columnTasks.length) return;
+    if (!container || !taskCount || !row) return;
+
+    const tasks = groupedTasks[status];
+    taskCount.innerText = String(tasks.length);
+
+    if (!tasks.length) return;
 
     row.classList.remove('hidden');
-    columnTasks.forEach((task) => {
-      const newEl = renderForYouTasks(task, task.projectId.name);
-      container.appendChild(newEl);
+
+    tasks.forEach((task) => {
+      container.appendChild(renderForYouTask(task, task.projectId.name));
     });
   });
 }
 
-function renderForYouTasks(task, projectName) {
+/* ------------------------------------------------------------------ */
+/* Single task */
+/* ------------------------------------------------------------------ */
+
+function renderForYouTask(task: Task, projectName: string): HTMLLIElement {
   const taskEl = document.createElement('li');
   const typeSvg = getSvgByType(task);
   const prioritySvg = getSvgByPriority(task);
 
   taskEl.className =
     'bg-white p-2 flex justify-between items-center rounded-sm hover:cursor-pointer hover:bg-primary-50 shadow-sm border border-gray-100';
+
   taskEl.innerHTML = /* HTML */ `
     <div class="flex items-center justify-start gap-2">
       <div class="flex items-center justify-center">${typeSvg}</div>
@@ -175,11 +200,12 @@ function renderForYouTasks(task, projectName) {
       </div>
     </div>
     <p class="smaller-text flex gap-2 font-medium">
-      ${String(task.priority).charAt(0).toUpperCase() +
-      String(task.priority).slice(1)}${prioritySvg}
+      ${task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+      ${prioritySvg}
     </p>
   `;
 
   taskEl.addEventListener('click', () => showTaskDrawer(task._id));
+
   return taskEl;
 }

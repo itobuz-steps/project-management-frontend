@@ -3,6 +3,7 @@ import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { config as appConfig } from '../config/config';
 import type { ApiResponse, RefreshTokenResponse } from '../interfaces/common';
 import type { Project } from '../interfaces/common';
+import type { ProjectMember } from '../interfaces/common';
 
 const API_URL = `${appConfig.API_BASE_URL}/project`;
 
@@ -130,9 +131,13 @@ class ProjectService {
     }
   }
 
-  async getProjectMembers<T = unknown>(projectId: string): Promise<T> {
+  async getProjectMembers(
+    projectId: string
+  ): Promise<ApiResponse<ProjectMember[]>> {
     try {
-      const response = await this.api.get<T>(`/get-user/${projectId}`);
+      const response = await this.api.get<ApiResponse<ProjectMember[]>>(
+        `/get-user/${projectId}`
+      );
       return response.data;
     } catch (error: unknown) {
       throw this.handleError(error, 'Failed to fetch project members');

@@ -1,34 +1,47 @@
 import projectService from '../../services/ProjectService';
-import { io } from 'socket.io-client';
-import { config } from '../../config/config.ts';
+import { io, Socket } from 'socket.io-client';
+import { config } from '../../config/config';
+import type { ProjectMember } from '../../interfaces/common';
 
-const socket = io(config.API_BASE_URL + '/', {
-  auth: { token: localStorage.getItem('access_token') },
+const socket: Socket = io(`${config.API_BASE_URL}/`, {
+  auth: {
+    token: localStorage.getItem('access_token') ?? undefined,
+  },
 });
 
-socket.on('connect', () =>
-  loadProjectMembers(localStorage.getItem('selectedProject'))
-);
+socket.on('connect', () => {
+  const projectId = localStorage.getItem('selectedProject');
+  if (projectId) {
+    loadProjectMembers(projectId);
+  }
+});
 
 socket.on('userStatusChanged', () => {
-  loadProjectMembers(localStorage.getItem('selectedProject'));
+  const projectId = localStorage.getItem('selectedProject');
+  if (projectId) {
+    loadProjectMembers(projectId);
+  }
 });
 
-export async function loadProjectMembers(projectId) {
+export async function loadProjectMembers(projectId: string): Promise<void> {
   try {
-    if (!projectId) return;
+    const data = await projectService.getProjectMembers<{
+      result: ProjectMember[];
+    }>(projectId);
 
-    const data = await projectService.getProjectMembers(projectId);
-    const members = data.result;
+    const members: ProjectMember[] = data.result;
 
     const container = document.getElementById('memberAvatars');
+    if (!container) return;
+
     container.innerHTML = '';
 
     members.forEach((userInfo, index) => {
       const img = document.createElement('img');
+
       const imageUrl = userInfo.profileImage
         ? `${config.API_BASE_URL}/uploads/profile/${userInfo.profileImage}`
-        : `../../../assets/img/profile.png`;
+        : '../../../assets/img/profile.png';
 
       img.src = imageUrl;
       img.alt = userInfo.name;
