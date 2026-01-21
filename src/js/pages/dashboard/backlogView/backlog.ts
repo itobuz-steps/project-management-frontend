@@ -4,8 +4,9 @@ import { addDragEvent } from '../../../utils/dragAndDropHandler';
 import { createTaskList } from '../../../utils/renderTasks';
 import { toggleHidden } from '../../../utils/elementUtils';
 import { openCreateTaskModal } from '../../../utils/modals/createTaskModal';
+import type { Project } from '../../../interfaces/common';
 
-export function createBacklogTable(projectType) {
+export function createBacklogTable(projectType: string) {
   let ifKanban = '';
   if (projectType === 'kanban') {
     ifKanban = 'hidden';
@@ -180,10 +181,10 @@ export function createBacklogTable(projectType) {
 }
 
 export async function renderBacklogTasks(
-  backlogBody,
-  backlogTasks,
-  addToSprintButton,
-  project
+  backlogBody: HTMLDivElement,
+  backlogTasks: string[],
+  addToSprintButton: HTMLButtonElement,
+  project: Project
 ) {
   let promiseArray = [];
   for (const taskId of backlogTasks) {
@@ -202,32 +203,34 @@ export async function renderBacklogTasks(
 
   const allTrs = await Promise.all(promiseArray);
 
-  loader.classList.add('hidden');
+  loader?.classList.add('hidden');
   backlogBody.classList.remove('hidden');
 
   allTrs.forEach((tr) => {
-    const checkbox = tr.querySelector('.checkboxes');
-    checkbox.addEventListener('change', () => {
+    const checkbox = tr.querySelector<HTMLInputElement>('.checkboxes');
+    checkbox?.addEventListener('change', () => {
       if (checkbox.checked && addToSprintButton.classList.contains('hidden')) {
         toggleHidden(addToSprintButton);
       }
     });
   });
 
-  addDragEvent(backlogBody, allTrs, '');
+  addDragEvent(backlogBody, allTrs, null);
   checkIfEmpty();
 }
 
-export function handleBacklogCheckboxAll(isCheckedValue) {
+export function handleBacklogCheckboxAll(isCheckedValue: boolean) {
   const backlogBodyChildren = document.getElementById('backlog-body');
-  backlogBodyChildren.querySelectorAll('.checkboxes').forEach((box) => {
+  backlogBodyChildren
+    ?.querySelectorAll<HTMLInputElement>('.checkboxes')
+    .forEach((box) => {
     box.checked = isCheckedValue;
   });
 }
 
 export function openCreateTaskModalFromBacklog() {
   const emptyMessage = document.querySelector('#backlog-empty-message p');
-  emptyMessage.addEventListener('click', () => {
+  emptyMessage?.addEventListener('click', () => {
     openCreateTaskModal();
   });
 }
