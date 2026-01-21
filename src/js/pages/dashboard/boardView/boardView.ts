@@ -326,9 +326,8 @@ export async function renderBoard(
           const currentProject = localStorage.getItem('selectedProject');
           if (!currentProject) return; // stop if null
 
-          const response = await projectService.getProjectMembers<{
-            result: User[];
-          }>(currentProject);
+          const response =
+            await projectService.getProjectMembers(currentProject);
 
           activeProjectMembers = response.result;
 

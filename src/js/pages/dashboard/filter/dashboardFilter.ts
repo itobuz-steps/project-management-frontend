@@ -2,12 +2,6 @@ import { removeElementChildren } from '../../../utils/elementUtils';
 import projectService from '../../../services/ProjectService';
 import renderSelectedTab from '../../../utils/renderSelectedTab';
 
-import type { ProjectMember } from '../../../interfaces/common';
-
-/* ------------------------------------------------------------------ */
-/* DOM elements */
-/* ------------------------------------------------------------------ */
-
 const statusDropDown = document.getElementById(
   'statusDropdown'
 ) as HTMLElement | null;
@@ -15,10 +9,6 @@ const assigneeDropdown = document.getElementById(
   'assigneeDropdown'
 ) as HTMLElement | null;
 const currentProject = localStorage.getItem('selectedProject');
-
-/* ------------------------------------------------------------------ */
-/* Helpers */
-/* ------------------------------------------------------------------ */
 
 function renderSubDropdown(item: string): HTMLDivElement {
   const subDropdown = document.createElement('div');
@@ -29,10 +19,6 @@ function renderSubDropdown(item: string): HTMLDivElement {
 
   return subDropdown;
 }
-
-/* ------------------------------------------------------------------ */
-/* Status filter */
-/* ------------------------------------------------------------------ */
 
 export async function handleStatusFilter(): Promise<void> {
   if (!currentProject || !statusDropDown || !assigneeDropdown) return;
@@ -54,19 +40,14 @@ export async function handleStatusFilter(): Promise<void> {
   });
 }
 
-/* ------------------------------------------------------------------ */
-/* Assignee filter */
-/* ------------------------------------------------------------------ */
-
 export async function handleAssigneeFilter(): Promise<void> {
   if (!currentProject || !statusDropDown || !assigneeDropdown) return;
 
   removeElementChildren(statusDropDown);
   removeElementChildren(assigneeDropdown);
 
-  const assigneesResponse = await projectService.getProjectMembers<{
-    result: ProjectMember[];
-  }>(currentProject);
+  const assigneesResponse =
+    await projectService.getProjectMembers(currentProject);
 
   assigneesResponse.result.forEach((assignee) => {
     const dropdownEl = renderSubDropdown(assignee.name);
@@ -78,10 +59,6 @@ export async function handleAssigneeFilter(): Promise<void> {
     });
   });
 }
-
-/* ------------------------------------------------------------------ */
-/* Priority filter & dropdown logic */
-/* ------------------------------------------------------------------ */
 
 const lowFilterBtn = document.getElementById(
   'low-filter'
@@ -103,10 +80,6 @@ const mainDropdown = document.getElementById(
   'mainDropdown'
 ) as HTMLElement | null;
 const subDropdowns = document.querySelectorAll<HTMLElement>('.subDropdown');
-
-/* ------------------------------------------------------------------ */
-/* Dropdown UI handlers */
-/* ------------------------------------------------------------------ */
 
 filterBox?.addEventListener('click', (e: MouseEvent) => {
   e.stopPropagation();
@@ -131,10 +104,6 @@ document.addEventListener('click', () => {
   mainDropdown?.classList.add('hidden');
   subDropdowns.forEach((d) => d.classList.add('hidden'));
 });
-
-/* ------------------------------------------------------------------ */
-/* Priority actions */
-/* ------------------------------------------------------------------ */
 
 lowFilterBtn?.addEventListener('click', async () => {
   if (!currentProject) return;

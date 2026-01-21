@@ -10,7 +10,6 @@ import { handleForYouPage, showForYouPage } from '../../forYouPage/forYouPage';
 import { config } from '../../../config/config';
 
 import type { Project } from '../../../interfaces/common';
-import type { ProjectMember } from '../../../interfaces/common';
 
 const sidebar = document.querySelector('#sidebar') as HTMLElement | null;
 const toggleBtn = document.querySelector(
@@ -106,7 +105,7 @@ export async function updateUserList(): Promise<void> {
   if (!projectId) return;
 
   const usersResponse = await projectService.getProjectMembers(projectId);
-  const users: ProjectMember[] = usersResponse.result;
+  const users = usersResponse.result;
 
   userListContainer.innerHTML = '';
 

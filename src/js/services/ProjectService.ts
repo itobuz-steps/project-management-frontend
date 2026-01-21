@@ -3,7 +3,7 @@ import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { config as appConfig } from '../config/config';
 import type { ApiResponse, RefreshTokenResponse } from '../interfaces/common';
 import type { Project } from '../interfaces/common';
-import type { ProjectMember } from '../interfaces/common';
+import type { ProjectMembers } from '../interfaces/auth';
 
 const API_URL = `${appConfig.API_BASE_URL}/project`;
 
@@ -131,11 +131,10 @@ class ProjectService {
     }
   }
 
-  async getProjectMembers(
-    projectId: string
-  ): Promise<ApiResponse<ProjectMember[]>> {
+  async getProjectMembers(projectId: string) {
+    ``;
     try {
-      const response = await this.api.get<ApiResponse<ProjectMember[]>>(
+      const response = await this.api.get<ProjectMembers>(
         `/get-user/${projectId}`
       );
       return response.data;

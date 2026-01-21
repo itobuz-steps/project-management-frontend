@@ -13,7 +13,7 @@ export async function createTaskList(
   task: Task,
   type: string,
   projectType: string,
-  sprint: Sprint | null
+  sprint: Sprint | null | undefined
 ) {
   let ifSprint = `hidden`;
   if (type === 'backlog') {

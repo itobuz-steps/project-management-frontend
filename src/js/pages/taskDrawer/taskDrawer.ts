@@ -11,7 +11,6 @@ import renderSelectedTab from '../../utils/renderSelectedTab';
 import { getSvgByType } from '../../utils/globalUtils';
 import { marked } from 'marked';
 import { config } from '../../config/config';
-import type { User } from '../../interfaces/auth';
 
 const taskDrawerInnerHtml = /* HTML */ ` <div>
   <div class="flex flex-col gap-3 p-3">
@@ -438,9 +437,8 @@ export async function showTaskDrawer(taskId: string) {
 
   assigneeDropdown?.appendChild(unassignedOption);
 
-  const members = (
-    await projectService.getProjectMembers<{ result: User[] }>(selectedProject)
-  ).result;
+  const members = (await projectService.getProjectMembers(selectedProject))
+    .result;
 
   members.forEach((member) => {
     const option = document.createElement('option');

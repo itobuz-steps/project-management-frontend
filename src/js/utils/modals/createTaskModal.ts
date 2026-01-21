@@ -75,7 +75,7 @@ taskForm.addEventListener('submit', async (e) => {
   }
 
   const task: Task = {
-    projectId,
+    projectId, 
     title: (
       document.getElementById('create-task-modal-title') as HTMLInputElement
     ).value.trim(),

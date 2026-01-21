@@ -132,7 +132,7 @@ class TaskService {
       formData.append('reporter', task.reporter);
     }
 
-    formData.append('projectId', task.projectId);
+    formData.append('projectId', task.projectId as string);
     formData.append('title', task.title);
     formData.append('storyPoint', task.storyPoint.toString());
     formData.append('description', task.description);
