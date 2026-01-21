@@ -160,7 +160,7 @@ taskForm.addEventListener('submit', async (e) => {
   }
 });
 
-export function openCreateTaskModal(context = null) {
+export function openCreateTaskModal(context: { _id: string } | null = null) {
   subtaskContext = context;
 
   createTaskModal.classList.remove('hidden');

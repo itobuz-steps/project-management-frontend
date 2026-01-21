@@ -92,8 +92,8 @@ class TaskService {
 
   async getTaskByProjectId(
     projectId: string,
-    filter: string,
-    searchInput: string
+    filter: string | null = '',
+    searchInput: string | null = ''
   ) {
     const response = await this.api.get(
       `/?projectId=${projectId}&filter=${filter}&searchInput=${searchInput}`
