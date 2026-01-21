@@ -27,8 +27,8 @@ const sprintBacklogWrapper = document.getElementById(
 
 export async function renderBacklogView(
   projectId: string,
-  filter = '',
-  searchInput = ''
+  filter: string | null = '',
+  searchInput: string | null = ''
 ) {
   listTableBody.innerHTML = '';
   sprintBacklogWrapper.innerHTML = '';

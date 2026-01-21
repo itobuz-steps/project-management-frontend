@@ -5,8 +5,9 @@ import { addDragEvent } from '../../../utils/dragAndDropHandler';
 import sprintService from '../../../services/SprintService';
 import projectService from '../../../services/ProjectService';
 import { renderBacklogView } from './renderBacklogView';
+import type { Project, Sprint, Task } from '../../../interfaces/common';
 
-export function createSprintTable(sprint) {
+export function createSprintTable(sprint: Sprint) {
   const sprintContainer = document.createElement('div');
 
   sprintContainer.dataset.id = sprint._id;
@@ -177,9 +178,19 @@ export function createSprintTable(sprint) {
   return sprintContainer;
 }
 
-export async function renderSprintTasks(sprint, sprintTasks, projectType) {
+export async function renderSprintTasks(
+  sprint: Sprint,
+  sprintTasks: string[],
+  projectType: string
+) {
   let promiseArray = [];
-  const sprintTaskBody = document.getElementById(`${sprint.key}-body`);
+  const sprintTaskBody = document.getElementById(
+    `${sprint.key}-body`
+  ) as HTMLTableSectionElement | null;
+
+  if (!sprintTaskBody) {
+    return;
+  }
 
   for (const taskId of sprintTasks) {
     const task = await taskService.getTaskById(taskId);
@@ -188,12 +199,14 @@ export async function renderSprintTasks(sprint, sprintTasks, projectType) {
     );
   }
 
-  const loader = document.getElementById(`${sprint.key}-loader`);
+  const loader = document.getElementById(
+    `${sprint.key}-loader`
+  ) as HTMLElement | null;
 
   sprintTaskBody.classList.add('hidden');
   const allTrs = await Promise.all(promiseArray);
 
-  loader.classList.add('hidden');
+  loader?.classList.add('hidden');
   sprintTaskBody.classList.remove('hidden');
 
   addDragEvent(sprintTaskBody, allTrs, sprint);
@@ -201,107 +214,142 @@ export async function renderSprintTasks(sprint, sprintTasks, projectType) {
   checkIfEmpty();
 }
 
-export async function handleSprintCreate(storyPointInput) {
+export async function handleSprintCreate(
+  storyPointInput: HTMLInputElement | null
+) {
+  const projectId = localStorage.getItem('selectedProject');
+  if (!projectId || !storyPointInput) return;
+
+  const storyPoint = Number(storyPointInput.value);
+  if (Number.isNaN(storyPoint)) return;
+
   const newSprint = {
-    projectId: localStorage.getItem('selectedProject'),
-    storyPoint: storyPointInput.value,
+    projectId,
+    storyPoint,
   };
 
   await sprintService.createSprint(newSprint);
-  await renderBacklogView(localStorage.getItem('selectedProject'));
+  await renderBacklogView(projectId);
 }
 
-export async function handleCompleteSprint(sprintId, project) {
+export async function handleCompleteSprint(sprintId: string, project: Project) {
   const sprint = await sprintService.getSprintById(sprintId);
 
   let completedTasks = [];
-  sprint.result.tasks.forEach((task) => {
+  sprint.result.tasks.forEach((task: Task) => {
     if (task.status === project.columns[project.columns.length - 1]) {
       completedTasks.push(task);
     }
   });
 
   await sprintService.updateSprint(sprintId, { isCompleted: true, tasks: [] });
-  await projectService.updateProject(project._id, { currentSprint: null });
-  await renderBacklogView(localStorage.getItem('selectedProject'));
+  if (project._id) {
+    await projectService.updateProject(project._id, { currentSprint: null });
+  }
+
+  const projectId = localStorage.getItem('selectedProject');
+  if (projectId) {
+    await renderBacklogView(projectId);
+  }
+
   handleDashboardSprintPreview();
 }
 
-export async function handleStartSprint(sprint) {
+export async function handleStartSprint(sprint: Sprint) {
   const startSprintButton = document.getElementById(
     `${sprint.key}-sprint-start-button`
-  );
+  ) as HTMLButtonElement | null;
   const sprintStartCloseSvg = document.getElementById(
     `${sprint.key}-start-close-svg`
-  );
-  const startSprintForm = document.getElementById(`${sprint.key}-start-form`);
-  const dueDateInput = document.getElementById(`${sprint.key}-due-date`);
+  ) as SVGSVGElement | null;
+  const startSprintForm = document.getElementById(
+    `${sprint.key}-start-form`
+  ) as HTMLFormElement | null;
+  const dueDateInput = document.getElementById(
+    `${sprint.key}-due-date`
+  ) as HTMLInputElement | null;
   const startSprintSubmitButton = document.getElementById(
     `${sprint.key}-start-form-button`
-  );
+  ) as HTMLButtonElement | null;
   const completeSprintButton = document.getElementById(
     `${sprint.key}-sprint-complete-button`
-  );
+  ) as HTMLButtonElement | null;
 
-  const project = await projectService.getProjectById(
-    localStorage.getItem('selectedProject')
-  );
+  const projectId = localStorage.getItem('selectedProject');
+  if (!projectId) return;
 
-  startSprintButton.addEventListener('click', toggleStartSprintForm);
-  sprintStartCloseSvg.addEventListener('click', toggleStartSprintForm);
+  const projectResponse = await projectService.getProjectById(projectId);
+  const project = projectResponse.result;
+  if (!project) return;
 
+  // Toggle start sprint form
   function toggleStartSprintForm() {
-    toggleHidden(startSprintButton);
-    toggleHidden(startSprintForm);
+    if (startSprintButton) toggleHidden(startSprintButton);
+    if (startSprintForm) toggleHidden(startSprintForm);
   }
 
-  startSprintSubmitButton.addEventListener('click', async (e) => {
+  startSprintButton?.addEventListener('click', toggleStartSprintForm);
+  sprintStartCloseSvg?.addEventListener('click', toggleStartSprintForm);
+
+  startSprintSubmitButton?.addEventListener('click', async (e: MouseEvent) => {
     e.preventDefault();
     await startSprintFunction();
   });
 
   async function startSprintFunction() {
-    if (project.result.currentSprint) {
+    if (project.currentSprint) {
       toggleStartSprintForm();
     } else {
+      if (!sprint._id || !dueDateInput) return;
+
       const response = await sprintService.updateSprint(sprint._id, {
         dueDate: dueDateInput.value,
-      });
+      } as Partial<Sprint>);
+
       await checkIfSprintStarted(response.result);
-      await renderBacklogView(localStorage.getItem('selectedProject'));
+      const projectId = localStorage.getItem('selectedProject');
+      if (!projectId) return;
+
+      await renderBacklogView(projectId);
       handleDashboardSprintPreview();
     }
   }
 
-  async function checkIfSprintStarted(sprint) {
-    if (sprint.dueDate) {
-      toggleHidden(startSprintForm);
-      toggleHidden(completeSprintButton);
+  async function checkIfSprintStarted(updatedSprint: Sprint) {
+    if (!updatedSprint._id || !updatedSprint.dueDate) return;
 
-      const response = await projectService.updateProject(project.result._id, {
-        currentSprint: sprint._id,
-      });
+    if (startSprintForm) toggleHidden(startSprintForm);
+    if (completeSprintButton) toggleHidden(completeSprintButton);
 
-      completeSprintButton.addEventListener('click', async (e) => {
-        e.preventDefault();
+    if (!project._id) return;
 
-        await handleCompleteSprint(sprint._id, response.result);
-      });
-    }
+    const response = await projectService.updateProject(project._id, {
+      currentSprint: updatedSprint._id,
+    });
+
+    completeSprintButton?.addEventListener('click', async (e: MouseEvent) => {
+      e.preventDefault();
+      if (updatedSprint._id) {
+        await handleCompleteSprint(updatedSprint._id, response.result);
+      }
+    });
   }
 }
 
-export function handleAddTaskToSprint(currentSprints, sprintDropdown) {
+export function handleAddTaskToSprint(
+  currentSprints: Sprint[],
+  sprintDropdown: HTMLUListElement
+) {
   sprintDropdown.innerHTML = '';
   toggleHidden(sprintDropdown);
 
   currentSprints.forEach((sprint) => {
-    const dropdownEl = document.createElement('li');
+    const dropdownEl = document.createElement('li') as HTMLLIElement;
     dropdownEl.className =
       'dropdown-item px-4 py-2 hover:bg-gray-100 cursor-pointer';
     dropdownEl.dataset.id = sprint._id;
     dropdownEl.id = `dropdown-${sprint.key}`;
-    dropdownEl.innerHTML = sprint.key;
+    dropdownEl.innerHTML = sprint.key!;
     sprintDropdown.appendChild(dropdownEl);
     dropdownEl.addEventListener('click', async () => {
       await handleAddTaskFromBacklogToSprint(dropdownEl);
@@ -309,29 +357,42 @@ export function handleAddTaskToSprint(currentSprints, sprintDropdown) {
   });
 }
 
-async function handleAddTaskFromBacklogToSprint(dropdownEl) {
+async function handleAddTaskFromBacklogToSprint(dropdownEl: HTMLLIElement) {
   const backlogBodyChildren = document.getElementById('backlog-body');
-  let selectedRows = [];
+  if (!backlogBodyChildren) return;
 
-  backlogBodyChildren.querySelectorAll('.checkboxes').forEach((checkbox) => {
-    if (checkbox.checked) {
+  const checkboxes =
+    backlogBodyChildren.querySelectorAll<HTMLInputElement>('.checkboxes');
+  const selectedRows: string[] = [];
+
+  checkboxes.forEach((checkbox) => {
+    if (checkbox.checked && checkbox.dataset.id) {
       selectedRows.push(checkbox.dataset.id);
     }
   });
 
-  await sprintService.addTasksToSprint(dropdownEl.dataset.id, {
+  // Make sure dropdownEl.dataset.id exists
+  const sprintId = dropdownEl.dataset.id;
+  if (!sprintId) return;
+
+  await sprintService.addTasksToSprint(sprintId, {
     tasks: selectedRows,
   });
 
-  await renderBacklogView(localStorage.getItem('selectedProject'));
+  const projectId = localStorage.getItem('selectedProject');
+  if (!projectId) return;
+
+  await renderBacklogView(projectId);
 }
 
 export async function handleDashboardSprintPreview() {
-  if (!localStorage.getItem('selectedProject')) return;
+  const projectId = localStorage.getItem('selectedProject');
+  if (!projectId) return;
 
-  const project = (
-    await projectService.getProjectById(localStorage.getItem('selectedProject'))
-  ).result;
+  const projectResponse = await projectService.getProjectById(projectId);
+  const project = projectResponse.result;
+  if (!project) return;
+
   const sprintPreviewContainer = document.getElementById(
     'dashboardSprintPreview'
   );
@@ -340,17 +401,26 @@ export async function handleDashboardSprintPreview() {
     'dashboardSprintDueDateWrapper'
   );
 
+  if (!sprintPreviewContainer || !sprintName || !sprintDueDateWrapper) return;
+
   if (project.projectType === 'scrum') {
     sprintPreviewContainer.classList.remove('hidden');
 
     if (project.currentSprint) {
       const sprintDueDate = document.getElementById('dashboardSprintDueDate');
-      const sprint = (await sprintService.getSprintById(project.currentSprint))
-        .result;
+      if (!sprintDueDate) return;
+
+      const sprintResponse = await sprintService.getSprintById(
+        project.currentSprint
+      );
+      const sprint = sprintResponse.result;
+      if (!sprint) return;
 
       sprintDueDateWrapper.classList.remove('hidden');
-      sprintName.innerText = sprint.key;
-      sprintDueDate.innerText = new Date(sprint.dueDate).toLocaleDateString();
+      sprintName.innerText = sprint.key ?? 'Unnamed Sprint';
+      sprintDueDate.innerText = sprint.dueDate
+        ? new Date(sprint.dueDate).toLocaleDateString()
+        : 'No due date';
     } else {
       sprintDueDateWrapper.classList.add('hidden');
       sprintName.innerText = 'No sprint started';

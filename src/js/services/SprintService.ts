@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import { config } from '../config/config';
-import type { Sprint } from '../interfaces/common';
+import type { AddTasks, CreateSprint, Sprint } from '../interfaces/common';
 
 const API_URL = config.API_BASE_URL + '/sprint';
 
@@ -100,7 +100,7 @@ class SprintService {
     }
   }
 
-  async createSprint(sprint: Sprint) {
+  async createSprint(sprint: CreateSprint) {
     try {
       const response = await this.api.post(`/`, sprint);
 
@@ -116,7 +116,7 @@ class SprintService {
     }
   }
 
-  async updateSprint(id: string, updatedSprint: Sprint) {
+  async updateSprint(id: string, updatedSprint: Partial<Sprint>) {
     try {
       const response = await this.api.put(`/${id}`, updatedSprint);
 
@@ -132,7 +132,7 @@ class SprintService {
     }
   }
 
-  async addTasksToSprint(id: string, updatedSprint: string[]) {
+  async addTasksToSprint(id: string, updatedSprint: AddTasks) {
     try {
       const response = await this.api.patch(`/${id}/addTasks`, updatedSprint);
 

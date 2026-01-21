@@ -8,7 +8,7 @@ export interface Project {
   name: string;
   projectType: string;
   columns: string[];
-  currentSprint?: string;
+  currentSprint?: string | null;
 }
 
 export interface Sprint {
@@ -19,6 +19,15 @@ export interface Sprint {
   tasks: string[];
   isCompleted: boolean;
   dueDate: string;
+}
+
+export interface CreateSprint {
+  projectId: string;
+  storyPoint: number;
+}
+
+export interface AddTasks {
+  tasks: string[];
 }
 
 export interface Task {
