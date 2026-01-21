@@ -1,13 +1,16 @@
 import taskService from '../../services/TaskService';
 import { showTaskDrawer } from './taskDrawer';
 import { config } from '../../config/config';
+import type { Task } from '../../interfaces/common';
 
-export async function renderSubtasks(task) {
+export async function renderSubtasks(task: Task) {
   const list = document.getElementById('subtasksList');
+
+  if (!list) throw new Error('Subtask list container not found');
 
   list.innerHTML = '';
 
-  if (!task.subTask.length) {
+  if (!task.subTask?.length) {
     list.innerHTML = "<p class='text-gray-400 font-semibold'>No subtasks</p>";
     return;
   }
@@ -15,7 +18,7 @@ export async function renderSubtasks(task) {
   const subtasks = (await taskService.getTaskById(task._id)).data.result
     .subTask;
 
-  subtasks.forEach(async (sub) => {
+  subtasks?.forEach(async (sub) => {
     const st = (await taskService.getTaskById(sub)).data.result;
     const subtaskAssignee = st.assignee
       ? (await taskService.getUserDetailsById(st.assignee)).data.result
@@ -125,11 +128,11 @@ export async function renderSubtasks(task) {
     const attachmentsLogo = div.querySelector('.attachmentIcon');
     const subtaskLogo = div.querySelector('.subtaskIcon');
 
-    if (st.attachments.length) {
-      attachmentsLogo.classList.remove('hidden');
+    if (st.attachments?.length) {
+      attachmentsLogo?.classList.remove('hidden');
     }
-    if (st.subTask.length) {
-      subtaskLogo.classList.remove('hidden');
+    if (st.subTask?.length) {
+      subtaskLogo?.classList.remove('hidden');
     }
 
     div.addEventListener('click', () => showTaskDrawer(sub));
