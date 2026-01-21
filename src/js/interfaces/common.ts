@@ -11,6 +11,7 @@ export interface Project {
 }
 
 export interface Sprint {
+  _id?: string;
   projectId?: string;
   storyPoint?: number;
   key?: string;

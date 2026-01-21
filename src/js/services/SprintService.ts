@@ -132,7 +132,7 @@ class SprintService {
     }
   }
 
-  async addTasksToSprint(id: string, updatedSprint: Sprint) {
+  async addTasksToSprint(id: string, updatedSprint: string[]) {
     try {
       const response = await this.api.patch(`/${id}/addTasks`, updatedSprint);
 
