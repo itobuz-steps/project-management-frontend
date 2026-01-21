@@ -152,10 +152,12 @@ export async function renderBacklogView(
       completeSprintButton?.addEventListener('click', async (e: MouseEvent) => {
         e.preventDefault();
 
+        if (!sprint._id) return;
+
         showConfirmModal(
           'Are you sure you want to complete this sprint?',
           async () => {
-            await handleCompleteSprint(sprint._id, response.result);
+            await handleCompleteSprint(sprint._id!, response.result);
           }
         );
       });
@@ -270,11 +272,13 @@ export async function renderBacklogView(
 
   const sprintDropdown = document.getElementById(
     'sprints-dropdown'
-  ) as HTMLElement | null;
+  ) as HTMLUListElement | null;
 
-  addToSprintButton?.addEventListener('click', () => {
-    handleAddTaskToSprint(currentSprints, sprintDropdown);
-  });
+  if (sprintDropdown && addToSprintButton) {
+    addToSprintButton.addEventListener('click', () => {
+      handleAddTaskToSprint(currentSprints, sprintDropdown);
+    });
+  }
 
   document.addEventListener('click', (e: MouseEvent) => {
     const target = e.target as Node;

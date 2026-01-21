@@ -1,4 +1,4 @@
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError, type AxiosResponse } from 'axios';
 import { config } from '../config/config';
 import type { Task } from '../interfaces/common';
 
@@ -80,7 +80,7 @@ class TaskService {
     return response;
   }
 
-  async getTaskById(id: string) {
+  async getTaskById(id: string): Promise<AxiosResponse<{ result: Task }>> {
     const response = await this.api.get(`/${id}`);
     return response;
   }

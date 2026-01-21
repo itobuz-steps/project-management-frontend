@@ -57,11 +57,10 @@ export function toggleHidden(element: HTMLElement) {
   element.classList.toggle('hidden');
 }
 
-export function dropdownEvent(sprint: Sprint = {}) {
-  const nameKey = sprint.key ? sprint.key : `backlog`;
-  const dropdownButton = document.getElementById(
-    `dropdownButton-${nameKey}`
-  ) as HTMLElement | null;
+export function dropdownEvent(sprint?: Sprint) {
+  const nameKey = sprint?.key ?? 'backlog';
+
+  const dropdownButton = document.getElementById(`dropdownButton-${nameKey}`);
   const dropdownMenu = document.querySelector<HTMLElement>(
     `.dropdown-menu-${nameKey}`
   );
@@ -72,15 +71,13 @@ export function dropdownEvent(sprint: Sprint = {}) {
     `.dropdown-icon-${nameKey}`
   );
 
-  if (!dropdownButton || !dropdownMenu || !dropdownIcon) {
-    return;
-  }
+  if (!dropdownButton || !dropdownMenu || !dropdownIcon) return;
 
-  dropdownButton.addEventListener('click', function () {
+  dropdownButton.addEventListener('click', () => {
     dropdownMenu.classList.toggle('hidden');
   });
 
-  dropdownButton.addEventListener('click', function () {
+  dropdownButton.addEventListener('click', () => {
     if (dropdownIcon.classList.contains('rotate-270')) {
       dropdownIcon.classList.remove('rotate-270');
       checkIfEmpty();

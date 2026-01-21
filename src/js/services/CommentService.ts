@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
-import type { UpdateCommentPayload } from '../interfaces/comment';
+import type { Comment, UpdateCommentPayload } from '../interfaces/comment';
 import type { RefreshTokenResponse } from '../interfaces/common';
 import { config as appConfig } from '../config/config';
 
@@ -76,9 +76,11 @@ class CommentService {
     );
   }
 
-  async getAllComments(taskId = ''): Promise<Comment[]> {
+  async getAllComments(taskId = ''): Promise<{ result: Comment[] }> {
     try {
-      const response = await this.api.get<Comment[]>(`/?taskId=${taskId}`);
+      const response = await this.api.get<{ result: Comment[] }>(
+        `/?taskId=${taskId}`
+      );
 
       return response.data;
     } catch (error) {

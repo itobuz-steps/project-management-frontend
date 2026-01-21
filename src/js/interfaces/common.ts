@@ -44,7 +44,7 @@ export interface Task {
   reporter?: string;
 
   parentTask?: string;
-  assignee?: string;
+  assignee?: string | null;
   subTask?: string[];
 
   tags: string[];

@@ -5,7 +5,7 @@ export interface SignupPayload {
 }
 
 export interface User {
-  id: string;
+  _id: string;
   name: string;
   email: string;
   profileImage?: string;

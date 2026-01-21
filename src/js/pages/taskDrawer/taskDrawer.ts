@@ -11,6 +11,7 @@ import renderSelectedTab from '../../utils/renderSelectedTab';
 import { getSvgByType } from '../../utils/globalUtils';
 import { marked } from 'marked';
 import { config } from '../../config/config';
+import type { User } from '../../interfaces/auth';
 
 const taskDrawerInnerHtml = /* HTML */ ` <div>
   <div class="flex flex-col gap-3 p-3">
@@ -332,50 +333,75 @@ const taskDrawerInnerHtml = /* HTML */ ` <div>
   </div>
 </div>`;
 
-export async function showTaskDrawer(taskId) {
-  const taskDrawerContainer = document.getElementById('task-side-drawer');
+export async function showTaskDrawer(taskId: string) {
+  const taskDrawerContainer = document.getElementById(
+    'task-side-drawer'
+  ) as HTMLElement;
 
   taskDrawerContainer.innerHTML = taskDrawerInnerHtml;
 
   const task = (await taskService.getTaskById(taskId)).data.result;
-  const reporter = (await taskService.getUserDetailsById(task.reporter)).data
+
+  const reporter = (await taskService.getUserDetailsById(task.reporter!)).data
     .result;
+
   const assignee = task.assignee
     ? (await taskService.getUserDetailsById(task.assignee)).data.result
     : null;
-  const taskDrawer = document.querySelector('.task-drawer');
+  const taskDrawer = document.querySelector<HTMLElement>('.task-drawer');
   const drawerBackdrop = document.querySelector('.drawer-backdrop');
-  const titleEl = taskDrawer.querySelector('.title');
-  const taskTypeIcon = taskDrawer.querySelector('.type-icon');
-  const taskKeyEl = taskDrawer.querySelector('.task-key');
-  const descriptionEl = taskDrawer.querySelector('.description');
-  const assigneeEl = taskDrawer.querySelector('#assignee-name');
-  const profileImageEl = taskDrawer.querySelector('.profile-image');
-  const dueDateEl = taskDrawer.querySelector('.due-date');
-  const closeButton = taskDrawer.querySelector('.close-btn');
-  const status = taskDrawer.querySelector('#statusSelect');
-  const priority = taskDrawer.querySelector('#prioritySelect');
-  const commentInput = taskDrawer.querySelector('#commentInput');
-  const commentSubmit = taskDrawer.querySelector('#submitButton');
-  const editModal = document.getElementById('update-task-modal');
-  const editTaskButton = document.querySelector('#edit-task-button');
-  const attachmentInput = taskDrawer.querySelector('#commentAttachment');
-  const attachButton = taskDrawer.querySelector('#attachButton');
-  const attachmentText = taskDrawer.querySelector('#commentAttachmentText');
-  const columns = (
-    await projectService.getProjectById(localStorage.getItem('selectedProject'))
-  ).result.columns;
-  const storyPoint = taskDrawer.querySelector('#story-point-value');
-  const typeSelect = taskDrawer.querySelector('#typeSelect');
+
+  if (!taskDrawer || !drawerBackdrop) {
+    console.error('Task drawer or backdrop element not found');
+    return;
+  }
+  const titleEl = taskDrawer.querySelector<HTMLElement>('.title');
+  const taskTypeIcon = taskDrawer.querySelector<HTMLElement>('.type-icon');
+  const taskKeyEl = taskDrawer.querySelector<HTMLElement>('.task-key');
+  const descriptionEl = taskDrawer.querySelector<HTMLElement>('.description');
+  const assigneeEl = taskDrawer.querySelector<HTMLElement>('#assignee-name');
+  const profileImageEl =
+    taskDrawer.querySelector<HTMLImageElement>('.profile-image');
+  const dueDateEl = taskDrawer.querySelector<HTMLElement>('.due-date');
+  const closeButton = taskDrawer.querySelector<HTMLButtonElement>('.close-btn');
+  const status = taskDrawer.querySelector<HTMLSelectElement>('#statusSelect');
+  const priority =
+    taskDrawer.querySelector<HTMLSelectElement>('#prioritySelect');
+  const commentInput =
+    taskDrawer.querySelector<HTMLTextAreaElement>('#commentInput');
+  const commentSubmit =
+    taskDrawer.querySelector<HTMLButtonElement>('#submitButton');
+  const editModal = document.getElementById('update-task-modal') as HTMLElement;
+  const editTaskButton =
+    document.querySelector<HTMLButtonElement>('#edit-task-button');
+  const attachmentInput =
+    taskDrawer.querySelector<HTMLInputElement>('#commentAttachment');
+  const attachButton =
+    taskDrawer.querySelector<HTMLButtonElement>('#attachButton');
+  const attachmentText = taskDrawer.querySelector<HTMLElement>(
+    '#commentAttachmentText'
+  );
+
+  const selectedProject = localStorage.getItem('selectedProject');
+
+  if (!selectedProject) {
+    return;
+  }
+
+  const columns = (await projectService.getProjectById(selectedProject)).result
+    .columns;
+  const storyPoint =
+    taskDrawer.querySelector<HTMLInputElement>('#story-point-value');
+  const typeSelect = taskDrawer.querySelector<HTMLSelectElement>('#typeSelect');
   const assigneeDropdown = taskDrawer.querySelector(
     '#assignee-dropdown-taskDrawer'
   );
   const reporterName = taskDrawer.querySelector('#reporter-name');
-  const reporterProfileImageEl = taskDrawer.querySelector(
+  const reporterProfileImageEl = taskDrawer.querySelector<HTMLImageElement>(
     '.reporter-profile-image'
   );
   const labelsName = taskDrawer.querySelector('.labels');
-  const labelsShow = task.tags.map((label) => {
+  const labelsShow = task.tags.map((label: string) => {
     let labelShow = /* HTML */ ` <div
       class="label bg-primary-100 rounded-sm px-2 py-1"
     >
@@ -385,20 +411,21 @@ export async function showTaskDrawer(taskId) {
     return labelShow;
   });
 
-  labelsName.innerHTML = labelsShow.join('');
-  reporterName.textContent = reporter.name;
+  labelsName!.innerHTML = labelsShow.join('');
+  reporterName!.textContent = reporter.name;
 
-  if (reporter.profileImage) {
+  if (reporter.profileImage && reporterProfileImageEl) {
     reporterProfileImageEl.src =
       config.API_BASE_URL + '/uploads/profile/' + reporter.profileImage;
   } else {
-    profileImageEl.src = '../../../assets/img/profile.png';
+    if (reporterProfileImageEl)
+      reporterProfileImageEl.src = '../../../assets/img/profile.png';
   }
 
-  assigneeEl.textContent = assignee ? assignee.name : 'No assignee';
+  assigneeEl!.textContent = assignee ? assignee.name : 'No assignee';
 
-  assigneeDropdown.classList.remove('hidden');
-  assigneeDropdown.innerHTML = '';
+  assigneeDropdown?.classList.remove('hidden');
+  assigneeDropdown!.innerHTML = '';
 
   const unassignedOption = document.createElement('option');
 
@@ -409,12 +436,10 @@ export async function showTaskDrawer(taskId) {
     unassignedOption.selected = true;
   }
 
-  assigneeDropdown.appendChild(unassignedOption);
+  assigneeDropdown?.appendChild(unassignedOption);
 
   const members = (
-    await projectService.getProjectMembers(
-      localStorage.getItem('selectedProject')
-    )
+    await projectService.getProjectMembers<{ result: User[] }>(selectedProject)
   ).result;
 
   members.forEach((member) => {
@@ -426,16 +451,20 @@ export async function showTaskDrawer(taskId) {
       option.selected = true;
     }
 
-    assigneeDropdown.appendChild(option);
+    assigneeDropdown?.appendChild(option);
   });
 
-  assigneeDropdown.addEventListener('change', async (e) => {
-    const assigneeId = e.target.value;
+  assigneeDropdown?.addEventListener('change', async (e) => {
+    const assigneeId = (e.target as HTMLSelectElement).value;
 
     try {
       await taskService.updateTask(taskId, {
         assignee: assigneeId || null,
       });
+
+      if (!assigneeEl) {
+        throw new Error('Assignee element not found');
+      }
 
       if (!assigneeId) {
         assigneeEl.textContent = 'Unassigned';
@@ -446,7 +475,7 @@ export async function showTaskDrawer(taskId) {
       }
 
       assigneeDropdown.classList.add('hidden');
-      renderSelectedTab(localStorage.getItem('selectedProject'));
+      renderSelectedTab(selectedProject);
       showToast('Assignee updated', 'success');
       showTaskDrawer(taskId);
     } catch (err) {
@@ -455,52 +484,71 @@ export async function showTaskDrawer(taskId) {
     }
   });
 
-  attachButton.addEventListener('click', () => {
-    attachmentInput.click();
+  attachButton?.addEventListener('click', () => {
+    attachmentInput?.click();
   });
 
-  editTaskButton.addEventListener('click', () => {
-    editModal.classList.remove('hidden');
+  editTaskButton?.addEventListener('click', () => {
+    editModal?.classList.remove('hidden');
     openUpdateTaskModal(taskId);
   });
 
   renderSubtasks(task);
 
-  commentInput.addEventListener('keydown', function (event) {
-    if (event.key === 'Enter') {
-      if (event.shiftKey) {
+  commentInput?.addEventListener('keydown', function (event: Event) {
+    const keyboardEvent = event as KeyboardEvent;
+    if (keyboardEvent.key === 'Enter') {
+      if (keyboardEvent.shiftKey) {
         return;
       }
 
-      event.preventDefault();
-      commentSubmit.click();
+      keyboardEvent.preventDefault();
+      commentSubmit?.click();
     }
   });
 
-  attachmentInput.addEventListener('change', (e) => {
-    if (e.target.files[0]) {
-      attachmentText.textContent = e.target.files[0].name;
+  attachmentInput?.addEventListener('change', (e) => {
+    if (
+      e.target instanceof HTMLInputElement &&
+      e.target.files &&
+      e.target.files?.[0] &&
+      e.target.files[0].name
+    ) {
+      if (!attachmentText) {
+        return;
+      }
+
+      attachmentText.textContent = e.target.files?.[0].name;
     }
   });
 
-  commentSubmit.addEventListener('click', async () => {
-    const message = commentInput.value.trim();
+  commentSubmit?.addEventListener('click', async () => {
+    const message = commentInput?.value.trim();
     const formData = new FormData();
 
-    if (!message && attachmentInput.files.length) {
+    if (!message) {
+      showToast('Comment cannot be empty');
+      return;
+    }
+
+    if (attachmentInput?.files?.length) {
       showToast('You must enter a comment before adding an attachment');
       return;
     }
 
-    formData.append('taskId', task._id);
+    formData.append('taskId', task._id ?? '');
     formData.append('message', message);
 
-    if (attachmentInput.files.length) {
+    if (attachmentInput?.files?.length) {
       formData.append('attachment', attachmentInput.files[0]);
     }
 
     try {
       await commentService.createComment(formData);
+
+      if (!commentInput || !attachmentInput || !attachmentText) {
+        throw new Error('Comment input elements not found');
+      }
 
       commentInput.value = '';
       attachmentInput.value = '';
@@ -517,13 +565,15 @@ export async function showTaskDrawer(taskId) {
     const option = document.createElement('option');
     option.value = column;
     option.textContent = column.charAt(0).toUpperCase() + column.slice(1);
-    status.appendChild(option);
+    status?.appendChild(option);
   });
 
-  status.addEventListener('change', async (e) => {
+  status?.addEventListener('change', async (e) => {
     try {
-      await taskService.updateTask(taskId, { status: e.target.value });
-      renderSelectedTab(localStorage.getItem('selectedProject'));
+      await taskService.updateTask(taskId, {
+        status: (e.target as HTMLSelectElement)?.value,
+      });
+      renderSelectedTab(selectedProject);
 
       showToast('Status updated successfully', 'success');
       e.preventDefault();
@@ -533,10 +583,12 @@ export async function showTaskDrawer(taskId) {
     }
   });
 
-  priority.addEventListener('change', async (e) => {
+  priority?.addEventListener('change', async (e) => {
     try {
-      await taskService.updateTask(taskId, { priority: e.target.value });
-      renderSelectedTab(localStorage.getItem('selectedProject'));
+      await taskService.updateTask(taskId, {
+        priority: (e.target as HTMLSelectElement)?.value,
+      });
+      renderSelectedTab(selectedProject);
       showToast('Status updated successfully', 'success');
 
       e.preventDefault();
@@ -546,12 +598,14 @@ export async function showTaskDrawer(taskId) {
     }
   });
 
-  storyPoint.addEventListener('keydown', async (e) => {
+  storyPoint?.addEventListener('keydown', async (e) => {
     try {
       if (e.key === 'Enter') {
         e.preventDefault();
-        await taskService.updateTask(taskId, { storyPoint: +e.target.value });
-        renderSelectedTab(localStorage.getItem('selectedProject'));
+        await taskService.updateTask(taskId, {
+          storyPoint: +(e.target as HTMLInputElement)?.value,
+        });
+        renderSelectedTab(selectedProject);
         showToast('Story point updated successfully', 'success');
       }
     } catch (err) {
@@ -560,10 +614,12 @@ export async function showTaskDrawer(taskId) {
     }
   });
 
-  typeSelect.addEventListener('change', async (e) => {
+  typeSelect?.addEventListener('change', async (e) => {
     try {
-      await taskService.updateTask(taskId, { type: e.target.value });
-      renderSelectedTab(localStorage.getItem('selectedProject'));
+      await taskService.updateTask(taskId, {
+        type: (e.target as HTMLSelectElement)?.value,
+      });
+      renderSelectedTab(selectedProject);
       showToast('Type updated successfully', 'success');
 
       e.preventDefault();
@@ -573,17 +629,36 @@ export async function showTaskDrawer(taskId) {
     }
   });
 
+  if (!status || !priority || !storyPoint || !typeSelect) {
+    throw new Error('One or more select elements not found');
+  }
+
   status.value = task.status;
   priority.value = task.priority;
-  storyPoint.value = task.storyPoint;
+  storyPoint.value = task.storyPoint + '';
   typeSelect.value = task.type;
 
   taskDrawer.dataset.id = task._id;
+
+  if (
+    !titleEl ||
+    !taskKeyEl ||
+    !taskTypeIcon ||
+    !descriptionEl ||
+    !assigneeEl ||
+    !profileImageEl ||
+    !dueDateEl ||
+    !closeButton
+  ) {
+    throw new Error('One or more task drawer elements not found');
+  }
+
   titleEl.textContent = task.title;
-  taskKeyEl.textContent = task.key;
+  taskKeyEl.textContent = task.key ?? null;
+
   taskTypeIcon.innerHTML = getSvgByType(task);
   descriptionEl.innerHTML = task.description
-    ? marked.parse(task.description)
+    ? await marked.parse(task.description)
     : 'No description added....';
   profileImageEl.src = '../../../assets/img/profile.png';
 
@@ -620,7 +695,12 @@ export async function showTaskDrawer(taskId) {
 
   async function updateCommentList() {
     const comments = (await commentService.getAllComments(task._id)).result;
-    const commentContainer = taskDrawer.querySelector('#commentsContainer');
+    const commentContainer =
+      taskDrawer?.querySelector<HTMLElement>('#commentsContainer');
+
+    if (!commentContainer) {
+      throw new Error('Comment container not found');
+    }
 
     commentContainer.innerHTML = ``;
 

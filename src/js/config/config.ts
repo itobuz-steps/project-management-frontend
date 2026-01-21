@@ -1,4 +1,4 @@
-console.log(import.meta.env);
+// console.log(import.meta.env);
 
 interface appConfig {
   API_BASE_URL: string;
