@@ -48,8 +48,12 @@ export interface Task {
 
 export interface ProjectMember {
   _id: string;
-  email: string;
+  name: string;
+  profileImage?: string;
+  onlineStatus: OnlineStatus;
 }
+
+export type OnlineStatus = 'online' | 'offline';
 
 export interface ApiResponse<T> {
   result: T;
