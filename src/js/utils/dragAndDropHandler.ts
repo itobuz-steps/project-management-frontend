@@ -41,7 +41,7 @@ export async function addDropEvent(
   parentContainer: HTMLElement,
   projectType: string,
   ifBacklog: boolean,
-  sprint: Sprint
+  sprint: Sprint | null
 ) {
   e.preventDefault();
 
