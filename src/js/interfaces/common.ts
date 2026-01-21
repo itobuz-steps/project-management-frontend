@@ -4,6 +4,7 @@ export interface RefreshTokenResponse {
 }
 
 export interface Project {
+  _id?: string;
   name: string;
   projectType: string;
   columns: string[];
@@ -39,4 +40,8 @@ export interface Task {
 export interface ProjectMember {
   _id: string;
   email: string;
+}
+
+export interface ApiResponse<T> {
+  result: T;
 }

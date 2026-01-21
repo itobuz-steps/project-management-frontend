@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { config as appConfig } from '../config/config';
-import type { RefreshTokenResponse } from '../interfaces/common';
+import type { ApiResponse, RefreshTokenResponse } from '../interfaces/common';
 import type { Project } from '../interfaces/common';
 
 const API_URL = `${appConfig.API_BASE_URL}/project`;
@@ -86,9 +86,9 @@ class ProjectService {
     }
   }
 
-  async getProjectById<T = unknown>(id: string): Promise<T> {
+  async getProjectById(id: string): Promise<ApiResponse<Project>> {
     try {
-      const response = await this.api.get<T>(`/${id}`);
+      const response = await this.api.get<ApiResponse<Project>>(`/${id}`);
 
       return response.data;
     } catch (error: unknown) {
@@ -96,9 +96,9 @@ class ProjectService {
     }
   }
 
-  async createProject<T = unknown>(project: Project): Promise<T> {
+  async createProject(project: Project): Promise<ApiResponse<Project>> {
     try {
-      const response = await this.api.post<T>(`/`, project);
+      const response = await this.api.post<ApiResponse<Project>>(`/`, project);
 
       return response.data;
     } catch (error: unknown) {
@@ -106,19 +106,22 @@ class ProjectService {
     }
   }
 
-  async updateProject<T = unknown>(
+  async updateProject(
     id: string,
-    updatedProject: Project
-  ): Promise<T> {
+    updatedProject: Partial<Project>
+  ): Promise<ApiResponse<Project>> {
     try {
-      const response = await this.api.put<T>(`/${id}`, updatedProject);
+      const response = await this.api.put<ApiResponse<Project>>(
+        `/${id}`,
+        updatedProject
+      );
       return response.data;
     } catch (error: unknown) {
       throw this.handleError(error, 'Failed to update project');
     }
   }
 
-  async deleteProject<T = unknown>(id: string): Promise<T> {
+  async deleteProject<T = void>(id: string): Promise<T> {
     try {
       const response = await this.api.delete<T>(`/${id}`);
       return response.data;
