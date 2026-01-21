@@ -4,10 +4,11 @@ export interface RefreshTokenResponse {
 }
 
 export interface Project {
-  _id?: string;
+  _id: string;
   name: string;
   projectType: string;
   columns: string[];
+  members: unknown[];
 }
 
 export interface Sprint {
@@ -19,7 +20,10 @@ export interface Sprint {
 
 export interface Task {
   _id?: string;
-  projectId: string;
+  projectId: {
+    _id: string;
+    name: string;
+  };
   title: string;
   storyPoint: number;
   description: string;
@@ -39,7 +43,7 @@ export interface Task {
   attachments?: FileList | File[];
 
   createdAt?: string;
-  updatedAt?: string; 
+  updatedAt?: string;
 }
 
 export interface ProjectMember {
