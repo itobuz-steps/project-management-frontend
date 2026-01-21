@@ -4,8 +4,9 @@ import commentService from '../../services/CommentService';
 import { DateTime } from 'luxon';
 import { marked } from 'marked';
 import { config } from '../../config/config';
+import type { Comment } from '../../interfaces/comment';
 
-export function appendCommentToContainer(comment, container) {
+export function appendCommentToContainer(comment: Comment, container: HTMLElement) {
   const commentEl = document.createElement('div');
 
   commentEl.className =
@@ -133,13 +134,16 @@ ${comment.message}</textarea
     </div>
   `;
 
-  const deleteBtn = commentEl.querySelector('.delete-btn');
-  const editBtn = commentEl.querySelector('.edit-btn');
-  const editControls = commentEl.querySelector('.edit-controls');
-  const messageEl = commentEl.querySelector('.message');
-  const editInput = commentEl.querySelector('.edit-input');
-  const saveBtn = commentEl.querySelector('.save-btn');
-  const attachmentLogo = commentEl.querySelector('#attachmentLogo');
+  const deleteBtn = commentEl.querySelector<HTMLButtonElement>('.delete-btn')!;
+  const editBtn = commentEl.querySelector<SVGSVGElement>('.edit-btn')!;
+  const editControls =
+    commentEl.querySelector<HTMLDivElement>('.edit-controls')!;
+  const messageEl = commentEl.querySelector<HTMLDivElement>('.message')!;
+  const editInput =
+    commentEl.querySelector<HTMLTextAreaElement>('.edit-input')!;
+  const saveBtn = commentEl.querySelector<HTMLButtonElement>('.save-btn')!;
+  const attachmentLogo =
+    commentEl.querySelector<SVGSVGElement>('#attachmentLogo')!;
 
   if (comment.attachment) {
     attachmentLogo.classList.remove('hidden');
@@ -175,7 +179,11 @@ ${comment.message}</textarea
   container.scrollTop = container.scrollHeight;
 }
 
-async function deleteComment(commentEl, commentId, container) {
+async function deleteComment(
+  commentEl: HTMLElement,
+  commentId: string,
+  container: HTMLElement
+) {
   try {
     await commentService.deleteComment(commentId);
     container.removeChild(commentEl);
@@ -184,7 +192,13 @@ async function deleteComment(commentEl, commentId, container) {
   }
 }
 
-async function editComment(input, commentId, comment, messageEl, editControls) {
+async function editComment(
+  input: HTMLInputElement | HTMLTextAreaElement,
+  commentId: string,
+  comment: { message: string },
+  messageEl: HTMLElement,
+  editControls: HTMLElement
+) {
   const updatedComment = input.value;
   const payload = { message: updatedComment };
 
