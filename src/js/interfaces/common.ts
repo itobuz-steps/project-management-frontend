@@ -37,6 +37,9 @@ export interface Task {
   tags: string[];
 
   attachments?: FileList | File[];
+
+  createdAt?: string;
+  updatedAt?: string; 
 }
 
 export interface ProjectMember {

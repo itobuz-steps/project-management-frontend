@@ -7,8 +7,14 @@ import { formatISO } from 'date-fns';
 import { showTaskDrawer } from '../pages/taskDrawer/taskDrawer.js';
 import { svgObject } from './svgObjects.js';
 import { config } from '../config/config.ts';
+import type { Sprint, Task } from '../interfaces/common.ts';
 
-export async function createTaskList(task, type, projectType, sprint) {
+export async function createTaskList(
+  task: Task,
+  type: string,
+  projectType: string,
+  sprint: Sprint
+) {
   let ifSprint = `hidden`;
   if (type === 'backlog') {
     ifSprint = ``;
@@ -49,23 +55,15 @@ export async function createTaskList(task, type, projectType, sprint) {
     ? (await TaskService.getUserDetailsById(task.reporter)).data.result
     : '';
 
-  let assignee = {};
-
+  let assignee = { name: 'Unassigned', profileImage: '...' };
   if (task.assignee) {
     const data = (await TaskService.getUserDetailsById(task.assignee)).data
       .result;
-
-    assignee.name = data.name;
-    assignee.profileImage = '../../../../assets/img/profile.png';
-
-    if (data.profileImage) {
-      assignee.profileImage =
-        config.API_BASE_URL + '/uploads/profile/' + data.profileImage;
-    }
-  } else {
     assignee = {
-      name: 'Unassigned',
-      profileImage: '../../../../assets/img/profile.png',
+      name: data.name,
+      profileImage: data.profileImage
+        ? config.API_BASE_URL + '/uploads/profile/' + data.profileImage
+        : '../../../../assets/img/profile.png',
     };
   }
 
@@ -97,9 +95,7 @@ export async function createTaskList(task, type, projectType, sprint) {
   tr.dataset.id = task._id;
 
   let dateValue;
-
-  dateValue = task.dueDate.split('T');
-  const newDate = new Date(dateValue);
+  const newDate = new Date(task.dueDate.split('T')[0]);
   dateValue = formatISO(newDate, { representation: 'date' });
 
   tr.innerHTML = /* HTML */ `
@@ -151,22 +147,28 @@ export async function createTaskList(task, type, projectType, sprint) {
         type="date"
         name="dueDate"
         id=""
-        class="${task.key}-due-date ${new Date(task.dueDate) < Date.now()
+        class="${new Date(task.dueDate).getTime() < Date.now()
           ? 'text-red-600'
           : ''} block w-28 rounded-md border border-gray-300 bg-gray-50 p-1 text-sm text-black outline-none"
         placeholder="Enter the due date"
         value="${dateValue}"
       />
     </td>
+
     <td class="p-2">
       <div class="flex min-w-18 gap-1 text-xs">${labelsEl.join('')}</div>
     </td>
     <td class="p-2">
-      ${DateTime.fromISO(task.createdAt).toLocaleString(DateTime.DATE_MED)}
+      ${task.createdAt
+        ? DateTime.fromISO(task.createdAt).toLocaleString(DateTime.DATE_MED)
+        : ''}
     </td>
     <td class="p-2">
-      ${DateTime.fromISO(task.updatedAt).toLocaleString(DateTime.DATE_MED)}
+      ${task.updatedAt
+        ? DateTime.fromISO(task.updatedAt).toLocaleString(DateTime.DATE_MED)
+        : ''}
     </td>
+
     <td class="p-2">
       <div class="flex items-center">
         <img
@@ -180,45 +182,80 @@ export async function createTaskList(task, type, projectType, sprint) {
     <td class="p-2">&nbsp;</td>
   `;
 
-  const dueDateInput = tr.querySelector(`.${task.key}-due-date`);
-  const openTaskDrawer = tr.querySelector('.open-taskDrawer');
+  const dueDateInput = tr.querySelector(
+    `.${task.key}-due-date`
+  ) as HTMLInputElement | null;
+  const openTaskDrawer = tr.querySelector(
+    '.open-taskDrawer'
+  ) as HTMLElement | null;
 
-  openTaskDrawer.addEventListener('click', () => showTaskDrawer(task._id));
+  if (openTaskDrawer) {
+    openTaskDrawer.addEventListener('click', () => showTaskDrawer(task._id!));
+  }
 
-  dueDateInput.addEventListener('change', async () => {
-    if (new Date(dueDateInput.value) < new Date(task.dueDate)) {
-      showToast('Invalid due date', 'error');
-      dueDateInput.value = dateValue;
-      return;
-    }
+  if (dueDateInput) {
+    dueDateInput.addEventListener('change', async () => {
+      if (!task.dueDate) return; // safety check
 
-    await taskService.updateTask(task._id, { dueDate: dueDateInput.value });
+      const oldDueDate = new Date(task.dueDate);
+      const newDueDate = new Date(dueDateInput.value);
 
-    showToast('Task Updated successfully', 'success');
+      if (newDueDate < oldDueDate) {
+        showToast('Invalid due date', 'error');
+        dueDateInput.value = formatISO(oldDueDate, { representation: 'date' });
+        return;
+      }
 
-    if (new Date(dueDateInput.value) >= Date.now()) {
-      dueDateInput.classList.remove('text-red-600');
-    }
-  });
+      await taskService.updateTask(task._id!, { dueDate: dueDateInput.value });
 
-  const statusOption = tr.querySelector(`.status-select-${task._id}`);
+      showToast('Task Updated successfully', 'success');
 
-  await addStatusOptions(statusOption, task.status);
+      if (newDueDate >= new Date()) {
+        dueDateInput.classList.remove('text-red-600');
+      }
+    });
+  }
 
-  statusOption.addEventListener('change', async (e) => {
-    await taskService.updateTask(task._id, { status: e.target.value });
-    e.preventDefault();
-  });
+  const statusOption = tr.querySelector(
+    `.status-select-${task._id}`
+  ) as HTMLSelectElement | null;
+
+  if (statusOption) {
+    await addStatusOptions(statusOption, task.status);
+
+    statusOption.addEventListener('change', async (e: Event) => {
+      const target = e.target as HTMLSelectElement;
+      if (!target.value) return;
+
+      if (task._id) {
+        await taskService.updateTask(task._id, { status: target.value });
+      }
+
+      e.preventDefault();
+    });
+  }
 
   return tr;
 }
 
-async function addStatusOptions(selectContainer, taskStatus) {
-  const project = (
-    await projectService.getProjectById(localStorage.getItem('selectedProject'))
-  ).result;
+async function addStatusOptions(
+  selectContainer: HTMLSelectElement,
+  taskStatus: string
+): Promise<void> {
+  const selectedProjectId = localStorage.getItem('selectedProject');
 
-  project.columns.forEach((column) => {
+  if (!selectedProjectId) {
+    return;
+  }
+
+  const project = (await projectService.getProjectById(selectedProjectId))
+    .result;
+
+  if (!project?.columns) {
+    return;
+  }
+
+  project.columns.forEach((column: string) => {
     const optionEl = document.createElement('option');
     optionEl.className = 'font-semibold';
     optionEl.innerText = column;
@@ -227,6 +264,7 @@ async function addStatusOptions(selectContainer, taskStatus) {
     if (column === taskStatus) {
       optionEl.selected = true;
     }
+
     selectContainer.appendChild(optionEl);
   });
 }
